@@ -1,0 +1,6 @@
+{
+    "newMRMDiscussion": {
+        "subject": "New MRM Discussion",
+        "body": "Dear {{greeting}}\n Your Tasks are following:\nMRM Details\n{{mrmDetails}}\n\n\n\n\nRegards,\nFeat Tech Team,\n\n\n\n\n\n*Please do not reply to this email. This is a computer-generated email."
+    }
+}

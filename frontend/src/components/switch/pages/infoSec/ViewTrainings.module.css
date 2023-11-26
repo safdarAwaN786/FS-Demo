@@ -1,0 +1,141 @@
+.parent {
+  display: flex;
+  width: 100%;
+}
+
+.sidebar {
+  width: 17.5%;
+}
+.subparent {
+  width: 82.5%;
+  margin-top: 102px;
+}
+
+.cardParent {
+  width: 80%;
+  margin-top: 1.19rem;
+  border-radius: 0.4375rem;
+  border: 1px solid #dadada;
+  background: #fbfbfb;
+  margin-left: 24px;
+}
+
+.card1headers {
+  border-bottom: 1px solid #e1e1e1;
+  height: 64px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.card1headers > div:nth-child(1) {
+  display: flex;
+  margin-left: 1.44rem;
+  padding-top: 0.81rem;
+  gap: 5px;
+}
+.card1headers > div:nth-child(2) > p {
+  color: #000;
+  text-align: center;
+  font-size: 1.5rem;
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  margin-left: 1.44rem;
+  margin-top: 0.5rem;
+}
+
+.card1headers > div:nth-child(1) > span:nth-child(1) {
+  width: 10px;
+  height: 10px;
+  background-color: #ee6a5f;
+  display: block;
+  border-radius: 0.625rem;
+}
+.card1headers > div:nth-child(1) > span:nth-child(2) {
+  width: 10px;
+  height: 10px;
+  background-color: #f5be4f;
+  display: block;
+  border-radius: 0.625rem;
+}
+.card1headers > div:nth-child(1) > span:nth-child(3) {
+  width: 10px;
+  height: 10px;
+  background-color: #62c554;
+  display: block;
+  border-radius: 0.625rem;
+}
+.cardbody {
+    display: flex;
+}
+
+.sec1 , .sec2 {
+    flex: 1;
+  padding-left: 2.63rem;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 3.5rem;
+  padding-top: 21px;
+  padding-bottom: 51px;
+}
+.sec1  > div, .sec2 > div {
+  display: flex;
+  gap: 0.63rem;
+}
+
+.card1para {
+  color: #000;
+  font-size: 0.9375rem;
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+.card1para2 {
+  color: #797979;
+  font-size: 0.9375rem;
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+@media (max-width: 1350px) {
+  .sidebar {
+    width: 20%;
+  }
+  .subparent {
+    width: 80%;
+  }
+}
+@media (max-width: 1250px) {
+  .sidebar {
+    width: 25%;
+  }
+  .subparent {
+    width: 75%;
+  }
+}
+@media (max-width: 950px) {
+  .sidebar {
+    width: 30%;
+  }
+  .subparent {
+    width: 70%;
+  }
+}
+@media (max-width: 750px) {
+  .sidebar {
+    width: 0%;
+  }
+  .subparent {
+    width: 100%;
+    margin-top: 40px;
+  }
+  .sec2 {
+    margin-right: 0px;
+  }
+}

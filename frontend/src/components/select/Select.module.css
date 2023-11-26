@@ -1,0 +1,43 @@
+.parent {
+  width: 205px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  background: #fafbfb;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 30px;
+  align-items: center;
+  position: relative;
+}
+.opts {
+  padding: 5 20px;
+  background: #fafbfb;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  border: 0;
+  outline: 0;
+  position: absolute;
+  top: 34px;
+  right: 0%;
+}
+
+.opts > p:hover {
+  padding: 5 20px;
+  background: #fff;
+}
+.opts > p {
+  padding: 5px 20px;
+}
+
+.rotater {
+  transform: rotate(180deg);
+  transition: 0.3s;
+  cursor: pointer;
+}
+
+.norotater {
+  transition: 0.3s;
+  cursor: pointer;
+}

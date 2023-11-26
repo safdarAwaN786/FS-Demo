@@ -1,0 +1,365 @@
+.parent {
+  display: flex;
+  width: 100%;
+}
+
+.sidebar {
+  width: 17.5%;
+}
+.subparent {
+  width: 82.5%;
+  margin-top: 102px;
+}
+.formDivider {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+.sec2 {
+  width: 100%;
+}
+.sec1 {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.headers {
+  display: flex;
+  width: 93%;
+  height: 70px;
+  align-items: center;
+  gap: 37px;
+  margin: auto;
+  padding-left: 32px;
+  border-radius: 10px 10px 0px 0px;
+  background: #ee6a5f;
+}
+.spans {
+  display: flex;
+  gap: 5px;
+}
+
+.spans > span {
+  display: block;
+  width: 10px;
+  height: 10px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  background: #62c554;
+}
+.spans > span:nth-child(2) {
+  border-radius: 10px;
+  background: #f5be4f;
+}
+.spans > span:nth-child(1) {
+  border-radius: 10px;
+  background: #ee201c;
+}
+.para {
+  color: #fff;
+  font-family: Poppins;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+}
+.btn {
+  width: 99%;
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 55px;
+  background: #fff;
+  padding-bottom: 14px;
+  margin-bottom: 15px;
+  border-radius: 0px 0px 15px 15px;
+}
+.btn > button {
+  width: 156px;
+  height: 58px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  background: #ee6a5f;
+  color: #fff;
+  font-size: 17px;
+  font-family: Poppins;
+  border: none;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+}
+.btn > button:hover {
+  color: #ee6a5f;
+  background: #fff;
+  border: 1px solid #ee6a5f;
+}
+.card1bodyp {
+  width: 93%;
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+  gap: 49px;
+  padding-top: 23px;
+  padding-bottom: 42px;
+  border-radius: 0px 0px 15px 15px;
+  background: #fafafa;
+}
+.card1body {
+  display: flex;
+  flex-direction: column;
+  width: 75%;
+  margin: auto;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+.inputp {
+  width: 100%;
+  border-radius: 10px;
+  height: 56px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  background: #fff;
+}
+.inputp input {
+  border-radius: 10px;
+  outline: 0;
+  border: 0;
+  width: 100%;
+  height: 100%;
+  text-align: left;
+  padding: 0 12px;
+  color: #4f4f4f;
+  font-family: Poppins;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+@media (max-width: 1000px) {
+  .formDivider {
+    flex-direction: column;
+  }
+}
+@media (max-width: 1350px) {
+  .sidebar {
+    width: 20%;
+  }
+  .subparent {
+    width: 80%;
+  }
+}
+.paraincard {
+  text-align: left;
+  color: #4f4f4f;
+  font-family: Poppins;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+.checksParent {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  width: 93%;
+  margin: auto;
+  padding: 0 19px 15px 15px;
+  background-color: #fafafa;
+  border-radius: 0px 0px 15px 15px;
+}
+.checks {
+  height: 60px;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: center;
+  border-radius: 10px;
+  padding: 0px 12px;
+  padding-left: 29px;
+  padding-right: 30px;
+}
+.checks > div {
+  justify-content: flex-start !important;
+  flex: 1;
+  gap: 12px;
+}
+.paraind {
+  color: #646464;
+  font-family: Poppins;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+.checksParent2 {
+  width: 93%;
+  padding-bottom: 108px;
+  background-color: #fafafa;
+  margin: auto;
+}
+
+.sec1p2 {
+  width: 100%;
+  margin-top: 64px;
+}
+.sec1p2 div:nth-child(3) {
+  background-color: #fafafa;
+  height: 75px;
+  border-radius: 0px 0px 15px 15px;
+}
+
+@media (max-width: 950px) {
+  .checks {
+    height: auto;
+  }
+}
+
+@media (max-width: 1250px) {
+  .sidebar {
+    width: 25%;
+  }
+  .subparent {
+    width: 75%;
+  }
+}
+@media (max-width: 950px) {
+  .sidebar {
+    width: 30%;
+  }
+  .subparent {
+    width: 70%;
+  }
+}
+@media (max-width: 750px) {
+  .sidebar {
+    width: 0%;
+  }
+  .subparent {
+    width: 100%;
+    margin-top: 40px;
+  }
+  .sec2 {
+    margin-right: 0px;
+  }
+  .formDivider {
+    margin-top: 12rem;
+  }
+}
+@media (max-width: 500px) {
+  .card1body {
+    width: 90%;
+  }
+  .checks {
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding-bottom: 10px;
+  }
+  .sec1p2 > div:nth-child(3){
+    height: auto;
+
+  }
+  .sec1p2 div:nth-child(3) {
+    padding-bottom: 1rem;
+  }
+}
+
+
+.dropdown {
+  width: 77%;
+  flex-direction: column;
+  margin: auto;
+}
+.optStyle {
+  color: #010101;
+  font-family: Poppins;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+.dropdown > p {
+  height: 30px;
+  width: 100%;
+  color: #4f4f4f;
+  font-size: 18px;
+  font-family: "Poppins";
+  font-style: normal;
+  font-weight: 400;
+  margin-bottom: 14px;
+  line-height: normal;
+  padding-bottom: 14px;
+  background-color: #fafafa !important;
+}
+.droper {
+  height: auto !important;
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column;
+  padding-right: 0 !important;
+  transition: 3s;
+  border-radius:0px 0px  10px 10px ;
+}
+.dropdown > div {
+  padding-right: 19px;
+  background: #fff !important;
+  height: 60px;
+}
+.indicator2 {
+  border-radius:10px 10px 0px 0px ;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  gap: 22px;
+  align-items: center;
+  padding-left: 22px;
+  cursor: pointer;
+}
+.indicator2 > div {
+  border-radius: 21px;
+  width: 21px;
+  height: 21px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f7f7f7;
+}
+
+.indicator2 > div > img {
+  width: 10px;
+  height: 5px;
+}
+.optStyle {
+  color: #010101;
+  font-family: Poppins;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+.droper > p:hover {
+  background: #d9d9d9;
+}
+.droper > p {
+  width: 100%;
+  height: 60px !important;
+  padding: 16px 0px 15px 39px;
+  cursor: pointer;
+}
+.rotate {
+  transform: rotate(180deg);
+  transition: 0.3s;
+}
+
+@media (max-width: 500px) {
+  .dropdown {
+    width: 90%;
+  }
+}

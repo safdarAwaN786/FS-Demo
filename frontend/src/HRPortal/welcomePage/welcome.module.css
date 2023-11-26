@@ -1,0 +1,70 @@
+.parent {
+  width: 100%;
+  display: flex;
+  height: 100vh;
+}
+
+.sidebar {
+  width: 17.5%;
+}
+.welcome {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+  width: 82.5%;
+}
+.welcome + img {
+  width: 29rem;
+  height: 29rem;
+}
+
+.welcome p {
+  color: #e65f2b;
+  text-align: center;
+  font-size: 4rem;
+  font-family: "Pompiere";
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+@media (max-width: 1350px) {
+  .sidebar {
+    width: 20%;
+  }
+  .welcome {
+    width: 80%;
+  }
+}
+@media (max-width: 1250px) {
+  .sidebar {
+    width: 25%;
+  }
+  .welcome {
+    width: 75%;
+  }
+}
+@media (max-width: 950px) {
+  .sidebar {
+    width: 30%;
+  }
+  .welcome {
+    width: 70%;
+  }
+}
+@media (max-width: 750px) {
+  .sidebar {
+    position: fixed;
+  }
+  .welcome {
+    width: 100% !important;
+  }
+}
+@media (max-width: 550px) {
+  .welcome > img {
+    width: 90% !important;
+    height: 90% !important;
+  }
+}

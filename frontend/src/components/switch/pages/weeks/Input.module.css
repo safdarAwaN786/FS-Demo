@@ -1,0 +1,254 @@
+.parent {
+  width: 100%;
+  display: flex;
+}
+.sidebar {
+  width: 17.5%;
+}
+.subparent {
+  width: 82.5%;
+}
+
+.searchbar {
+  display: flex;
+  margin: auto;
+  width: 95%;
+  padding: 1px 16px 1px 0px;
+  justify-content: space-between;
+  border-radius: 7px;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  margin-top: 165px;
+}
+
+.sec1 {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 86px;
+  flex-wrap: wrap;
+  width: 80%;
+}
+.septrate {
+  display: none;
+}
+
+
+@media (max-width: 500px) {
+  .sec1 {
+    gap: 15px !important;
+    width: 100%;
+  }
+}
+.sec1 > input {
+  color: var(--foundation-grey-g-900, #333);
+  text-align: left;
+  font-size: 14px;
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  border: 0;
+  outline: 0;
+  width: 60%;
+}
+
+.sec2,
+.sec3 {
+  border-radius: 8px;
+  border: 1px solid #2b5ce6;
+  width: 127px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 7px;
+  flex-shrink: 0;
+  cursor: pointer;
+  margin-right: 29px;
+}
+.sec2 > p,
+.sec3 > p {
+  color: #2b5ce6;
+  font-size: 14px;
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+.tableParent {
+  width: 93%;
+  height: 620px;
+  margin: auto;
+  margin-top: 13px;
+  margin-left: 18px;
+}
+.tableParent2 {
+  width: 95%;
+  height: 620px;
+  margin: auto;
+  margin-top: 13px;
+  overflow-x: scroll;
+}
+
+.table {
+  width: 100%;
+}
+.headers {
+  display: flex;
+  align-items: center;
+  align-self: stretch;
+  border-bottom: 1px solid var(--gray-200, #eaecf0);
+  background: var(--foundation-blue-b-10, #fafbfb);
+}
+.headers > td {
+  display: flex;
+  height: 44px;
+  padding: 12px 24px;
+  align-items: center;
+  gap: 12px;
+  align-self: stretch;
+  color: var(--foundation-blue-b-500, #42526d);
+  font-size: 12px;
+  font-family: Inter;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 18px;
+}
+.headers > td:nth-child(1),
+.tablebody > td:nth-child(1) {
+  width: 270px;
+}
+.headers > td:nth-child(2),
+.tablebody > td:nth-child(2) {
+  width: 207px;
+}
+.headers > td:nth-child(3),
+.tablebody > td:nth-child(3) {
+  width: 211px;
+}
+.headers > td:nth-child(4),
+.tablebody > td:nth-child(4) {
+  width: 214px;
+}
+.headers > td:nth-child(5),
+.tablebody > td:nth-child(5) {
+  width: 218px;
+}
+
+.tablebody > td {
+  display: flex;
+  height: 72px;
+  padding: 12px 24px;
+  align-items: center;
+  gap: 12px;
+  align-self: stretch;
+  color: var(--foundation-blue-b-500, #42526d);
+  color: #000;
+  font-size: 12px;
+  font-family: Inter;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 18px;
+}
+
+.tablebody {
+  display: flex;
+  align-items: center;
+  align-self: stretch;
+  border-bottom: 1px solid var(--gray-200, #eaecf0);
+}
+.tablebody > td:nth-child(1) {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 6px;
+}
+.tablebody > td:nth-child(1) > p {
+  color: #2b5ce6;
+  font-size: 12px;
+  font-family: Inter;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 18px;
+}
+.next {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: 29px;
+  margin-right: 31px;
+  margin-bottom: 28px;
+}
+.next > button {
+  width: 108px;
+  height: 30px;
+  flex-shrink: 0;
+  border-radius: 5px;
+  color: #707070;
+  font-size: 14px;
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  background: #fff;
+  border-radius: 5px;
+  border: 1px solid #7e7e7e;
+}
+@media (max-width: 1000px) {
+  .septrate {
+    display: block;
+  }
+  .sec1 {
+    gap: 41px;
+    width: 100%;
+  }
+  .sec2 {
+    display: none !important;
+  }
+  .septrate {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
+}
+
+
+@media (max-width: 1350px) {
+  .sidebar {
+    width: 20%;
+  }
+  .subparent {
+    width: 80%;
+  }
+}
+@media (max-width: 1250px) {
+  .sidebar {
+    width: 25%;
+  }
+  .subparent {
+    width: 75%;
+  }
+}
+@media (max-width: 950px) {
+  .sidebar {
+    width: 30%;
+  }
+  .subparent {
+    width: 70%;
+  }
+}
+@media (max-width: 750px) {
+  .sidebar {
+    width: 0%;
+  }
+  .subparent {
+    width: 100%;
+    margin-top: 40px;
+  }
+  .sec2 {
+    margin-right: 0px;
+  }
+}

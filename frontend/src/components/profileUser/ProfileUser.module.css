@@ -1,0 +1,44 @@
+.parent {
+  display: flex;
+  justify-content: flex-end;
+}
+.parent > img {
+  
+  cursor: pointer;
+  top: 1.44rem;
+}
+
+
+.dropdown {
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  justify-content: center;
+  align-items: flex-start;
+  top: 4rem;
+  right: 0.1rem;
+  width: 136px;
+  height: 76px;
+  flex-shrink: 0;
+  border-radius: 5px;
+  border: 1px solid #e3e3e3;
+  background: #fff;
+  gap: 1rem;
+}
+.dropdown > div {
+  display: flex;
+  gap: 10px;
+  margin-left: 10px;
+}
+.dropdown > div > p {
+  color: #7f7f7f;
+  text-align: center;
+  font-size: 14px;
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  cursor: pointer;
+}
+

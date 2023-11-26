@@ -1,0 +1,415 @@
+.parent {
+  display: flex;
+  width: 100%;
+}
+
+
+.hrInfo {
+  width: 95%;
+  margin: auto;
+  position: relative;
+}
+
+.hrInfo div:nth-child(1) {
+  border-radius: 0.4375rem 0.4375rem 0rem 0rem;
+  background: #db5853;
+  width: 100%;
+  height: 10.4375rem;
+  margin: auto;
+  display: block;
+}
+.hrInfo div:nth-child(2) {
+  border-radius: 0rem 0rem 0.4375rem 0.4375rem;
+  background: #fbfbfb;
+  height: 10.4375rem;
+}
+
+.profile > p:nth-child(2) {
+  color: #db5853;
+  text-align: left;
+  font-size: 2.125rem;
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  margin-top: 9rem;
+  margin-bottom: 0.5rem;
+  margin-left: 1.44rem;
+}
+.sidebar {
+  width: 17.5%;
+}
+.profile {
+  width: 82.5%;
+}
+.hrInfo > div:nth-child(1) {
+  display: flex;
+  padding-left: 0.81rem;
+  padding-top: 0.81rem;
+  gap: 5px;
+}
+
+.hrInfo > div:nth-child(1) > span:nth-child(1) {
+  width: 10px;
+  height: 10px;
+  background-color: #ee6a5f;
+  display: block;
+  border-radius: 0.625rem;
+}
+.hrInfo > div:nth-child(1) > span:nth-child(2) {
+  width: 10px;
+  height: 10px;
+  background-color: #f5be4f;
+  display: block;
+  border-radius: 0.625rem;
+}
+.hrInfo > div:nth-child(1) > span:nth-child(3) {
+  width: 10px;
+  height: 10px;
+  background-color: #62c554;
+  display: block;
+  border-radius: 0.625rem;
+}
+
+@media (max-width: 1350px) {
+  .sidebar {
+    width: 20%;
+  }
+  .profile {
+    width: 80%;
+  }
+}
+@media (max-width: 1250px) {
+  .sidebar {
+    width: 25%;
+  }
+  .profile {
+    width: 75%;
+  }
+}
+@media (max-width: 950px) {
+  .sidebar {
+    width: 30%;
+  }
+  .profile {
+    width: 70%;
+  }
+}
+@media (max-width: 750px) {
+  .sidebar {
+    width: 0% !important;
+  }
+  .profile {
+    width: 100%;
+  }
+}
+.hrInfo > div:nth-child(2) > p:nth-child(1) {
+  color: #3d3d3d;
+  font-size: 1.75rem;
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  margin-left: 17.6rem;
+  padding-top: 3.4rem;
+  margin-bottom: 0;
+}
+.hrInfo > div:nth-child(2) > p:nth-child(2) {
+  color: #545454;
+  font-size: 1.25rem;
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  margin-left: 17.6rem;
+  margin-bottom: 0;
+}
+
+.hrInfo > div:nth-child(3) > img:nth-child(1) {
+  width: 14.1875rem;
+  height: 14.1875rem;
+  border-radius: 50%;
+  position: absolute;
+  top: 3.81rem;
+  left: 2.12rem;
+}
+.hrInfo > div:nth-child(4) {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 2.5rem;
+  background: #fff;
+  position: absolute;
+  top: 14.5rem;
+  left: 13rem;
+  display: flex;
+  justify-content: center;
+  cursor: pointer;
+  align-items: center;
+}
+
+p {
+  margin-bottom: 0;
+}
+
+.card1 {
+  width: 42%;
+  margin-top: 1.19rem;
+  border-radius: 0.4375rem;
+  border: 1px solid #dadada;
+  background: #fbfbfb;
+}
+
+.card1headers {
+  border-bottom: 1px solid #e1e1e1;
+  height: 5.31rem;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.card1headers > div:nth-child(1) {
+  display: flex;
+  margin-left: 1.44rem;
+  padding-top: 0.81rem;
+  gap: 5px;
+}
+.card1headers > div:nth-child(2) > p {
+  color: #000;
+  text-align: center;
+  font-size: 1.5rem;
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  margin-left: 1.44rem;
+  margin-top: 0.5rem;
+}
+
+.card1headers > div:nth-child(1) > span:nth-child(1) {
+  width: 10px;
+  height: 10px;
+  background-color: #ee6a5f;
+  display: block;
+  border-radius: 0.625rem;
+}
+.card1headers > div:nth-child(1) > span:nth-child(2) {
+  width: 10px;
+  height: 10px;
+  background-color: #f5be4f;
+  display: block;
+  border-radius: 0.625rem;
+}
+.card1headers > div:nth-child(1) > span:nth-child(3) {
+  width: 10px;
+  height: 10px;
+  background-color: #62c554;
+  display: block;
+  border-radius: 0.625rem;
+}
+
+.card1body {
+  padding-left: 2.63rem;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 3.5rem;
+  padding-top: 3.06rem;
+  padding-bottom: 2.94rem;
+}
+.card1body > div {
+  display: flex;
+  gap: 0.63rem;
+}
+
+.card1para {
+  color: #000;
+  font-size: 0.9375rem;
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+.card1para2 {
+  color: #797979;
+  font-size: 0.9375rem;
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.card2 {
+  width: 42%;
+  margin-top: 1.19rem;
+  border-radius: 0.4375rem;
+  border: 1px solid #dadada;
+}
+
+.card2headers {
+  border-bottom: 1px solid #e1e1e1;
+  height: 5.31rem;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  background: #fbfbfb;
+}
+.card2headers p:nth-child(1) {
+  color: #000;
+  text-align: center;
+  font-size: 1.5rem;
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  margin-left: 2.12rem;
+}
+.card2headers img:nth-child(2) {
+  width: 14rem;
+  margin-left: 0.87rem;
+  flex-shrink: 0;
+}
+.card2headers p:nth-child(3) {
+  color: #000;
+  text-align: center;
+  font-size: 1.5rem;
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  margin-left: 0.81rem;
+}
+
+.card2body {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+}
+
+.card2body > input {
+  height: 4.4375rem;
+  border-radius: 0.625rem;
+  padding: 0px 0.5rem;
+  border: 0;
+  outline: 0;
+  background: #f6f6f6;
+  width: 80%;
+  display: block;
+  margin: auto;
+  color: #a5a5a5;
+  font-size: 1.125rem;
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+}
+.card2body > input::placeholder {
+  color: #a5a5a5;
+  font-size: 1.125rem;
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+}
+
+.card2body > input:nth-child(1) {
+  margin-top: 1.81rem;
+}
+.card2body > input:nth-child(2) {
+  margin-top: 2.69rem;
+}
+.card2body > button:nth-child(3) {
+  width: 55%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 3.12rem;
+  height: 4.1875rem;
+  border-radius: 0.625rem;
+  background: #ee6a5f;
+  color: #fff;
+  text-align: center;
+  font-size: 1.3125rem;
+  font-family: "Poppins";
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  border: 0;
+  z-index: 2;
+}
+.card2body > button:nth-child(3):hover {
+  background: #fff;
+  color: #ee6a5f;
+  border: 1px solid #ee6a5f;
+  transition: 0.3s;
+}
+
+.cardParent {
+  display: flex;
+  width: 95%;
+  justify-content: space-between;
+  margin: auto;
+  margin-bottom: 1.31rem;
+}
+
+@media (max-width: 1250px) {
+  .card1 {
+    width: 50%;
+  }
+  .card2 {
+    width: 50%;
+  }
+  .cardParent {
+    margin-right: 1rem;
+  }
+}
+@media (max-width: 1150px) {
+  .card1 {
+    width: 99%;
+    margin-top: 9px !important;
+    margin: auto;
+  }
+  .card2 {
+    width: 99%;
+    margin-top: 9px !important;
+    margin: auto;
+    padding-bottom: 1rem;
+  }
+  .cardParent {
+    margin-right: 1rem;
+    flex-direction: column;
+  }
+}
+
+@media (min-width: 1250px) {
+  .card1 {
+    width: 44% !important;
+  }
+  .card2 {
+    width: 44% !important;
+    padding-bottom: 1rem;
+  }
+}
+@media (min-width: 1150px) {
+  .card1 {
+    width: 47%;
+  }
+  .card2 {
+    width: 47%;
+    padding-bottom: 1rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .hrInfo > div:nth-child(2) {
+    flex-direction: column;
+    height: 15.4375rem !important;
+    padding: 2rem;
+    display: flex;
+    justify-content: flex-end;
+  }
+  .hrInfo p {
+    margin-left: 0 !important;
+  }
+  .card2headers img:nth-child(2) {
+    width: 10rem;
+  }
+}

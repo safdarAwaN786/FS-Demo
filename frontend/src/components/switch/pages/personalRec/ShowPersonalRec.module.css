@@ -1,0 +1,345 @@
+.parent {
+  display: flex;
+  width: 100%;
+}
+
+.sidebar {
+  width: 17.5%;
+}
+.subparent {
+  width: 82.5%;
+  margin-top: 102px;
+}
+.headers {
+  display: flex;
+  width: 99%;
+
+  height: 75px;
+  align-items: center;
+  gap: 37px;
+  margin: auto;
+  padding-left: 32px;
+  border-radius: 10px 10px 0px 0px;
+  background: #ee6a5f;
+}
+.spans {
+  display: flex;
+  gap: 5px;
+}
+
+.spans > span {
+  display: block;
+  width: 10px;
+  height: 10px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  background: #62c554;
+}
+.spans > span:nth-child(2) {
+  border-radius: 10px;
+  background: #f5be4f;
+}
+.spans > span:nth-child(1) {
+  border-radius: 10px;
+  background: #ee201c;
+}
+
+.indicator > div {
+  border-radius: 21px;
+  background: #f7f7f7;
+  width: 23px !important;
+  height: 23px !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 99%;
+}
+
+.indicator > div > img {
+  width: 10px;
+  height: 5px;
+}
+.formDivider {
+  width: 99%;
+  margin: auto;
+  display: flex;
+  background: #fafafa;
+  gap: 95px;
+  padding-bottom: 142px;
+}
+.sec1 {
+  width: 40%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  justify-content: flex-start;
+  align-items: flex-start;
+  margin-left: 44px;
+  padding-top: 22px;
+}
+.sec2 {
+  width: 60%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding-top: 22px;
+}
+.heading {
+  color: #fff;
+  font-size: 24px;
+  font-family: "Poppins";
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+}
+.paraind {
+  color: #646464;
+  font-size: 18px;
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.sec1 input,
+.sec2 input {
+  border: 0;
+  outline: 0;
+  border-radius: 10px;
+  background: #fff;
+  width: 100%;
+  color: #000;
+  font-family: Poppins;
+  font-size: 17px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+.sec2 input::placeholder {
+  color: #000;
+  font-family: Poppins;
+  font-size: 17px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+.inputParent {
+  width: 95%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-direction: column;
+}
+.inputParent > div:nth-child(2) {
+  background: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 56px;
+  width: 100%;
+  border-radius: 10px;
+  padding: 15px 26px 15px 15px;
+  background: #fff;
+}
+.inputParentSec2 {
+  width: 85%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-direction: column;
+}
+.inputParentSec2 > div:nth-child(2) {
+  background: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 56px;
+  width: 80%;
+  border-radius: 10px;
+  padding: 15px 26px 15px 15px;
+  background: #fff;
+}
+.textareaParent {
+  width: 95%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-direction: column;
+}
+.textareaParent > div:nth-child(2) {
+  height: 168px !important;
+  background: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 56px;
+  width: 100%;
+  border-radius: 10px;
+  padding: 15px 26px 15px 15px;
+  background: #fff;
+}
+.textareaParent textarea {
+  border: 0;
+  outline: 0;
+  border-radius: 10px;
+  height: 100% !important;
+  background: #fff;
+  width: 100%;
+  color: #000;
+  font-family: Poppins;
+  font-size: 17px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+.textareaParent textarea::placeholder {
+  color: #000;
+  font-family: Poppins;
+  font-size: 17px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+.para > p {
+  color: #4f4f4f;
+  font-size: 18px;
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+.checksParent {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+.checks {
+  height: 74px;
+  width: 95%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: center;
+  border-radius: 10px;
+  padding: 0px 12px;
+  background: #fff;
+}
+.checks > div {
+  justify-content: flex-start;
+  gap: 1rem;
+  flex: 1;
+}
+
+@media (max-width: 950px) {
+  .checks {
+    height: auto;
+  }
+}
+
+.bg {
+  background-color: #fafafa !important;
+}
+
+.btn {
+  width: 99%;
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 55px;
+  background: #fafafa;
+  padding-bottom: 14px;
+  margin-bottom: 15px;
+  border-radius: 0px 0px 15px 15px;
+  background: #fafafa;
+}
+.btn > button {
+  width: 156px;
+  height: 58px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  background: #ee6a5f;
+  color: #fff;
+  font-size: 17px;
+  font-family: Poppins;
+  border: none;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+}
+.btn > button:hover {
+  color: #ee6a5f;
+  background: #fff;
+  border: 1px solid #ee6a5f;
+}
+
+.term {
+  width: 95%;
+  height: 74px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  background: #fff;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 24px 34px;
+}
+.termtextarea {
+  width: 95%;
+  height: 222px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  background: #fff;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: 24px 34px;
+}
+
+.term > p,
+.termtextarea > p {
+  color: #646464;
+  font-family: Poppins;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+}
+@media (max-width: 1350px) {
+  .sidebar {
+    width: 20%;
+  }
+  .subparent {
+    width: 80%;
+  }
+}
+@media (max-width: 1250px) {
+  .sidebar {
+    width: 25%;
+  }
+  .subparent {
+    width: 75%;
+  }
+}
+@media (max-width: 950px) {
+  .sidebar {
+    width: 30%;
+  }
+  .subparent {
+    width: 70%;
+  }
+}
+@media (max-width: 750px) {
+  .sidebar {
+    width: 0%;
+  }
+  .subparent {
+    width: 100%;
+    margin-top: 40px;
+  }
+  .sec2 {
+    margin-right: 0px;
+  }
+}

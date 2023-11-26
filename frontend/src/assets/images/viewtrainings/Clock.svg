@@ -1,0 +1,13 @@
+<svg width="35" height="35" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Circle Clock" clip-path="url(#clip0_32_9685)">
+<g id="circle-clock--clock-loading-measure-time-circle">
+<path id="Vector" d="M17.5 33.75C21.8098 33.75 25.943 32.038 28.9905 28.9905C32.038 25.943 33.75 21.8098 33.75 17.5C33.75 13.1902 32.038 9.05698 28.9905 6.00951C25.943 2.96205 21.8098 1.25 17.5 1.25C13.1902 1.25 9.05698 2.96205 6.00951 6.00951C2.96205 9.05698 1.25 13.1902 1.25 17.5C1.25 21.8098 2.96205 25.943 6.00951 28.9905C9.05698 32.038 13.1902 33.75 17.5 33.75Z" stroke="#C1C1C1" stroke-width="1.71429" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector_2" d="M17.5 11.25V17.5L23.85 24.9" stroke="#C1C1C1" stroke-width="1.71429" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+</g>
+<defs>
+<clipPath id="clip0_32_9685">
+<rect width="35" height="35" fill="white"/>
+</clipPath>
+</defs>
+</svg>

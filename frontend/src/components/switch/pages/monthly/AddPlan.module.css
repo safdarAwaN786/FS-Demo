@@ -1,0 +1,243 @@
+.parent {
+  display: flex;
+  width: 100%;
+}
+
+.sidebar {
+  width: 17.5%;
+}
+.subparent {
+  width: 82.5%;
+  margin-top: 102px;
+}
+.headers {
+  display: flex;
+  width: 85%;
+
+  height: 75px;
+  align-items: center;
+  gap: 37px;
+  margin: auto;
+  padding-left: 32px;
+  border-radius: 10px 10px 0px 0px;
+  background: #ee6a5f;
+}
+.spans {
+  display: flex;
+  gap: 5px;
+}
+select {
+  border: 0;
+  outline: 0;
+}
+.spans > span {
+  display: block;
+  width: 10px;
+  height: 10px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  background: #62c554;
+}
+.spans > span:nth-child(2) {
+  border-radius: 10px;
+  background: #f5be4f;
+}
+.spans > span:nth-child(1) {
+  border-radius: 10px;
+  background: #ee201c;
+}
+
+.indicator > div {
+  border-radius: 21px;
+  background: #f7f7f7;
+  width: 23px !important;
+  height: 23px !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 80%;
+  cursor: pointer;
+}
+
+.indicator > div > img {
+  width: 10px;
+  height: 5px;
+}
+.formDivider {
+  width: 85%;
+  margin: auto;
+  display: flex;
+  background: #fafafa;
+}
+.sec1,
+.sec2 {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 59px;
+  justify-content: flex-start;
+  align-items: center;
+  padding-top: 45px;
+}
+.heading {
+  color: #fff;
+  font-size: 24px;
+  font-family: "Poppins";
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+}
+.paraind {
+  color: #646464;
+  font-size: 18px;
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.sec1 input,
+.sec2 input {
+  border: 0;
+  outline: 0;
+  border-radius: 10px;
+  background: #fff;
+  width: 100%;
+  color: #d2d2d2;
+  font-size: 18px;
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+.sec2 input::placeholder {
+  color: #d2d2d2;
+  font-size: 18px;
+  font-family: "Poppins";
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+.inputParent {
+  width: 77%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-direction: column;
+}
+.inputParent > div:nth-child(2) {
+  background: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 56px;
+  width: 100%;
+  border-radius: 10px;
+  padding: 15px 26px 15px 15px;
+  background: #fff;
+}
+.checkinputParent {
+  width: 77%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-direction: column;
+}
+.checkinputParent > div {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+.dropdown {
+  padding: 15px 0 15px 0px;
+}
+.dropdown div:nth-child(2) {
+  align-items: flex-end;
+  border-radius: 5px 5px 0px 0px;
+  background: #fff;
+  padding: 0px 15px 0px 11px;
+}
+.dropdown div:nth-child(2) img {
+  cursor: pointer;
+}
+
+.para > p {
+  color: #4f4f4f;
+  font-size: 18px;
+  font-family: "Poppins";
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+.bg {
+  background-color: #fafafa !important;
+}
+.btn {
+  width: 85%;
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 55px;
+  background: #fafafa;
+  padding-bottom: 9px;
+  margin-bottom: 29px;
+  border-radius: 0px 0px 15px 15px;
+  background: #fafafa;
+}
+.btn > button {
+  width: 156px;
+  height: 58px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  background: #ee6a5f;
+  color: #fff;
+  font-size: 17px;
+  font-family: Poppins;
+  border: none;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+}
+.btn > button:hover {
+  color: #ee6a5f;
+  background: #fff;
+  border: 1px solid #ee6a5f;
+}
+@media (max-width: 1350px) {
+  .sidebar {
+    width: 20%;
+  }
+  .subparent {
+    width: 80%;
+  }
+}
+@media (max-width: 1250px) {
+  .sidebar {
+    width: 25%;
+  }
+  .subparent {
+    width: 75%;
+  }
+}
+@media (max-width: 950px) {
+  .sidebar {
+    width: 30%;
+  }
+  .subparent {
+    width: 70%;
+  }
+}
+@media (max-width: 750px) {
+  .sidebar {
+    width: 0%;
+  }
+  .subparent {
+    width: 100%;
+    margin-top: 40px;
+  }
+  .sec2 {
+    margin-right: 0px;
+  }
+}

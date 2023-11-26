@@ -1,0 +1,267 @@
+.parent {
+  width: 100%;
+  display: flex;
+}
+.sidebar {
+  width: 17.5%;
+}
+
+.form {
+  width: 635px;
+  margin: auto;
+  margin-top: 169px;
+  border-radius: 0px 0px 10px 10px;
+  background: #fafafa !important;
+  padding-bottom: 97px;
+  margin-bottom: 37px;
+}
+
+.headers {
+  display: flex;
+  width: 100%;
+
+  height: 68px;
+  align-items: center;
+  gap: 37px;
+  margin: auto;
+  padding-left: 32px;
+  border-radius: 10px 10px 0px 0px;
+  background: #ee6a5f;
+}
+.spans {
+  display: flex;
+  gap: 5px;
+}
+
+.spans > span {
+  display: block;
+  width: 10px;
+  height: 10px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  background: #62c554;
+}
+.spans > span:nth-child(2) {
+  border-radius: 10px;
+  background: #f5be4f;
+}
+.spans > span:nth-child(1) {
+  border-radius: 10px;
+  background: #ee201c;
+}
+.para {
+  color: #363636;
+  font-size: 20px;
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: 500;
+  width: 80% !important;
+  display: flex;
+}
+
+.sec1 {
+  width: 100%;
+  background: #fafafa !important;
+  width: 67%;
+  padding-top: 22px;
+  margin: auto;
+}
+.sec1 div div {
+  border-radius: 10px;
+  background: #fff;
+  margin-bottom: 26px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+.sec1 div p {
+  color: #898989;
+  font-size: 17px;
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+.sec1 img {
+  width: 20px;
+  height: 20px;
+  margin: 21px;
+}
+.sec1 input {
+  padding: 18px 22px;
+  border: 0;
+  outline: 0;
+  border-radius: 10px;
+  width: 80%;
+}
+.fortextarea {
+  border: 0;
+  padding: 10px 0px;
+  outline: 0;
+  border-radius: 10px;
+  background: #fff;
+  height: 194px !important;
+  width: 80%;
+}
+
+.btns {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  padding-right: 0 !important;
+  gap: 1rem;
+}
+
+.btns button:nth-child(1) {
+  width: 246px;
+  height: 58px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  border: 1px solid #ee6a5f;
+  color: #ee6a5f;
+  font-size: 17px;
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  background: #fff;
+}
+.btns button:nth-child(2) {
+  width: 156px;
+  height: 58px;
+  flex-shrink: 0;
+  color: #fff;
+  font-size: 17px;
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  border-radius: 10px;
+  background: #ee6a5f;
+  border: 0;
+}
+.btns > button:nth-child(2):hover {
+  color: #ee6a5f;
+  transition: 0.3s;
+  border: 1px solid #ee6a5f;
+  background: #fff;
+}
+.btns > button:nth-child(1):hover {
+  transition: 0.3s;
+  background: #ee6a5f;
+  color: #fff;
+}
+
+@media (max-width: 1350px) {
+  .sidebar {
+    width: 20%;
+  }
+  .form {
+    width: 80%;
+    width: 560px;
+  }
+}
+@media (max-width: 1250px) {
+  .sidebar {
+    width: 25%;
+  }
+  .form {
+    width: 65%;
+  }
+}
+@media (max-width: 950px) {
+  .sidebar {
+    width: 30%;
+  }
+  .form {
+    width: 65%;
+  }
+}
+@media (max-width: 750px) {
+  .sidebar {
+    width: 0%;
+  }
+  .form {
+    width: 90%;
+    margin-top: 12rem;
+  }
+  .sec1 {
+    width: 90%;
+  }
+}
+
+.alertparent {
+  width: 100%;
+  height: 100vh;
+  position: fixed;
+  top: 0%;
+  left: 0%;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(217, 217, 217, 0.7);
+}
+.alert {
+  width: 438px;
+  height: 224px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  background: #fff;
+}
+.msg {
+  margin-top: 25px;
+  margin-left: 37px;
+  color: #000;
+  font-family: Poppins;
+  font-size: 17px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+.alertbtns {
+  margin-top: 84px;
+  margin-left: 190px;
+}
+
+.btn1 {
+  width: 95px;
+  height: 38px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  background: #ee6a5f;
+  color: #fff;
+  font-family: Poppins;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  border: 0;
+}
+
+.btn1:hover {
+  color: #ee6a5f;
+  background: #fff;
+  border: 1px solid #ee6a5f;
+}
+.btn2:hover {
+  background: #ee6a5f;
+  color: #fff;
+}
+.btn2 {
+  width: 95px;
+  height: 38px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  color: #ee6a5f;
+  background: #fff;
+  border: 1px solid #ee6a5f;
+  font-family: Poppins;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  margin-left: 28px;
+  line-height: normal;
+}

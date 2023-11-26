@@ -1,0 +1,15 @@
+<svg width="35" height="35" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Browser Lock" clip-path="url(#clip0_17_9139)">
+<g id="browser-lock--secure-password-window-browser-lock-security-login-encryption">
+<path id="Vector 2567" d="M11.875 26.25V21.25C11.875 20.9185 12.0067 20.6005 12.2411 20.3661C12.4755 20.1317 12.7935 20 13.125 20H21.875C22.2065 20 22.5245 20.1317 22.7589 20.3661C22.9933 20.6005 23.125 20.9185 23.125 21.25V26.25C23.125 26.5815 22.9933 26.8995 22.7589 27.1339C22.5245 27.3683 22.2065 27.5 21.875 27.5H13.125C12.7935 27.5 12.4755 27.3683 12.2411 27.1339C12.0067 26.8995 11.875 26.5815 11.875 26.25Z" stroke="#797979" stroke-width="1.71429" stroke-linejoin="round"/>
+<path id="Vector 2568" d="M13.75 20V17.5C13.75 16.5054 14.1451 15.5516 14.8483 14.8483C15.5516 14.1451 16.5054 13.75 17.5 13.75C18.4946 13.75 19.4484 14.1451 20.1517 14.8483C20.8549 15.5516 21.25 16.5054 21.25 17.5V20" stroke="#797979" stroke-width="1.71429" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector" d="M1.25 8.73511H33.75" stroke="#797979" stroke-width="1.71429" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector_2" d="M31.25 1.25H3.75C3.08696 1.25 2.45107 1.51339 1.98223 1.98223C1.51339 2.45107 1.25 3.08696 1.25 3.75V31.25C1.25 31.913 1.51339 32.5489 1.98223 33.0178C2.45107 33.4866 3.08696 33.75 3.75 33.75H31.25C31.913 33.75 32.5489 33.4866 33.0178 33.0178C33.4866 32.5489 33.75 31.913 33.75 31.25V3.75C33.75 3.08696 33.4866 2.45107 33.0178 1.98223C32.5489 1.51339 31.913 1.25 31.25 1.25Z" stroke="#797979" stroke-width="1.71429" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+</g>
+<defs>
+<clipPath id="clip0_17_9139">
+<rect width="35" height="35" fill="white"/>
+</clipPath>
+</defs>
+</svg>
