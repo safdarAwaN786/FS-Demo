@@ -61,7 +61,7 @@ export default function LoginPage() {
             }).catch((error) => {
                 console.log(error);
                 dispatch(setLoading(false));
-                if (error.response?.status === 400 || error.response?.status === 403) {
+                if (error.response?.status === 400 || error.response?.status === 403 || error.response?.state === 401) {
                     Swal.fire({
                         icon: 'error',
                         title: 'Oops...',
@@ -74,6 +74,13 @@ export default function LoginPage() {
                         icon: 'error',
                         title: 'Oops...',
                         text: 'Sorry, Try Again Please !',
+                        confirmButtonText: 'OK.'
+                    })
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Wrong Credentials !',
                         confirmButtonText: 'OK.'
                     })
                 }
