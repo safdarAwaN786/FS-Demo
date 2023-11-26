@@ -14,10 +14,10 @@ const trainerRouter = require('./src/routers/HR/TrainerRouter')
 const personalRecuisitionRouter = require('./src/routers/HR/PersonalRecuisitionRouter')
 const supplierRouter = require('./src/routers/HR/SupplierRouter')
 
-const machineryRouter = require('./src/routers/Tech/MachineryRouter')
-const equipmentRouter = require('./src/routers/Tech/EquipmentRouter')
+const machineryRouter = require('./src/routers/Tech/machineryRouter')
+const equipmentRouter = require('./src/routers/Tech/equipmentRouter')
 const calibrationRouter = require('./src/routers/Tech/CalibrationRecordRouter')
-const maintainceRouter = require('./src/routers/Tech/PreventiveMaintainanceRouter')
+const maintainceRouter = require('./src/routers/Tech/preventiveMaintainanceRouter')
 const workrequestRouter = require('./src/routers/Tech/MaintenanceWorkRequestRouter');
 
 const listOfDocumentRouter = require('./src/routers/Admin/ListOfDocumentsRouter');
