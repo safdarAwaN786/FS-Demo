@@ -110,7 +110,7 @@ function AddAuditingYearlyPlan() {
     }, [yearlyPlanData])
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get("/readProcess", { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readProcess`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             setAllDataArr(response.data.data)
             setProcesses(response.data.data.slice(startIndex, endIndex));
             dispatch(setLoading(false))
@@ -147,7 +147,7 @@ function AddAuditingYearlyPlan() {
     const makeRequest = () => {
         if (dataToSend.Year !== '' && dataToSend.Selected.lenght !== 0) {
             dispatch(setLoading(true))
-            axios.post("/addYearlyAuditPlan", dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addYearlyAuditPlan`, dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
                 setDataToSend(null);
                 dispatch(setLoading(false))
                 Swal.fire({

@@ -42,7 +42,7 @@ function TrainedEmployees() {
     const [trainedEmployees, setTrainedEmployees] = useState(null);
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get("/readMonthlyPlan", { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readMonthlyPlan`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             const plannedTrainingsList = response.data.data;
             const foundTraining = plannedTrainingsList.find((training) => training._id === idToWatch);
             if (foundTraining) {

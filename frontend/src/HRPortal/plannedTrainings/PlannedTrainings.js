@@ -21,7 +21,7 @@ function PlannedTrainings() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get("/readMonthlyPlan", { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readMonthlyPlan`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             const allTrainings = response.data.data;
             setAllDataArr(allTrainings.filter((training) => training.Assigned !== true));
             setPlannedTrainings(allTrainings.filter((training) => training.Assigned !== true).slice(startIndex, endIndex));

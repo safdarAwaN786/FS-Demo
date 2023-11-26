@@ -23,7 +23,7 @@ function UpdateProductDetails() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`/get-department/${user?.Company?._id}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
             SetDepartmentsToShow(res.data.data);
             if (product) {
                 dispatch(setLoading(false))
@@ -42,7 +42,7 @@ function UpdateProductDetails() {
     console.log(idToWatch);
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`/get-product/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-product/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
             console.log(res.data);
             setDataToSend(res.data.data);
             setProduct(res.data.data.ProductDetails);
@@ -80,7 +80,7 @@ function UpdateProductDetails() {
     const makeRequest = () => {
 
         dispatch(setLoading(true))
-        axios.patch(`/update-product/${idToWatch}`, dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+        axios.patch(`${process.env.REACT_APP_BACKEND_URL}/update-product/${idToWatch}`, dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
             console.log("request made !");
             setDataToSend(null);
             dispatch(setLoading(false))

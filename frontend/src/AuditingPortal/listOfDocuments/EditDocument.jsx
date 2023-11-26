@@ -25,7 +25,7 @@ function EditDocument() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`/get-documentById/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-documentById/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             setDocumentData(response.data.data);
             dispatch(setLoading(false))
         }).catch(err => {
@@ -43,7 +43,7 @@ function EditDocument() {
     const makeRequest = () => {
         if (documentData.EditorData) {
             dispatch(setLoading(true))
-            axios.put("/updateDocument", documentData, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+            axios.put(`${process.env.REACT_APP_BACKEND_URL}/updateDocument`, documentData, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
                 console.log("request made !");
                 setDocumentData(null);
                 dispatch(setLoading(false))

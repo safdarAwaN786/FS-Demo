@@ -22,7 +22,7 @@ function AddParticipant() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`/get-department/${user?.Company?._id}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
             setDepartmentsToShow(res.data.data);
             dispatch(setLoading(false));
         }).catch(err => {
@@ -39,7 +39,7 @@ function AddParticipant() {
         console.log(dataToSend);
         if (dataToSend) {
             dispatch(setLoading(true))
-            axios.post("/create-participants", dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/create-participants`, dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
                 dispatch(setLoading(false))
                 setDataToSend(null);
                 Swal.fire({

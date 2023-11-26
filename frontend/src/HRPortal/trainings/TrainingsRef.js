@@ -26,7 +26,7 @@ function TrainingsRef() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get("/readTraining", { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readTraining`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             dispatch(setLoading(false))
             setAllDataArr(response.data.data)
             setTrainingsList(response.data.data.slice(startIndex, endIndex));
@@ -78,7 +78,7 @@ function TrainingsRef() {
     const handleDownloadImage = async (imageURL) => {
         try {
             dispatch(setLoading(true));
-            const response = await axios.get('/download-image', {
+            const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/download-image`, {
                 params: {
                     url: imageURL,
                 },

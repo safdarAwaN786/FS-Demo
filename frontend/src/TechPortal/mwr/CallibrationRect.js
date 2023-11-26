@@ -27,7 +27,7 @@ function CallibrationRect() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`/readCalibrationByEquipmentId/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readCalibrationByEquipmentId/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
             if (res.data.data) {
                 const dataArr = res.data.data;
                 setCallibrationsToShow(dataArr.filter((data) => data.dateType === dateType && data.callibrationType === callibrationType))
@@ -44,7 +44,7 @@ function CallibrationRect() {
             })
         })
 
-        axios.get(`/readEquipment/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readEquipment/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
             setEquipmentToShow(res.data.data);
             if(callibrationsToShow){
                 dispatch(setLoading(false))

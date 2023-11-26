@@ -43,7 +43,7 @@ function HRProfile() {
             if (validationMessage === 'Password is valid!') {
                 const userToken = Cookies.get('userToken');
                 dispatch(setLoading(true))
-                axios.put('/change-password', { newPassword: newPassword }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+                axios.put(`${process.env.REACT_APP_BACKEND_URL}/change-password`, { newPassword: newPassword }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
                     dispatch(setLoading(false));
                     setNewPassword(null);
                     setConfirmPassword(null);

@@ -215,7 +215,7 @@ function AddMachine() {
                                 <button onClick={() => {
                                     setSubmitAlert(false)
                                     dispatch(setLoading(true))
-                                    axios.post('/addMachinery', formData, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+                                    axios.post(`${process.env.REACT_APP_BACKEND_URL}/addMachinery`, formData, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
                                         dispatch(setLoading(false))
                                         setFormData(null)
                                         Swal.fire({

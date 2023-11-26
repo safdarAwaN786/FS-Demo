@@ -22,7 +22,7 @@ function YearlyPlan() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get("/readYearlyPlan", { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readYearlyPlan`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             setAllDataArr(response.data.data);
             setYearlyPlans(response.data.data.slice(startIndex, endIndex))
             dispatch(setLoading(false))

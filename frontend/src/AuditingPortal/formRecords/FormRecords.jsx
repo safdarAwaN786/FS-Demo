@@ -27,7 +27,7 @@ function FormRecords() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get("/get-all-forms", { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-forms`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             const approvedForms = response.data.forms.filter((obj) => obj.Status === 'Approved')
             setAllDataArr(approvedForms)
             setFormsList(approvedForms.slice(startIndex, endIndex));

@@ -29,7 +29,7 @@ function Participants() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get("/get-all-participants", { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-participants`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             setAllDataArr(response.data.data)
             setParticipantsList(response.data.data.slice(startIndex, endIndex));
             dispatch(setLoading(false))

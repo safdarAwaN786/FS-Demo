@@ -118,7 +118,7 @@ function AddAuditor() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`/get-department/${user?.Company?._id}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
             SetDepartmentsToShow(res.data.data);
             dispatch(setLoading(false))
         }).catch(err => {
@@ -145,7 +145,7 @@ function AddAuditor() {
     const makeRequest = () => {
         if (auditorData !== null) {
             dispatch(setLoading(true))
-            axios.post("/addAuditor", auditorData, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addAuditor`, auditorData, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
                 setAuditorData(null);
                 dispatch(setLoading(false))
                 Swal.fire({

@@ -53,7 +53,7 @@ function ActionOnCorrective() {
 
     useEffect(() => {
        dispatch(setLoading(true))
-        axios.get(`/readReportById/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readReportById/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             console.log(response.data.data);
             setReportData(response.data.data)
             setAuditData(response.data.data.ConductAudit);
@@ -99,7 +99,7 @@ function ActionOnCorrective() {
         console.log(finalFormData)
         if (finalFormData) {
             dispatch(setLoading(true))
-            axios.post("/addCorrectiveAction", finalFormData, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addCorrectiveAction`, finalFormData, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
                 console.log("request made !");
                 dispatch(setLoading(false))
                 Swal.fire({

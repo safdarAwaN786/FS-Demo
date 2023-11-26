@@ -24,7 +24,7 @@ function ProcessRecords() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get("/readMonthlyAuditPlan", { headers: { Authorization: `Bearer ${userToken}` } }).then((Response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readMonthlyAuditPlan`, { headers: { Authorization: `Bearer ${userToken}` } }).then((Response) => {
             setAllDataArr(Response.data.data);
             setPlanProcesses(Response.data.data.slice(startIndex, endIndex));
             dispatch(setLoading(false))

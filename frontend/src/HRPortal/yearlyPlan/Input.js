@@ -108,7 +108,7 @@ function Input() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get("/readTraining", { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readTraining`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             setAllDataArr(response.data.data)
             setTrainings(response.data.data.slice(startIndex, endIndex));
             dispatch(setLoading(false))
@@ -147,7 +147,7 @@ function Input() {
     const makeRequest = () => {
         if (dataToSend.Year !== '' && dataToSend.Month[0].MonthName !== '' && dataToSend.Month[0].Trainings.lenght !== 0) {
             dispatch(setLoading(true))
-            axios.post("/addYearlyPlan", dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addYearlyPlan`, dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
                 dispatch(setLoading(false))
                 setDataToSend(null);
                 Swal.fire({

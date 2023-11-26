@@ -96,7 +96,7 @@ function AddEmployee() {
 
     useEffect(() => {
         dispatch(setLoading(true));
-        axios.get(`/get-department/${user?.Company?._id}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
             dispatch(setLoading(false))
             setDepartmentsToShow(res.data.data);
         }).catch(err => {
@@ -123,7 +123,7 @@ function AddEmployee() {
     const makeRequest = () => {
         if (employeeData && !error) {
             dispatch(setLoading(true))
-            axios.post("/addEmployee", employeeData, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addEmployee`, employeeData, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
                 dispatch(setLoading(false))
                 if (response.status === 201) {
                     Swal.fire({

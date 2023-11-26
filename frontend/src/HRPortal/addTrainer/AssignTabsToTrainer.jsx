@@ -129,7 +129,7 @@ function AssignTabsToTrainer() {
 
         if (dataToSend.Tabs.length > 0) {
             dispatch(setLoading(true))
-            axios.patch(`/assign-tabs/${idToWatch}`, dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+            axios.patch(`${process.env.REACT_APP_BACKEND_URL}/assign-tabs/${idToWatch}`, dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
                 dispatch(setLoading(false))
                 setDataToSend(null);
                 Swal.fire({

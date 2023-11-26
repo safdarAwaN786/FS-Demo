@@ -27,7 +27,7 @@ function AuditingChecked() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`/readYearlyAuditPlanById/${planId}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readYearlyAuditPlanById/${planId}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             setPlanToShow(response.data.data);
             setPlanProcesses(response.data.data.Selected);
             dispatch(setLoading(false))

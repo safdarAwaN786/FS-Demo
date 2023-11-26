@@ -28,7 +28,7 @@ function ViewDepartments() {
     useEffect(() => {
         const userToken = Cookies.get('userToken');
         dispatch(setLoading(true));
-        axios.get(`/get-department/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             dispatch(setLoading(false));
             setAllDataArr(response.data.data)
             setDepartments(response.data.data.slice(startIndex, endIndex));

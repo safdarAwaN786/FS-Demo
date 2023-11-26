@@ -68,7 +68,7 @@ function CallibrationRect2() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`/readEquipment/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readEquipment/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
             setEquipment(res.data.data);
             dispatch(setLoading(false))
         }).catch(err => {
@@ -338,7 +338,7 @@ function CallibrationRect2() {
                                     setSubmitAlert(false)
                                     const formData = convertStateToFormData(formValues);
                                     dispatch(setLoading(true))
-                                    axios.post(`/addCalibration/${idToWatch}`, formData, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+                                    axios.post(`${process.env.REACT_APP_BACKEND_URL}/addCalibration/${idToWatch}`, formData, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
                                         dispatch(setLoading(false))
                                         Swal.fire({
                                             title: 'Success',

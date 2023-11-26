@@ -24,7 +24,7 @@ function SendMRM() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get('/get-all-notifications', { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-notifications`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
             {
                 setNotifications(res.data.data);
                 dispatch(setLoading(false))
@@ -76,7 +76,7 @@ function SendMRM() {
 
         if (dataToSend) {
             dispatch(setLoading(true))
-            axios.post("/create-mrm", dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/create-mrm`, dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
                 console.log("request made !");
                 setDataToSend(null);
                 dispatch(setLoading(false))

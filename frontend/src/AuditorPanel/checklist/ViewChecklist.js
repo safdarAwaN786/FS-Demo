@@ -26,7 +26,7 @@ function ViewChecklist() {
     const idToWatch = useSelector(state => state.idToProcess);
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`/getChecklistById/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/getChecklistById/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             setDataToSend(response.data.data);
             setQuestions(response.data.data.ChecklistQuestions)
             dispatch(setLoading(false))
@@ -79,7 +79,7 @@ function ViewChecklist() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`/get-department/${user?.Company?._id}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
             SetDepartmentsToShow(res.data.data);
             if(questions){
                 dispatch(setLoading(false))
@@ -130,7 +130,7 @@ function ViewChecklist() {
     const makeRequest = () => {
         if (dataToSend) {
             console.log(dataToSend);
-            axios.post("/addChecklist", dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addChecklist`, dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
                 console.log("request made !");
                 setDataToSend(null);
 

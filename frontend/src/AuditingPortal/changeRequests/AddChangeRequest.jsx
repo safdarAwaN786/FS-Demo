@@ -8,7 +8,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { setLoading } from '../../redux/slices/loading';
 
-
 function AddChangeRequest() {
     
     const [dataToSend, setDataToSend] = useState(null);
@@ -28,7 +27,7 @@ function AddChangeRequest() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get("/get-documents", { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-documents`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             setDocuments(response.data.data);
             if(departmentsToShow){
                 dispatch(setLoading(false))
@@ -50,7 +49,7 @@ function AddChangeRequest() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`/get-department/${user?.Company?._id}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
             SetDepartmentsToShow(res.data.data);
             if (documents) {
                 dispatch(setLoading(false))
@@ -69,7 +68,7 @@ function AddChangeRequest() {
     const makeRequest = () => {
         if (dataToSend) {
             dispatch(setLoading(true))
-            axios.post("/addChangeRequest", dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addChangeRequest`, dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
                 console.log("request made !");
                 setDataToSend(null);
                 dispatch(setLoading(false))

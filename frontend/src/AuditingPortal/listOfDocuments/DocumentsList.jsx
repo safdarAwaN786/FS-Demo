@@ -34,7 +34,7 @@ function DocumentsList() {
 
     const refreshData = () => {
         dispatch(setLoading(true))
-        axios.get("/get-documents", { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-documents`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             setAllDataArr(response.data.data)
             setDocumentsList(response.data.data.slice(startIndex, endIndex));
             dispatch(setLoading(false))
@@ -51,7 +51,7 @@ function DocumentsList() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get("/get-documents", { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-documents`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             setAllDataArr(response.data.data)
             setDocumentsList(response.data.data.slice(startIndex, endIndex));
             dispatch(setLoading(false))
@@ -348,7 +348,7 @@ function DocumentsList() {
                             <div className={style.alertbtns}>
                                 <button onClick={() => {
                                     dispatch(setLoading(true))
-                                    axios.patch('/approve-document', { id: idForAction }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/approve-document`, { id: idForAction }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
                                         dispatch(setLoading(false))
                                         refreshData();
                                         Swal.fire({
@@ -390,7 +390,7 @@ function DocumentsList() {
                                 <button onClick={() => {
                                     setReview(false);
                                     dispatch(setLoading(true))
-                                    axios.patch('/review-document', { documentId: idForAction }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/review-document`, { documentId: idForAction }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
                                         dispatch(setLoading(false))
                                         refreshData();
                                         Swal.fire({
@@ -431,7 +431,7 @@ function DocumentsList() {
                                 e.preventDefault();
                                 setDisApprove(false);
                                 dispatch(setLoading(true))
-                                axios.patch('/disapprove-document', { documentId: idForAction, reason: reason }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/disapprove-document`, { documentId: idForAction, reason: reason }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
                                     dispatch(setLoading(false))
                                     Swal.fire({
                                         title: 'Success',
@@ -473,7 +473,7 @@ function DocumentsList() {
                                 e.preventDefault();
                                 setReject(false);
                                 dispatch(setLoading(true))
-                                axios.patch('/reject-document', { documentId: idForAction, reason: reason }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/reject-document`, { documentId: idForAction, reason: reason }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
                                     dispatch(setLoading(false))
                                     Swal.fire({
                                         title: 'Success',

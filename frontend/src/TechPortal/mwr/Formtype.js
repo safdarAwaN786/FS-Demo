@@ -26,7 +26,7 @@ function Formtype() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`/readMachinery/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readMachinery/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
             setMachine(res.data.data)
             dispatch(setLoading(false))
         }).catch(err => {
@@ -76,7 +76,7 @@ function Formtype() {
         console.log(formData);
         if (formData) {
             dispatch(setLoading(true))
-            axios.post(`/addPreventiveMaintaince/${idToWatch}`, formData, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addPreventiveMaintaince/${idToWatch}`, formData, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
                 dispatch(setLoading(false))
                 Swal.fire({
                     title: 'Success',

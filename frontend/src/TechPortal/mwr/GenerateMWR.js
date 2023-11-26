@@ -39,7 +39,7 @@ function GenerateMWR() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get("/readAllMachinery", { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readAllMachinery`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
             setMachineries(res.data.data);
             dispatch(setLoading(false))
         }).catch(err => {
@@ -121,7 +121,7 @@ function GenerateMWR() {
     const makeRequest = () => {
         const formData = convertStateToFormData(formValues);
         dispatch(setLoading(true))
-        axios.post('/createWorkRequest', formData, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.post(`${process.env.REACT_APP_BACKEND_URL}/createWorkRequest`, formData, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
             dispatch(setLoading(false))
             Swal.fire({
                 title: 'Success',

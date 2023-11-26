@@ -36,7 +36,7 @@ function ProcessDetails() {
 
     const refreshData = () => {
         dispatch(setLoading(true))
-        axios.get("/get-all-processes", { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-processes`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             setAllDataArr(response.data.data)
             setProcessesList(response.data.data.slice(startIndex, endIndex));
             dispatch(setLoading(false))
@@ -52,7 +52,7 @@ function ProcessDetails() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get("/get-all-processes", { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-processes`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             setAllDataArr(response.data.data)
             setProcessesList(response.data.data.slice(startIndex, endIndex));
             dispatch(setLoading(false))
@@ -304,7 +304,7 @@ function ProcessDetails() {
                                 <button onClick={() => {
                                     setApprove(false)
                                     dispatch(setLoading(true))
-                                    axios.patch('/approve-process', { id: idForAction }).then(() => {
+                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/approve-process`, { id: idForAction }).then(() => {
                                         dispatch(setLoading(false))
                                         Swal.fire({
                                             title: 'Success',
@@ -340,7 +340,7 @@ function ProcessDetails() {
                                 e.preventDefault();
                                 setReject(false);
                                 dispatch(setLoading(true))
-                                axios.patch('/disapprove-process', { id: idForAction, Reason: reason }).then(() => {
+                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/disapprove-process`, { id: idForAction, Reason: reason }).then(() => {
                                     dispatch(setLoading(false))
                                     Swal.fire({
                                         title: 'Success',

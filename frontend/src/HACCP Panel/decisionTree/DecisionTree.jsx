@@ -37,7 +37,7 @@ function DecisionTree() {
 
     const refreshData = () => {
         dispatch(setLoading(true))
-        axios.get("/get-all-decision-trees", { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-decision-trees`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             setAllDataArr(response.data.data)
             setDecisionTreesList(response.data.data.slice(startIndex, endIndex));
             dispatch(setLoading(false))
@@ -55,7 +55,7 @@ function DecisionTree() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get("/get-all-decision-trees", { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-decision-trees`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             console.log(response.data);
             setAllDataArr(response.data.data)
             setDecisionTreesList(response.data.data.slice(startIndex, endIndex));
@@ -301,7 +301,7 @@ function DecisionTree() {
                                 e.preventDefault();
                                 setReject(false);
                                 dispatch(setLoading(true))
-                                axios.patch('/disapprove-decision-tree', { id: idForAction, Reason: reason }).then(() => {
+                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/disapprove-decision-tree`, { id: idForAction, Reason: reason }).then(() => {
                                     dispatch(setLoading(false))
                                     Swal.fire({
                                         title: 'Success',
@@ -349,7 +349,7 @@ function DecisionTree() {
                                 <button onClick={() => {
                                     setApprove(false)
                                     dispatch(setLoading(true))
-                                    axios.patch('/approve-decision-tree', { id: idForAction }).then(() => {
+                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/approve-decision-tree`, { id: idForAction }).then(() => {
                                         dispatch(setLoading(false))
                                         Swal.fire({
                                             title: 'Success',

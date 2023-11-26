@@ -26,7 +26,7 @@ function EditChecklist() {
     const idToWatch = useSelector(state => state.idToProcess);
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`/getChecklistById/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/getChecklistById/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             setDataToSend(response.data.data);
             setQuestions(response.data.data.ChecklistQuestions);
             if (departmentsToShow) {
@@ -81,7 +81,7 @@ function EditChecklist() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`/get-department/${user?.Company?._id}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
             SetDepartmentsToShow(res.data.data);
             if (questions) {
                 dispatch(setLoading(false))
@@ -132,7 +132,7 @@ function EditChecklist() {
     const makeRequest = () => {
         if (dataToSend) {
             dispatch(setLoading(true))
-            axios.put("/updateChecklist", dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+            axios.put(`${process.env.REACT_APP_BACKEND_URL}/updateChecklist`, dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
                 console.log("request made !");
                 setDataToSend(null);
                 setQuestions([])

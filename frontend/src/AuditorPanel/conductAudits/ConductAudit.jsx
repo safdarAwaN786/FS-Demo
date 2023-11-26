@@ -25,7 +25,7 @@ function ConductAudits() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get("/getChecklists", { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/getChecklists`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             const approvedChecklists = response.data.data.filter((obj) => obj.Status === 'Approved')
             setAllDataArr(approvedChecklists)
             setChecklists(approvedChecklists.slice(startIndex, endIndex));

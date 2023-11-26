@@ -29,7 +29,7 @@ function AddDecisionTree() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get("/get-all-conduct-haccp", { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-conduct-haccp`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             setAllConductHaccps(response.data.data);
             if(departmentsToShow){
                 dispatch(setLoading(false))
@@ -48,7 +48,7 @@ function AddDecisionTree() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`/get-department/${user?.Company?._id}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
             SetDepartmentsToShow(res.data.data);
             if(allConductHaccps){
                 dispatch(setLoading(false))
@@ -75,7 +75,7 @@ function AddDecisionTree() {
     const idToWatch = useSelector(state => state.idToProcess);
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`/get-decision-tree/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-decision-tree/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
             setDataToSend(res.data.data);
             if(departmentsToShow && allConductHaccps){
                 dispatch(setLoading(false))
@@ -114,7 +114,7 @@ function AddDecisionTree() {
     const makeRequest = () => {
         if (dataToSend.Decisions.length > 0) {
             dispatch(setLoading(true))
-            axios.patch(`/update-decision-tree/${idToWatch}`, dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+            axios.patch(`${process.env.REACT_APP_BACKEND_URL}/update-decision-tree/${idToWatch}`, dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
                 console.log("request made !");
                 setDataToSend(null);
                 dispatch(setLoading(false))

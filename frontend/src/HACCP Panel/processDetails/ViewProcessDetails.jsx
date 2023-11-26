@@ -28,7 +28,7 @@ function ViewProcessDetails() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`/get-process/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-process/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             console.log(response.data);
             setProcessListData(response.data.data)
             setProcesses(response.data.data?.ProcessDetails.slice(startIndex, endIndex));

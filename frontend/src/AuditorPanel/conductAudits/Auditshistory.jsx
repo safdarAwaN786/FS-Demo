@@ -27,7 +27,7 @@ function AuditsHistory() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`/get-conduct-audits-by-ChecklistId/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-conduct-audits-by-ChecklistId/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
             console.log(res.data);
             setChecklistResults(res.data.data);
             setChecklistData(res.data.data[0]?.Checklist);

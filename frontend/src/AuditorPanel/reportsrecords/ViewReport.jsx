@@ -49,7 +49,7 @@ function ViewReport() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`/readReportByAuditId/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readReportByAuditId/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             console.log(response.data.data);
             setReportData(response.data.data)
             setAuditData(response.data.data.ConductAudit)

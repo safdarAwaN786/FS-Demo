@@ -33,7 +33,7 @@ function AddPlanAuditing() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`/get-department/${user?.Company?._id}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
             SetDepartmentsToShow(res.data.data);
             if (yearlyPlans) {
                 dispatch(setLoading(false))
@@ -67,7 +67,7 @@ function AddPlanAuditing() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get("/readYearlyAuditPlan", { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readYearlyAuditPlan`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             console.log(response.data);
             setYearlyPlans(response.data.data);
             if (departmentsToShow) {
@@ -82,7 +82,7 @@ function AddPlanAuditing() {
             })
         })
 
-        axios.get("/readAuditor", { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readAuditor`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             console.log(response.data);
             const auditors = response.data.data;
 
@@ -109,7 +109,7 @@ function AddPlanAuditing() {
     const makeRequest = () => {
         if (planData) {
             dispatch(setLoading(true))
-            axios.post("/addMonthlyAuditingPlan", planData, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addMonthlyAuditingPlan`, planData, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
                 console.log("request made !");
                 setPlanData(null);
                 setDataToSend(null)

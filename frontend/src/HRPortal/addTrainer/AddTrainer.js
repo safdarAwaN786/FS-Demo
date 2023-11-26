@@ -112,7 +112,7 @@ function AddTrainer() {
     const makeRequest = () => {
         if (trainerData !== null) {
             dispatch(setLoading(true))
-            axios.post("/addTrainer", trainerData, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addTrainer`, trainerData, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
                 setTrainerData(null);
                 dispatch(setLoading(false))
                 Swal.fire({

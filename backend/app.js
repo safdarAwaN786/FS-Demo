@@ -5,7 +5,6 @@ const mime = require('mime-types');
 const app = express();
 require('./src/db/connectdb')
 const path = require('path')
-const session = require('express-session');
 const employeeRouter = require('./src/routers/HR/EmployeeRouter')
 const monthlyPlanRouter = require('./src/routers/HR/MonthlyTrainingPlanRouter')
 const yearlyPlanRouter = require('./src/routers/HR/YearlyTrainingPlanRouter')
@@ -13,7 +12,6 @@ const trainingRouter = require('./src/routers/HR/TrainingRouter')
 const trainerRouter = require('./src/routers/HR/TrainerRouter')
 const personalRecuisitionRouter = require('./src/routers/HR/PersonalRecuisitionRouter')
 const supplierRouter = require('./src/routers/HR/SupplierRouter')
-
 const machineryRouter = require('./src/routers/Tech/MachineryRouter')
 const equipmentRouter = require('./src/routers/Tech/EquipmentRouter')
 const calibrationRouter = require('./src/routers/Tech/CalibrationRecordRouter')
@@ -178,4 +176,3 @@ app.get('/download-image', async (req, res) => {
 app.listen(port, () => {
     console.log(`This is the ${port} active port! Wait for DB Connection...`);
 });
-

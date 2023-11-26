@@ -26,7 +26,7 @@ function DecisionTreeMembers() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`/get-decision-tree/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-decision-tree/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             setDecisionTree(response.data.data);
             console.log(response.data.data);
             setMembers(response.data.data?.ConductHaccp.Members?.slice(startIndex, endIndex));
@@ -79,7 +79,7 @@ function DecisionTreeMembers() {
     const handleDownloadImage = async (imageURL) => {
         try {
             dispatch(setLoading(true));
-            const response = await axios.get('/download-image', {
+            const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/download-image`, {
                 params: {
                     url: imageURL,
                 },

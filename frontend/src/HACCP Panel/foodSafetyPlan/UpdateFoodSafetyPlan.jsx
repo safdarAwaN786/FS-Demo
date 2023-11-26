@@ -24,7 +24,7 @@ function UpdateFoodSafetyPlan() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`/get-department/${user?.Company?._id}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
             SetDepartmentsToShow(res.data.data);
         }).catch(err => {
             dispatch(setLoading(false));
@@ -56,7 +56,7 @@ function UpdateFoodSafetyPlan() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`/get-food-safety/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-food-safety/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
             setDataToSend(res.data.data);
             if(treesToShow && departmentsToShow){
                 dispatch(setLoading(false))
@@ -103,7 +103,7 @@ function UpdateFoodSafetyPlan() {
     const makeRequest = () => {
         if (dataToSend.Plans?.length > 0) {
 
-            axios.patch(`/update-food-safety/${idToWatch}`, dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+            axios.patch(`${process.env.REACT_APP_BACKEND_URL}/update-food-safety/${idToWatch}`, dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
                 console.log("request made !");
                 setDataToSend(null);
 

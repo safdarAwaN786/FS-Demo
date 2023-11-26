@@ -26,7 +26,7 @@ function PersonalRec() {
     const makeRequest = () => {
         if (personFormData) {
             dispatch(setLoading(true))
-            axios.post("/addPersonalRecuisition", personFormData, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addPersonalRecuisition`, personFormData, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
                 dispatch(setLoading(false))
                 dispatch(updatePersonFormData(null));
                 Swal.fire({

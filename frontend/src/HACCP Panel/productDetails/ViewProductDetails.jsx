@@ -22,7 +22,7 @@ function ViewProductDetails() {
     const idToWatch = useSelector(state => state.idToProcess);
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`/get-product/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-product/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
             setDataToSend(res.data.data);
             setProduct(res.data.data.ProductDetails);
             dispatch(setLoading(false))
@@ -54,7 +54,7 @@ function ViewProductDetails() {
     const makeRequest = () => {
 
         
-        axios.post("/create-product", dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+        axios.post(`${process.env.REACT_APP_BACKEND_URL}/create-product`, dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
             console.log("request made !");
             setDataToSend(null);
 

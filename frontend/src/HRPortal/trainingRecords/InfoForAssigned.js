@@ -35,7 +35,7 @@ function InfoForAssigned() {
     console.log(assignedTrainingID);
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get("/readMonthlyPlan", { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readMonthlyPlan`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             const assignedTrainingsList = response.data.data;
             setAssignedTrainingData(assignedTrainingsList.find((training) => training._id === idToWatch));
             dispatch(setLoading(false))
@@ -64,7 +64,7 @@ function InfoForAssigned() {
     const handleDownloadImage = async (imageURL) => {
         try {
             dispatch(setLoading(true))
-            const response = await axios.get('/download-image', {
+            const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/download-image`, {
                 params: {
                     url: imageURL,
 

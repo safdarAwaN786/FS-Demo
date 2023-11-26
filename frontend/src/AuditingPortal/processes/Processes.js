@@ -29,7 +29,7 @@ function Processes() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get("/readProcess", { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readProcess`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             setAllDataArr(response.data.data)
             console.log(response.data);
             setProcessesList(response.data.data.slice(startIndex, endIndex));

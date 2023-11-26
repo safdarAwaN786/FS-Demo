@@ -46,7 +46,7 @@ function AddProcess() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`/get-department/${user?.Company?._id}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
             SetDepartmentsToShow(res.data.data);
             dispatch(setLoading(false))
         }).catch(err => {
@@ -126,7 +126,7 @@ function AddProcess() {
     const makeRequest = () => {
         if (processInfo) {
             dispatch(setLoading(true))
-            axios.post("/addProcess", processInfo, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addProcess`, processInfo, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
                 setProcessInfo(null);
                 dispatch(setLoading(false))
                 Swal.fire({

@@ -20,7 +20,7 @@ function MaintananceRect() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`/getWorkRequestsByMachineId/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/getWorkRequestsByMachineId/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
             setRequests(res.data.data);
             dispatch(setLoading(false))
         }).catch(err => {

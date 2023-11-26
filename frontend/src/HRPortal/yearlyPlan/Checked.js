@@ -25,7 +25,7 @@ function Checked() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get("/readYearlyPlan", { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readYearlyPlan`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             {
                 const yearlyPlansList = response.data.data;
                 const foundObj = yearlyPlansList.find((plan) => plan._id === idToWatch).Month.find((month) => month.MonthName === monthName);

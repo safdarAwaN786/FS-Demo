@@ -25,7 +25,7 @@ function AddPlan() {
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`/get-department/${user?.Company?._id}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
             setDepartmentsToShow(res.data.data);
             if(trainings && yearlyPlans && trainers){
                 dispatch(setLoading(false))
@@ -90,7 +90,7 @@ function AddPlan() {
 
     useEffect(() => {
         dispatch(setLoading(true));
-        axios.get("/readTraining", { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readTraining`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             setTrainings(response.data.data);
             if(departmentsToShow && yearlyPlans && trainers){
                 dispatch(setLoading(false))
@@ -103,7 +103,7 @@ function AddPlan() {
                 text : 'Something went wrong, Try Again!'
             })
         });
-        axios.get("/readYearlyPlan", { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readYearlyPlan`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             setYearlyPlans(response.data.data);
             if(departmentsToShow && trainings && trainers){
                 dispatch(setLoading(false))
@@ -117,7 +117,7 @@ function AddPlan() {
             })
         })
 
-        axios.get("/readTrainer", { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readTrainer`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             setTrainers(response.data.data);
             if(departmentsToShow && yearlyPlans && trainings){
                 dispatch(setLoading(false))
@@ -136,7 +136,7 @@ function AddPlan() {
     const makeRequest = () => {
         if (planData) {
             dispatch(setLoading(true));
-            axios.post("/addMonthlyPlan", planData, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addMonthlyPlan`, planData, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
                 dispatch(setLoading(false));
                 setPlanData(null);
                 setDataToSend(null);

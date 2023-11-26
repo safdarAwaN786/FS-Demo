@@ -31,7 +31,7 @@ function ResultsHistory() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`/get-responses-by-formId/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-responses-by-formId/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
             console.log(res.data);
             setFormResults(res.data.data);
             setFormData(res.data.data[0]?.Form);
@@ -47,7 +47,7 @@ function ResultsHistory() {
     }, [])
     const refreshData = () => {
         dispatch(setLoading(true))
-        axios.get(`/get-responses-by-formId/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-responses-by-formId/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
             setFormResults(res.data);
             setFormData(res.data[0].Form);
             dispatch(setLoading(false))
@@ -194,7 +194,7 @@ function ResultsHistory() {
                                 e.preventDefault();
                                 setCommentBox(false);
                                 dispatch(setLoading(true))
-                                axios.patch('/addComment', { resultId: idForAction, comment: comment }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/addComment`, { resultId: idForAction, comment: comment }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
                                     dispatch(setLoading(false))
                                     Swal.fire({
                                         title: 'Success',

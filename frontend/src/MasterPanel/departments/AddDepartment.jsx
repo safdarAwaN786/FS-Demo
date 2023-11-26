@@ -23,7 +23,7 @@ function AddDepartments() {
 
     useEffect(() => {
         dispatch(setLoading(true));
-        axios.get('/get-all-companies', { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-companies`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
             setCompanies(res.data.data);
         }).catch(err => {
             dispatch(setLoading(false));
@@ -81,7 +81,7 @@ function AddDepartments() {
     const makeRequest = () => {
         if (dataToSend.Departments.length !== 0) {
             dispatch(setLoading(true));
-            axios.post("/create-department", dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/create-department`, dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
                 dispatch(setLoading(false));
                 setDataToSend(null);
                 Swal.fire({

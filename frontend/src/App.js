@@ -59,7 +59,6 @@ import { setLoading } from "./redux/slices/loading";
 
 
 
-
 function App() {
 
   const dispatch = useDispatch();
@@ -78,7 +77,7 @@ function App() {
     if (userToken) {
       dispatch(setLoading(true));
       console.log(userToken);
-      axios.get('/get-user', { headers: { Authorization: `Bearer ${userToken}` } })
+      axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-user`, { headers: { Authorization: `Bearer ${userToken}` } })
         .then(response => {
           dispatch(logInUser(response.data.data));
           dispatch(setLoading(false))
@@ -102,7 +101,7 @@ function App() {
     if (userToken) {
       console.log(userToken);
       dispatch(setLoading(true));
-      axios.get('/get-user', { headers: { Authorization: `Bearer ${userToken}` } })
+      axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-user`, { headers: { Authorization: `Bearer ${userToken}` } })
         .then(response => {
           console.log(response.data);
           dispatch(logInUser(response.data.data));
@@ -123,7 +122,6 @@ function App() {
 
 
   const [personFormData, setPersonFormData] = useState({});
-  const [UserWholeData, setUserWholeData] = useState(null);
   return (
     < >
       <Routes>

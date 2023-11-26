@@ -36,7 +36,7 @@ function FoodSafetyPlan() {
 
     const refreshData = () => {
         dispatch(setLoading(true))
-        axios.get("/get-all-food-safety", { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-food-safety`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             setAllDataArr(response.data.data)
             setSafetyPlansList(response.data.data.slice(startIndex, endIndex));
             dispatch(setLoading(false))
@@ -54,7 +54,7 @@ function FoodSafetyPlan() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get("/get-all-food-safety", { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-food-safety`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             setAllDataArr(response.data.data);
             console.log(response.data.data);
             setSafetyPlansList(response.data.data.slice(startIndex, endIndex));
@@ -309,7 +309,7 @@ function FoodSafetyPlan() {
                                 e.preventDefault();
                                 setReject(false);
                                 dispatch(setLoading(true))
-                                axios.patch('/disapprove-food-safety', { id: idForAction, Reason: reason }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/disapprove-food-safety`, { id: idForAction, Reason: reason }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
                                     dispatch(setLoading(false))
                                     Swal.fire({
                                         title: 'Success',
@@ -354,7 +354,7 @@ function FoodSafetyPlan() {
                                 <button onClick={() => {
                                     setApprove(false)
                                     dispatch(setLoading(true))
-                                    axios.patch('/approve-food-safety', { id: idForAction }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/approve-food-safety`, { id: idForAction }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
                                         dispatch(setLoading(false))
                                         Swal.fire({
                                             title: 'Success',

@@ -31,7 +31,7 @@ function AddUsers() {
 
     useEffect(() => {
         dispatch(setLoading(true));
-        axios.get("/get-all-departments", { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-departments`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             // Those Companies which have some departments
             setAllDepartments(response.data.data);
             // Create a Set to keep track of unique property values
@@ -170,7 +170,7 @@ function AddUsers() {
 
             if (dataToSend.Users.filter((obj) => obj.validationMessage !== 'Password is valid!').length === 0) {
                 dispatch(setLoading(true));
-                axios.post("/create-user", dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+                axios.post(`${process.env.REACT_APP_BACKEND_URL}/create-user`, dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
                     dispatch(setLoading(false));
                     setDataToSend(null);
                     if (res.data.status === 201) {

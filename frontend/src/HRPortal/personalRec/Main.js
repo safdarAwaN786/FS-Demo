@@ -25,7 +25,7 @@ function Main() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get("/readPersonalRecuisition", { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readPersonalRecuisition`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             dispatch(setLoading(false))
             setAllDataArr(response.data.data);
             setPersonReqList(response.data.data.slice(startIndex, endIndex));
@@ -40,7 +40,7 @@ function Main() {
     }, [])
 
     const statusUpdated = () => {
-        axios.get("/readPersonalRecuisition", { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readPersonalRecuisition`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             dispatch(setLoading(false))
             setAllDataArr(response.data.data);
             setPersonReqList(response.data.data.slice(startIndex, endIndex));
@@ -235,7 +235,7 @@ function Main() {
                         <div class={style.alert}>
                             <form onSubmit={() => {
                                 dispatch(setLoading(true))
-                                axios.patch("/updatePersonStatus", dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/updatePersonStatus`, dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
                                     statusUpdated();
                                     Swal.fire({
                                         title: 'Success',
@@ -275,7 +275,7 @@ function Main() {
                             <div className={style.alertbtns}>
                                 <button onClick={() => {
                                     dispatch(setLoading(true))
-                                    axios.patch("/updatePersonStatus", dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/updatePersonStatus`, dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
                                         statusUpdated()
                                         Swal.fire({
                                             title: 'Success',

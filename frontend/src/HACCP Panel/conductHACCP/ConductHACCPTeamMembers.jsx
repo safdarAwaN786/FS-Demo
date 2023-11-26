@@ -28,7 +28,7 @@ function ConductHACCPTeamMembers() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`/get-conduct-haccp/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-conduct-haccp/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             setConductedHACCP(response.data.data);
             setMembers(response.data.data?.Members.slice(startIndex, endIndex));
             dispatch(setLoading(false))
@@ -80,7 +80,7 @@ function ConductHACCPTeamMembers() {
     const handleDownloadImage = async (imageURL) => {
         try {
             dispatch(setLoading(true));
-            const response = await axios.get('/download-image', {
+            const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/download-image`, {
                 params: {
                     url: imageURL,
                 },

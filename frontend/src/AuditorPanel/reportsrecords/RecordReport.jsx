@@ -50,7 +50,7 @@ function RecordReport() {
 
         if (selectedDate) {
             dispatch(setLoading(true))
-            axios.post("/addReport", { ConductAudit: idToWatch, TargetDate: selectedDate }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addReport`, { ConductAudit: idToWatch, TargetDate: selectedDate }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
                 console.log("request made !");
                 dispatch(setLoading(false))
                 Swal.fire({
@@ -86,7 +86,7 @@ function RecordReport() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`/get-conduct-audit-by-auditId/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-conduct-audit-by-auditId/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             console.log(response.data.data);
             setAuditData(response.data.data)
             setAnswers(response.data.data.Answers);

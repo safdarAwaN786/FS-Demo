@@ -33,7 +33,7 @@ function EmployeeProfile() {
 
     useEffect(() => {
         dispatch(setLoading(true));
-        axios.get("/readEmployee", { headers: { Authorization: `Bearer ${userToken}` } }).then((Response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readEmployee`, { headers: { Authorization: `Bearer ${userToken}` } }).then((Response) => {
             const employeesList = Response.data.data;
             const foundEmployee = employeesList.find((employee) => employee._id === idToWatch)
             if (plannedTrainings) {
@@ -62,7 +62,7 @@ function EmployeeProfile() {
 
     useEffect(() => {
         dispatch(setLoading(true));
-        axios.get("/readMonthlyPlan", { headers: { Authorization: `Bearer ${userToken}` } }).then((Response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readMonthlyPlan`, { headers: { Authorization: `Bearer ${userToken}` } }).then((Response) => {
             const trainings = Response.data.data;
             setPlannedTrainings(trainings);
             if (employeeData) {   
@@ -81,7 +81,7 @@ function EmployeeProfile() {
     const handleDownloadImage = async (imageURL) => {
         try {
             dispatch(setLoading(true));
-            const response = await axios.get('/download-image', {
+            const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/download-image`, {
                 params: {
                     url: imageURL,
 

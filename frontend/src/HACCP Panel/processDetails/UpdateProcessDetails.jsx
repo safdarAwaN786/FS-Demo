@@ -22,7 +22,7 @@ function UpdateProcessDetails() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`/get-department/${user?.Company?._id}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
             SetDepartmentsToShow(res.data.data);
             if(processes){
                 dispatch(setLoading(false))
@@ -39,7 +39,7 @@ function UpdateProcessDetails() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`/get-process/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-process/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
             setDataToSend(res.data.data);
             setProcesses(res.data.data?.ProcessDetails);
             if(departmentsToShow){
@@ -98,7 +98,7 @@ function UpdateProcessDetails() {
     const makeRequest = () => {
         if (dataToSend.ProcessDetails.length !== 0) {
             dispatch(setLoading(true))
-            axios.patch(`/update-process/${idToWatch}`, dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+            axios.patch(`${process.env.REACT_APP_BACKEND_URL}/update-process/${idToWatch}`, dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
                 console.log("request made !");
                 setDataToSend(null);
 

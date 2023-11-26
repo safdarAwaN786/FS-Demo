@@ -31,7 +31,7 @@ function MainForTrainerPortal() {
 
     const makeRequest = () => {
         dispatch(setLoading(true))
-        axios.patch("/update-training-status", dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.patch(`${process.env.REACT_APP_BACKEND_URL}/update-training-status`, dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
            dispatch(setLoading(false))
             setDataToSend(null);
             Swal.fire({
@@ -172,7 +172,7 @@ function MainForTrainerPortal() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get("/readMonthlyPlan", { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readMonthlyPlan`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             const plannedTrainingsList = response.data.data;
             setTrainingToShow(plannedTrainingsList.find((training) => training._id === idToWatch));
             setTrainingEmployees(plannedTrainingsList.find((training) => training._id === idToWatch)?.Employee.slice(startIndex, endIndex))

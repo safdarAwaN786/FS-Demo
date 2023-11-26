@@ -46,7 +46,7 @@ function UpdateHACCPTeam() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`/get-department/${user?.Company?._id}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
             SetDepartmentsToShow(res.data.data);
             if (members) {
                 dispatch(setLoading(false))
@@ -63,7 +63,7 @@ function UpdateHACCPTeam() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`/get-haccp-team/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-haccp-team/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
             setDataToSend(res.data.data);
             setMembers(res.data.data.TeamMembers);
             if (departmentsToShow) {
@@ -167,7 +167,7 @@ function UpdateHACCPTeam() {
     const makeRequest = () => {
         if (finalFormData && dataToSend.TeamMembers.length !== 0) {
             dispatch(setLoading(true))
-            axios.patch(`/update-haccp-team/${idToWatch}`, finalFormData, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+            axios.patch(`${process.env.REACT_APP_BACKEND_URL}/update-haccp-team/${idToWatch}`, finalFormData, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
                 console.log("request made !");
                 dispatch(setLoading(false))
                 Swal.fire({
@@ -203,7 +203,7 @@ function UpdateHACCPTeam() {
     const handleDownloadImage = async (imageURL) => {
         try {
             dispatch(setLoading(true));
-            const response = await axios.get('/download-image', {
+            const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/download-image`, {
                 params: {
                     url: imageURL,
                 },

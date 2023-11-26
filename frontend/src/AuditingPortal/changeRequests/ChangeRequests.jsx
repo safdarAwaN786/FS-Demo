@@ -10,7 +10,7 @@ import { changeId } from '../../redux/slices/idToProcessSlice'
 import Cookies from 'js-cookie'
 import { useDispatch, useSelector } from 'react-redux'
 import { setLoading } from '../../redux/slices/loading'
-
+import {backend_url} from '../../LoginPage'
 function ChangeRequests() {
 
     const [requestsList, setRequestsList] = useState(null);
@@ -33,7 +33,7 @@ function ChangeRequests() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get("/readChangeRequest", { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readChangeRequest`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             setAllDataArr(response.data.data)
             setRequestsList(response.data.data.slice(startIndex, endIndex));
             dispatch(setLoading(true))
@@ -49,7 +49,7 @@ function ChangeRequests() {
 
     const refreshData = () => {
         dispatch(setLoading(true))
-        axios.get("/readChangeRequest", { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readChangeRequest`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             setAllDataArr(response.data.data)
             setRequestsList(response.data.data.slice(startIndex, endIndex));
             dispatch(setLoading(false))
@@ -317,7 +317,7 @@ function ChangeRequests() {
                             <div className={style.alertbtns}>
                                 <button onClick={() => {
                                     dispatch(setLoading(true))
-                                    axios.patch('/approve-ChangeRequest', { documentId: idForAction }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/approve-ChangeRequest`, { documentId: idForAction }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
                                         dispatch(setLoading(false))
                                         refreshData();
                                         Swal.fire({
@@ -355,7 +355,7 @@ function ChangeRequests() {
                                 <button onClick={() => {
                                     setReview(false);
                                     dispatch(setLoading(false))
-                                    axios.patch('/review-ChangeRequest', { documentId: idForAction }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/review-ChangeRequest`, { documentId: idForAction }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
                                         dispatch(setLoading(false))
                                         refreshData();
                                         Swal.fire({
@@ -392,7 +392,7 @@ function ChangeRequests() {
                                 e.preventDefault();
                                 setDisApprove(false);
                                 dispatch(setLoading(true))
-                                axios.patch('/disapprove-ChangeRequest', { documentId: idForAction, reason: reason }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/disapprove-ChangeRequest`, { documentId: idForAction, reason: reason }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
                                     dispatch(setLoading(false))
                                     Swal.fire({
                                         title: 'Success',
@@ -434,7 +434,7 @@ function ChangeRequests() {
                                 e.preventDefault();
                                 setReject(false);
                                 dispatch(setLoading(true))
-                                axios.patch('/reject-ChangeRequest', { documentId: idForAction, reason: reason }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/reject-ChangeRequest`, { documentId: idForAction, reason: reason }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
                                     dispatch(setLoading(false))
                                     Swal.fire({
                                         title: 'Success',

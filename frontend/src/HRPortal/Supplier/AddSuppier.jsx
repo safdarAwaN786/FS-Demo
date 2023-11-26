@@ -23,7 +23,7 @@ function AddSupplier() {
 
         if (dataToSend) {
             dispatch(setLoading(true))
-            axios.post("/create-supplier", dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/create-supplier`, dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
                 dispatch(setLoading(false))
                 setDataToSend(null);
                 Swal.fire({

@@ -39,7 +39,7 @@ function HACCPTeamMembers() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`/get-haccp-team/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-haccp-team/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             setTeamData(response.data.data)
             console.log(response.data.data);
             setMembersList(response.data.data?.TeamMembers.slice(startIndex, endIndex));
@@ -110,7 +110,7 @@ function HACCPTeamMembers() {
     const handleDownloadImage = async (imageURL) => {
         try {
             dispatch(setLoading(true));
-            const response = await axios.get('/download-image', {
+            const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/download-image`, {
                 params: {
                     url: imageURL,
                 },

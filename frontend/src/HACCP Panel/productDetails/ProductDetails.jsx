@@ -36,7 +36,7 @@ function ProductDetails() {
 
     const refreshData = () => {
         dispatch(setLoading(true))
-        axios.get("/get-all-products", { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-products`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             setAllDataArr(response.data.data)
             setProductsList(response.data.data.slice(startIndex, endIndex));
             dispatch(setLoading(false))
@@ -52,7 +52,7 @@ function ProductDetails() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get("/get-all-products", { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-products`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             console.log(response.data);
             setAllDataArr(response.data.data)
             setProductsList(response.data.data.slice(startIndex, endIndex));
@@ -313,7 +313,7 @@ function ProductDetails() {
                                 <button onClick={() => {
                                     setApprove(false)
                                     dispatch(setLoading(true))
-                                    axios.patch('/approve-product', { id: idForAction }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/approve-product`, { id: idForAction }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
                                         dispatch(setLoading(false))
                                         Swal.fire({
                                             title: 'Success',
@@ -350,7 +350,7 @@ function ProductDetails() {
                                 e.preventDefault();
                                 setReject(false);
                                 dispatch(setLoading(true))
-                                axios.patch('/disapprove-product', { id: idForAction, Reason: reason }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/disapprove-product`, { id: idForAction, Reason: reason }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
                                     dispatch(setLoading(false))
                                     Swal.fire({
                                         title: 'Success',

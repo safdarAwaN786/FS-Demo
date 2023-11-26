@@ -28,7 +28,7 @@ function Employees() {
     const [allDataArr, setAllDataArr] = useState(null);
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get("/readEmployee", { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readEmployee`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             dispatch(setLoading(false))
             setAllDataArr(response.data.data);
             setEmployeesList(response.data.data.slice(startIndex, endIndex))
@@ -62,7 +62,7 @@ function Employees() {
     const handleDownloadImage = async (imageURL) => {
         try {
             dispatch(setLoading(true))
-            const response = await axios.get('/download-image', {
+            const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/download-image`, {
                 params: {
                     url: imageURL,
 

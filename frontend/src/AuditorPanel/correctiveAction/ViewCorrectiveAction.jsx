@@ -49,7 +49,7 @@ function ViewCorrectiveAction() {
     useEffect(() => {
         console.log(idToWatch);
         dispatch(setLoading(true))
-        axios.get(`/readCorrectiveActionByReportId/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readCorrectiveActionByReportId/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             console.log(response.data.data);
             setActionData(response.data.data)
             setCorrectiveAnswers(response.data.data.Answers);

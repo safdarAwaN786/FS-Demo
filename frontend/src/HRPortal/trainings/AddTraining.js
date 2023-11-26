@@ -41,7 +41,7 @@ function AddTraining() {
     const makeRequest = () => {
         if (trainingData) {
             dispatch(setLoading(true))
-            axios.post("/addTraining", trainingData, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addTraining`, trainingData, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
                 dispatch(setLoading(false))
                 setTrainingData(null);
                 Swal.fire({

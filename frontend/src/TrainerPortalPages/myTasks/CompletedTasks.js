@@ -21,7 +21,7 @@ function CompletedTasks() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get("/readMonthlyPlan", { headers: { Authorization: `Bearer ${userToken}` } }).then((Response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readMonthlyPlan`, { headers: { Authorization: `Bearer ${userToken}` } }).then((Response) => {
             const plannedTrainingsList = Response.data.data;
             const assignedTrainingsArr = plannedTrainingsList.filter((training) => training.Assigned === true && training.TrainingResultStatus === 'Conducted');
             setAllDataArr(assignedTrainingsArr)

@@ -29,7 +29,7 @@ function MaintananceRect2() {
     const handleDownloadImage = async (imageURL) => {
         try {
             dispatch(setLoading(true));
-            const response = await axios.get('/download-image', {
+            const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/download-image`, {
                 params: {
                     url: imageURL,
                 },
@@ -64,7 +64,7 @@ function MaintananceRect2() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`/readMachinery/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readMachinery/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
             setMachine(res.data.data)
             if(maintenances){
                 dispatch(setLoading(false))
@@ -77,7 +77,7 @@ function MaintananceRect2() {
                 text : 'Something went wrong, Try Again!'
             })
         });
-        axios.get(`/getMaintenanceByMachineId/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/getMaintenanceByMachineId/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
             const allMaintenances = res.data.data;
             setMaintenances(allMaintenances.filter((maintenance) => maintenance.dateType === dateType));
             if(machine){

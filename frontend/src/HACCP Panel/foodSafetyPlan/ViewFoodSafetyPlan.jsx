@@ -26,7 +26,7 @@ function ViewFoodSafetyPlan() {
 
     useEffect(()=>{
         dispatch(setLoading(true))
-        axios.get(`/get-food-safety/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res)=>{
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-food-safety/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res)=>{
             setDataToSend(res.data.data);
             dispatch(setLoading(false))
         }).catch(err => {
@@ -69,7 +69,7 @@ function ViewFoodSafetyPlan() {
     const makeRequest = () => {
         if (dataToSend.Plans?.length > 0) {
             dispatch(setLoading(true))
-            axios.post("/create-food-safety", dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/create-food-safety`, dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
                 console.log("request made !");
                 setDataToSend(null);
                 dispatch(setLoading(false))

@@ -23,7 +23,7 @@ function YearlyPlanAuditing() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get("/readYearlyAuditPlan", { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readYearlyAuditPlan`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             console.log(response.data);
             setAllDataArr(response.data.data);
             setYearlyPlans(response.data.data.slice(startIndex, endIndex));

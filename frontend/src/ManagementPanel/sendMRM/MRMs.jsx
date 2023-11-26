@@ -28,7 +28,7 @@ function MRMs() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get("/get-all-mrms", { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-mrms`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             setAllDataArr(response.data.data)
             setMRMsList(response.data.data.slice(startIndex, endIndex));
             dispatch(setLoading(false))

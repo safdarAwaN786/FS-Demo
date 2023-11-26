@@ -27,7 +27,7 @@ function UsersDepartments() {
     useEffect(() => {
         const userToken = Cookies.get('userToken');
         dispatch(setLoading(true));
-        axios.get(`/get-userByCompany/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-userByCompany/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             // Create a Set to keep track of unique property values
             const uniqueCompanyObjects = new Set();
             // Use reduce to build the new array with distinct property values

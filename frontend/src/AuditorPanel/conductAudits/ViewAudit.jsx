@@ -49,7 +49,7 @@ function ViewAudit() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`/get-conduct-audit-by-auditId/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-conduct-audit-by-auditId/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             console.log(response.data.data);
             setChecklistData(response.data.data.Checklist);
             setAuditData(response.data.data);
@@ -81,7 +81,7 @@ function ViewAudit() {
         console.log(finalFormData)
         if (finalFormData) {
             dispatch(setLoading(true))
-            axios.post("/addConductAudit", finalFormData, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addConductAudit`, finalFormData, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
                 console.log("request made !");
                 dispatch(setLoading(false))
                 Swal.fire({

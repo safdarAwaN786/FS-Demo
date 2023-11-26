@@ -46,7 +46,7 @@ function ViewForm() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`/get-form-by-id/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res)=>{
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-form-by-id/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res)=>{
             setDataToSend(res.data.form);
             setQuestions(res.data.form.questions);
             dispatch(setLoading(false))

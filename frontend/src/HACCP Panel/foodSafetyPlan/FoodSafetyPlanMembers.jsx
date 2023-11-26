@@ -27,7 +27,7 @@ function FoodSafetyPlanMembers() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`/get-food-safety/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-food-safety/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             setSafetyPlan(response.data.data);
             setMembers(response.data.data?.DecisionTree.ConductHaccp.Members?.slice(startIndex, endIndex));
             dispatch(setLoading(false))
@@ -75,7 +75,7 @@ function FoodSafetyPlanMembers() {
     const handleDownloadImage = async (imageURL) => {
         try {
             dispatch(setLoading(true));
-            const response = await axios.get('/download-image', {
+            const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/download-image`, {
                 params: {
                     url: imageURL,
                 },

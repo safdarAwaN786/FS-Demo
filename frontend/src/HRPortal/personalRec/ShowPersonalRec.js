@@ -18,7 +18,7 @@ function ShowPersonalRec() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get("/readPersonalRecuisition", { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readPersonalRecuisition`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             const reqPersonsList = response.data.data;
             setReqPersonData(reqPersonsList.find((person) => person._id === idToWatch))
             dispatch(setLoading(false))

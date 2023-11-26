@@ -24,7 +24,7 @@ function Companies() {
 
     useEffect(() => {
         dispatch(setLoading(true));
-        axios.get("/get-all-companies", { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-companies`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             dispatch(setLoading(false));
             setAllDataArr(response.data.data)
             console.log(response.data);

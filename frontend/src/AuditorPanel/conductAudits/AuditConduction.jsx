@@ -47,7 +47,7 @@ function AuditConduction() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`/getChecklistById/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/getChecklistById/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             const checklistData = response.data.data;
             setChecklistData(response.data.data);
             setQuestions(response.data.data.ChecklistQuestions);
@@ -79,7 +79,7 @@ function AuditConduction() {
         console.log(finalFormData)
         if (finalFormData) {
             dispatch(setLoading(true))
-            axios.post("/addConductAudit", finalFormData, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addConductAudit`, finalFormData, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
                 console.log("request made !");
                 dispatch(setLoading(false))
                 Swal.fire({

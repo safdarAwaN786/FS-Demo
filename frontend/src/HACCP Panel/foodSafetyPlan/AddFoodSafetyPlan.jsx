@@ -24,7 +24,7 @@ function AddFoodSafetyPlan() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`/get-department/${user?.Company?._id}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
             SetDepartmentsToShow(res.data.data);
         }).catch(err => {
             dispatch(setLoading(false));
@@ -55,7 +55,7 @@ function AddFoodSafetyPlan() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get("/get-all-decision-trees", { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-decision-trees`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             setTreesToShow(response.data.data);
             console.log(response.data.data);
         }).catch(err => {
@@ -87,7 +87,7 @@ function AddFoodSafetyPlan() {
     const makeRequest = () => {
         if (dataToSend.Plans?.length > 0) {
             dispatch(setLoading(true))
-            axios.post("/create-food-safety", dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/create-food-safety`, dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
                 console.log("request made !");
                 setDataToSend(null);
                 dispatch(setLoading(false))

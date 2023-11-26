@@ -34,7 +34,7 @@ function HACCPteams() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get("/get-all-haccp-teams", { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-haccp-teams`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             console.log(response.data.data);
             setAllDataArr(response.data.data)
             setTeamsList(response.data.data.slice(startIndex, endIndex));
@@ -64,7 +64,7 @@ function HACCPteams() {
 
     const refreshData = () => {
         dispatch(setLoading(true))
-        axios.get("/get-all-haccp-teams", { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-haccp-teams`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             console.log(response.data.data);
             setAllDataArr(response.data.data)
             setTeamsList(response.data.data.slice(startIndex, endIndex));
@@ -324,7 +324,7 @@ function HACCPteams() {
                                 <button onClick={() => {
                                     setApprove(false)
                                     dispatch(setLoading(true))
-                                    axios.patch('/approveHaccpTeam', { id: idForAction }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+                                    axios.patch(`/approveHaccpTeam`, { id: idForAction }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
                                         dispatch(setLoading(false))
                                         Swal.fire({
                                             title: 'Success',
@@ -365,7 +365,7 @@ function HACCPteams() {
                                 e.preventDefault();
                                 setReject(false);
                                 dispatch(setLoading(true))
-                                axios.patch('/disapproveHaccpTeam', { id: idForAction, Reason: reason }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/disapproveHaccpTeam`, { id: idForAction, Reason: reason }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
                                     dispatch(setLoading(false))
                                     Swal.fire({
                                         title: 'Success',

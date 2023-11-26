@@ -45,7 +45,7 @@ function UsersList() {
     const userToken = Cookies.get('userToken');
     useEffect(() => {
         dispatch(setLoading(true));
-        axios.get(`/get-usersByDepartment/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-usersByDepartment/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             dispatch(setLoading(false));
             setAllDataArr(response.data.data);
             setUsersList(response.data.data.slice(startIndex, endIndex));
@@ -61,7 +61,7 @@ function UsersList() {
 
     const refreshData = () => {
         dispatch(setLoading(true));
-        axios.get(`/get-usersByDepartment/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-usersByDepartment/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             dispatch(setLoading(false))
             setAllDataArr(response.data.data);
             setUsersList(response.data.data.slice(startIndex, endIndex));

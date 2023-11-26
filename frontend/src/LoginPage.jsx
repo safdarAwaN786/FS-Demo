@@ -14,7 +14,7 @@ export default function LoginPage() {
 
     const [credentials, setCredentials] = useState(null);
     const [showPassword, setShowPassword] = useState(false); // State variable to toggle password visibility
-
+    console.log(process.env.REACT_APP_BACKEND_URL);
     const loggedIn = useSelector(state => state.auth.loggedIn)
     const dispatch = useDispatch();
     const togglePasswordVisibility = () => {
@@ -23,7 +23,6 @@ export default function LoginPage() {
     const loading = useSelector(state => state.loading)
 
     const navigate = useNavigate()
-
     useEffect(() => {
         const userToken = Cookies.get('userToken');
         if (loggedIn) {
@@ -32,7 +31,7 @@ export default function LoginPage() {
             navigate('/')
         }
         if (userToken) {
-            axios.get('/get-user', { headers: { Authorization: `Bearer ${userToken}` } }).then(response => {
+            axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-user`, { headers: { Authorization: `Bearer ${userToken}` } }).then(response => {
                 dispatch(logInUser(response.data.data));
                 dispatch(setLoading(false));
             }).catch(error => {
@@ -48,7 +47,7 @@ export default function LoginPage() {
         console.log(credentials);
         if (credentials) {
             dispatch(setLoading(true));
-            axios.post("/user/login", credentials,).then((response) => {
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/user/login`, credentials,).then((response) => {
                 const { Token } = response.data;
                 Cookies.set('userToken', Token);
                 dispatch(logInUser(null));

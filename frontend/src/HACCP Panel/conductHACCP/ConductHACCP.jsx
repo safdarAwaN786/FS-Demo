@@ -34,7 +34,7 @@ function ConductHACCP() {
 
     const refreshData = () => {
         dispatch(setLoading(true))
-        axios.get("/get-all-conduct-haccp", { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-conduct-haccp`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             setAllDataArr(response.data.data)
             setConductHACCPsList(response.data.data.slice(startIndex, endIndex));
             dispatch(setLoading(false));
@@ -50,7 +50,7 @@ function ConductHACCP() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get("/get-all-conduct-haccp", { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-conduct-haccp`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             setAllDataArr(response.data.data)
             setConductHACCPsList(response.data.data.slice(startIndex, endIndex));
             dispatch(setLoading(false))
@@ -300,7 +300,7 @@ function ConductHACCP() {
                                 <button onClick={() => {
                                     setApprove(false)
                                     dispatch(setLoading(true))
-                                    axios.patch('/approve-conduct-haccp', { id: idForAction }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/approve-conduct-haccp`, { id: idForAction }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
                                         dispatch(setLoading(false))
                                         Swal.fire({
                                             title: 'Success',
@@ -426,7 +426,7 @@ function ConductHACCP() {
                                 e.preventDefault();
                                 setReject(false);
                                 dispatch(setLoading(true))
-                                axios.patch('/disapprove-conduct-haccp', { id: idForAction, Reason: reason }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/disapprove-conduct-haccp`, { id: idForAction, Reason: reason }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
                                     dispatch(setLoading(false))
                                     Swal.fire({
                                         title: 'Success',

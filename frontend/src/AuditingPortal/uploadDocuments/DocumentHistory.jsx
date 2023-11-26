@@ -28,7 +28,7 @@ function DocumentHistory() {
     const handleDownloadImage = async (imageURL) => {
         try {
             dispatch(setLoading(true));
-            const response = await axios.get('/download-image', {
+            const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/download-image`, {
                 params: {
                     url: imageURL,
                 },
@@ -63,7 +63,7 @@ function DocumentHistory() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`/readDocumentById/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readDocumentById/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
             console.log(res.data.data);
             setDocumentData(res.data.data);
             dispatch(setLoading(false))
@@ -80,7 +80,7 @@ function DocumentHistory() {
 
     const refreshData = () => {
         dispatch(setLoading(true))
-        axios.get(`/readDocumentById/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readDocumentById/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
             console.log(res.data.data);
             setDocumentData(res.data.data);
             dispatch(setLoading(false))
@@ -229,7 +229,7 @@ function DocumentHistory() {
                                 e.preventDefault();
                                 setCommentBox(false);
                                 dispatch(setLoading(true))
-                                axios.patch(`/comment-document/${idToWatch}`, { objIndex: indexForAction, comment: comment }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/comment-document/${idToWatch}`, { objIndex: indexForAction, comment: comment }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
                                     dispatch(setLoading(false))
                                     Swal.fire({
                                         title: 'Success',

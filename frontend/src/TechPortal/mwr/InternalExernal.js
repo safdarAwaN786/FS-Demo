@@ -25,7 +25,7 @@ function InternalExernal() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`/readCalibrationByEquipmentId/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readCalibrationByEquipmentId/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
             if (res.data.data) {
                 const dataArr = res.data.data;
                 setCallibrationsToShow(dataArr.filter((data) => data.dateType === dateType && data.callibrationType === callibrationType));

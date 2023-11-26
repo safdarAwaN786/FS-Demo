@@ -37,7 +37,7 @@ function TechMWR() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get('/getAllWorkRequests', { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/getAllWorkRequests`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
             setAllDataArr(res.data.data);
             setRequests(res.data.data.slice(startIndex, endIndex));
             dispatch(setLoading(false))
@@ -53,7 +53,7 @@ function TechMWR() {
 
     const reGetData = () => {
         dispatch(setLoading(true))
-        axios.get('/getAllWorkRequests', { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/getAllWorkRequests`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
             setAllDataArr(res.data.data);
             setRequests(res.data.data.slice(startIndex, endIndex));
             dispatch(setLoading(false))

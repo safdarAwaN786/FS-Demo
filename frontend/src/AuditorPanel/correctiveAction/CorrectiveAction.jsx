@@ -29,7 +29,7 @@ function CorrectiveActions() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get("/readReports", { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readReports`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             console.log(response.data.data);
             setAllDataArr(response.data.data)
             setReportsList(response.data.data.slice(startIndex, endIndex));

@@ -29,7 +29,7 @@ function FillForm() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`/get-form-by-id/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-form-by-id/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
             setDataToSend(res.data.form);
             setAnswerData({ Form: res.data.form._id })
             setQuestions(res.data.form.questions);
@@ -59,7 +59,7 @@ function FillForm() {
         console.log(answerData);
         if (answerData.answers?.length > 0) {
             dispatch(setLoading(true))
-            axios.post("/submit-response", answerData, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/submit-response`, answerData, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
                 dispatch(setLoading(false))
                 setAnswerData(null);
                 Swal.fire({

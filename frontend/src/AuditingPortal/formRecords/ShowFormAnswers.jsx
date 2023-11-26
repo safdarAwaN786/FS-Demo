@@ -34,7 +34,7 @@ function ShowFormAnswers() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`/get-record-by-recordId/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-record-by-recordId/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
             setDataToSend(res.data.data);
             setAnswers(res.data.data.answers);
             dispatch(setLoading(false))

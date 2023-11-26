@@ -23,7 +23,7 @@ function GenerateMWR2() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`/getWorkRequestById/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/getWorkRequestById/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
             setRequest(res.data.data);
             dispatch(setLoading(false))
         }).catch(err => {
@@ -40,7 +40,7 @@ function GenerateMWR2() {
     const handleDownloadImage = async (imageURL) => {
         try {
             dispatch(setLoading(true));
-            const response = await axios.get('/download-image', {
+            const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/download-image`, {
                 params: {
                     url: imageURL,
                 },

@@ -33,7 +33,7 @@ function Checklist() {
 
     const statusChange = () => {
         dispatch(setLoading(true))
-        axios.get("/getChecklists", { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/getChecklists`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             setAllDataArr(response.data.data)
             setChecklists(response.data.data.slice(startIndex, endIndex));
             dispatch(setLoading(false))
@@ -50,7 +50,7 @@ function Checklist() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get("/getChecklists", { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/getChecklists`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             setAllDataArr(response.data.data)
             setChecklists(response.data.data.slice(startIndex, endIndex));
             dispatch(setLoading(false))
@@ -297,7 +297,7 @@ function Checklist() {
                             <div className={style.alertbtns}>
                                 <button onClick={() => {
                                     dispatch(setLoading(true))
-                                    axios.patch('/approveChecklist', { id: checklistIdForAction }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/approveChecklist`, { id: checklistIdForAction }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
                                         dispatch(setLoading(false))
                                         statusChange();
                                         Swal.fire({
@@ -335,7 +335,7 @@ function Checklist() {
                             <div className={style.alertbtns}>
                                 <button onClick={() => {
                                     dispatch(setLoading(true))
-                                    axios.patch('/disapproveChecklist', { id: checklistIdForAction, Reason: Reason }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/disapproveChecklist`, { id: checklistIdForAction, Reason: Reason }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
                                         dispatch(setLoading(false))
                                         statusChange();
                                         Swal.fire({

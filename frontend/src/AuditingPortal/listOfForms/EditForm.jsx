@@ -46,7 +46,7 @@ function EditForm() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`/get-form-by-id/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-form-by-id/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
             setDataToSend(res.data.form);
             setQuestions(res.data.form.questions);
             if(departmentsToShow){    
@@ -72,7 +72,7 @@ function EditForm() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`/get-department/${user?.Company?._id}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
             SetDepartmentsToShow(res.data.data);
             if(questions){
                 dispatch(setLoading(false))
@@ -114,7 +114,7 @@ function EditForm() {
     const makeRequest = () => {
         if (dataToSend?.questions.length > 0) {
             dispatch(setLoading(true))
-            axios.put("/update-form", dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+            axios.put(`${process.env.REACT_APP_BACKEND_URL}/update-form`, dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
                 dispatch(setLoading(false))
                 setDataToSend(null);
                 Swal.fire({

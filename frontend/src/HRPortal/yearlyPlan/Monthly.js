@@ -21,7 +21,7 @@ function Monthly() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get("/readYearlyPlan", { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readYearlyPlan`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             const yearlyPlansList = response.data.data;
             setPlanToShow(yearlyPlansList.find((plan) => plan._id === idToWatch))
             dispatch(setLoading(false));

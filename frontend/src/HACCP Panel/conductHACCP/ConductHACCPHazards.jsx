@@ -31,7 +31,7 @@ function ConductHACCPHazards() {
    
     useEffect(()=>{
         dispatch(setLoading(true))
-        axios.get(`/get-conduct-haccp/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res)=>{
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-conduct-haccp/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res)=>{
             setDataToSend(res.data.data)
             dispatch(setLoading(false));
         }).catch(err => {

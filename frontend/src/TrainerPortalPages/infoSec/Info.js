@@ -33,7 +33,7 @@ function Info() {
 
     useEffect(() => {
         dispatch(setLoading(true));
-        axios.get("/readMonthlyPlan", { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readMonthlyPlan`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             const assignedTrainingsList = response.data.data;
             setassignedTrainingToShow(assignedTrainingsList.find((training) => training._id === idToWatch));
             dispatch(setLoading(false))
@@ -68,7 +68,7 @@ function Info() {
                 formData.append("Images", image); // Use the correct field name "Images"
             });
             console.log(formData);
-            axios.patch("/upload-images", formData, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+            axios.patch(`${process.env.REACT_APP_BACKEND_URL}/upload-images`, formData, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
                 console.log("request made !");
                 dispatch(setLoading(false))
                 Swal.fire({
@@ -101,7 +101,7 @@ function Info() {
     const handleDownloadImage = async (imageURL) => {
         try {
             dispatch(setLoading(true));
-            const response = await axios.get('/download-image', {
+            const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/download-image`, {
                 params: {
                     url: imageURL,
                 },

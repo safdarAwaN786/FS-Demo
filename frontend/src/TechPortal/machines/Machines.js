@@ -27,7 +27,7 @@ function Machines() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get('/getAllMaintenanceRecords', { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/getAllMaintenanceRecords`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
             setMaintenances(res.data.data);
             if(machinaries){
                 dispatch(setLoading(false))
@@ -40,7 +40,7 @@ function Machines() {
                 text : 'Something went wrong, Try Again!'
             })
         })
-        axios.get("/readAllMachinery", { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readAllMachinery`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
             setAllDataArr(res.data.data);
             setMachineries(res.data.data.slice(startIndex, endIndex));
             if(maintenances){

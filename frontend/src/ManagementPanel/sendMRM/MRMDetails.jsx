@@ -22,7 +22,7 @@ function MRMDetails() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`/get-mrmbyId/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-mrmbyId/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
             {
                 setDataToSend(res.data.data);
                 dispatch(setLoading(false))

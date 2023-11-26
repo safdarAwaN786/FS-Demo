@@ -30,7 +30,7 @@ function Devices() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get("/readAllEquipment", { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readAllEquipment`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
             setAllDataArr(res.data.data);
             setDevices(res.data.data.slice(startIndex, endIndex));
             if(callibrations){
@@ -44,7 +44,7 @@ function Devices() {
                 text : 'Something went wrong, Try Again!'
             })
         })
-        axios.get('/readAllCalibration', { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readAllCalibration`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
             setCallibrations(res.data.data);
             if(devices){
                 dispatch(setLoading(false))

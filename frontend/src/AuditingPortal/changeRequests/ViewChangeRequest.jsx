@@ -23,7 +23,7 @@ function ViewChangeRequest() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`/readChangeRequestById/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readChangeRequestById/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             setRequestData(response.data.data);
             dispatch(setLoading(false))
         }).catch(err => {

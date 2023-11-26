@@ -26,7 +26,7 @@ function SendNotification() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get('/get-all-participants', { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-participants`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
             {
                 setParticipants(res.data.data);
                 dispatch(setLoading(false))
@@ -86,7 +86,7 @@ function SendNotification() {
 
         if (dataToSend.Participants.length > 0) {
             dispatch(setLoading(true))
-            axios.post("/create-notification", dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/create-notification`, dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
                 console.log("request made !");
                 setDataToSend(null);
                 dispatch(setLoading(false))

@@ -25,7 +25,7 @@ export default function Suppliers() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get("/get-all-suppliers", { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-suppliers`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             dispatch(setLoading(false))
             setAllDataArr(response.data.data);
             setSuppliers(response.data.data.slice(startIndex, endIndex));
@@ -41,7 +41,7 @@ export default function Suppliers() {
 
     const statusUpdated = () => {
         dispatch(setLoading(true))
-        axios.get("/get-all-suppliers", { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-suppliers`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             dispatch(setLoading(false))
             setAllDataArr(response.data.data);
             setSuppliers(response.data.data.slice(startIndex, endIndex));

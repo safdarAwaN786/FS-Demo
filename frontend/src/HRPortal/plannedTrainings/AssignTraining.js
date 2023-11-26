@@ -31,7 +31,7 @@ function AssignTrainings() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get("/readMonthlyPlan", { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readMonthlyPlan`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             const plannedTrainingsList = response.data.data;
             setPlannedTraining(plannedTrainingsList.find((training) => training._id === idToWatch))
             dispatch(setLoading(false))
@@ -54,7 +54,7 @@ function AssignTrainings() {
     useEffect(() => {
         if (plannedTraining !== null) {
             dispatch(setLoading(true))
-            axios.get("/readEmployee", { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+            axios.get(`${process.env.REACT_APP_BACKEND_URL}/readEmployee`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
                 const allEmployees = response.data.data;
                 dispatch(setLoading(false))
                 setAllDataArr(allEmployees);
@@ -112,7 +112,7 @@ function AssignTrainings() {
     const makeRequest = () => {
         if (dataToSend) {
             dispatch(setLoading(true))
-            axios.patch("/assignEmployee", dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+            axios.patch(`${process.env.REACT_APP_BACKEND_URL}/assignEmployee`, dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
                 dispatch(setLoading(false))
                 setDataToSend(null);
                 Swal.fire({

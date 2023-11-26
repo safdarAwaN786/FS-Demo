@@ -28,7 +28,7 @@ function UpdateConductHACCP() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`/get-department/${user?.Company?._id}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
             SetDepartmentsToShow(res.data.data);
             if(processesToShow && teamsToShow){
                 dispatch(setLoading(false))
@@ -45,7 +45,7 @@ function UpdateConductHACCP() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get("/get-all-haccp-teams", { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-haccp-teams`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             setTeamsToShow(response.data.data);
             if(processesToShow, departmentsToShow){
                 dispatch(setLoading(false))
@@ -59,7 +59,7 @@ function UpdateConductHACCP() {
             })
         })
 
-        axios.get("/get-all-processes", { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-processes`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             setProcessesToShow(response.data.data);
             if(teamsToShow && departmentsToShow){
                 dispatch(setLoading(false))
@@ -95,7 +95,7 @@ function UpdateConductHACCP() {
 
     useEffect(()=>{
         dispatch(setLoading(true))
-        axios.get(`/get-conduct-haccp/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res)=>{
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-conduct-haccp/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res)=>{
             setDataToSend(res.data.data);
             if(processesToShow && departmentsToShow && processesToShow){
                 dispatch(setLoading)
@@ -146,7 +146,7 @@ function UpdateConductHACCP() {
     const makeRequest = () => {
         if (dataToSend) {
 
-            axios.put(`/update-conduct-haccp/${idToWatch}`, dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+            axios.put(`${process.env.REACT_APP_BACKEND_URL}/update-conduct-haccp/${idToWatch}`, dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
                 console.log("request made !");
                 setDataToSend(null);
 

@@ -33,7 +33,7 @@ function FormsList() {
 
     const refreshData = () => {
         dispatch(setLoading(true))
-        axios.get("/get-all-forms", { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-forms`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             setAllDataArr(response.data.forms)
             setFormsList(response.data.forms.slice(startIndex, endIndex));
             dispatch(setLoading(false))
@@ -50,7 +50,7 @@ function FormsList() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get("/get-all-forms", { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-forms`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             console.log(response.data.forms);
             setAllDataArr(response.data.forms)
             setFormsList(response.data.forms.slice(startIndex, endIndex));
@@ -350,7 +350,7 @@ function FormsList() {
                             <div className={style.alertbtns}>
                                 <button onClick={() => {
                                     dispatch(setLoading(true))
-                                    axios.patch('/approveForm', { id: idForAction }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/approveForm`, { id: idForAction }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
                                         dispatch(setLoading(false))
                                         refreshData();
                                         Swal.fire({
@@ -392,7 +392,7 @@ function FormsList() {
                                 <button onClick={() => {
                                     setReview(false);
                                     dispatch(setLoading(true))
-                                    axios.patch('/reviewForm', { formId: idForAction }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/reviewForm`, { formId: idForAction }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
                                         dispatch(setLoading(false))
                                         refreshData();
                                         Swal.fire({
@@ -432,7 +432,7 @@ function FormsList() {
                                 e.preventDefault();
                                 setDisApprove(false);
                                 dispatch(setLoading(true))
-                                axios.patch('/disapproveForm', { formId: idForAction, reason: reason }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/disapproveForm`, { formId: idForAction, reason: reason }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
                                     dispatch(false)
                                     Swal.fire({
                                         title: 'Success',
@@ -475,7 +475,7 @@ function FormsList() {
                                 e.preventDefault();
                                 setReject(false);
                                 dispatch(setLoading(true))
-                                axios.patch('/rejectForm', { formId: idForAction, reason: reason }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/rejectForm`, { formId: idForAction, reason: reason }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
                                     dispatch(setLoading(false))
                                     Swal.fire({
                                         title: 'Success',
