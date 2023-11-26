@@ -1,6 +1,0 @@
-{
-    "registrationConfirmation": {
-        "subject": "Feat Tech System Credentials!",
-        "body": "Welcome to our System!\n\nDear {{name}},\nUser Name:  {{username}}\nPassword:  {{password}}\n\n\n\n\nRegards,\nFeat Tech Team,\n\n\n\n\n\n*Please do not reply to this email. This is a computer-generated email."
-    }
-}

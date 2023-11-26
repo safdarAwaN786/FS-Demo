@@ -1,6 +1,0 @@
-{
-    "newNotification": {
-        "subject": "New Notification For Meeting",
-        "body": "Notification Details:\nVenue:  {{venue}}\nMRMNo:  {{mrmNo}}\nDate:  {{date}}\nTime:  {{time}}\nAgenda:  {{agenda}}\n\n\n\n\nRegards,\nFeat Tech Team,\n\n\n\n\n\n*Please do not reply to this email. This is a computer-generated email."
-    }
-}
