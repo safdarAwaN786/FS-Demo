@@ -209,8 +209,15 @@ function ProcessDetails() {
 
                                                     }} className={`btn btn-outline-primary pt-0 px-1`}>Approve</p>
                                                     <p onClick={() => {
+                                                        if(process.Status === 'Approved'){
+                                                            setDataToShow('Process is already Approved!');
+                                                            setShowBox(true)
+                                                        } else {
+
+
                                                         setIdForAction(process._id);
                                                         setReject(true);
+                                                        }
                                                     }} style={{
                                                         height: '28px'
 
@@ -304,7 +311,7 @@ function ProcessDetails() {
                                 <button onClick={() => {
                                     setApprove(false)
                                     dispatch(setLoading(true))
-                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/approve-process`, { id: idForAction }).then(() => {
+                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/approve-process`, { id: idForAction }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
                                         dispatch(setLoading(false))
                                         Swal.fire({
                                             title: 'Success',
@@ -314,6 +321,7 @@ function ProcessDetails() {
                                         })
                                         refreshData();
                                     }).catch(err => {
+                                        console.log(err)
                                         dispatch(setLoading(false));
                                         Swal.fire({
                                             icon: 'error',
@@ -340,7 +348,7 @@ function ProcessDetails() {
                                 e.preventDefault();
                                 setReject(false);
                                 dispatch(setLoading(true))
-                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/disapprove-process`, { id: idForAction, Reason: reason }).then(() => {
+                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/disapprove-process`, { id: idForAction, Reason: reason }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
                                     dispatch(setLoading(false))
                                     Swal.fire({
                                         title: 'Success',

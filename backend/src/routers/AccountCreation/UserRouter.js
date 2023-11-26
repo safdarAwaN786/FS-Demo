@@ -311,7 +311,7 @@ router.post('/user/login', async (req, res) => {
 
     if (user.isSuspended) {
  
-      return res.status(403).json({ message: 'Access denied!' });
+      return res.status(403).json({ message: 'Access denied!.' });
     }
 
     const accessToken = jwt.sign(
