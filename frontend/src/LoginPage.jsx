@@ -61,7 +61,9 @@ export default function LoginPage() {
             }).catch((error) => {
                 console.log(error);
                 dispatch(setLoading(false));
-                if (error.response?.status === 400 || error.response?.status === 403 || error.response?.state === 401) {
+                console.log(error.response.status);
+                console.log(error.response.data.message);
+                if (error.response.status === 401 || error.response?.status === 400 || error.response.status === 403) {
                     Swal.fire({
                         icon: 'error',
                         title: 'Oops...',

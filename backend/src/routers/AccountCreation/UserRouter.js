@@ -306,12 +306,12 @@ router.post('/user/login', async (req, res) => {
     // Compare the entered password with the stored hashed password
     if (storedPassword !== req.body.password) {
       console.log('Wrong Credentials!');
-      return res.status(400).json({ message: 'Wrong Credentials' });
+      return res.status(400).json({ message: 'Wrong Password' });
     }
 
-    if (!user || user.isSuspended) {
-      console.log('User not found or account is suspended. Access denied.');
-      return res.status(403).json({ message: 'Access denied. User not found or account is suspended.' });
+    if (user.isSuspended) {
+ 
+      return res.status(403).json({ message: 'Access denied!' });
     }
 
     const accessToken = jwt.sign(
