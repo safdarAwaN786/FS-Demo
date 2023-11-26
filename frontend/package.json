@@ -1,6 +1,6 @@
 {
   "name": "depfrontend",
-  "proxy": "http://localhost:587/",
+  "proxy": "https://safdar-project.onrender.com/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
