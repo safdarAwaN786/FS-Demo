@@ -146,7 +146,7 @@ import AssignTabsToOwner from './AuditingPortal/processes/AssignTabsToOwner'
 import AssignTabsToInternalAuditor from './AuditingPortal/internalAuditors/AssignTabsToInternalAuditor'
 import ShowFormAnswers from './AuditingPortal/formRecords/ShowFormAnswers'
 import AuditsHistory from './AuditorPanel/conductAudits/Auditshistory'
-import { ScaleLoader } from 'react-spinners'
+import { FadeLoader, ScaleLoader } from 'react-spinners'
 import AddSupplier from './HRPortal/Supplier/AddSuppier'
 import Suppliers from './HRPortal/Supplier/Suppliers'
 
@@ -191,13 +191,12 @@ function MainPage() {
             {loading && (
                 <div className={style.loaderContainer}>
                     <div className={style.loaderInner}>
-                        <ScaleLoader
-                            color="#f17575"
-                            cssOverride={{}}
-                            height={35}
-                            loading
-                            margin={2}
-                            radius={5}
+                        <FadeLoader
+                            color="#f76060"
+                            height={30}
+                            margin={8}
+                            radius={4}
+                            speedMultiplier={0.9}
                             width={8}
                         />
                     </div>

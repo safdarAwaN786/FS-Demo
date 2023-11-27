@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Cookies from 'js-cookie'
 import { logInUser } from './redux/slices/authSlice';
 import { setLoading } from './redux/slices/loading';
-import { ScaleLoader } from 'react-spinners'
+import { FadeLoader, ScaleLoader } from 'react-spinners'
 
 export default function LoginPage() {
 
@@ -104,13 +104,12 @@ export default function LoginPage() {
             {loading && (
                 <div className={style.loaderContainer}>
                     <div className={style.loaderInner}>
-                        <ScaleLoader
-                            color="#f17575"
-                            cssOverride={{}}
-                            height={35}
-                            loading
-                            margin={2}
-                            radius={5}
+                        <FadeLoader
+                            color="#f76060"
+                            height={30}
+                            margin={8}
+                            radius={4}
+                            speedMultiplier={0.9}
                             width={8}
                         />
                     </div>
