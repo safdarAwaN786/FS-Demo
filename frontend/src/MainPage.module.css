@@ -22,14 +22,13 @@
 }
 
 .loaderInner {
-  width: 150px; /* Adjust the width of the inner square */
-  height: 150px; /* Adjust the height of the inner square */
+  width: 100px; /* Adjust the width of the inner square */
+  height: 100px; /* Adjust the height of the inner square */
   background-color: #fff; /* Background color of the inner square */
   border-radius: 6px; /* Adjust the border-radius if needed */
   display: flex;
   align-items: center;
   justify-content: center;
-  padding-bottom: 20px;
 }
 .one {
   cursor: "pointer";

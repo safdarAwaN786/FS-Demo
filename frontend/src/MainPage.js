@@ -191,12 +191,13 @@ function MainPage() {
             {loading && (
                 <div className={style.loaderContainer}>
                     <div className={style.loaderInner}>
-                        <FadeLoader
-                            color="#f76060"
-                            height={30}
-                            margin={8}
-                            radius={4}
-                            speedMultiplier={0.9}
+                        <ScaleLoader
+                            color="#eb5757"
+                            cssOverride={{}}
+                            height={35}
+                            loading
+                            margin={2}
+                            radius={5}
                             width={8}
                         />
                     </div>
