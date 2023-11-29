@@ -33,28 +33,28 @@ function Devices() {
         axios.get(`${process.env.REACT_APP_BACKEND_URL}/readAllEquipment`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
             setAllDataArr(res.data.data);
             setDevices(res.data.data.slice(startIndex, endIndex));
-            if(callibrations){
+            if (callibrations) {
                 dispatch(setLoading(false))
             }
         }).catch(err => {
             dispatch(setLoading(false));
             Swal.fire({
-                icon : 'error',
-                title : 'OOps..',
-                text : 'Something went wrong, Try Again!'
+                icon: 'error',
+                title: 'OOps..',
+                text: 'Something went wrong, Try Again!'
             })
         })
         axios.get(`${process.env.REACT_APP_BACKEND_URL}/readAllCalibration`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
             setCallibrations(res.data.data);
-            if(devices){
-                dispatch(setLoading(false))
-            }
+
+            dispatch(setLoading(false))
+
         }).catch(err => {
             dispatch(setLoading(false));
             Swal.fire({
-                icon : 'error',
-                title : 'OOps..',
-                text : 'Something went wrong, Try Again!'
+                icon: 'error',
+                title: 'OOps..',
+                text: 'Something went wrong, Try Again!'
             })
         })
     }, []);

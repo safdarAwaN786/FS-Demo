@@ -43,9 +43,9 @@ function Machines() {
         axios.get(`${process.env.REACT_APP_BACKEND_URL}/readAllMachinery`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
             setAllDataArr(res.data.data);
             setMachineries(res.data.data.slice(startIndex, endIndex));
-            if(maintenances){
+            
                 dispatch(setLoading(false))
-            }
+            
         }).catch(err => {
             dispatch(setLoading(false));
             Swal.fire({

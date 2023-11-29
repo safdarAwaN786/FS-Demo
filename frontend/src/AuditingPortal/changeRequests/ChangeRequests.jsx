@@ -36,7 +36,7 @@ function ChangeRequests() {
         axios.get(`${process.env.REACT_APP_BACKEND_URL}/readChangeRequest`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             setAllDataArr(response.data.data)
             setRequestsList(response.data.data.slice(startIndex, endIndex));
-            dispatch(setLoading(true))
+            dispatch(setLoading(false))
         }).catch(err => {
             dispatch(setLoading(false));
             Swal.fire({

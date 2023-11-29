@@ -36,9 +36,9 @@ function EmployeeProfile() {
         axios.get(`${process.env.REACT_APP_BACKEND_URL}/readEmployee`, { headers: { Authorization: `Bearer ${userToken}` } }).then((Response) => {
             const employeesList = Response.data.data;
             const foundEmployee = employeesList.find((employee) => employee._id === idToWatch)
-            if (plannedTrainings) {
+           
                 dispatch(setLoading(false));
-            }
+            
             if (foundEmployee) {
                 setEmployeeData(foundEmployee);
             } else {

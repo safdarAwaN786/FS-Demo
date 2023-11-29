@@ -38,9 +38,10 @@ function UploadedDocuments() {
             console.log(response);
             setAllDataArr(response.data.data)
             setDocumentsList(response.data.data.slice(startIndex, endIndex));
-            dispatch(false)
+            dispatch(setLoading(false))
         }).catch(err => {
             dispatch(setLoading(false));
+            console.log(err);
             Swal.fire({
                 icon: 'error',
                 title: 'OOps..',
@@ -58,6 +59,7 @@ function UploadedDocuments() {
             dispatch(setLoading(false))
         }).catch(err => {
             dispatch(setLoading(false));
+            console.log(err);
             Swal.fire({
                 icon: 'error',
                 title: 'OOps..',
@@ -123,6 +125,7 @@ function UploadedDocuments() {
             // Clean up by removing the temporary anchor element
             document.body.removeChild(link);
         } catch (error) {
+            console.log(error);
             dispatch(setLoading(false))
             Swal.fire({
                 icon: 'error',
@@ -392,6 +395,7 @@ function UploadedDocuments() {
                                     setUploadDoc(false);
                                 }).catch(err => {
                                     dispatch(setLoading(false));
+                                    console.log(err)
                                     Swal.fire({
                                         icon: 'error',
                                         title: 'OOps..',
@@ -485,10 +489,7 @@ function UploadedDocuments() {
                                         })
                                     })
                                     setReview(false)
-
-
-                                }
-                                } className={style.btn1}>Review</button>
+                                }} className={style.btn1}>Review</button>
 
 
                                 <button onClick={() => {
