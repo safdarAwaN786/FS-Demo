@@ -7,6 +7,7 @@ const authMiddleware = async (req, res, next) => {
   try {
 
     // Skip authentication for the login route
+
     if (req.path === '/user/login') {
       return next();
     } else {
@@ -14,7 +15,7 @@ const authMiddleware = async (req, res, next) => {
       // Get the token from the request headers
       const token = req.header('Authorization');
 
-     
+
       if (!token) {
         return res.status(401).json({ error: 'No token, authorization denied' });
       }
@@ -31,7 +32,8 @@ const authMiddleware = async (req, res, next) => {
       const decoded = jwt.verify(tokenWithoutBearer, process.env.JWT_CODE);
 
       // Find the user by the decoded token information
-      const user = await User.findById(decoded.id);
+      const user = await User.findById(decoded.id).populate('Company');
+     
 
       if (!user) {
         return res.status(404).json({ error: 'User not found' });

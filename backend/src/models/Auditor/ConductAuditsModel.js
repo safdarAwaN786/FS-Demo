@@ -59,7 +59,6 @@ const ConductAuditsSchema = new mongoose.Schema({
         ref: 'Checklist'
     },
     Answers: [{
-
         type : Schema.Types.ObjectId,
         ref : 'ChecklistAnswer',
     }],
@@ -71,10 +70,6 @@ const ConductAuditsSchema = new mongoose.Schema({
     AuditDate: {
         type: Date
     },
-    TargetDate: {
-        type: Date,
-        required: true
-    }
 
 }, {
     timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }

@@ -126,7 +126,7 @@ function AddDecisionTree() {
 
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        dispatch(updateTabData({ ...tabData, Tab: 'Decision Tree' }))
+                        dispatch(updateTabData({ ...tabData, Tab: 'Identify CCP/OPRP' }))
                     }
                 })
 
@@ -158,7 +158,7 @@ function AddDecisionTree() {
                         <BsArrowLeftCircle
                             role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
                                 {
-                                    dispatch(updateTabData({ ...tabData, Tab: 'Decision Tree' }))
+                                    dispatch(updateTabData({ ...tabData, Tab: 'Identify CCP/OPRP' }))
                                 }
                             }} />
 

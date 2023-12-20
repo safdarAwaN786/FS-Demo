@@ -28,6 +28,7 @@ const transporter = nodemailer.createTransport(smtpTransport({
 // * Create a new User document or update existing
 router.post('/create-user', async (req, res) => {
   try {
+    console.log('User for creation came');
     const { companyId, departmentId } = req.body;
 
     // Check if the company with the given ID exists
@@ -291,7 +292,7 @@ router.patch('/assign-tabs/:UserId', async (req, res) => {
 // * User Login
 router.post('/user/login', async (req, res) => {
   try {
-
+    console.log(req.body);
     const user = await User.findOne({ UserName: req.body.userName });
 
     if (!user) {
@@ -410,9 +411,8 @@ router.put('/change-password', async (req, res) => {
       console.log(`User document with  not found`);
       return res.status(404).json({ message: `User document with not found` });
     }
-    const salt = await bcrypt.genSalt(10);
 
-    updatedUser.Password = await bcrypt.hash(req.body.newPassword, salt);
+    updatedUser.Password = CryptoJS.AES.encrypt(req.body.newPassword, process.env.PASS_CODE).toString()
 
 
     console.log(updatedUser);

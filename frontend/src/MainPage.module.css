@@ -544,6 +544,15 @@
   box-shadow: 0px 2px 6px rgb(211, 211, 211);
   z-index: 10;
 }
+.myFooter{
+  height: 30px;
+  width: 100%;
+  position: fixed;
+  bottom: 0px;
+  left: 0px;
+  /* box-shadow: 2px 0px 6px rgb(211, 211, 211); */
+  z-index: 10;
+}
 
 .sidebarParent {
   width: 17.5%;
@@ -709,7 +718,7 @@
   /* justify-content: center; */
   /* margin-left: 0.6rem;  */
 
-  height: 350px;
+  height: 70vh;
   overflow-y: scroll !important;
   gap: 0.69rem;
 }
@@ -810,9 +819,10 @@
 }
 
 .logoImg {
-  width: 140.18px;
-  height: 30.94px;
+  width: 50px;
+  height: 50px;
   margin: auto;
+  border-radius: 30px;
 }
 
 @media (max-width: 750px) {
@@ -825,8 +835,8 @@
   }
 
   .logoImg {
-    width: 140.18px;
-    height: 30.94px;
+    width: 50px;
+    height: 50px;
     margin-left: 0;
   }
 

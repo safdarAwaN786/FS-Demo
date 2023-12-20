@@ -130,7 +130,7 @@ function GenerateMWR() {
                 confirmButtonText: 'Go!',
             }).then((result) => {
                 if (result.isConfirmed) {
-                    dispatch(updateTabData({ ...tabData, Tab: 'MWR Requests' }))
+                    dispatch(updateTabData({ ...tabData, Tab: 'Generate MWR Corrective' }))
                 }
             })
         }).catch(err => {
@@ -153,7 +153,7 @@ function GenerateMWR() {
                     <BsArrowLeftCircle
                         role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
                             {
-                                dispatch(updateTabData({ ...tabData, Tab: 'MWR Requests' }))
+                                dispatch(updateTabData({ ...tabData, Tab: 'Generate MWR Corrective' }))
                             }
                         }} />
 
@@ -333,9 +333,11 @@ function GenerateMWR() {
                             type="file"
                             id="file-input"
                             name='mwrImage'
+                            accept='.jpg, .jpeg, .png'
                             style={{ display: 'none' }}
                             ref={fileInputRef}
                             onChange={updateFormFiles}
+                            required
                         />
                     </div>
                     <div className={style.resbtns}>

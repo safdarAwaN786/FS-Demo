@@ -50,7 +50,7 @@ function ViewChangeRequest() {
                         <BsArrowLeftCircle
                             role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
                                 {
-                                    dispatch(updateTabData({...tabData, Tab : 'Change Requests'}))
+                                    dispatch(updateTabData({...tabData, Tab : 'Document Change Creation'}))
                                 }
                             }} />
 
@@ -62,7 +62,7 @@ function ViewChangeRequest() {
                             <span></span>
                         </div>
                         <div className={`${style.heading} ms-3 `}>
-                            View Change Request
+                            View Document Change Request
                         </div>
                     </div>
                     <form encType='multipart/form-data' onSubmit={(event) => {

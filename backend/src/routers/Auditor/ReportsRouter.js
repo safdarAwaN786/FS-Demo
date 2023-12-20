@@ -53,7 +53,14 @@ router.get('/readReports', async (req, res) => {
                     model: 'ChecklistQuestion'
                 }
             }]
-        });
+        }).populate({
+            path : 'SelectedAnswers.Answer',
+            model : 'ChecklistAnswer',
+            populate: {
+                path: 'question',
+                model: 'ChecklistQuestion'
+            }
+        })
 
         const reportsToSend = reports.filter(Obj => Obj.User.Department.equals(req.user.Department))
 
@@ -88,10 +95,17 @@ router.get('/readReportByAuditId/:auditId', async (req, res) => {
                     path: 'question',
                     model: 'ChecklistQuestion'
                 }
-            }]
-        });
+            }]            
+        }).populate({
+            path : 'SelectedAnswers.Answer',
+            model : 'ChecklistAnswer',
+            populate: {
+                path: 'question',
+                model: 'ChecklistQuestion'
+            }
+        })
 
-        const reportToSend = reports.find(Obj => Obj.User.Department.equals(req.user.Department));
+        const reportToSend = reports.filter(Obj => Obj.User.Department.equals(req.user.Department));
 
 
 
@@ -125,8 +139,15 @@ router.get('/readReportById/:reportId', async (req, res) => {
                     path: 'question',
                     model: 'ChecklistQuestion'
                 }
-            }]
-        });
+            }]            
+        }).populate({
+            path : 'SelectedAnswers.Answer',
+            model : 'ChecklistAnswer',
+            populate: {
+                path: 'question',
+                model: 'ChecklistQuestion'
+            }
+        })
         console.log(new Date().toLocaleString() + ' ' + 'Loading Reports...')
 
         const totalCollections = await Reports.countDocuments()

@@ -57,7 +57,7 @@ function UploadDocument() {
 
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        dispatch(updateTabData({ ...tabData, Tab: 'Upload Document' }))
+                        dispatch(updateTabData({ ...tabData, Tab: 'Upload Document Manually' }))
                     }
                 })
 
@@ -88,7 +88,7 @@ function UploadDocument() {
                     <div className='d-flex flex-row bg-white px-lg-5 mx-lg-5 mx-3 px-2 py-2'>
                         <BsArrowLeftCircle role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
                             {
-                                dispatch(updateTabData({ ...tabData, Tab: 'Upload Document' }))
+                                dispatch(updateTabData({ ...tabData, Tab: 'Upload Document Manually' }))
                             }
                         }} />
 
@@ -100,7 +100,7 @@ function UploadDocument() {
                             <span></span>
                         </div>
                         <div className={`${style.heading} ms-3 `}>
-                            Upload Document
+                            Upload Document Manually
                         </div>
                     </div>
                     <form encType='multipart/form-data' onSubmit={(event) => {
@@ -179,7 +179,7 @@ function UploadDocument() {
 
 
 
-                            <input type='file' name='file' className='btn btn-outline-danger px-3 py-2 m-2' required />
+                            <input type='file' accept='.pdf' name='file' className='btn btn-outline-danger px-3 py-2 m-2' required />
 
 
                             <button type='submit' >Submit</button>

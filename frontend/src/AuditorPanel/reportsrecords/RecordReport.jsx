@@ -19,6 +19,7 @@ function RecordReport() {
     const [dataToShow, setDataToShow] = useState(null);
     const [selectedDate, setSelectedDate] = useState(null);
     // Create an array of refs for file inputs
+    const [selectedAnswers, setSelectedAnswers] = useState([]);
 
     const userToken = Cookies.get('userToken');
     const tabData = useSelector(state => state.tab);
@@ -26,7 +27,9 @@ function RecordReport() {
     const idToWatch = useSelector(state => state.idToProcess);
     const [answers, setAnswers] = useState([]);
 
-   
+    useEffect(() => {
+        console.log(selectedAnswers);
+    }, [selectedAnswers])
 
     const alertManager = () => {
         setalert(!alert)
@@ -48,9 +51,10 @@ function RecordReport() {
 
     const makeRequest = () => {
 
-        if (selectedDate) {
+        if(selectedAnswers.length > 0){
+
             dispatch(setLoading(true))
-            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addReport`, { ConductAudit: idToWatch, TargetDate: selectedDate }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addReport`, { ConductAudit: idToWatch, SelectedAnswers: selectedAnswers }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
                 console.log("request made !");
                 dispatch(setLoading(false))
                 Swal.fire({
@@ -58,29 +62,29 @@ function RecordReport() {
                     text: 'Submitted Successfully',
                     icon: 'success',
                     confirmButtonText: 'Go!',
-
+                    
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        dispatch(updateTabData({ ...tabData, Tab: 'Reports Records' }))
+                        dispatch(updateTabData({ ...tabData, Tab: 'Non-Conformity Report' }))
                     }
                 })
-
+                
             }).catch(err => {
                 dispatch(setLoading(false));
                 Swal.fire({
-                    icon : 'error',
-                    title : 'OOps..',
-                    text : 'Something went wrong, Try Again!'
+                    icon: 'error',
+                    title: 'OOps..',
+                    text: 'Something went wrong, Try Again!'
                 })
             })
         } else {
             Swal.fire({
                 icon: 'error',
-                title: 'Oops...',
-                text: 'Try filling data again',
-                confirmButtonText: 'OK.'
+                title: 'OOps..',
+                text: 'Kindly choose at least one question for Corrective Action!'
             })
         }
+            
     }
 
 
@@ -94,26 +98,14 @@ function RecordReport() {
         }).catch(err => {
             dispatch(setLoading(false));
             Swal.fire({
-                icon : 'error',
-                title : 'OOps..',
-                text : 'Something went wrong, Try Again!'
+                icon: 'error',
+                title: 'OOps..',
+                text: 'Something went wrong, Try Again!'
             })
         })
 
 
     }, [])
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     return (
@@ -125,7 +117,7 @@ function RecordReport() {
                     <div className='mx-lg-5 px-4 mx-md-4 mx-2  mb-1 '>
 
                         <BsArrowLeftCircle onClick={(e) => {
-                            dispatch(updateTabData({ ...tabData, Tab: 'Reports Records' }))
+                            dispatch(updateTabData({ ...tabData, Tab: 'Non-Conformity Report' }))
                         }} className='fs-3 text-danger mx-1' role='button' />
                     </div>
                     <div className={`${style.headers} d-flex justify-content-start ps-3 align-items-center `}>
@@ -152,10 +144,21 @@ function RecordReport() {
                                     <div className='d-flex bg-light p-3 justify-content-center flex-column '>
                                         <div style={{
                                             width: '100%'
-                                        }} className=' me-3 d-flex flex-column'>
+                                        }} className=' me-3 w-100 d-flex justify-content-between flex-row'>
                                             <input value={answer.question.questionText} style={{
                                                 borderRadius: '0px'
-                                            }} name='questionText' placeholder='Untitled Question' className='border-0  border-secondary bg-light mt-2 mb-3 w-100 p-3' required readOnly />
+                                            }} name='questionText' placeholder='Untitled Question' className='border-0  border-secondary bg-light mt-2 mb-3 w-75 p-3' required readOnly />
+                                            <input style={{
+                                                cursor: 'pointer'
+                                            }} className='mt-2' type='checkbox' onChange={(e) => {
+                                                let updatedAnswers = [...selectedAnswers];
+                                                if (e.target.checked) {
+                                                    updatedAnswers.push({ Answer: answer._id });
+                                                } else {
+                                                    updatedAnswers = updatedAnswers.filter((ansObj) => ansObj.Answer !== answer._id);
+                                                }
+                                                setSelectedAnswers(updatedAnswers)
+                                            }} />
 
                                         </div>
                                         <div>
@@ -258,6 +261,20 @@ function RecordReport() {
                                             )}
                                             <textarea value={answers[index].Remarks} rows={3} className='w-100 p-2 my-2' placeholder='Remarks...' required />
                                         </div>
+                                        {selectedAnswers.some((ansObj) => ansObj.Answer === answer._id) && (
+                                            <div>
+                                                <label>Target Date : </label>
+                                                <input type='date' onChange={(e) => {
+                                                    const updatedAnswers = selectedAnswers.map((ansObj) => {
+                                                        if (ansObj.Answer === answer._id) {
+                                                            return { ...ansObj, TargetDate: e.target.value };
+                                                        }
+                                                        return ansObj;
+                                                    });
+                                                    setSelectedAnswers(updatedAnswers);
+                                                }} className='p-2' required />
+                                            </div>
+                                        )}
 
                                         <div style={{
                                             width: '100%'
@@ -266,7 +283,6 @@ function RecordReport() {
                                                 width: '80%'
                                             }}>
                                                 {answers[index].EvidenceDoc && (
-
                                                     <div className='d-flex flex-column w-50'>
                                                         <label>Evidence Document :</label>
                                                         <a href={answers[index].EvidenceDoc} className='btn btn-outline-danger' download>Download</a>
@@ -290,13 +306,13 @@ function RecordReport() {
 
 
 
-                        <div className='p-3 mx-lg-5 mx-3 px-3 bg-light px-lg-5 '>
+                        {/* <div className='p-3 mx-lg-5 mx-3 px-3 bg-light px-lg-5 '>
 
                             <p className='my-1 fw-bold'>Select Date (For Corrective Action)</p>
                             <input onChange={(e) => {
                                 setSelectedDate(e.target.value)
                             }} className='w-25 p-2' type='date' required />
-                        </div>
+                        </div> */}
                         <div className={style.btn}>
                             <button type='submit'>Submit</button>
                         </div>

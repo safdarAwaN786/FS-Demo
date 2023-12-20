@@ -33,16 +33,16 @@ function AddSupplier() {
                     confirmButtonText: 'Go!',
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        dispatch(updateTabData({ ...tabData, Tab: 'Suppliers' }))
+                        dispatch(updateTabData({ ...tabData, Tab: 'Approved Supplier List' }))
                     }
                 })
 
             }).catch(err => {
                 dispatch(setLoading(false));
                 Swal.fire({
-                    icon : 'error',
-                    title : 'OOps..',
-                    text : 'Something went wrong, Try Again!'
+                    icon: 'error',
+                    title: 'OOps..',
+                    text: 'Something went wrong, Try Again!'
                 })
             })
         } else {
@@ -64,7 +64,7 @@ function AddSupplier() {
                     <div className='d-flex flex-row px-lg-5 mx-lg-5 px-2 mx-2 my-1'>
                         <BsArrowLeftCircle role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
                             {
-                                dispatch(updateTabData({ ...tabData, Tab: 'Suppliers' }))
+                                dispatch(updateTabData({ ...tabData, Tab: 'Approved Supplier List' }))
                             }
                         }} />
 
@@ -122,6 +122,31 @@ function AddSupplier() {
                                             </select>
                                         </div>
                                     </div>
+                                    <div className={style.inputParent}>
+                                        <div className={style.para}>
+                                            {/* <p>Document Type</p> */}
+                                        </div>
+                                        <div >
+                                            <select value={dataToSend?.RiskCategory} onChange={(e) => {
+                                                setDataToSend({ ...dataToSend, [e.target.name]: e.target.value });
+                                            }} name='RiskCategory' className='w-100 text-dark' required>
+                                                <option value='' selected disabled>Risk Category</option>
+                                                <option>Low</option>
+                                                <option>Medium</option>
+                                                <option>High</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div className={style.inputParent}>
+                                        <div className={style.para}>
+                                            <p>Current Approval Date</p>
+                                        </div>
+                                        <div >
+                                            <input value={dataToSend?.CurrentApprovalDate} onChange={(e) => {
+                                                setDataToSend({ ...dataToSend, [e.target.name]: e.target.value });
+                                            }} name='CurrentApprovalDate' className='text-dark' type='date' placeholder='Product Service Offered' required />
+                                        </div>
+                                    </div>
                                 </div>
                                 <div className={style.sec2}>
 
@@ -150,9 +175,29 @@ function AddSupplier() {
                                             {/* <p>Document Type</p> */}
                                         </div>
                                         <div >
+                                            <input value={dataToSend?.PhoneNumber2} onChange={(e) => {
+                                                setDataToSend({ ...dataToSend, [e.target.name]: e.target.value });
+                                            }} name='PhoneNumber2' className='text-dark' type='number' placeholder='Second Contact No' />
+                                        </div>
+                                    </div>
+                                    <div className={style.inputParent}>
+                                        <div className={style.para}>
+                                            {/* <p>Document Type</p> */}
+                                        </div>
+                                        <div >
                                             <input value={dataToSend?.ProductServiceOffered} onChange={(e) => {
                                                 setDataToSend({ ...dataToSend, [e.target.name]: e.target.value });
                                             }} name='ProductServiceOffered' className='text-dark' type='text' placeholder='Product Service Offered' required />
+                                        </div>
+                                    </div>
+                                    <div className={style.inputParent}>
+                                        <div className={style.para}>
+                                            <p>Next Approval Date</p>
+                                        </div>
+                                        <div >
+                                            <input value={dataToSend?.NextApprovalDate} onChange={(e) => {
+                                                setDataToSend({ ...dataToSend, [e.target.name]: e.target.value });
+                                            }} name='NextApprovalDate' className='text-dark' type='date' placeholder='Product Service Offered' required />
                                         </div>
                                     </div>
 

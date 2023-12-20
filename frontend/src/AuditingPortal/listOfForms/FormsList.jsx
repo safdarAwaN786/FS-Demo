@@ -25,18 +25,45 @@ function FormsList() {
     const [disApprove, setDisApprove] = useState(false);
     const [review, setReview] = useState(false);
     const [allDataArr, setAllDataArr] = useState(null);
-
+    const [formToProcess, setFormToProcess] = useState(null);
 
     const userToken = Cookies.get('userToken');
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
+
+    const [departmentsToShow, SetDepartmentsToShow] = useState(null);
+    const user = useSelector(state => state.auth?.user);
+
+    useEffect(() => {
+        dispatch(setLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+            SetDepartmentsToShow(res.data.data);
+
+        }).catch(err => {
+            dispatch(setLoading(false));
+            Swal.fire({
+                icon: 'error',
+                title: 'OOps..',
+                text: 'Something went wrong, Try Again!'
+            })
+        })
+    }, [])
+    useEffect(() => {
+        console.log(formToProcess);
+    }, [formToProcess])
+    useEffect(() => {
+        if (formsList && departmentsToShow) {
+            dispatch(setLoading(false))
+        }
+
+    }, [departmentsToShow, formsList])
 
     const refreshData = () => {
         dispatch(setLoading(true))
         axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-forms`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             setAllDataArr(response.data.forms)
             setFormsList(response.data.forms.slice(startIndex, endIndex));
-            dispatch(setLoading(false))
+
         }).catch(err => {
             dispatch(setLoading(false));
             Swal.fire({
@@ -137,6 +164,7 @@ function FormsList() {
                                 <td>Review Date</td>
                                 <td>Approved By</td>
                                 <td>Approval Date</td>
+                                <td>Results History</td>
                                 <td>Action</td>
                                 <td>Action</td>
                                 <td>Document</td>
@@ -185,12 +213,18 @@ function FormsList() {
                                             ) : (
                                                 <td>---</td>
                                             )}
+                                            <td>
+                                                <p onClick={() => {
+                                                    dispatch(updateTabData({ ...tabData, Tab: 'viewResultsHistory' }))
+                                                    dispatch(changeId(form._id))
+                                                }} className={style.click}>View</p>
+                                            </td>
 
 
                                             <td >
 
                                                 <p onClick={() => {
-
+                                                    setFormToProcess(form);
                                                     setSend(true);
                                                 }} className={style.click}>Send</p>
                                             </td>
@@ -515,25 +549,58 @@ function FormsList() {
                     <div class={style.alertparent}>
                         <div class={`${style.alert} p-3 pt-5`}>
                             <form onSubmit={(e) => {
+                                e.preventDefault();
+                                if (formToProcess?.SendToDepartments.length > 0) {
+                                    dispatch(setLoading(true))
+                                    axios.put(`${process.env.REACT_APP_BACKEND_URL}/send-form`, formToProcess, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+                                        dispatch(setLoading(false))
+                                        setFormToProcess(null);
+                                        setSend(false)
+                                        Swal.fire({
+                                            title: 'Success',
+                                            text: 'Sended Successfully',
+                                            icon: 'success',
+                                            confirmButtonText: 'Go!',
 
+                                        })
+
+                                    }).catch(err => {
+                                        dispatch(setLoading(false));
+                                        setSend(false)
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'OOps..',
+                                            text: 'Something went wrong, Try Again!'
+                                        })
+                                    })
+                                } else {
+                                    setSend(false)
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Oops...',
+                                        text: 'Kindly, Mark at least one department!',
+                                        confirmButtonText: 'OK.'
+                                    })
+                                }
                             }}>
-                                <div className='mx-4 my-4 d-inline'>
-
-                                    <input type='checkbox' className='mx-3 my-2 p-2' /><span>Department 1</span>
-                                </div>
-                                <div className='mx-4 my-4 d-inline'>
-
-                                    <input type='checkbox' className='mx-3 my-2 p-2' /><span>Department 2</span>
-                                </div>
-                                <div className='mx-4 my-4 d-inline'>
-
-                                    <input type='checkbox' className='mx-3 my-2 p-2' /><span>Department 3</span>
-                                </div>
-                                <div className='mx-4 my-4 d-inline'>
-
-                                    <input type='checkbox' className='mx-3 my-2 p-2' /><span>Department 4</span>
-                                </div>
-
+                                {departmentsToShow.map((depObj) => {
+                                    return (
+                                        <div className='mx-4 my-4 d-inline'>
+                                            <input type='checkbox' onChange={(e) => {
+                                                const updatedForm = { ...formToProcess }
+                                                if (!updatedForm.SendToDepartments) {
+                                                    updatedForm.SendToDepartments = []
+                                                }
+                                                if (e.target.checked) {
+                                                    updatedForm.SendToDepartments.push(depObj._id)
+                                                } else {
+                                                    updatedForm.SendToDepartments = updatedForm.SendToDepartments.filter(depId => depId !== depObj._id)
+                                                }
+                                                setFormToProcess(updatedForm)
+                                            }} className='mx-3 mt-2 p-2' /><span>{depObj.DepartmentName}</span>
+                                        </div>
+                                    )
+                                })}
 
                                 <div className={`$ mt-3 d-flex justify-content-end `}>
                                     <button type='submit' className='btn btn-danger px-3 py-2 m-3'>Send</button>

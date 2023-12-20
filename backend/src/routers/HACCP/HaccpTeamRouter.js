@@ -12,7 +12,7 @@ const emailTemplates = require('../../EmailTemplates/userEmail.json');
 const UserModel = require('../../models/AccountCreation/UserModel');
 const template = emailTemplates.registrationConfirmation;
 require('dotenv').config()
-
+const { rgb, degrees, PDFDocument, StandardFonts } = require('pdf-lib');
 
 router.use(authMiddleWare); // Perform authentication checks using the attached user information
 
@@ -23,6 +23,29 @@ cloudinary.config({
 });
 
 const upload = multer();
+
+// Function to add the company logo and information to the first page
+const addFirstPage = async (page, logoImage, Company) => {
+  const { width, height } = page.getSize();
+
+  const pdfDoc = await PDFDocument.create();
+  const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
+  const logoDims = { width: 300, height: 300 };
+  const centerTextX = width / 2;
+  page.drawImage(logoImage, { x: centerTextX - logoDims.width / 2, y: height - 400, width: logoDims.width, height: logoDims.height });
+  // Add company name (centered)
+  const companyNameText = Company.CompanyName;
+  const companyNameTextWidth = (helveticaFont.widthOfTextAtSize(companyNameText, 25));
+  page.drawText(companyNameText, { x: centerTextX - companyNameTextWidth / 2, y: height - 420, color: rgb(0, 0, 0), fontSize: 25 });
+  // Add company contact (centered)
+  const companyContactText = `Contact # ${Company.PhoneNo}`;
+  const companyContactTextWidth = (helveticaFont.widthOfTextAtSize(companyContactText, 25));
+  page.drawText(companyContactText, { x: centerTextX - companyContactTextWidth / 2, y: height - 450, color: rgb(0, 0, 0), fontSize: 25 });
+  // Add company email (centered)
+  const companyEmailText = `${Company.Email}`;
+  const companyEmailTextWidth = (helveticaFont.widthOfTextAtSize(companyEmailText, 25));
+  page.drawText(companyEmailText, { x: centerTextX - companyEmailTextWidth / 2, y: height - 480, color: rgb(0, 0, 0), fontSize: 25 });
+};
 
 // * Upload Documents To Cloudinary
 const uploadToCloudinary = (buffer) => {
@@ -114,7 +137,6 @@ router.post('/create-haccp-team', upload.fields(generateMembersDocArray()), asyn
     if (!Array.isArray(teamData.TeamMembers)) {
       console.log('team members is an array :');
       console.log(teamData.TeamMembers);
-
     }
 
     const filesObj = req.files;
@@ -122,11 +144,36 @@ router.post('/create-haccp-team', upload.fields(generateMembersDocArray()), asyn
       // Process each question in the Questions array
       for (const key in filesObj) {
         const fileData = filesObj[key][0];
-        const index = fileData.fieldname.split('-')[1]; // Get the field name of the uploaded file and Extract the index from the field name
-        console.log('File Data:', fileData); // Log the file data for debugging
-        // Now, you can associate this file with the question data using the extracted index
-        // For example, you can update the questionData with the file information
-        teamData.TeamMembers[index].Document = await uploadToCloudinary(fileData.buffer).then((result) => {
+        const index = fileData.fieldname.split('-')[1];
+
+        const response = await axios.get(req.user.Company.CompanyLogo, { responseType: 'arraybuffer' });
+        const pdfDoc = await PDFDocument.load(fileData.buffer);
+        const logoImage = Buffer.from(response.data);
+        const logoImageDataUrl = `data:image/jpeg;base64,${logoImage.toString('base64')}`;
+        const isJpg = logoImageDataUrl.includes('data:image/jpeg') || logoImageDataUrl.includes('data:image/jpg');
+        const isPng = logoImageDataUrl.includes('data:image/png');
+        let pdfLogoImage;
+        if (isJpg) {
+          pdfLogoImage = await pdfDoc.embedJpg(logoImage);
+        } else if (isPng) {
+          pdfLogoImage = await pdfDoc.embedPng(logoImage);
+        }
+        const firstPage = pdfDoc.insertPage(0);
+        addFirstPage(firstPage, pdfLogoImage, req.user.Company);
+        const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
+        pdfDoc.getPages().slice(1).forEach(async (page) => {
+          const { width, height } = page.getSize();
+          const watermarkText = 'Powered By Feat Technology';
+          const watermarkFontSize = 20;
+          const watermarkTextWidth = (helveticaFont.widthOfTextAtSize(watermarkText, watermarkFontSize));
+          const centerWatermarkX = width / 2 - watermarkTextWidth / 2;
+          const centerWatermarkY = height / 2 + 150;
+          page.drawText(watermarkText, { x: centerWatermarkX, y: centerWatermarkY, fontSize: 20, color: rgb(0, 0, 0), opacity: 0.35, rotate: degrees(-45) });
+        });
+        // Save the modified PDF
+        const modifiedPdfBuffer = await pdfDoc.save();
+
+        teamData.TeamMembers[index].Document = await uploadToCloudinary(modifiedPdfBuffer).then((result) => {
           return (result.secure_url)
         }).catch((err) => {
           console.log(err);
@@ -299,12 +346,37 @@ router.patch('/update-haccp-team/:teamId', upload.fields(generateMembersDocArray
       // If there are uploaded files, process each one
       for (const key in filesObj) {
         const fileData = filesObj[key][0];
-        const index = fileData.fieldname.split('-')[1]; // Get the index of the uploaded file from the field name
-        console.log('File Data:', fileData);
+        const index = fileData.fieldname.split('-')[1];
 
         try {
-          // Upload file to Cloudinary
-          const cloudinaryResult = await uploadToCloudinary(fileData.buffer);
+          const response = await axios.get(req.user.Company.CompanyLogo, { responseType: 'arraybuffer' });
+          const pdfDoc = await PDFDocument.load(fileData.buffer);
+          const logoImage = Buffer.from(response.data);
+          const logoImageDataUrl = `data:image/jpeg;base64,${logoImage.toString('base64')}`;
+          const isJpg = logoImageDataUrl.includes('data:image/jpeg') || logoImageDataUrl.includes('data:image/jpg');
+          const isPng = logoImageDataUrl.includes('data:image/png');
+          let pdfLogoImage;
+          if (isJpg) {
+            pdfLogoImage = await pdfDoc.embedJpg(logoImage);
+          } else if (isPng) {
+            pdfLogoImage = await pdfDoc.embedPng(logoImage);
+          }
+          const firstPage = pdfDoc.insertPage(0);
+          addFirstPage(firstPage, pdfLogoImage, req.user.Company);
+          const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
+          pdfDoc.getPages().slice(1).forEach(async (page) => {
+            const { width, height } = page.getSize();
+            const watermarkText = 'Powered By Feat Technology';
+            const watermarkFontSize = 20;
+            const watermarkTextWidth = (helveticaFont.widthOfTextAtSize(watermarkText, watermarkFontSize));
+            const centerWatermarkX = width / 2 - watermarkTextWidth / 2;
+            const centerWatermarkY = height / 2 + 150;
+            page.drawText(watermarkText, { x: centerWatermarkX, y: centerWatermarkY, fontSize: 20, color: rgb(0, 0, 0), opacity: 0.35, rotate: degrees(-45) });
+          });
+          // Save the modified PDF
+          const modifiedPdfBuffer = await pdfDoc.save();
+
+          const cloudinaryResult = await uploadToCloudinary(modifiedPdfBuffer);
           const secureUrl = cloudinaryResult.secure_url;
           // Update the Document property of the corresponding team member
           teamData.TeamMembers[index].Document = secureUrl;

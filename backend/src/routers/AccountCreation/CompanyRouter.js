@@ -44,17 +44,16 @@ router.post('/create-company',upload.single('CompanyLogo'), async (req, res) => 
   try {
 
     const result = await uploadToCloudinary(req.file.buffer);
-    const companyData = req.body; // The Company data sent in the request body
+    const companyData = req.body; 
     const createdCompany = new Company({
       ...companyData,
       CompanyLogo : result.secure_url
     });
 
     await createdCompany.save();
-    console.log(new Date().toLocaleString() + ' ' + 'Creating Company document...');
 
     res.status(201).json({ status: true, message: "Company document created successfully", data: createdCompany });
-    console.log(new Date().toLocaleString() + ' ' + 'CREATE Company document Successfully!');
+    
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Error creating Company document', error: error.message });

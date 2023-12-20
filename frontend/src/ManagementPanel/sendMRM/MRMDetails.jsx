@@ -62,7 +62,7 @@ function MRMDetails() {
                     <div className='d-flex flex-row px-lg-5 mx-lg-5 px-2 mx-2 my-1'>
                         <BsArrowLeftCircle role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
                             {
-                                dispatch(updateTabData({ ...tabData, Tab: 'Generate MRM' }))
+                                dispatch(updateTabData({ ...tabData, Tab: 'Minutes of Meeting' }))
                             }
                         }} />
 

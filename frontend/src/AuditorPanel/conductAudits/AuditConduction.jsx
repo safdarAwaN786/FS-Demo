@@ -206,17 +206,15 @@ function AuditConduction() {
                                                 )}
                                                 {question.ComplianceType === 'Yes/No' && (
                                                     <div className='d-flex flex-row flex-wrap'>
-
                                                         <input onChange={(e) => {
                                                             const updatedAnswers = [...answers]
                                                             if (!updatedAnswers[index]) {
                                                                 updatedAnswers[index] = {};
                                                             }
-
                                                             updatedAnswers[index].question = question._id;
                                                             updatedAnswers[index].YesNoAnswer = 'Yes';
                                                             setAnswers(updatedAnswers);
-                                                        }} type="radio" class="btn-check" name={question._id} id={`Yes-${index}`} autocomplete="off" />
+                                                        }} type="radio" class="btn-check" name={question._id} id={`Yes-${index}`} autocomplete="off" {...question.Required ? { required: true } : {}}/>
                                                         <label class="btn btn-outline-success m-2" for={`Yes-${index}`}>Yes</label>
 
                                                         <input onChange={(e) => {
@@ -228,7 +226,7 @@ function AuditConduction() {
                                                             updatedAnswers[index].question = question._id;
                                                             updatedAnswers[index].YesNoAnswer = 'No';
                                                             setAnswers(updatedAnswers);
-                                                        }} type="radio" class="btn-check" name={question._id} id={`No-${index}`} autocomplete="off" />
+                                                        }} type="radio" class="btn-check" name={question._id} id={`No-${index}`} autocomplete="off" {...(questions[index].Required ? { required: true } : {})}/>
                                                         <label class="btn btn-outline-danger m-2" for={`No-${index}`}>No</label>
                                                         <input onChange={(e) => {
                                                             const updatedAnswers = [...answers]
@@ -239,7 +237,7 @@ function AuditConduction() {
                                                             updatedAnswers[index].question = question._id;
                                                             updatedAnswers[index].YesNoAnswer = 'N/A';
                                                             setAnswers(updatedAnswers);
-                                                        }} type="radio" class="btn-check" name={question._id} id={`N/A-${index}`} autocomplete="off" />
+                                                        }} type="radio" class="btn-check" name={question._id} id={`N/A-${index}`} autocomplete="off" {...(questions[index].Required ? { required: true } : {})}/>
                                                         <label class="btn btn-outline-secondary m-2" for={`N/A-${index}`}>N/A</label>
                                                     </div>
                                                 )}
@@ -255,7 +253,7 @@ function AuditConduction() {
                                                             updatedAnswers[index].question = question._id;
                                                             updatedAnswers[index].SafeAtRiskAnswer = 'Safe';
                                                             setAnswers(updatedAnswers);
-                                                        }} type="radio" class="btn-check" name={question._id} id={`Safe-${index}`} autocomplete="off" />
+                                                        }} type="radio" class="btn-check" name={question._id} id={`Safe-${index}`} autocomplete="off" {...question.Required ? { required: true } : {}}/>
                                                         <label class="btn btn-outline-success m-2" for={`Safe-${index}`}>Safe</label>
 
                                                         <input onChange={(e) => {
@@ -267,7 +265,7 @@ function AuditConduction() {
                                                             updatedAnswers[index].question = question._id;
                                                             updatedAnswers[index].SafeAtRiskAnswer = 'At Risk';
                                                             setAnswers(updatedAnswers);
-                                                        }} type="radio" class="btn-check" name={question._id} id={`At Risk-${index}`} autocomplete="off" />
+                                                        }} type="radio" class="btn-check" name={question._id} id={`At Risk-${index}`} autocomplete="off" {...question.Required ? { required: true } : {}}/>
                                                         <label class="btn btn-outline-danger m-2" for={`At Risk-${index}`}>At Risk</label>
                                                         <input onChange={(e) => {
                                                             const updatedAnswers = [...answers]
@@ -278,7 +276,7 @@ function AuditConduction() {
                                                             updatedAnswers[index].question = question._id;
                                                             updatedAnswers[index].SafeAtRiskAnswer = 'N/A';
                                                             setAnswers(updatedAnswers);
-                                                        }} type="radio" class="btn-check" name={question._id} id={`N/A-${index}`} autocomplete="off" />
+                                                        }} type="radio" class="btn-check" name={question._id} id={`N/A-${index}`} autocomplete="off" {...question.Required ? { required: true } : {}}/>
                                                         <label class="btn btn-outline-secondary m-2" for={`N/A-${index}`}>N/A</label>
                                                     </div>
                                                 )}
@@ -295,7 +293,7 @@ function AuditConduction() {
                                                             updatedAnswers[index].question = question._id;
                                                             updatedAnswers[index].PassFailAnswer = 'Pass';
                                                             setAnswers(updatedAnswers);
-                                                        }} type="radio" class="btn-check" name={question._id} id={`Pass-${index}`} autocomplete="off" />
+                                                        }} type="radio" class="btn-check" name={question._id} id={`Pass-${index}`} autocomplete="off" {...question.Required ? { required: true } : {}}/>
                                                         <label class="btn btn-outline-success m-2" for={`Pass-${index}`}>Pass</label>
 
                                                         <input onChange={(e) => {
@@ -307,7 +305,7 @@ function AuditConduction() {
                                                             updatedAnswers[index].question = question._id;
                                                             updatedAnswers[index].PassFailAnswer = 'Fail';
                                                             setAnswers(updatedAnswers);
-                                                        }} type="radio" class="btn-check" name={question._id} id={`Fail-${index}`} autocomplete="off" />
+                                                        }} type="radio" class="btn-check" name={question._id} id={`Fail-${index}`} autocomplete="off" {...question.Required ? { required: true } : {}}/>
                                                         <label class="btn btn-outline-danger m-2" for={`Fail-${index}`}>Fail</label>
                                                         <input onChange={(e) => {
                                                             const updatedAnswers = [...answers]
@@ -318,7 +316,7 @@ function AuditConduction() {
                                                             updatedAnswers[index].question = question._id;
                                                             updatedAnswers[index].PassFailAnswer = 'N/A';
                                                             setAnswers(updatedAnswers);
-                                                        }} type="radio" class="btn-check" name={question._id} id={`N/A-${index}`} autocomplete="off" />
+                                                        }} type="radio" class="btn-check" name={question._id} id={`N/A-${index}`} autocomplete="off" {...question.Required ? { required: true } : {}}/>
                                                         <label class="btn btn-outline-secondary m-2" for={`N/A-${index}`}>N/A</label>
                                                     </div>
                                                 )}
@@ -334,7 +332,7 @@ function AuditConduction() {
                                                             updatedAnswers[index].question = question._id;
                                                             updatedAnswers[index].CompliantNonCompliantAnswer = 'Compliant';
                                                             setAnswers(updatedAnswers);
-                                                        }} type="radio" class="btn-check" name={question._id} id={`Compliant-${index}`} autocomplete="off" />
+                                                        }} type="radio" class="btn-check" name={question._id} id={`Compliant-${index}`} autocomplete="off" {...question.Required ? { required: true } : {}}/>
                                                         <label class="btn btn-outline-success m-2" for={`Compliant-${index}`}>Compliant</label>
 
                                                         <input onChange={(e) => {
@@ -346,7 +344,7 @@ function AuditConduction() {
                                                             updatedAnswers[index].question = question._id;
                                                             updatedAnswers[index].CompliantNonCompliantAnswer = 'Non-Compliant';
                                                             setAnswers(updatedAnswers);
-                                                        }} type="radio" class="btn-check" name={question._id} id={`Non-Compliant-${index}`} autocomplete="off" />
+                                                        }} type="radio" class="btn-check" name={question._id} id={`Non-Compliant-${index}`} autocomplete="off" {...question.Required ? { required: true } : {}}/>
                                                         <label class="btn btn-outline-danger m-2" for={`Non-Compliant-${index}`}>Non-Compliant</label>
                                                         <input onChange={(e) => {
                                                             const updatedAnswers = [...answers]
@@ -357,7 +355,7 @@ function AuditConduction() {
                                                             updatedAnswers[index].question = question._id;
                                                             updatedAnswers[index].CompliantNonCompliantAnswer = 'N/A';
                                                             setAnswers(updatedAnswers);
-                                                        }} type="radio" class="btn-check" name={question._id} id={`N/A-${index}`} autocomplete="off" />
+                                                        }} type="radio" class="btn-check" name={question._id} id={`N/A-${index}`} autocomplete="off" {...question.Required ? { required: true } : {}}/>
                                                         <label class="btn btn-outline-secondary m-2" for={`N/A-${index}`}>N/A</label>
                                                     </div>
                                                 )}
@@ -373,7 +371,7 @@ function AuditConduction() {
                                                             updatedAnswers[index].question = question._id;
                                                             updatedAnswers[index].GoodFairPoorAnswer = 'Good';
                                                             setAnswers(updatedAnswers);
-                                                        }} type="radio" class="btn-check" name={question._id} id={`Good-${index}`} autocomplete="off" />
+                                                        }} type="radio" class="btn-check" name={question._id} id={`Good-${index}`} autocomplete="off" {...question.Required ? { required: true } : {}}/>
                                                         <label class="btn btn-outline-success m-2" for={`Good-${index}`}>Good</label>
                                                         <input onChange={(e) => {
                                                             const updatedAnswers = [...answers]
@@ -384,7 +382,7 @@ function AuditConduction() {
                                                             updatedAnswers[index].question = question._id;
                                                             updatedAnswers[index].GoodFairPoorAnswer = 'Fair';
                                                             setAnswers(updatedAnswers);
-                                                        }} type="radio" class="btn-check" name={question._id} id={`Fair-${index}`} autocomplete="off" />
+                                                        }} type="radio" class="btn-check" name={question._id} id={`Fair-${index}`} autocomplete="off" {...question.Required ? { required: true } : {}}/>
                                                         <label class="btn btn-outline-warning m-2" for={`Fair-${index}`}>Fair</label>
 
                                                         <input onChange={(e) => {
@@ -396,7 +394,7 @@ function AuditConduction() {
                                                             updatedAnswers[index].question = question._id;
                                                             updatedAnswers[index].GoodFairPoorAnswer = 'Poor';
                                                             setAnswers(updatedAnswers);
-                                                        }} type="radio" class="btn-check" name={question._id} id={`Poor-${index}`} autocomplete="off" />
+                                                        }} type="radio" class="btn-check" name={question._id} id={`Poor-${index}`} autocomplete="off" {...question.Required ? { required: true } : {}}/>
                                                         <label class="btn btn-outline-danger m-2" for={`Poor-${index}`}>Poor</label>
                                                         <input onChange={(e) => {
                                                             const updatedAnswers = [...answers]
@@ -407,7 +405,7 @@ function AuditConduction() {
                                                             updatedAnswers[index].question = question._id;
                                                             updatedAnswers[index].GoodFairPoorAnswer = 'N/A';
                                                             setAnswers(updatedAnswers);
-                                                        }} type="radio" class="btn-check" name={question._id} id={`N/A-${index}`} autocomplete="off" />
+                                                        }} type="radio" class="btn-check" name={question._id} id={`N/A-${index}`} autocomplete="off" {...question.Required ? { required: true } : {}}/>
                                                         <label class="btn btn-outline-secondary m-2" for={`N/A-${index}`}>N/A</label>
                                                     </div>
                                                 )}
@@ -424,7 +422,7 @@ function AuditConduction() {
                                                             updatedAnswers[index].question = question._id;
                                                             updatedAnswers[index].ConformObservationAnswer = 'Conform';
                                                             setAnswers(updatedAnswers);
-                                                        }} type="radio" class="btn-check" name={question._id} id={`Conform-${index}`} autocomplete="off" />
+                                                        }} type="radio" class="btn-check" name={question._id} id={`Conform-${index}`} autocomplete="off" {...question.Required ? { required: true } : {}}/>
                                                         <label class="btn btn-outline-success m-2" for={`Conform-${index}`}>Conform</label>
                                                         <input onChange={(e) => {
                                                             const updatedAnswers = [...answers]
@@ -435,7 +433,7 @@ function AuditConduction() {
                                                             updatedAnswers[index].question = question._id;
                                                             updatedAnswers[index].ConformObservationAnswer = 'Minor Non-Conform';
                                                             setAnswers(updatedAnswers);
-                                                        }} type="radio" class="btn-check" name={question._id} id={`Minor Non-Conform-${index}`} autocomplete="off" />
+                                                        }} type="radio" class="btn-check" name={question._id} id={`Minor Non-Conform-${index}`} autocomplete="off" {...question.Required ? { required: true } : {}}/>
                                                         <label class="btn btn-outline-warning m-2" for={`Minor Non-Conform-${index}`}>Minor Non-Conform</label>
 
                                                         <input onChange={(e) => {
@@ -447,7 +445,7 @@ function AuditConduction() {
                                                             updatedAnswers[index].question = question._id;
                                                             updatedAnswers[index].ConformObservationAnswer = 'Major Non-Conform';
                                                             setAnswers(updatedAnswers);
-                                                        }} type="radio" class="btn-check" name={question._id} id={`Major Non-Conform-${index}`} autocomplete="off" />
+                                                        }} type="radio" class="btn-check" name={question._id} id={`Major Non-Conform-${index}`} autocomplete="off" {...question.Required ? { required: true } : {}}/>
                                                         <label class="btn btn-outline-danger m-2" for={`Major Non-Conform-${index}`}>Major Non-Conform</label>
                                                         <input onChange={(e) => {
                                                             const updatedAnswers = [...answers]
@@ -458,7 +456,7 @@ function AuditConduction() {
                                                             updatedAnswers[index].question = question._id;
                                                             updatedAnswers[index].ConformObservationAnswer = 'Critical Non-Conform';
                                                             setAnswers(updatedAnswers);
-                                                        }} type="radio" class="btn-check" name={question._id} id={`Critical Non-Conform-${index}`} autocomplete="off" />
+                                                        }} type="radio" class="btn-check" name={question._id} id={`Critical Non-Conform-${index}`} autocomplete="off" {...question.Required ? { required: true } : {}}/>
                                                         <label class="btn btn-outline-primary m-2" for={`Critical Non-Conform-${index}`}>Critical Non-Conform</label>
 
                                                         <input onChange={(e) => {
@@ -470,7 +468,7 @@ function AuditConduction() {
                                                             updatedAnswers[index].question = question._id;
                                                             updatedAnswers[index].ConformObservationAnswer = 'Observation';
                                                             setAnswers(updatedAnswers);
-                                                        }} type="radio" class="btn-check" name={question._id} id={`Observation-${index}`} autocomplete="off" />
+                                                        }} type="radio" class="btn-check" name={question._id} id={`Observation-${index}`} autocomplete="off" {...question.Required ? { required: true } : {}}/>
                                                         <label class="btn btn-outline-info m-2" for={`Observation-${index}`}>Observation</label>
                                                         <input onChange={(e) => {
                                                             const updatedAnswers = [...answers]
@@ -481,7 +479,7 @@ function AuditConduction() {
                                                             updatedAnswers[index].question = question._id;
                                                             updatedAnswers[index].ConformObservationAnswer = 'N/A';
                                                             setAnswers(updatedAnswers);
-                                                        }} type="radio" class="btn-check" name={question._id} id={`N/A-${index}`} autocomplete="off" />
+                                                        }} type="radio" class="btn-check" name={question._id} id={`N/A-${index}`} autocomplete="off" {...question.Required ? { required: true } : {}}/>
                                                         <label class="btn btn-outline-secondary m-2" for={`N/A-${index}`}>N/A</label>
                                                     </div>
                                                 )}
@@ -494,7 +492,7 @@ function AuditConduction() {
                                                             updatedAnswers[index].question = question._id;
                                                             updatedAnswers[index].Remarks = e.target.value;
                                                             setAnswers(updatedAnswers);
-                                                }} required/>
+                                                }} />
                                             </div>
 
                                             <div style={{
@@ -506,7 +504,7 @@ function AuditConduction() {
 
                                                     <div className='d-flex flex-column w-50'>
                                                         <label>Evidence Document :</label>
-                                                        <input name={`EvidenceDoc-${index}`} type='file' className='btn btn-outline-danger' />
+                                                        <input name={`EvidenceDoc-${index}`} accept='.pdf' type='file' className='btn btn-outline-danger' />
                                                     </div>
                                                 </div>
                                                 <p className='mx-2 mt-1' style={{
@@ -522,20 +520,7 @@ function AuditConduction() {
                                     </div>
                                 )
                             })}
-                            <div className='d-flex justify-content-center '>
-                                <label><b>Target Date : </b></label>
-                                <input type='date' name='TargetDate'  required/>
-                            </div>
-                            {/* <div className='d-flex flex-row mx-auto'>
-    <a onClick={addQuestion} className='btn btn-outline-danger my-4 fs-4 w-100'>Add Question</a>
-    {questions.length > 0 && (
-        <a style={{
-            borderRadius: '100px',
-            width: '40px',
-            height: '40px',
-        }} onClick={clearLastQuestion} className='btn  btn-outline-danger mx-4 my-auto pt-1  '><FaMinus /></a>
-    )}
-</div> */}
+                            
                         </div>
 
 

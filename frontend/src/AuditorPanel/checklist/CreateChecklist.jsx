@@ -127,7 +127,7 @@ function CreateChecklist() {
 
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        dispatch(updateTabData({ ...tabData, Tab: 'Checklist' }))
+                        dispatch(updateTabData({ ...tabData, Tab: 'Internal Audit Check List' }))
                     }
                 })
 
@@ -159,7 +159,7 @@ function CreateChecklist() {
                         <BsArrowLeftCircle
                             role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
                                 {
-                                    dispatch(updateTabData({ ...tabData, Tab: 'Checklist' }))
+                                    dispatch(updateTabData({ ...tabData, Tab: 'Internal Audit Check List' }))
                                 }
                             }} />
 

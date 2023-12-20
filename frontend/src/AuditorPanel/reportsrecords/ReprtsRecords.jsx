@@ -95,7 +95,6 @@ function ReportsRecords() {
                             <tr className={style.headers}>
                                 <td>Document ID</td>
                                 <td>Department</td>
-                                <td>Target Date</td>
                                 <td>Actual Date</td>
                                 <td>Status</td>
                                 <td>Non Conformance Report</td>
@@ -116,12 +115,7 @@ function ReportsRecords() {
                                                 lineHeight: "20px",
                                             }}>{audit.Checklist.ChecklistId}</p></td>
                                             <td className={style.simpleContent}>{audit.Checklist.Department.DepartmentName}</td>
-                                            {audit.TargetDate ? (
-
-                                                <td>{audit.TargetDate?.slice(0, 10).split('-')[2]}/{audit.TargetDate?.slice(0, 10).split('-')[1]}/{audit.TargetDate?.slice(0, 10).split('-')[0]}</td>
-                                            ) : (
-                                                <td><div className={`text-center ${style.yellowStatus}  `}><p>Pending</p></div></td>
-                                            )}
+                                            
                                             {audit.AuditDate ? (
 
                                                 <td>{audit.AuditDate?.slice(0, 10).split('-')[2]}/{audit.AuditDate?.slice(0, 10).split('-')[1]}/{audit.AuditDate?.slice(0, 10).split('-')[0]}</td>
@@ -135,9 +129,9 @@ function ReportsRecords() {
                                                 <p onClick={() => {
                                                     dispatch(changeId(audit._id))
                                                     dispatch(updateTabData({...tabData, Tab : 'recordReport'}))
-                                                }} className='btn btn-outline-success p-1 m-0'>Take Action</p>
+                                                }} className='btn btn-outline-success p-1 m-0'>Generate Report</p>
                                                 <p onClick={() => {
-                                                    dispatch(updateTabData({...tabData, Tab : 'viewReport'}));
+                                                    dispatch(updateTabData({...tabData, Tab : 'viewReportsList'}));
                                                     dispatch(changeId(audit._id));
                                                 }} className={style.redclick}>View</p>
                                             </td>

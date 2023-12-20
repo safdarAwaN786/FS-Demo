@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const Form = require('../../models/Admin/ListOfFormsModel').ListOfForms;
-const {QuestionModel} = require('../../models/Admin/ListOfFormsModel');
+const { QuestionModel } = require('../../models/Admin/ListOfFormsModel');
 const authMiddleware = require('../../middleware/auth');
 router.use(authMiddleware);
 
 // * Route to create a new form
-router.post('/create-form',  async (req, res) => {
+router.post('/create-form', async (req, res) => {
   try {
 
     const createdBy = req.user.Name;
@@ -20,8 +20,8 @@ router.post('/create-form',  async (req, res) => {
     const createdForm = new Form({
       ...req.body,
       CreatedBy: createdBy,
-      User : req.user._id,
-      questions : questionsIds,
+      User: req.user._id,
+      questions: questionsIds,
     });
 
     await createdForm.save();
@@ -36,13 +36,13 @@ router.post('/create-form',  async (req, res) => {
 });
 
 // * Route to get a form by ID
-router.get('/get-form-by-id/:formId',  async (req, res) => {
+router.get('/get-form-by-id/:formId', async (req, res) => {
   try {
 
     const formId = req.params.formId;
     const form = await Form.findById(formId).populate('Department User').populate({
-      path : 'questions',
-      model : 'Question'
+      path: 'questions',
+      model: 'Question'
     })
 
     if (!form) {
@@ -60,12 +60,12 @@ router.get('/get-form-by-id/:formId',  async (req, res) => {
 });
 
 // * Route to get all forms
-router.get('/get-all-forms',  async (req, res) => {
+router.get('/get-all-forms', async (req, res) => {
   try {
 
     const forms = await Form.find().populate('Department User').populate({
-      path : 'questions',
-      model : 'Question'
+      path: 'questions',
+      model: 'Question'
     })
 
     if (!forms) {
@@ -75,7 +75,32 @@ router.get('/get-all-forms',  async (req, res) => {
 
     const formsToSend = forms.filter(Obj => Obj.User.Department.equals(req.user.Department))
     console.log('Form retrieved successfully');
-    res.status(200).json({ status: true, forms : formsToSend });
+    res.status(200).json({ status: true, forms: formsToSend });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error getting form', error: error.message });
+  }
+});
+// * Route to get all forms
+router.get('/get-forms-to-fill', async (req, res) => {
+  try {
+
+    const forms = await Form.find().populate('Department User').populate({
+      path: 'questions',
+      model: 'Question'
+    })
+
+    if (!forms) {
+      console.log('Form not found');
+      return res.status(404).json({ message: 'Form not found' });
+    }
+
+    const formsToSend = forms.filter(Obj =>
+      Obj.SendToDepartments.includes(req.user.Department)
+    )
+    console.log('Form retrieved successfully');
+    res.status(200).json({ status: true, forms: formsToSend });
 
   } catch (error) {
     console.error(error);
@@ -84,19 +109,19 @@ router.get('/get-all-forms',  async (req, res) => {
 });
 
 // * Route to update a form by ID
-router.put('/update-form',  async (req, res) => {
+router.put('/update-form', async (req, res) => {
   try {
 
     const updatedBy = req.user.Name;
     const formId = req.body._id;
-    
+
     const form = await Form.findById(formId);
-    
+
     if (!form) {
       console.log('Form not found');
       return res.status(404).json({ message: 'Form not found' });
     }
-    
+
     // Check if the user can update the form based on its status
     if (form.Status !== 'Pending' && form.Status !== 'Rejected' && form.Status !== 'Disapproved') {
       return res.status(403).json({ status: false, message: 'Form cannot be updated because of its current status' });
@@ -105,14 +130,14 @@ router.put('/update-form',  async (req, res) => {
     const questionsArr = Object.values(createdQuestions);
     const questionsIds = questionsArr.map(questionObj => questionObj._id);
     console.log(questionsIds);
-    
+
     const updates = {
       ...req.body,
-      questions : questionsIds
+      questions: questionsIds
     };
     // Increment the RevisionNo by one
     form.RevisionNo += 1;
-    
+
     // Set the update time to the current time
     form.UpdationDate = new Date();
 
@@ -130,9 +155,43 @@ router.put('/update-form',  async (req, res) => {
     res.status(500).json({ message: 'Error updating form', error: error.message });
   }
 });
+// * Route to update a form by ID
+router.put('/send-form', async (req, res) => {
+  try {
+
+    const formId = req.body._id;
+
+    const form = await Form.findById(formId);
+
+    if (!form) {
+      console.log('Form not found');
+      return res.status(404).json({ message: 'Form not found' });
+    }
+
+
+
+
+    const updates = {
+      ...req.body,
+    };
+
+
+    // Update the form fields
+    Object.assign(form, updates);
+    await form.save();
+
+    console.log(form);
+    console.log('Form Sended successfully');
+    res.status(200).json({ status: true, message: 'Form updated successfully', form });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error updating form', error: error.message });
+  }
+});
 
 // * Review Form
-router.patch('/reviewForm',  async (req, res) => {
+router.patch('/reviewForm', async (req, res) => {
   try {
 
     const reviewedBy = req.user.Name;
@@ -166,7 +225,7 @@ router.patch('/reviewForm',  async (req, res) => {
 });
 
 // * Reject Form
-router.patch('/rejectForm',  async (req, res) => {
+router.patch('/rejectForm', async (req, res) => {
   try {
 
     const rejectBy = req.user.Name;
@@ -188,21 +247,21 @@ router.patch('/rejectForm',  async (req, res) => {
 
     document.Reason = reason
     document.RejectionDate = new Date(),
-    document.ReviewDate = null,
-    document.Status = 'Rejected';
+      document.ReviewDate = null,
+      document.Status = 'Rejected';
     document.RejectedBy = rejectBy
 
     // Save the updated document
     await document.save();
     res.status(200).send({ status: true, message: 'Document rejected successfully', data: document });
-  
+
   } catch (error) {
     res.status(500).send({ status: false, message: 'Failed to update document reject', error: error.message });
   }
 });
 
 // * Approve Form
-router.patch('/approveForm',  async (req, res) => {
+router.patch('/approveForm', async (req, res) => {
   try {
 
     const approveBy = req.user.Name;
@@ -227,14 +286,14 @@ router.patch('/approveForm',  async (req, res) => {
     }
 
     document.ApprovalDate = new Date(),
-    document.Status = 'Approved';
+      document.Status = 'Approved';
     document.DisapprovalDate = null
     document.ApprovedBy = approveBy
 
     // Save the updated document
     await document.save();
     res.status(200).send({ status: true, message: 'Document approved successfully', data: document });
-  
+
   } catch (error) {
     console.log(error);
     res.status(500).send({ status: false, message: 'Failed to update document approve', error: error.message });
@@ -242,7 +301,7 @@ router.patch('/approveForm',  async (req, res) => {
 });
 
 // * Diapprove Form
-router.patch('/disapproveForm',  async (req, res) => {
+router.patch('/disapproveForm', async (req, res) => {
   try {
 
     const disapproveBy = req.user.Name;
@@ -275,7 +334,7 @@ router.patch('/disapproveForm',  async (req, res) => {
     // Save the updated document
     await document.save();
     res.status(200).send({ status: true, message: 'Document disapproved successfully', data: document });
-  
+
   } catch (error) {
     res.status(500).send({ status: false, message: 'Failed to update document disapprove', error: error.message });
   }

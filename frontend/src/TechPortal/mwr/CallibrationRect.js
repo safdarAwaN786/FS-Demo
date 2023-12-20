@@ -1,4 +1,3 @@
-
 import style from './CallibrationRect.module.css'
 import { useEffect, useState } from 'react'
 import axios from "axios";

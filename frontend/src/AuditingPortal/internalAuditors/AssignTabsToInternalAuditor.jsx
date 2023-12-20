@@ -42,7 +42,7 @@ function AssignTabsToInternalAuditor() {
 
     const tabsList2 = [
         { Tab: 'Processes' },
-        { Tab: 'Internal Auditors' },
+        { Tab: 'Internal Auditor Management' },
         { Tab: 'Yearly Plan A' },
     ]
     // Tabs where Creation and Approval functionality will be choosen

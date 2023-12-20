@@ -89,7 +89,7 @@ function AddProcessDetails() {
                     confirmButtonText: 'Go!',
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        dispatch(updateTabData({ ...tabData, Tab: 'Process Details' }))
+                        dispatch(updateTabData({ ...tabData, Tab: 'Construct Flow Diagram' }))
                     }
                 })
 
@@ -126,7 +126,7 @@ function AddProcessDetails() {
                         <BsArrowLeftCircle
                             role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
                                 {
-                                    dispatch(updateTabData({ ...tabData, Tab: 'Process Details' }))
+                                    dispatch(updateTabData({ ...tabData, Tab: 'Construct Flow Diagram' }))
                                 }
                             }} />
 
@@ -138,7 +138,7 @@ function AddProcessDetails() {
                             <span></span>
                         </div>
                         <div className={`${style.heading} ms-3 `}>
-                            Add Process Description
+                            Add Flow Diagram
                         </div>
                     </div>
                     <form encType='multipart/form-data' onSubmit={(event) => {

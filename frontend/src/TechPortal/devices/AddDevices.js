@@ -78,7 +78,7 @@ function AddDevices() {
                 <div className='d-flex flex-row bg-white px-lg-5 mx-1 px-2 py-2'>
                     <BsArrowLeftCircle role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
                         {
-                            dispatch(updateTabData({ ...tabData, Tab: 'Measuring Devices' }))
+                            dispatch(updateTabData({ ...tabData, Tab: 'Master List of Monitoring and Measuring Devices' }))
 
                         }
                     }} />
@@ -471,7 +471,7 @@ function AddDevices() {
 
                                         }).then((result) => {
                                             if (result.isConfirmed) {
-                                                dispatch(updateTabData({ ...tabData, Tab: 'Measuring Devices' }))
+                                                dispatch(updateTabData({ ...tabData, Tab: 'Master List of Monitoring and Measuring Devices' }))
 
                                             }
                                         })

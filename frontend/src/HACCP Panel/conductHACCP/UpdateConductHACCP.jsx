@@ -159,7 +159,7 @@ function UpdateConductHACCP() {
 
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        dispatch(updateTabData({ ...tabData, Tab: 'Conduct HACCP' }))
+                        dispatch(updateTabData({ ...tabData, Tab: 'Conduct Risk Assessment' }))
                     }
                 })
 
@@ -193,7 +193,7 @@ function UpdateConductHACCP() {
                         <BsArrowLeftCircle
                             role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
                                 {
-                                    dispatch(updateTabData({ ...tabData, Tab: 'Conduct HACCP' }))
+                                    dispatch(updateTabData({ ...tabData, Tab: 'Conduct Risk Assessment' }))
                                 }
                             }} />
 

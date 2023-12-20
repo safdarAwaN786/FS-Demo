@@ -59,7 +59,7 @@ function AssignTabsToEmployee() {
         // { Tab: 'Internal Auditors' },
         // { Tab: 'Yearly Plan A' },
         { Tab: 'Yearly Plan H' },
-        { Tab: 'Employees' },
+        { Tab: 'Employee Registration' },
         { Tab: 'Trainings' },
         { Tab: 'Trainers' },
         // { Tab: 'Machinery' },

@@ -9,14 +9,21 @@ const ReportsSchema = new mongoose.Schema({
         ref: 'ConductAudits',
         required: true,
     },
-    User : {
-        type : Schema.Types.ObjectId,
-        ref : 'User'
+    User: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
     },
-
-    TargetDate: {
-        type: Date
-    },
+    SelectedAnswers: [
+        {
+            Answer: {
+                type: Schema.Types.ObjectId,
+                ref: 'ChecklistAnswer',
+            },
+            TargetDate: {
+                type: Date
+            }
+        }
+    ],
 
     ReportDate: {
         type: Date
@@ -26,9 +33,7 @@ const ReportsSchema = new mongoose.Schema({
         type: String
     },
 
-    ReportDate: {
-        type: Date
-    }
+
 
 }, {
     timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }

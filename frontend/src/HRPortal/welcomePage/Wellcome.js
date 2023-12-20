@@ -4,7 +4,7 @@ import welcomeImg from '../../assets/images/sidebar/welcomeimg.svg'
 import { useSelector } from 'react-redux';
 
 function Wellcome() {
-  const [offcanvas, setOffcanvas] = useState(false);
+ 
 
   const user = useSelector(state => state.auth?.user);
   return (
@@ -12,7 +12,7 @@ function Wellcome() {
       
       <div className={style.welcome}>
         <img src={welcomeImg} alt="" />
-        <p>Welcome to {user?.Department.ShortName} Panel!</p>
+        <p>Welcome to {user?.Department?.DepartmentName} Panel!</p>
       </div>
     </div>
   )

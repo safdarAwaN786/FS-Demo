@@ -92,7 +92,7 @@ function UpdateProductDetails() {
 
             }).then((result) => {
                 if (result.isConfirmed) {
-                    dispatch(updateTabData({ ...tabData, Tab: 'Product Details' }))
+                    dispatch(updateTabData({ ...tabData, Tab: 'Describe Product' }))
 
                 }
             })
@@ -123,7 +123,7 @@ function UpdateProductDetails() {
                         <BsArrowLeftCircle
                             role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
                                 {
-                                    dispatch({ ...tabData, Tab: 'Product Details' })
+                                    dispatch({ ...tabData, Tab: 'Describe Product' })
 
                                 }
                             }} />

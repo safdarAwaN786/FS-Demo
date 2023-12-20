@@ -184,6 +184,11 @@ const UserSchema = new mongoose.Schema({
         default : false,
         required : true
     },
+    isDeputyOwner : {
+        type : Boolean,
+        default : false,
+        required : true
+    },
     isAuditor : {
         type : Boolean,
         default : false,

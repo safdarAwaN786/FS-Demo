@@ -18,10 +18,20 @@ const FormRecordsSchema = new mongoose.Schema({
   FillBy: {
     type: String
   },
-
+  VerifiedBy: {
+    type: String
+  },
+  Status: {
+    type: String,
+    enum: ['Pending', 'Verified', 'Rejected'],
+    default: 'Pending'
+  },
   FillDate: {
     type: Date,
     default: Date.now,
+  },
+  VerificationDate: {
+    type: Date
   },
 
   Comment: {

@@ -119,7 +119,7 @@ function ProcessDetails() {
                             dispatch(updateTabData({ ...tabData, Tab: 'addProcessDetails' }));
                         }}>
                             <img src={add} alt="" />
-                            <p>Add Process</p>
+                            <p>Add Flow Diagram</p>
                         </div>
                     )}
                 </div>
@@ -150,7 +150,7 @@ function ProcessDetails() {
                                     <td></td>
 
                                 )}
-                                <td>Process Details</td>
+                                <td>Flow Diagram</td>
                                 <td>Approved By</td>
                                 <td>Approval Date</td>
                                 <td>Status</td>

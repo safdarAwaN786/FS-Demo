@@ -157,7 +157,7 @@ function AddAuditingYearlyPlan() {
                     confirmButtonText: 'Go!',
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        dispatch(updateTabData({ ...tabData, Tab: 'Yearly Plan A' }))
+                        dispatch(updateTabData({ ...tabData, Tab: 'Audit Program (Yearly Plan)' }))
                     }
                 })
             }).catch((error) => {
@@ -208,11 +208,11 @@ function AddAuditingYearlyPlan() {
                         let hasError = false; // Initialize a variable to track errors
 
                         for (let i = 0; i < yearlyPlanData.Selected.length; i++) {
-                            if (yearlyPlanData.Selected[i].Risk === 'High' && yearlyPlanData.Selected[i].monthNames.length !== 3) {
+                            if (yearlyPlanData.Selected[i].Risk === 'High' && yearlyPlanData.Selected[i].monthNames.length < 3) {
                                 hasError = true; // Set the error flag to true
-                            } else if (yearlyPlanData.Selected[i].Risk === 'Medium' && yearlyPlanData.Selected[i].monthNames.length !== 2) {
+                            } else if (yearlyPlanData.Selected[i].Risk === 'Medium' && yearlyPlanData.Selected[i].monthNames.length < 2) {
                                 hasError = true; // Set the error flag to true
-                            } else if (yearlyPlanData.Selected[i].Risk === 'Low' && yearlyPlanData.Selected[i].monthNames.length !== 1) {
+                            } else if (yearlyPlanData.Selected[i].Risk === 'Low' && yearlyPlanData.Selected[i].monthNames.length < 1) {
                                 hasError = true; // Set the error flag to true
                             }
                         }
@@ -233,7 +233,7 @@ function AddAuditingYearlyPlan() {
                     <div className='d-flex flex-row px-lg-5  px-2 mx-2 my-2'>
                         <BsArrowLeftCircle role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
                             {
-                                dispatch(updateTabData({ ...tabData, Tab: 'Yearly Plan A' }))
+                                dispatch(updateTabData({ ...tabData, Tab: 'Audit Program (Yearly Plan)' }))
                             }
                         }} />
 
@@ -309,11 +309,10 @@ function AddAuditingYearlyPlan() {
 
 
 
-                    <div className={style.btn}>
+                    <div className={`${style.btn} mb-3`}>
                         <button onClick={() => {
                             setDataToSend(yearlyPlanData);
-
-                        }} type='submit' >Submit</button>
+                        }} type='submit' className='mb-3' >Submit</button>
                     </div>
 
 
@@ -381,9 +380,9 @@ function AddAuditingYearlyPlan() {
                     <div class={style.alertparent}>
                         <div class={style.alert2}>
                             <p class={style.msg}>Kindly select the plan according to Risk Assessment :</p>
-                            <p class={style.msg}>High : Exactly 3 months should choosen</p>
-                            <p class={style.msg}>Medium : Exactly 2 months should choosen</p>
-                            <p class={style.msg}>Low : Exactly 1 months should choosen</p>
+                            <p class={style.msg}>High : Minimum 3 months should choosen</p>
+                            <p class={style.msg}>Medium : Minimum 2 months should choosen</p>
+                            <p class={style.msg}>Low : Minimum 1 months should choosen</p>
                             <div className={style.alertbtns}>
                                 <button onClick={() => {
                                     setSelectionError(false);

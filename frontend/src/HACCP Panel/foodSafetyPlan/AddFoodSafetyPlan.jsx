@@ -99,7 +99,7 @@ function AddFoodSafetyPlan() {
 
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        dispatch(updateTabData({ ...tabData, Tab: 'Food Safety Plan' }))
+                        dispatch(updateTabData({ ...tabData, Tab: 'Generate Food Safety Plan' }))
                     }
                 })
 

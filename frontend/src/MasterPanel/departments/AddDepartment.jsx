@@ -25,6 +25,7 @@ function AddDepartments() {
         dispatch(setLoading(true));
         axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-companies`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
             setCompanies(res.data.data);
+            dispatch(setLoading(false))
         }).catch(err => {
             dispatch(setLoading(false));
             Swal.fire({

@@ -37,7 +37,7 @@ function PersonalRec() {
                   
                   }).then( (result ) => {
                     if (result.isConfirmed) {
-                        dispatch(updateTabData({...tabData, Tab : 'Personal Rec'}));
+                        dispatch(updateTabData({...tabData, Tab : 'Employee Requisition'}));
                     }
                   })
             }).catch(err => {

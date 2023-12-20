@@ -115,7 +115,7 @@ function FoodSafetyPlanMembers() {
                     <BsArrowLeftCircle
                         role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
                             {
-                                dispatch(updateTabData({...tabData, Tab : 'Food Safety Plan'}))
+                                dispatch(updateTabData({...tabData, Tab : 'Generate Food Safety Plan'}))
                             }
                         }} />
 

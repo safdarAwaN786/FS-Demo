@@ -79,14 +79,14 @@
 }
 .tableParent {
   width: 93%;
-  height: 620px;
+  height: 500px;
   margin: auto;
   margin-top: 13px;
   margin-left: 18px;
 }
 .tableParent2 {
   width: 95%;
-  height: 620px;
+  height: 500px;
   margin: auto;
   margin-top: 13px;
   overflow-x: scroll;

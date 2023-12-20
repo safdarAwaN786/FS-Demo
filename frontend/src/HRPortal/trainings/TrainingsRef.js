@@ -33,9 +33,9 @@ function TrainingsRef() {
         }).catch(err => {
             dispatch(setLoading(false));
             Swal.fire({
-                icon : 'error',
-                title : 'OOps..',
-                text : 'Something went wrong, Try Again!'
+                icon: 'error',
+                title: 'OOps..',
+                text: 'Something went wrong, Try Again!'
             })
         })
     }, [])
@@ -75,40 +75,58 @@ function TrainingsRef() {
         }
     }
 
+    const user = useSelector(state => state.auth.user)
+
+
     const handleDownloadImage = async (imageURL) => {
         try {
-            dispatch(setLoading(true));
-            const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/download-image`, {
-                params: {
-                    url: imageURL,
-                },
-                responseType: 'blob', headers: { Authorization: `Bearer ${userToken}` }  // Specify the response type as 'blob' to handle binary data
-            });
+            if (imageURL) {
 
-            // Create a Blob object from the response data
-            const blob = new Blob([response.data]);
+                dispatch(setLoading(true))
+                const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/download-image`, {
+                    params: {
+                        url: imageURL,
+                    },
+                    responseType: 'blob', headers: { Authorization: `Bearer ${userToken}` } // Specify the response type as 'blob' to handle binary data
+                });
 
-            // Create a temporary anchor element
-            const link = document.createElement('a');
-            link.href = window.URL.createObjectURL(blob);
-            // Set the download attribute and suggested filename for the downloaded image
-            link.download = `file-homage${imageURL.substring(imageURL.lastIndexOf('.'))}`;
-            // Append the anchor element to the document body and click it to trigger the download
-            document.body.appendChild(link);
-            dispatch(setLoading(false));
-            link.click();
-            // Clean up by removing the temporary anchor element
-            document.body.removeChild(link);
+
+                let blob;
+
+                blob = new Blob([response.data]);
+                // }
+
+                // Create a temporary anchor element
+                const link = document.createElement('a');
+                link.href = window.URL.createObjectURL(blob);
+
+                // Set the download attribute and suggested filename for the downloaded image
+                link.download = `${user.Department.DepartmentName}-FSMS${imageURL.substring(imageURL.lastIndexOf('.'))}`;
+
+                // Append the anchor element to the document body and click it to trigger the download
+                document.body.appendChild(link);
+                dispatch(setLoading(false))
+                link.click();
+                // Clean up by removing the temporary anchor element
+                document.body.removeChild(link);
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'OOps..',
+                    text: 'No any file uploaded here!'
+                })
+            }
         } catch (error) {
             dispatch(setLoading(false))
             Swal.fire({
-                icon : 'error',
-                title : 'OOps..',
-                text : 'Something went wrong, Try Again!'
+                icon: 'error',
+                title: 'OOps..',
+                text: 'Something went wrong, Try Again!'
             })
         }
 
     };
+
 
     return (
         <>
@@ -123,7 +141,7 @@ function TrainingsRef() {
                     {tabData?.Creation && (
 
                         <div className={style.sec2} onClick={() => {
-                            dispatch(updateTabData({...tabData, Tab : 'addTraining'}));
+                            dispatch(updateTabData({ ...tabData, Tab: 'addTraining' }));
                         }}>
                             <img src={add} alt="" />
                             <p>Add New</p>

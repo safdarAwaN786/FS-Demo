@@ -89,6 +89,10 @@ const FormSchema = new mongoose.Schema({
     type : Schema.Types.ObjectId,
     ref : 'Question'
   }],
+  SendToDepartments : [{
+    type : Schema.Types.ObjectId,
+    ref : 'Department'
+  }],
 
   RevisionNo: {
     type: Number,

@@ -37,9 +37,9 @@ function FillForm() {
         }).catch(err => {
             dispatch(setLoading(false));
             Swal.fire({
-                icon : 'error',
-                title : 'OOps..',
-                text : 'Something went wrong, Try Again!'
+                icon: 'error',
+                title: 'OOps..',
+                text: 'Something went wrong, Try Again!'
             })
         })
     }, [])
@@ -70,16 +70,16 @@ function FillForm() {
 
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        dispatch(updateTabData({ ...tabData, Tab: 'Form Records' }))
+                        dispatch(updateTabData({ ...tabData, Tab: 'Record Keeping' }))
                     }
                 })
 
             }).catch(err => {
                 dispatch(setLoading(false));
                 Swal.fire({
-                    icon : 'error',
-                    title : 'OOps..',
-                    text : 'Something went wrong, Try Again!'
+                    icon: 'error',
+                    title: 'OOps..',
+                    text: 'Something went wrong, Try Again!'
                 })
             })
         } else {
@@ -100,7 +100,7 @@ function FillForm() {
                 <div className={`${style.form} mt-5`}>
                     <div className='bg-white px-2    mb-1 '>
                         <BsArrowLeftCircle onClick={(e) => {
-                            dispatch(updateTabData({ ...tabData, Tab: 'Form Records' }))
+                            dispatch(updateTabData({ ...tabData, Tab: 'Record Keeping' }))
                         }} className='fs-3 text-danger mx-1' role='button' />
                     </div>
                     <div className={`${style.headers} mt-0`}>
@@ -143,38 +143,30 @@ function FillForm() {
                             }
                         }}>
 
-                            <div>
+
+                            <div className='w-100'>
                                 <p className='text-black'>Document Type</p>
-                                <select value={dataToSend?.DocumentType} onChange={(e) => {
-                                    setDataToSend({ ...dataToSend, [e.target.name]: e.target.value })
-                                }} name='DocumentType' className={`form-select  form-select-lg mb-3`} aria-label="Large select example" required readOnly>
-                                    <option disabled selected>{dataToSend?.DocumentType}</option>
-
-
-                                </select>
+                                <div>
+                                    <input value={dataToSend?.DocumentType} className='w-100' name='FormName' type="text" readOnly />
+                                </div>
                             </div>
-                            <div className='mb-4'>
+                            <div className='w-100'>
                                 <p className='text-black'>Department</p>
                                 <div>
-                                    <select value={dataToSend?.Department.DepartmentName} name='Department' className={`form-select  form-select-lg `} aria-label="Large select example" readOnly >
-                                        <option selected>{dataToSend?.Department.DepartmentName}</option>
-
-                                    </select>
+                                    <input value={dataToSend?.Department.DepartmentName} className='w-100' name='FormName' type="text" readOnly />
                                 </div>
                             </div>
 
-                            <div>
+                            <div className='w-100'>
                                 <p className='text-black'>Maintenance Frequency</p>
-                                <select value={dataToSend?.MaintenanceFrequency} name='MaintenanceFrequency' className={`form-select  form-select-lg mb-3`} aria-label="Large select example" readOnly>
-                                    <option disabled selected>{dataToSend?.MaintenanceFrequency}</option>
-
-
-                                </select>
+                                <div>
+                                    <input value={dataToSend?.MaintenanceFrequency} className='w-100' name='FormName' type="text" readOnly />
+                                </div>
                             </div>
+
                             <div className='w-100'>
                                 <p className='text-black'>Form Name</p>
                                 <div>
-
                                     <input value={dataToSend?.FormName} className='w-100' name='FormName' type="text" readOnly />
                                 </div>
                             </div>
@@ -219,7 +211,9 @@ function FillForm() {
                                                     updatedAnswers[index].shortTextAnswer = e.target.value;
                                                     setAnswers(updatedAnswers);
 
-                                                }} className='bg-light border-bottom border-secondary py-1 my-1  w-100' type='text' {...(questions[index].Required ? { required: true } : {})} />
+                                                }} style={{
+                                                    borderRadius: '0px'
+                                                }} className='bg-light border-bottom border-secondary p-1 my-1  w-100' type='text' {...(questions[index].Required ? { required: true } : {})} />
 
                                             </div>
 
@@ -245,126 +239,165 @@ function FillForm() {
                                         )}
 
                                         {(questions[index].questionType === 'Multiplechoicegrid') && (
-                                            <div className=' d-flex flex-column'>
-                                                <div className='d-flex my-2 flex-row'>
-                                                    <span className='me-5 pe-4 px-2 py-0 d-inline'>R\C</span>
-                                                    {questions[index]?.columns.map((column, colIndex) => {
-                                                        return (
-                                                            <input value={dataToSend?.questions[index].columns[colIndex].colTitle} className='bg-light border-bottom border-secondary d-inline py-0 px-1 mx-1 ' type='text' readOnly />
-                                                        )
-                                                    })}
-                                                </div>
-
-
-                                                {questions[index]?.rows?.map((row, rowIndex) => {
-                                                    return (
-
-                                                        <div className='my-2 d-flex flex-row'>
-
-
-                                                            <span>{rowIndex + 1}.</span>
-
-                                                            <input value={dataToSend?.questions[index].rows[rowIndex].rowTitle} name='rowTitle' type='text' style={{
-                                                                borderRadius: '0px'
-                                                            }} className='bg-light border-bottom border-secondary w-25 px-2 py-0 d-inline' readOnly />
-                                                            <div className='d-flex justify-content-between w-75'>
-
-
-                                                                {questions[index]?.columns.map((colnum, colIndex) => {
+                                            <>
+                                                <div className={`${style.gridCover}`}>
+                                                    <table className='table table-bordered'>
+                                                        <thead>
+                                                            <tr>
+                                                                <th style={{
+                                                                    minWidth: '120px'
+                                                                }}>R\C</th>
+                                                                {questions[index]?.columns.map((column, colIndex) => {
                                                                     return (
-                                                                        <input onChange={(e) => {
-                                                                            const updatedAnswers = [...answers]
-                                                                            if (!updatedAnswers[index]) {
-                                                                                updatedAnswers[index] = {};
-                                                                            }
-
-                                                                            updatedAnswers[index].question = questions[index]._id;
-                                                                            if (!updatedAnswers[index].multipleChoiceGridAnswers) {
-                                                                                updatedAnswers[index].multipleChoiceGridAnswers = [];
-                                                                            }
-
-                                                                            if (e.target.checked) {
-                                                                                updatedAnswers[index].multipleChoiceGridAnswers.push(`R${rowIndex}-C${colIndex}`);
-                                                                            } else {
-                                                                                updatedAnswers[index].multipleChoiceGridAnswers.filter(answer => answer !== `R${rowIndex}-C${colIndex}`)
-                                                                            }
-                                                                            setAnswers(updatedAnswers);
-                                                                        }} className='mx-2' style={{
-                                                                            width: '20px',
-                                                                            height: '20px'
-                                                                        }} name={`R${rowIndex}`} type='radio' {...(questions[index].Required ? { required: true } : {})} />
+                                                                        <th style={{
+                                                                            minWidth: '80px'
+                                                                        }}>
+                                                                            <input value={dataToSend?.questions[index].columns[colIndex].colTitle} className={`bg-light border-bottom border-secondary d-inline py-0 px-1 mx-1 ${style.noRadius}`} type='text' readOnly />
+                                                                        </th>
                                                                     )
                                                                 })}
-                                                            </div>
-                                                        </div>
-                                                    )
-                                                })}
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {questions[index]?.rows?.map((row, rowIndex) => {
+                                                                return (
+                                                                    <tr>
+                                                                        <td>
+                                                                            <span>{rowIndex + 1}.</span>
+                                                                            <input value={dataToSend?.questions[index].rows[rowIndex].rowTitle} name='rowTitle' type='text' style={{
+                                                                                borderRadius: '0px'
+                                                                            }} className='bg-light border-bottom border-secondary px-2 py-0 d-inline' readOnly />
+                                                                        </td>
 
+                                                                        {questions[index]?.columns.map((colnum, colIndex) => {
+                                                                            return (
+                                                                                <td>
+                                                                                    <input
+                                                                                        onChange={(e) => {
+                                                                                            const updatedAnswers = [...answers];
+                                                                                            if (!updatedAnswers[index]) {
+                                                                                                updatedAnswers[index] = {};
+                                                                                            }
 
+                                                                                            updatedAnswers[index].question = questions[index]._id;
+                                                                                            if (!updatedAnswers[index].multipleChoiceGridAnswers) {
+                                                                                                updatedAnswers[index].multipleChoiceGridAnswers = [];
+                                                                                            }
 
+                                                                                            const radioValue = `R${rowIndex}-C${colIndex}`;
 
-                                            </div>
+                                                                                            // Remove all other values from the same row
+                                                                                            updatedAnswers[index].multipleChoiceGridAnswers = updatedAnswers[index].multipleChoiceGridAnswers.filter(
+                                                                                                (answer) => !answer.startsWith(`R${rowIndex}-`)
+                                                                                            );
+
+                                                                                            if (e.target.checked) {
+                                                                                                updatedAnswers[index].multipleChoiceGridAnswers.push(radioValue);
+                                                                                            }
+
+                                                                                            setAnswers(updatedAnswers);
+                                                                                        }}
+                                                                                        className='mx-2'
+                                                                                        style={{
+                                                                                            width: '20px',
+                                                                                            height: '20px',
+                                                                                        }}
+                                                                                        name={`R${rowIndex}`}
+                                                                                        type='radio'
+                                                                                        {...(questions[index].Required ? { required: true } : {})}
+                                                                                    />
+
+                                                                                </td>
+                                                                            )
+                                                                        })}
+
+                                                                    </tr>
+                                                                )
+                                                            })}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+
+                                            </>
 
                                         )}
 
                                         {(questions[index].questionType === 'Checkboxgrid') && (
-                                            <div className=' d-flex flex-column'>
-                                                <div className='d-flex my-2 flex-row'>
-                                                    <span className='me-25 pe-25 px-2 py-0 d-inline'>R\C</span>
-                                                    {questions[index]?.columns.map((column, colIndex) => {
-                                                        return (
-                                                            <input value={dataToSend?.questions[index].columns[colIndex].colTitle} className='bg-light border-bottom border-secondary d-inline py-0 px-1 mx-1 ' type='text' readOnly />
-                                                        )
-                                                    })}
-                                                </div>
-
-
-                                                {questions[index]?.rows?.map((row, rowIndex) => {
-                                                    return (
-
-                                                        <div className='my-2 d-flex flex-row'>
-
-
-                                                            <span>{rowIndex + 1}.</span>
-
-                                                            <input value={dataToSend?.questions[index].rows[rowIndex].rowTitle} type='text' style={{
-                                                                borderRadius: '0px'
-                                                            }} className='bg-light border-bottom border-secondary w-50 px-2 py-0 d-inline' readOnly />
-
-                                                            <div className='d-flex justify-content-between w-75'>
-
-                                                                {questions[index]?.columns.map((colnum, colIndex) => {
+                                            <>
+                                                <div className={`${style.gridCover}`}>
+                                                    <table className='table table-bordered'>
+                                                        <thead>
+                                                            <tr>
+                                                                <th style={{
+                                                                    minWidth: '120px'
+                                                                }}>R\C</th>
+                                                                {questions[index]?.columns.map((column, colIndex) => {
                                                                     return (
-                                                                        <input onChange={(e) => {
-                                                                            const updatedAnswers = [...answers]
-                                                                            if (!updatedAnswers[index]) {
-                                                                                updatedAnswers[index] = {};
-                                                                            }
-
-                                                                            updatedAnswers[index].question = questions[index]._id;
-                                                                            if (!updatedAnswers[index].checkboxGridAnswers) {
-                                                                                updatedAnswers[index].checkboxGridAnswers = [];
-                                                                            }
-
-                                                                            if (e.target.checked) {
-                                                                                updatedAnswers[index].checkboxGridAnswers.push(`R${rowIndex}C${colIndex}`)
-                                                                            } else {
-                                                                                updatedAnswers[index].checkboxGridAnswers = updatedAnswers[index].checkboxGridAnswers.filter((text) => {
-                                                                                    return (
-                                                                                        text !== `R${rowIndex}C${colIndex}`
-                                                                                    )
-                                                                                })
-                                                                            }
-                                                                            setAnswers(updatedAnswers);
-
-                                                                        }} className='mx-2' type='checkbox' />
+                                                                        <th style={{
+                                                                            minWidth: '80px'
+                                                                        }}>
+                                                                            <input value={dataToSend?.questions[index].columns[colIndex].colTitle} className={`bg-light border-bottom border-secondary d-inline py-0 px-1 mx-1 ${style.noRadius}`} type='text' readOnly />
+                                                                        </th>
                                                                     )
                                                                 })}
-                                                            </div>
-                                                        </div>
-                                                    )
-                                                })}
-                                            </div>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {questions[index]?.rows?.map((row, rowIndex) => {
+                                                                return (
+
+                                                                    <tr>
+
+                                                                        <td>
+
+                                                                            <span>{rowIndex + 1}.</span>
+
+                                                                            <input value={dataToSend?.questions[index].rows[rowIndex].rowTitle} type='text' style={{
+                                                                                borderRadius: '0px'
+                                                                            }} className='bg-light border-bottom border-secondary  px-2 py-0 d-inline' readOnly />
+                                                                        </td>
+
+
+
+                                                                        {questions[index]?.columns.map((colnum, colIndex) => {
+                                                                            return (
+                                                                                <td>
+
+                                                                                    <input onChange={(e) => {
+                                                                                        const updatedAnswers = [...answers]
+                                                                                        if (!updatedAnswers[index]) {
+                                                                                            updatedAnswers[index] = {};
+                                                                                        }
+
+                                                                                        updatedAnswers[index].question = questions[index]._id;
+                                                                                        if (!updatedAnswers[index].checkboxGridAnswers) {
+                                                                                            updatedAnswers[index].checkboxGridAnswers = [];
+                                                                                        }
+
+                                                                                        if (e.target.checked) {
+                                                                                            updatedAnswers[index].checkboxGridAnswers.push(`R${rowIndex}-C${colIndex}`)
+                                                                                        } else {
+                                                                                            updatedAnswers[index].checkboxGridAnswers = updatedAnswers[index].checkboxGridAnswers.filter((text) => {
+                                                                                                return (
+                                                                                                    text !== `R${rowIndex}-C${colIndex}`
+                                                                                                )
+                                                                                            })
+                                                                                        }
+                                                                                        setAnswers(updatedAnswers);
+
+                                                                                    }} className='mx-2' type='checkbox' />
+                                                                                </td>
+                                                                            )
+                                                                        })}
+
+                                                                    </tr>
+                                                                )
+                                                            })}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+
+                                            </>
 
                                         )}
 
@@ -489,9 +522,9 @@ function FillForm() {
                                         {questions[index].questionType === 'Linearscale' && (
                                             <div className=' d-flex my-3 flex-column pe-4'>
 
-                                            {answers[index]?.linearScaleAnswer && (
-                                                <span>Selected Value : {answers[index]?.linearScaleAnswer}</span>
-                                            )}
+                                                {answers[index]?.linearScaleAnswer && (
+                                                    <span>Selected Value : {answers[index]?.linearScaleAnswer}</span>
+                                                )}
 
                                                 <Slider
 

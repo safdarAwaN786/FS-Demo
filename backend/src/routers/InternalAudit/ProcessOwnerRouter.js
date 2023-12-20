@@ -60,6 +60,7 @@ router.post('/send-email-to-process-owner', async (req, res) => {
 // * Post Process Data Into MongoDB Database
 router.post('/addProcess', async (req, res) => {
     console.log("request made process..");
+    console.log(req.body);
     try {
         const userNameExist = await User.findOne({ UserName: req.body.ProcessOwner.UserName });
         if (userNameExist) {
@@ -72,7 +73,8 @@ router.post('/addProcess', async (req, res) => {
                 User: req.user._id,
                 Department: req.user.Department,
                 Company: req.user.Company,
-                isProcessOwner: true,
+                isProcessOwner: req.body.processOwner?.deputyOwner ? false : true,
+                isDeputyOwner : req.body.processOwner?.deputyOwner ? true : false,
                 CreatedBy: createdBy,
                 CreationDate: new Date(),
                 Password: CryptoJS.AES.encrypt(req.body.ProcessOwner.Password, process.env.PASS_CODE).toString(),

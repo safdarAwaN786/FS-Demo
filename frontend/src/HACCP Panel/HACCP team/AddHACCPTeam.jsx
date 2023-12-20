@@ -1,11 +1,7 @@
-
 import style from './AddHACCPTeam.module.css'
-
 import { useEffect, useState } from 'react'
 import axios from "axios";
-
 import Swal from 'sweetalert2'
-
 import { FaMinus } from 'react-icons/fa'
 import { BsArrowLeftCircle } from 'react-icons/bs';
 import { useDispatch, useSelector } from 'react-redux';
@@ -157,7 +153,7 @@ function AddHACCPTeam() {
 
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        dispatch(updateTabData({ ...tabData, Tab: 'HACCP Teams' }))
+                        dispatch(updateTabData({ ...tabData, Tab: 'HACCP Team Management' }))
                     }
                 })
 
@@ -194,7 +190,7 @@ function AddHACCPTeam() {
                         <BsArrowLeftCircle
                             role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
                                 {
-                                    dispatch(updateTabData({ ...tabData, Tab: 'HACCP Teams' }))
+                                    dispatch(updateTabData({ ...tabData, Tab: 'HACCP Team Management' }))
 
                                 }
                             }} />
@@ -341,7 +337,7 @@ function AddHACCPTeam() {
                                         </div>
                                         <div className='d-flex w-100 justify-content-center align-items-center'>
                                             <p><b>Upload Document :</b></p>
-                                            <input name={`Document-${index}`} type='file' className='p-2 m-2 btn btn-danger ' />
+                                            <input name={`Document-${index}`} type='file' accept='.pdf' className='p-2 m-2 btn btn-danger ' />
 
                                         </div>
                                     </div>

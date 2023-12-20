@@ -80,7 +80,7 @@ function AddChangeRequest() {
 
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        dispatch(updateTabData({...tabData, Tab : 'Change Requests'}))
+                        dispatch(updateTabData({...tabData, Tab : 'Document Change Creation'}))
                     }
                 })
 
@@ -112,7 +112,7 @@ function AddChangeRequest() {
                     <BsArrowLeftCircle 
                         role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
                             {
-                                dispatch(updateTabData({...tabData, Tab : 'Change Requests'}))
+                                dispatch(updateTabData({...tabData, Tab : 'Document Change Creation'}))
                             }
                         }} />
 
@@ -125,7 +125,7 @@ function AddChangeRequest() {
                             <span></span>
                         </div>
                         <div className={`${style.heading} ms-3 `}>
-                            Add Change Request
+                            Add Document Change Request
                         </div>
                     </div>
                     <form encType='multipart/form-data' onSubmit={(event) => {

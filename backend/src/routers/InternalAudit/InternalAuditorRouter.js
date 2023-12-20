@@ -12,6 +12,7 @@ const emailTemplates = require('../../EmailTemplates/userEmail.json');
 const template = emailTemplates.registrationConfirmation;
 const CryptoJS = require('crypto-js');
 router.use(authMiddleware);
+const { rgb, degrees, PDFDocument, StandardFonts } = require('pdf-lib');
 
 // * Cloudinary Setup 
 cloudinary.config({
@@ -21,6 +22,29 @@ cloudinary.config({
 });
 
 const upload = multer();
+
+// Function to add the company logo and information to the first page
+const addFirstPage = async (page, logoImage, Company) => {
+    const { width, height } = page.getSize();
+  
+    const pdfDoc = await PDFDocument.create();
+    const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica); 
+    const logoDims = { width: 300, height: 300 }; 
+    const centerTextX = width / 2;
+    page.drawImage(logoImage, { x: centerTextX - logoDims.width / 2, y: height - 400, width: logoDims.width, height: logoDims.height });
+    // Add company name (centered)
+    const companyNameText = Company.CompanyName;
+    const companyNameTextWidth = (helveticaFont.widthOfTextAtSize(companyNameText, 25));
+    page.drawText(companyNameText, { x: centerTextX - companyNameTextWidth / 2, y: height - 420, color: rgb(0, 0, 0), fontSize: 25 });
+    // Add company contact (centered)
+    const companyContactText = `Contact # ${Company.PhoneNo}`;
+    const companyContactTextWidth = (helveticaFont.widthOfTextAtSize(companyContactText, 25));
+    page.drawText(companyContactText, { x: centerTextX - companyContactTextWidth / 2, y: height - 450, color: rgb(0, 0, 0), fontSize: 25 });
+    // Add company email (centered)
+    const companyEmailText = `${Company.Email}`;
+    const companyEmailTextWidth = (helveticaFont.widthOfTextAtSize(companyEmailText, 25));
+    page.drawText(companyEmailText, { x: centerTextX - companyEmailTextWidth / 2, y: height - 480, color: rgb(0, 0, 0), fontSize: 25 });
+  };
 
 // * Upload Documents To Cloudinary
 const uploadToCloudinary = (buffer) => {
@@ -116,7 +140,6 @@ router.post("/addAuditor", upload.fields([{ name: 'AuditorImage' }, { name: 'Aud
             if (req.files['AuditorImage']) {
                 auditorImageFile = req.files['AuditorImage'][0];
 
-                // Upload the image buffer to Cloudinary and obtain the URL
                 auditorImageUrl = await uploadToCloudinary(auditorImageFile.buffer).then((result) => {
                     return (result.secure_url)
                 }).catch((err) => {
@@ -128,8 +151,34 @@ router.post("/addAuditor", upload.fields([{ name: 'AuditorImage' }, { name: 'Aud
             if (req.files['AuditorDocument']) {
                 auditorDocumentFile = req.files['AuditorDocument'][0];
 
-                // Upload the document buffers to Cloudinary and obtain the URLs
-                auditorDocumentUrl = await uploadToCloudinary(auditorDocumentFile.buffer).then((result) => {
+                const response = await axios.get(req.user.Company.CompanyLogo, { responseType: 'arraybuffer' });
+                const pdfDoc = await PDFDocument.load(auditorDocumentFile.buffer);
+                const logoImage = Buffer.from(response.data);
+                const logoImageDataUrl = `data:image/jpeg;base64,${logoImage.toString('base64')}`;
+                const isJpg = logoImageDataUrl.includes('data:image/jpeg') || logoImageDataUrl.includes('data:image/jpg');
+                const isPng = logoImageDataUrl.includes('data:image/png');
+                let pdfLogoImage;
+                if (isJpg) {
+                  pdfLogoImage = await pdfDoc.embedJpg(logoImage);
+                } else if (isPng) {
+                  pdfLogoImage = await pdfDoc.embedPng(logoImage);
+                }
+                const firstPage = pdfDoc.insertPage(0);
+                addFirstPage(firstPage, pdfLogoImage, req.user.Company);
+                const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica); 
+                pdfDoc.getPages().slice(1).forEach(async (page) => {
+                  const { width, height } = page.getSize();
+                  const watermarkText = 'Powered By Feat Technology';
+                  const watermarkFontSize = 20; 
+                  const watermarkTextWidth = (helveticaFont.widthOfTextAtSize(watermarkText, watermarkFontSize));
+                  const centerWatermarkX = width / 2 - watermarkTextWidth / 2;
+                  const centerWatermarkY = height / 2 + 150;
+                  page.drawText(watermarkText, { x: centerWatermarkX, y: centerWatermarkY, fontSize: 20, color: rgb(0, 0, 0), opacity : 0.35 , rotate: degrees(-45) });
+                });
+                // Save the modified PDF
+                const modifiedPdfBuffer = await pdfDoc.save();
+                
+                auditorDocumentUrl = await uploadToCloudinary(modifiedPdfBuffer).then((result) => {
                     return (result.secure_url)
                 }).catch((err) => {
                     console.log(err);
@@ -140,8 +189,34 @@ router.post("/addAuditor", upload.fields([{ name: 'AuditorImage' }, { name: 'Aud
             if (req.files['ApprovedAuditorLetter']) {
                 approvedAuditorDocumentFile = req.files['ApprovedAuditorLetter'][0];
 
-                // Upload the document buffers to Cloudinary and obtain the URLs
-                approvedAuditorDocumentUrl = await uploadToCloudinary(approvedAuditorDocumentFile.buffer).then((result) => {
+                const response = await axios.get(req.user.Company.CompanyLogo, { responseType: 'arraybuffer' });
+                const pdfDoc = await PDFDocument.load(approvedAuditorDocumentFile.buffer);
+                const logoImage = Buffer.from(response.data);
+                const logoImageDataUrl = `data:image/jpeg;base64,${logoImage.toString('base64')}`;
+                const isJpg = logoImageDataUrl.includes('data:image/jpeg') || logoImageDataUrl.includes('data:image/jpg');
+                const isPng = logoImageDataUrl.includes('data:image/png');
+                let pdfLogoImage;
+                if (isJpg) {
+                  pdfLogoImage = await pdfDoc.embedJpg(logoImage);
+                } else if (isPng) {
+                  pdfLogoImage = await pdfDoc.embedPng(logoImage);
+                }
+                const firstPage = pdfDoc.insertPage(0);
+                addFirstPage(firstPage, pdfLogoImage, req.user.Company);
+                const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica); 
+                pdfDoc.getPages().slice(1).forEach(async (page) => {
+                  const { width, height } = page.getSize();
+                  const watermarkText = 'Powered By Feat Technology';
+                  const watermarkFontSize = 20; 
+                  const watermarkTextWidth = (helveticaFont.widthOfTextAtSize(watermarkText, watermarkFontSize));
+                  const centerWatermarkX = width / 2 - watermarkTextWidth / 2;
+                  const centerWatermarkY = height / 2 + 150;
+                  page.drawText(watermarkText, { x: centerWatermarkX, y: centerWatermarkY, fontSize: 20, color: rgb(0, 0, 0), opacity : 0.35 , rotate: degrees(-45) });
+                });
+                // Save the modified PDF
+                const modifiedPdfBuffer = await pdfDoc.save();
+                
+                approvedAuditorDocumentUrl = await uploadToCloudinary(modifiedPdfBuffer).then((result) => {
                     return (result.secure_url)
                 }).catch((err) => {
                     console.log(err);

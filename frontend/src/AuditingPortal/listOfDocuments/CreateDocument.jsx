@@ -57,7 +57,7 @@ function CreateDocument() {
 
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        dispatch(updateTabData({ ...tabData, Tab: 'List of Documents' }))
+                        dispatch(updateTabData({ ...tabData, Tab: 'Master List of Documents' }))
                     }
                 })
 

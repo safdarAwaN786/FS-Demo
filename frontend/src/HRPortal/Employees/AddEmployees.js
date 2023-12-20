@@ -142,7 +142,7 @@ function AddEmployee() {
 
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            dispatch(updateTabData({ ...tabData, Tab: 'Employees' }));
+                            dispatch(updateTabData({ ...tabData, Tab: 'Employee Registration' }));
                         }
                     })
                 }
@@ -196,7 +196,7 @@ function AddEmployee() {
                 <div className='d-flex flex-row px-lg-5  px-2 mx-1 my-2'>
                     <BsArrowLeftCircle role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
                         {
-                            dispatch(updateTabData({ ...tabData, Tab: 'Employees' }))
+                            dispatch(updateTabData({ ...tabData, Tab: 'Employee Registration' }))
                         }
                     }} />
 
@@ -252,6 +252,7 @@ function AddEmployee() {
                                 type="file"
                                 id="file-input"
                                 name='Image'
+                                accept=".jpg, .jpeg, .png"
                                 style={{ display: 'none' }}
                                 ref={fileInputRef}
                                 onChange={handleImageChange}
@@ -343,7 +344,7 @@ function AddEmployee() {
                                     }} placeholder='Date of Birth*' required />
 
                                 </div>
-                                <input onChange={handleDocumentChange} name='CV' type='file' ref={documentRef} style={{ display: 'none' }} />
+                                <input onChange={handleDocumentChange} name='CV' type='file' accept=".pdf" ref={documentRef} style={{ display: 'none' }} />
                                 <div className='d-flex flex-wrap'>
 
                                     <p className={style.pbtn} onClick={() => {

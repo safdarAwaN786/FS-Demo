@@ -7,10 +7,10 @@ const authMiddleware = require('../../middleware/auth');
 router.use(authMiddleware);
 
 // * Route to submit user responses for a form
-router.post('/submit-response',  async (req, res) => {
+router.post('/submit-response', async (req, res) => {
   try {
 
-   
+
     const formId = req.body.Form;
 
     const form = await Form.findById(formId);
@@ -28,7 +28,7 @@ router.post('/submit-response',  async (req, res) => {
     const filledBy = req.user.Name;
     const formRecords = new FormRecords({
       ...req.body,
-      User : req.user._id,
+      User: req.user._id,
       FillBy: filledBy
     });
 
@@ -48,7 +48,7 @@ router.post('/submit-response',  async (req, res) => {
 
 
 // * Add comment to the submitted form
-router.patch('/addComment',  async (req, res) => {
+router.patch('/addComment', async (req, res) => {
   try {
 
     const { resultId, comment } = req.body;
@@ -65,9 +65,30 @@ router.patch('/addComment',  async (req, res) => {
     res.status(500).send({ status: false, message: 'Failed to update document reject', error: error.message });
   }
 });
+// * Verify the Answers of an Response
+router.patch('/verify-response', async (req, res) => {
+  try {
+
+    const { resultId } = req.body;
+
+    // Find the document by ID
+    const response = await FormRecords.findById(resultId);
+    response.Status = 'Verified';
+    response.VerifiedBy = req.user.Name;
+    response.VerificationDate = new Date();
+
+    // Save the updated document
+    await response.save();
+    res.status(200).send({ status: true, message: 'Response Verified successfully', data: response });
+
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ status: false, message: 'Failed to update document reject', error: error.message });
+  }
+});
 
 // * Route to get user responses for a form
-router.get('/get-responses-by-formId/:formId',  async (req, res) => {
+router.get('/get-responses-by-formId/:formId', async (req, res) => {
   try {
 
     const formId = req.params.formId;
@@ -77,9 +98,9 @@ router.get('/get-responses-by-formId/:formId',  async (req, res) => {
       {
         path: 'Form',
         model: 'Form',
-        populate : {
-          path : 'Department',
-          model : 'Department'
+        populate: {
+          path: 'Department',
+          model: 'Department'
         }
       },
       {
@@ -109,7 +130,7 @@ router.get('/get-responses-by-formId/:formId',  async (req, res) => {
   }
 });
 // * Route to get user responses for a form
-router.get('/get-record-by-recordId/:recordId',  async (req, res) => {
+router.get('/get-record-by-recordId/:recordId', async (req, res) => {
   try {
 
     const recordId = req.params.recordId;
@@ -119,9 +140,9 @@ router.get('/get-record-by-recordId/:recordId',  async (req, res) => {
       {
         path: 'Form',
         model: 'Form',
-        populate : {
-          path : 'Department',
-          model : 'Department'
+        populate: {
+          path: 'Department',
+          model: 'Department'
         }
       },
       {

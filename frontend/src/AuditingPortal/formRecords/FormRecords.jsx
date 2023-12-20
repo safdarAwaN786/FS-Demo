@@ -27,7 +27,7 @@ function FormRecords() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-forms`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-forms-to-fill`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             const approvedForms = response.data.forms.filter((obj) => obj.Status === 'Approved')
             setAllDataArr(approvedForms)
             setFormsList(approvedForms.slice(startIndex, endIndex));
@@ -95,10 +95,8 @@ function FormRecords() {
                             <tr className={style.headers}>
                                 <td>Form ID</td>
                                 <td>Form Name</td>
-                                <td>Result History</td>
                                 
                                 <td>Form</td>
-                                
                             </tr>
                             {
                                 formsList?.map((form, i) => {
@@ -115,13 +113,7 @@ function FormRecords() {
                                                 lineHeight: "20px",
                                             }}>{form.FormId}</p></td>
                                             <td className={style.simpleContent}>{form.FormName}</td>        
-                                            <td>
-                                                <p onClick={() => {
-                                                    dispatch(updateTabData({...tabData, Tab : 'viewResultsHistory'}))
-                                                    dispatch(changeId(form._id))
-                                                   
-                                                }} className={style.redclick}>View</p>
-                                            </td>
+                                            
                                             <td>
                                                 <p onClick={() => {
                                                     

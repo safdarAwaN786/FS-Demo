@@ -41,7 +41,7 @@ function AssignTabsToOwner() {
     // Tabs from where only  Creation functionality willl be choosen..
 
     const tabsList2 = [
-        { Tab: 'Processes' },
+        { Tab: 'Define Process' },
         { Tab: 'Internal Auditors' },
         { Tab: 'Yearly Plan A' },
     ]

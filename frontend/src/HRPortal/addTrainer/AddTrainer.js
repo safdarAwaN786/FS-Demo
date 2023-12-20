@@ -123,7 +123,7 @@ function AddTrainer() {
 
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        dispatch(updateTabData({...tabData, Tab : 'Trainers'}))
+                        dispatch(updateTabData({...tabData, Tab : 'Add Trainers'}))
                         
                     }
                 })
@@ -164,7 +164,7 @@ function AddTrainer() {
                 <div className='d-flex flex-row bg-white px-lg-3  px-2 py-2'>
                     <BsArrowLeftCircle role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
                         {
-                            dispatch(updateTabData({...tabData, Tab : 'Trainers'}))
+                            dispatch(updateTabData({...tabData, Tab : 'Add Trainers'}))
                            
                         }
                     }} />
@@ -205,6 +205,7 @@ function AddTrainer() {
                             type="file"
                             id="file-input"
                             name='TrainerImage'
+                            accept='.png, .jpg, .jpeg'
                             style={{ display: 'none' }}
                             ref={fileInputRef}
                             onChange={handleImageChange}
@@ -252,7 +253,7 @@ function AddTrainer() {
                             <input name='Specialities' type="text" placeholder='Speciality here' />
                             <img style={{ width: '20px', height: '20px', cursor: 'pointer' }} src={copyP} alt="" />
                         </div>
-                        <input onChange={handleDocumentChange} name='TrainerDocument' type='file' ref={documentRef} style={{ display: 'none' }} />
+                        <input onChange={handleDocumentChange} name='TrainerDocument' type='file' accept='.pdf' ref={documentRef} style={{ display: 'none' }} />
                         <div className={`${style.btns}`}>
 
                             <p style={{

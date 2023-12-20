@@ -161,7 +161,7 @@ function AddCompany() {
                                             <p>Company Logo</p>
                                         </div>
                                         <div className='bg-danger'>
-                                            <input name='CompanyLogo' className='btn btn-danger bg-danger w-100 ' type='file' required />
+                                            <input name='CompanyLogo' className='btn btn-danger bg-danger w-100' accept='.png, .jpg, .jpeg' type='file' required />
                                         </div>
                                     </div>
 

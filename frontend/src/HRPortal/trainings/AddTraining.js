@@ -52,7 +52,7 @@ function AddTraining() {
 
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        dispatch(updateTabData({...tabData, Tab : 'Trainings'}))
+                        dispatch(updateTabData({...tabData, Tab : 'Add Trainings'}))
                     }
                 })
 
@@ -83,7 +83,7 @@ function AddTraining() {
                 <div className='d-flex flex-row bg-white px-lg-3  px-2 py-2'>
                     <BsArrowLeftCircle role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
                         {
-                            dispatch(updateTabData({...tabData, Tab : 'Trainings'}))
+                            dispatch(updateTabData({...tabData, Tab : 'Add Trainings'}))
                         }
                     }} />
 
@@ -128,7 +128,7 @@ function AddTraining() {
                                 <textarea name='EvaluationCriteria' className={style.fortextarea} type="text" required />
                             </div>
                         </div>
-                        <input onChange={handleDocumentChange} name='TrainingMaterial' type='file' ref={documentRef} style={{ display: 'none' }} />
+                        <input onChange={handleDocumentChange} name='TrainingMaterial' type='file' accept='.pdf' ref={documentRef} style={{ display: 'none' }} />
                         <div className={style.btns}>
                             <p style={{
                                 padding: "13px 20px",

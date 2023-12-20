@@ -52,9 +52,9 @@ function AddProcess() {
         }).catch(err => {
             dispatch(setLoading(false));
             Swal.fire({
-                icon : 'error',
-                title : 'OOps..',
-                text : 'Something went wrong, Try Again!'
+                icon: 'error',
+                title: 'OOps..',
+                text: 'Something went wrong, Try Again!'
             })
         })
     }, [])
@@ -137,15 +137,15 @@ function AddProcess() {
 
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        dispatch(updateTabData({ ...tabData, Tab: 'Processes' }))
+                        dispatch(updateTabData({ ...tabData, Tab: 'Define Process' }))
                     }
                 })
             }).catch(err => {
                 dispatch(setLoading(false));
                 Swal.fire({
-                    icon : 'error',
-                    title : 'OOps..',
-                    text : 'Something went wrong, Try Again!'
+                    icon: 'error',
+                    title: 'OOps..',
+                    text: 'Something went wrong, Try Again!'
                 })
             })
         } else {
@@ -168,7 +168,7 @@ function AddProcess() {
                     <div className='d-flex flex-row px-lg-5 px-2 bg-white py-1'>
                         <BsArrowLeftCircle role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
                             {
-                                dispatch(updateTabData({ ...tabData, Tab: 'Processes' }))
+                                dispatch(updateTabData({ ...tabData, Tab: 'Define Process' }))
                             }
                         }} />
 
@@ -188,8 +188,15 @@ function AddProcess() {
                         <form encType='multipart/form-data' onSubmit={(event) => {
                             event.preventDefault();
 
-                            if (processInfo.ProcessOwner === null) {
+
+                            if (processInfo?.ProcessOwner === null) {
                                 setOwnerError(true);
+                            } else if(validationMessage !== 'Password is valid!') {
+                                Swal.fire({
+                                    icon : 'error',
+                                    title : 'OOps..',
+                                    text : validationMessage
+                                })
                             } else {
                                 alertManager();
                             }
@@ -280,24 +287,70 @@ function AddProcess() {
                                     }} className={style.fortextarea} type="text" required />
                                 </div>
                             </div>
-                            <div>
+                            <div className={`mx-auto my-2 `}>
+                                <p>Name</p>
+                                <input value={ownerDetail?.Name} type='text' name='Name' onChange={(event) => {
+                                    updateOwnerDetail(event);
+                                }} className={`p-3 w-100`} required />
+                            </div>
+                            <div className={`mx-auto my-2 `}>
+                                <p>Designation</p>
+                                <input value={ownerDetail?.Designation} type='text' onChange={(event) => {
+                                    updateOwnerDetail(event);
+                                }} name='Designation' className={`p-3 w-100`} required />
+                            </div>
+                            <div className={`mx-auto my-2 `}>
+                                <p>Phone</p>
+                                <input value={ownerDetail?.PhoneNumber} name='PhoneNumber' onChange={(event) => {
+                                    updateOwnerDetail(event);
+                                }} type='number' className={`p-3 w-100`} required />
+                            </div>
+                            <div className={`mx-auto my-2 `}>
+                                <p>Email Address</p>
+                                <input value={ownerDetail?.Email} name='Email' onChange={(event) => {
+                                    updateOwnerDetail(event);
+                                }} type='text' className={`p-3 w-100`} required />
+                            </div>
+                            <div className={`mx-auto my-2 `}>
+                                <p>UserName (for login)</p>
+                                <input value={ownerDetail?.UserName} name='UserName' onChange={(event) => {
+                                    updateOwnerDetail(event);
+                                }} type='text' className={`p-3 w-100`} required />
+                            </div>
+                            <div className={`mx-auto my-2 `}>
+                                <p>Password</p>
+                                <div className='mb-0 d-flex flex-row justify-content-start'>
+                                    <input name='Password' value={ownerDetail?.Password} onChange={(event) => {
+                                        updateOwnerDetail(event);
+                                        CheckPassword(ownerDetail.Password);
 
 
-                                {processInfo?.ProcessOwner == null ? (
-                                    <a onClick={() => {
-                                        setAddOwner(true)
-                                    }} className='btn btn-outline-danger py-2 fs-5 w-100'>Add Process Owner</a>
-                                ) : (
+                                    }} type='text' className={`p-3 w-100`} required />
 
-                                    <a onClick={() => {
-                                        setAddOwner(true)
-                                    }} className='btn btn-outline-danger py-2 fs-5 w-100'>Edit Owner Detail</a>
+                                    <a onClick={handleGenerateClick} className='btn btn-primary ms-2 my-auto'>Generate</a>
+                                </div>
+                                {validationMessage && (
+                                    <p className={`${validationMessage === 'Password is valid!' ? 'text-success' : 'text-danger'} mt-0`}>{validationMessage}</p>
                                 )}
                             </div>
+                            <div className={`mx-auto my-3 gap-2 d-flex flex-row`}>
+                                <input className='mt-1' value={ownerDetail?.UserName} name='UserName' onChange={(event) => {
+                                    setOwnerDetail({ ...ownerDetail, deputyOwner: event.target.checked })
+                                }} type='checkbox' required />
+                                <p>Deputy Process Owner</p>
+                            </div>
+
 
                             <div className={style.btns}>
 
-                                <button className='mt-5' type='submit'>Submit</button>
+                                <button onClick={() => {
+                                    
+                                        if (validationMessage == 'Password is valid!') {
+                                            setProcessInfo({ ...processInfo, ProcessOwner: ownerDetail });
+                                        } 
+
+
+                                }} className='mt-5' type='submit'>Submit</button>
                             </div>
                         </form>
                     </div>
@@ -372,57 +425,10 @@ function AddProcess() {
 
 
                             }}>
-                                <div className='p-lg-5 p-3 d-flex justify-content-center flex-column'>
-                                    <div className={`mx-auto my-2 ${style.ownerInput}`}>
-                                        <p>Name</p>
-                                        <input value={ownerDetail?.Name} type='text' name='Name' onChange={(event) => {
-                                            updateOwnerDetail(event);
-                                        }} className={`p-2 w-100`} required />
-                                    </div>
-                                    <div className={`mx-auto my-2 ${style.ownerInput}`}>
-                                        <p>Designation</p>
-                                        <input value={ownerDetail?.Designation} type='text' onChange={(event) => {
-                                            updateOwnerDetail(event);
-                                        }} name='Designation' className={`p-2 w-100`} required />
-                                    </div>
-                                    <div className={`mx-auto my-2 ${style.ownerInput}`}>
-                                        <p>Phone</p>
-                                        <input value={ownerDetail?.PhoneNumber} name='PhoneNumber' onChange={(event) => {
-                                            updateOwnerDetail(event);
-                                        }} type='number' className={`p-2 w-100`} required />
-                                    </div>
 
-                                    <div className={`mx-auto my-2 ${style.ownerInput}`}>
-                                        <p>Email Address</p>
-                                        <input value={ownerDetail?.Email} name='Email' onChange={(event) => {
-                                            updateOwnerDetail(event);
-                                        }} type='text' className={`p-2 w-100`} required />
-                                    </div>
-                                    <div className={`mx-auto my-2 ${style.ownerInput}`}>
-                                        <p>UserName (for login)</p>
-                                        <input value={ownerDetail?.UserName} name='UserName' onChange={(event) => {
-                                            updateOwnerDetail(event);
-                                        }} type='text' className={`p-2 w-100`} required />
-                                    </div>
-                                    <div className={`mx-auto my-2 ${style.ownerInput}`}>
-                                        <p>Password</p>
-                                        <div className='d-flex flex-row justify-content-start'>
-                                            <input name='Password' value={ownerDetail?.Password} onChange={(event) => {
-                                                updateOwnerDetail(event);
-                                                CheckPassword(ownerDetail.Password);
-                                            }} type='text' className={`p-2 w-100`} required />
-
-                                            <a onClick={handleGenerateClick} className='btn btn-primary ms-2'>Generate</a>
-                                        </div>
-                                        {validationMessage && (
-                                            <p className={`${validationMessage === 'Password is valid!' ? 'text-success' : 'text-danger'}`}>{validationMessage}</p>
-                                        )}
-                                    </div>
-
-                                </div>
                                 <div className={` d-flex justify-content-center`}>
                                     <button type='submit' onClick={() => {
-                                        CheckPassword(ownerDetail.Password)
+
                                         // setAddOwner(false);
 
                                     }} className={style.btn1}>Save</button>

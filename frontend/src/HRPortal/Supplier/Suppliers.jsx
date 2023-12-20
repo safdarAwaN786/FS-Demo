@@ -28,6 +28,7 @@ export default function Suppliers() {
         axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-suppliers`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             dispatch(setLoading(false))
             setAllDataArr(response.data.data);
+            console.log(response.data);
             setSuppliers(response.data.data.slice(startIndex, endIndex));
         }).catch(err => {
             dispatch(setLoading(false));
@@ -43,6 +44,7 @@ export default function Suppliers() {
         dispatch(setLoading(true))
         axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-suppliers`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             dispatch(setLoading(false))
+            console.log(response.data);
             setAllDataArr(response.data.data);
             setSuppliers(response.data.data.slice(startIndex, endIndex));
         }).catch(err => {
@@ -95,7 +97,16 @@ export default function Suppliers() {
         setalert2(!alert2)
     }
 
+    const formatDate = (date) => {
 
+        const newDate = new Date(date);
+        const formatDate = newDate.toLocaleDateString('en-GB', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+        });
+        return formatDate;
+    }
 
 
     return (
@@ -131,14 +142,17 @@ export default function Suppliers() {
                                 <td>Supplier Code</td>
                                 <td>Name</td>
                                 <td>Phone #</td>
+                                <td>Phone 2 #</td>
                                 <td>Contact Person</td>
                                 <td>Address</td>
+                                <td>Due Date</td>
+                                <td>Risk Category</td>
+                                <td>Current Approval Date</td>
+                                <td>Next Approval Date</td>
                                 <td>Created By</td>
                                 <td>Creation Date</td>
                                 <td>Service Offered</td>
                                 {tabData?.Approval && (
-
-
                                     <td>Action</td>
                                 )}
                                 <td></td>
@@ -154,10 +168,16 @@ export default function Suppliers() {
                                             <td className={style.textStyle2}>{supplier.SupplierCode}</td>
                                             <td className={style.textStyle3}>{supplier.Name}</td>
                                             <td className={style.textStyle3}>{supplier.PhoneNumber}</td>
+                                            <td className={style.textStyle3}>{supplier.PhoneNumber2}</td>
                                             <td className={style.textStyle3}>{supplier.ContactPerson}</td>
                                             <td className={style.textStyle3}>{supplier.Address}</td>
+                                            <td className={style.textStyle3}>{supplier.DueDate}</td>
+                                            <td className={style.textStyle3}>{supplier.RiskCategory}</td>
+                                            <td>{formatDate(supplier.CurrentApprovalDate)}</td>
+                                            <td>{formatDate(supplier.NextApprovalDate)}</td>
+
                                             <td className={style.textStyle3}>{supplier.CreatedBy}</td>
-                                            <td>{supplier.CreationDate?.slice(0, 10).split('-')[2]}/{supplier.CreationDate?.slice(0, 10).split('-')[1]}/{supplier.CreationDate?.slice(0, 10).split('-')[0]}</td>
+                                            <td>{formatDate(supplier.CreationDate)}</td>
                                             <td ><button onClick={() => {
                                                 setPopUpData(supplier.ProductServiceOffered);
                                                 setShowBox(true);

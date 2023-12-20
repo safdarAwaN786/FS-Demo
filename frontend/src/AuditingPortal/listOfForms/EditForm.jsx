@@ -49,15 +49,15 @@ function EditForm() {
         axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-form-by-id/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
             setDataToSend(res.data.form);
             setQuestions(res.data.form.questions);
-            if(departmentsToShow){    
+            if (departmentsToShow) {
                 dispatch(setLoading(false))
             }
         }).catch(err => {
             dispatch(setLoading(false));
             Swal.fire({
-                icon : 'error',
-                title : 'OOps..',
-                text : 'Something went wrong, Try Again!'
+                icon: 'error',
+                title: 'OOps..',
+                text: 'Something went wrong, Try Again!'
             })
         })
     }, [])
@@ -74,15 +74,15 @@ function EditForm() {
         dispatch(setLoading(true))
         axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
             SetDepartmentsToShow(res.data.data);
-            if(questions){
+            if (questions) {
                 dispatch(setLoading(false))
             }
         }).catch(err => {
             dispatch(setLoading(false));
             Swal.fire({
-                icon : 'error',
-                title : 'OOps..',
-                text : 'Something went wrong, Try Again!'
+                icon: 'error',
+                title: 'OOps..',
+                text: 'Something went wrong, Try Again!'
             })
         })
     }, [])
@@ -125,16 +125,16 @@ function EditForm() {
 
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        dispatch(updateTabData({...tabData, Tab : 'list of Forms'}))
+                        dispatch(updateTabData({ ...tabData, Tab: 'Master List of Records/Forms' }))
                     }
                 })
 
             }).catch(err => {
                 dispatch(setLoading(false));
                 Swal.fire({
-                    icon : 'error',
-                    title : 'OOps..',
-                    text : 'Something went wrong, Try Again!'
+                    icon: 'error',
+                    title: 'OOps..',
+                    text: 'Something went wrong, Try Again!'
                 })
             })
         } else {
@@ -158,7 +158,7 @@ function EditForm() {
                         <BsArrowLeftCircle
                             role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
                                 {
-                                    dispatch(updateTabData({...tabData, Tab : 'List of Forms'}))
+                                    dispatch(updateTabData({ ...tabData, Tab: 'Master List of Records/Forms' }))
                                 }
                             }} />
 
@@ -304,52 +304,62 @@ function EditForm() {
                                         )}
 
                                         {(questions[index].questionType === 'Multiplechoicegrid') && (
-                                            <div className=' d-flex flex-column'>
-                                                <div className='d-flex my-2 flex-row'>
-                                                    <span className=' px-2 py-0 d-inline'>R\C</span>
-                                                    {questions[index]?.columns.map((column, colIndex) => {
-                                                        return (
-                                                            <input value={dataToSend?.questions[index].columns[colIndex].colTitle} onChange={(e) => {
-                                                                const updatedQuestions = [...questions];
+                                            <>
 
-                                                                updatedQuestions[index].columns[colIndex].colTitle = e.target.value;
-
-                                                                // updatedQuestions[index]?.columns[colIndex]?.colTitle = e.target.value;
-                                                                setQuestions(updatedQuestions);
-                                                            }} className='bg-light border-bottom border-secondary d-inline py-0 px-1 mx-1 ' type='text' required />
-                                                        )
-                                                    })}
-                                                </div>
-
-
-                                                {questions[index]?.rows?.map((row, rowIndex) => {
-                                                    return (
-
-                                                        <div className='my-2 d-flex flex-row'>
-
-
-                                                            <span>{rowIndex + 1}.</span>
-
-                                                            <input value={dataToSend?.questions[index].rows[rowIndex].rowTitle} onChange={(e) => {
-                                                                const updatedQuestions = [...questions];
-                                                                updatedQuestions[index].rows[rowIndex].rowTitle = e.target.value;
-                                                                setQuestions(updatedQuestions);
-                                                            }} name='rowTitle' type='text' style={{
-                                                                borderRadius: '0px'
-                                                            }} className='bg-light border-bottom border-secondary w-50 px-2 py-0 d-inline' />
-
-                                                            {questions[index]?.columns.map((colnum, colIndex) => {
+                                                <div className={`${style.gridCover}`}>
+                                                    <table className='table table-bordered'>
+                                                        <thead>
+                                                            <tr>
+                                                                <th style={{
+                                                                    minWidth: '120px'
+                                                                }}>R\C</th>
+                                                                {questions[index]?.columns.map((column, colIndex) => {
+                                                                    return (
+                                                                        <th style={{
+                                                                            minWidth: '80px'
+                                                                        }}>
+                                                                            <input value={dataToSend?.questions[index].columns[colIndex].colTitle} onChange={(e) => {
+                                                                                const updatedQuestions = [...questions];
+                                                                                updatedQuestions[index].columns[colIndex].colTitle = e.target.value;
+                                                                                setQuestions(updatedQuestions);
+                                                                            }} className={`bg-light border-bottom border-secondary d-inline py-0 px-1 mx-1 ${style.noRadius}`} type='text' required />
+                                                                        </th>
+                                                                    )
+                                                                })}
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {questions[index]?.rows?.map((row, rowIndex) => {
                                                                 return (
-                                                                    <input className='mx-2' style={{
-                                                                        width: '20px',
-                                                                        height: '20px'
 
-                                                                    }} name={`R${rowIndex}`} type='radio' />
+                                                                    <tr>
+                                                                        <td>
+                                                                            <span>{rowIndex + 1}.</span>
+                                                                            <input value={dataToSend?.questions[index].rows[rowIndex].rowTitle} onChange={(e) => {
+                                                                                const updatedQuestions = [...questions];
+                                                                                updatedQuestions[index].rows[rowIndex].rowTitle = e.target.value;
+                                                                                setQuestions(updatedQuestions);
+                                                                            }} name='rowTitle' type='text' style={{
+                                                                                borderRadius: '0px'
+                                                                            }} className='bg-light border-bottom border-secondary  px-2 py-0 d-inline' />
+                                                                        </td>
+                                                                        {questions[index]?.columns.map((colnum, colIndex) => {
+                                                                            return (
+                                                                                <td>
+                                                                                    <input className='mx-2' style={{
+                                                                                        width: '20px',
+                                                                                        height: '20px'
+                                                                                    }} name={`R${rowIndex}`} type='radio' />
+                                                                                </td>
+                                                                            )
+                                                                        })}
+                                                                    </tr>
                                                                 )
                                                             })}
-                                                        </div>
-                                                    )
-                                                })}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+
 
 
 
@@ -408,65 +418,75 @@ function EditForm() {
 
                                                 </div>
 
-                                            </div>
 
+
+                                            </>
                                         )}
 
                                         {(questions[index].questionType === 'Checkboxgrid') && (
-                                            <div className=' d-flex flex-column'>
-                                                <div className='d-flex my-2 flex-row'>
-                                                    <span className=' px-2 py-0 d-inline'>R\C</span>
-                                                    {questions[index]?.columns.map((column, colIndex) => {
-                                                        return (
-                                                            <input value={dataToSend?.questions[index].columns[colIndex].colTitle} onChange={(e) => {
-                                                                const updatedQuestions = [...questions];
-
-                                                                updatedQuestions[index].columns[colIndex].colTitle = e.target.value;
-
-
-                                                                setQuestions(updatedQuestions);
-                                                            }} className='bg-light border-bottom border-secondary d-inline py-0 px-1 mx-1 ' type='text' required />
-                                                        )
-                                                    })}
-                                                </div>
-
-
-                                                {questions[index]?.rows?.map((row, rowIndex) => {
-                                                    return (
-
-                                                        <div className='my-2 d-flex flex-row'>
-
-
-                                                            <span>{rowIndex + 1}.</span>
-
-                                                            <input onChange={(e) => {
-                                                                const updatedQuestions = [...questions];
-                                                                updatedQuestions[index].rows[rowIndex].rowTitle = e.target.value;
-                                                                setQuestions(updatedQuestions);
-                                                            }} value={dataToSend?.questions[index].rows[rowIndex].rowTitle} type='text' style={{
-                                                                borderRadius: '0px'
-                                                            }} className='bg-light border-bottom border-secondary w-50 px-2 py-0 d-inline' />
-
-                                                            {questions[index]?.columns.map((colnum, colIndex) => {
+                                            <>
+                                                <div className={`${style.gridCover}`}>
+                                                    <table className='table table-bordered'>
+                                                        <thead>
+                                                            <tr>
+                                                                <th style={{
+                                                                    minWidth: '120px'
+                                                                }}>R\C</th>
+                                                                {questions[index]?.columns.map((column, colIndex) => {
+                                                                    return (
+                                                                        <th style={{
+                                                                            minWidth: '80px'
+                                                                        }}>
+                                                                            <input value={dataToSend?.questions[index].columns[colIndex].colTitle} onChange={(e) => {
+                                                                                const updatedQuestions = [...questions];
+                                                                                updatedQuestions[index].columns[colIndex].colTitle = e.target.value;
+                                                                                setQuestions(updatedQuestions);
+                                                                            }} className={`bg-light border-bottom border-secondary d-inline py-0 px-1 mx-1 ${style.noRadius}`} type='text' required />
+                                                                        </th>
+                                                                    )
+                                                                })}
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {questions[index]?.rows?.map((row, rowIndex) => {
                                                                 return (
-                                                                    <input className='mx-2' type='checkbox' />
+
+                                                                    <tr>
+                                                                        <td>
+                                                                            <span>{rowIndex + 1}.</span>
+                                                                            <input value={dataToSend?.questions[index].rows[rowIndex].rowTitle} onChange={(e) => {
+                                                                                const updatedQuestions = [...questions];
+                                                                                updatedQuestions[index].rows[rowIndex].rowTitle = e.target.value;
+                                                                                setQuestions(updatedQuestions);
+                                                                            }} name='rowTitle' type='text' style={{
+                                                                                borderRadius: '0px'
+                                                                            }} className='bg-light border-bottom border-secondary  px-2 py-0 d-inline' required />
+                                                                        </td>
+                                                                        {questions[index]?.columns.map((colnum, colIndex) => {
+                                                                            return (
+                                                                                <td>
+                                                                                    <input className='mx-2' style={{
+                                                                                        width: '20px',
+                                                                                        height: '20px'
+                                                                                    }} type='checkbox' />
+                                                                                </td>
+                                                                            )
+                                                                        })}
+                                                                    </tr>
                                                                 )
                                                             })}
-                                                        </div>
-                                                    )
-                                                })}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
 
 
 
                                                 <div className='d-flex justify-content-between mt-3'>
-
                                                     <div>
-
-
                                                         <a onClick={() => {
                                                             const updatedQuestions = [...questions];
 
-                                                            updatedQuestions[index].rows.push('');
+                                                            updatedQuestions[index].rows.push({});
                                                             setQuestions(updatedQuestions)
                                                         }} className='btn px-1 py-1 btn-primary'><BiPlus className='text-white' />Row</a>
                                                         {questions[index]?.rows.length > 1 && (
@@ -478,8 +498,6 @@ function EditForm() {
                                                             }} onClick={() => {
                                                                 const updatedQuestions = [...questions];
                                                                 updatedQuestions[index].rows.pop();
-
-
                                                                 setQuestions(updatedQuestions);
                                                             }} className='btn mx-1 p-0 btn-outline-primary'><FaMinus /></a>
                                                         )}
@@ -487,33 +505,27 @@ function EditForm() {
                                                     <div>
 
                                                         {questions[index]?.columns.length > 1 && (
-
                                                             <a style={{
                                                                 borderRadius: '50px',
                                                                 width: '30px',
                                                                 height: '30px'
                                                             }} onClick={() => {
-
                                                                 const updatedQuestions = [...questions]
                                                                 updatedQuestions[index].columns.pop();
                                                                 setQuestions(updatedQuestions);
                                                             }} className='btn mx-1 p-0 btn-outline-primary'><FaMinus /></a>
                                                         )}
 
-
                                                         <a onClick={() => {
-
                                                             const updatedQuestions = [...questions];
-                                                            updatedQuestions[index].columns.push('');
+                                                            updatedQuestions[index].columns.push({ colTitle: '' });
 
                                                             setQuestions(updatedQuestions)
                                                         }} className='btn px-1 py-1 btn-primary'><BiPlus className='text-white' />Column</a>
 
                                                     </div>
-
                                                 </div>
-
-                                            </div>
+                                            </>
 
                                         )}
 

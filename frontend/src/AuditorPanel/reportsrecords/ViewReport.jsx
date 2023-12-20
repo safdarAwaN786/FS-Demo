@@ -23,7 +23,7 @@ function ViewReport() {
     const dispatch = useDispatch();
     const idToWatch = useSelector(state => state.idToProcess)
 
-   
+
 
     const alertManager = () => {
         setalert(!alert)
@@ -43,13 +43,22 @@ function ViewReport() {
     }, []);
 
     const [auditData, setAuditData] = useState(null);
-    const [answers, setAnswers] =useState([]);
+    const [answers, setAnswers] = useState([]);
+    const formatDate = (date) => {
 
+        const newDate = new Date(date);
+        const formatDate = newDate.toLocaleDateString('en-GB', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+        });
+        return formatDate;
+    }
 
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readReportByAuditId/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readReportById/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             console.log(response.data.data);
             setReportData(response.data.data)
             setAuditData(response.data.data.ConductAudit)
@@ -65,8 +74,8 @@ function ViewReport() {
 
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        dispatch(updateTabData({...tabData, Tab : 'Reports Records'}))
-                        
+                        dispatch(updateTabData({ ...tabData, Tab: 'Non-Conformity Report' }))
+
                     }
                 })
             }
@@ -74,25 +83,14 @@ function ViewReport() {
         }).catch(err => {
             dispatch(setLoading(false));
             Swal.fire({
-                icon : 'error',
-                title : 'OOps..',
-                text : 'Something went wrong, Try Again!'
+                icon: 'error',
+                title: 'OOps..',
+                text: 'Something went wrong, Try Again!'
             })
         })
 
 
     }, [])
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -102,12 +100,12 @@ function ViewReport() {
 
 
                 <div className={`${style.subparent} mx-2 mx-sm-4 mt-5 mx-lg-5`}>
-                <div className='mx-lg-5 px-4 mx-md-4 mx-2  mb-1 '>
+                    <div className='mx-lg-5 px-4 mx-md-4 mx-2  mb-1 '>
 
-                    <BsArrowLeftCircle onClick={(e) => {
-                        dispatch(updateTabData({...tabData, Tab : 'Reports Records'}))
-                    }} className='fs-3 text-danger mx-1' role='button' />
-                </div>
+                        <BsArrowLeftCircle onClick={(e) => {
+                            dispatch(updateTabData({ ...tabData, Tab: 'Non-Conformity Report' }))
+                        }} className='fs-3 text-danger mx-1' role='button' />
+                    </div>
                     <div className={`${style.headers} d-flex justify-content-start ps-3 align-items-center `}>
                         <div className={style.spans}>
                             <span></span>
@@ -132,11 +130,13 @@ function ViewReport() {
                                     <div className='d-flex bg-light p-3 justify-content-center flex-column '>
                                         <div style={{
                                             width: '100%'
-                                        }} className=' me-3 d-flex flex-column'>
+                                        }} className=' me-3 d-flex flex-row'>
                                             <input value={answer.question.questionText} style={{
                                                 borderRadius: '0px'
                                             }} name='questionText' placeholder='Untitled Question' className='border-0  border-secondary bg-light mt-2 mb-3 w-100 p-3' required readOnly />
-
+                                            <input checked={reportData.SelectedAnswers?.some((ansObj) => ansObj.Answer._id === answer._id)} style={{
+                                                cursor: 'pointer'
+                                            }} className='mt-2' type='checkbox' />
                                         </div>
                                         <div>
                                             {answer.question.ComplianceType === 'GradingSystem' && (
@@ -238,7 +238,12 @@ function ViewReport() {
                                             )}
                                             <textarea value={answers[index].Remarks} rows={3} className='w-100 p-2 my-2' placeholder='Remarks...' required />
                                         </div>
-
+                                        {reportData?.SelectedAnswers.some((ansObj) => ansObj.Answer._id === answer._id) && (
+                                            <div>
+                                                <label>Target Date : </label>
+                                                <input value={formatDate((reportData?.SelectedAnswers?.find((ansObj)=> ansObj.Answer._id === answer._id)).TargetDate)} type='text'  className='p-2' required />
+                                            </div>
+                                        )}
                                         <div style={{
                                             width: '100%'
                                         }} className=' mt-2 d-flex flex-row'>
@@ -266,17 +271,6 @@ function ViewReport() {
                                 </div>
                             )
                         })}
-
-
-                        <div className='p-3 mx-lg-5 mx-3 px-3 bg-light px-lg-5 mb-5'>
-
-                            <p className='my-1 fw-bold'>Target Date (For Corrective Action)</p>
-                            <input className='w-25 p-2' value={`${reportData?.TargetDate.slice(0, 10).split('-')[2]} /${reportData?.TargetDate.slice(0, 10).split('-')[1]}/${reportData?.TargetDate.slice(0, 10).split('-')[0]}`} readOnly required />
-                        </div>
-
-
-
-
                     </form>
                 </div>
             </div>

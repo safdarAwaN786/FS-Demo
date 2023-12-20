@@ -140,7 +140,7 @@ function AssignTabsToTrainer() {
 
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        dispatch(updateTabData({...tabData, Tab : 'Trainers'}))
+                        dispatch(updateTabData({...tabData, Tab : 'Add Trainers'}))
                        
                     }
                 })

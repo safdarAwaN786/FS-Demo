@@ -29,9 +29,7 @@ function AddHACCPRiskAssessment() {
         dispatch(setLoading(true))
         axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
             SetDepartmentsToShow(res.data.data);
-            if(processesToShow && teamsToShow){
-                dispatch(setLoading(false))
-            }
+            
         }).catch(err => {
             dispatch(setLoading(false));
             Swal.fire({
@@ -54,18 +52,19 @@ function AddHACCPRiskAssessment() {
             Swal.fire({
                 icon : 'warning',
                 title : 'OOps..',
-                text : 'No, Any Process available!'
+                text : 'No, Any Product flow diagram available!'
             })
+        } else if(teamsToShow && processesToShow && departmentsToShow){
+            dispatch(setLoading(false))
+            
         }
-    }, [teamsToShow, processesToShow])
+    }, [teamsToShow, processesToShow, departmentsToShow])
 
     useEffect(() => {
         dispatch(setLoading(true))
         axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-haccp-teams`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             setTeamsToShow(response.data.data);
-            if(processesToShow, departmentsToShow){
-                dispatch(setLoading(false))
-            }
+            
         }).catch(err => {
             dispatch(setLoading(false));
             Swal.fire({
@@ -77,9 +76,7 @@ function AddHACCPRiskAssessment() {
 
         axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-processes`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             setProcessesToShow(response.data.data);
-            if(teamsToShow && departmentsToShow){
-                dispatch(setLoading(false))
-            }
+            
         }).catch(err => {
             dispatch(setLoading(false));
             Swal.fire({
@@ -138,7 +135,7 @@ function AddHACCPRiskAssessment() {
 
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        dispatch(updateTabData({ ...tabData, Tab: 'Conduct HACCP' }))
+                        dispatch(updateTabData({ ...tabData, Tab: 'Conduct Risk Assessment' }))
                     }
                 })
 
@@ -170,7 +167,7 @@ function AddHACCPRiskAssessment() {
                         <BsArrowLeftCircle
                             role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
                                 {
-                                    dispatch(updateTabData({ ...tabData, Tab: 'Conduct HACCP' }))
+                                    dispatch(updateTabData({ ...tabData, Tab: 'Conduct Risk Assessment' }))
                                 }
                             }} />
 
@@ -288,7 +285,7 @@ function AddHACCPRiskAssessment() {
 
                                         <div className={style.inputParent}>
                                             <div className={style.para}>
-                                                <p>Process</p>
+                                                <p>Product Flow Diagram</p>
                                             </div>
                                             <div style={{
                                                 border: '1px solid silver'
@@ -422,29 +419,8 @@ function AddHACCPRiskAssessment() {
                         </div>
 
 
-                        <div className={`${style.btn} px-lg-4 px-2 d-flex justify-content-between`}>
-                            <div className={style.inputParent}>
-                                <div className={style.para}>
-                                    <p></p>
-                                </div>
-                                <div className='border w-50 border-dark-subtle'>
-                                    <select className='w-100' name='Department'  >
-                                        <option value="" selected >Added Team Members</option>
-
-                                        {dataToSend?.Members?.map((member) => {
-
-                                            return (
-
-                                                <option disabled>{member.Name}</option>
-                                            )
-                                        })}
-
-
-                                    </select>
-
-
-                                </div>
-                            </div>
+                        <div className={`${style.btn} px-lg-4 px-2 d-flex justify-content-center`}>
+                            
                             <button type='submit' >Submit</button>
                         </div>
                     </form>

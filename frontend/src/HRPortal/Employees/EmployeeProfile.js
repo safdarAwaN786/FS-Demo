@@ -77,43 +77,52 @@ function EmployeeProfile() {
             })
         })
     }, []);
+    const user = useSelector(state => state.auth.user);
 
     const handleDownloadImage = async (imageURL) => {
         try {
-            dispatch(setLoading(true));
-            const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/download-image`, {
-                params: {
-                    url: imageURL,
+            if (imageURL) {
 
-                },
-                responseType: 'blob',headers: { Authorization: `Bearer ${userToken}` } // Specify the response type as 'blob' to handle binary data
-            });
-
-            // Create a Blob object from the response data
-            const blob = new Blob([response.data]);
-
-            // Create a temporary anchor element
-            const link = document.createElement('a');
-            link.href = window.URL.createObjectURL(blob);
+                dispatch(setLoading(true))
+                const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/download-image`, {
+                    params: {
+                        url: imageURL,
+                    },
+                    responseType: 'blob', headers: { Authorization: `Bearer ${userToken}` } // Specify the response type as 'blob' to handle binary data
+                });
 
 
+                let blob;
 
-            // Set the download attribute and suggested filename for the downloaded image
-            link.download = `file-homage${imageURL.substring(imageURL.lastIndexOf('.'))}`;
+                blob = new Blob([response.data]);
+                // }
 
-            // Append the anchor element to the document body and click it to trigger the download
-            document.body.appendChild(link);
-            dispatch(setLoading(false));
-            link.click();
+                // Create a temporary anchor element
+                const link = document.createElement('a');
+                link.href = window.URL.createObjectURL(blob);
 
-            // Clean up by removing the temporary anchor element
-            document.body.removeChild(link);
+                // Set the download attribute and suggested filename for the downloaded image
+                link.download = `${user.Department.DepartmentName}-FSMS${imageURL.substring(imageURL.lastIndexOf('.'))}`;
+
+                // Append the anchor element to the document body and click it to trigger the download
+                document.body.appendChild(link);
+                dispatch(setLoading(false))
+                link.click();
+                // Clean up by removing the temporary anchor element
+                document.body.removeChild(link);
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'OOps..',
+                    text: 'No any file uploaded here!'
+                })
+            }
         } catch (error) {
             dispatch(setLoading(false))
             Swal.fire({
-                icon : 'error',
-                title : 'OOps..',
-                text : 'Something went wrong, Try Again!'
+                icon: 'error',
+                title: 'OOps..',
+                text: 'Something went wrong, Try Again!'
             })
         }
 
@@ -143,7 +152,7 @@ function EmployeeProfile() {
                 <div className='d-flex flex-row px-lg-5  px-2 my-2'>
                     <BsArrowLeftCircle role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
                         {
-                            dispatch(updateTabData({ ...tabData, Tab: 'Employees' }))
+                            dispatch(updateTabData({ ...tabData, Tab: 'Employee Registration' }))
                         }
                     }} />
 

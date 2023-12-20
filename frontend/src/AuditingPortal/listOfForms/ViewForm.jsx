@@ -46,16 +46,16 @@ function ViewForm() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-form-by-id/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res)=>{
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-form-by-id/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
             setDataToSend(res.data.form);
             setQuestions(res.data.form.questions);
             dispatch(setLoading(false))
         }).catch(err => {
             dispatch(setLoading(false));
             Swal.fire({
-                icon : 'error',
-                title : 'OOps..',
-                text : 'Something went wrong, Try Again!'
+                icon: 'error',
+                title: 'OOps..',
+                text: 'Something went wrong, Try Again!'
             })
         })
     }, [])
@@ -91,7 +91,7 @@ function ViewForm() {
         }),
     };
 
-   
+
 
 
     return (
@@ -100,11 +100,11 @@ function ViewForm() {
             <div className={style.parent}>
 
                 <div className={`${style.form} mt-5 `}>
-                <div className='d-flex flex-row bg-white px-lg-3  px-2 py-2'>
+                    <div className='d-flex flex-row bg-white px-lg-3  px-2 py-2'>
                         <BsArrowLeftCircle
                             role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
                                 {
-                                    dispatch(updateTabData({...tabData, Tab : 'List of Forms'}))
+                                    dispatch(updateTabData({ ...tabData, Tab: 'Master List of Records/Forms' }))
                                 }
                             }} />
 
@@ -123,64 +123,42 @@ function ViewForm() {
                     <div className={`${style.sec1}  px-3`}>
                         <form encType='multipart/form-data' onSubmit={(event) => {
                             event.preventDefault();
-                            
+
                             alertManager();
                         }}>
 
-                            <div className='mb-4'>
+
+                            <div className='w-100'>
                                 <p className='text-black'>Department</p>
                                 <div>
-                                    <select value={dataToSend?.Department.DepartmentName}  name='Department' className={`form-select  form-select-lg `} aria-label="Large select example"  readOnly >
-                                        <option selected>{dataToSend?.Department.DepartmentName}</option>
-                                        
-                                    </select>
+                                    <input value={dataToSend?.Department.DepartmentName} className='w-100' name='FormDescription' type="text" readOnly />
                                 </div>
                             </div>
-                            <div>
+                            <div className='w-100'>
                                 <p className='text-black'>Document Type</p>
-                                <select value={dataToSend?.DocumentType} onChange={(e) => {
-                                    setDataToSend({ ...dataToSend, [e.target.name]: e.target.value })
-                                }} name='DocumentType' className={`form-select  form-select-lg mb-3`} aria-label="Large select example" required readOnly>
-                                    <option disabled selected>{dataToSend?.DocumentType}</option>
-                                    
-
-                                </select>
+                                <div>
+                                    <input value={dataToSend?.DocumentType} className='w-100' name='FormDescription' type="text" readOnly />
+                                </div>
                             </div>
-                            <div>
+
+                            <div className='w-100'>
                                 <p className='text-black'>Maintenance Frequency</p>
-                                <select value={dataToSend?.MaintenanceFrequency}  name='MaintenanceFrequency' className={`form-select  form-select-lg mb-3`} aria-label="Large select example" readOnly>
-                                    <option selected>{dataToSend?.MaintenanceFrequency}</option>
-                                    {/* <option value="1 Hour">1 Hour</option>
-                                    <option value="2 Hour">2 Hour</option>
-                                    <option value="3 Hour">3 Hour</option>
-                                    <option value="4 Hour">4 Hour</option>
-                                    <option value="5 Hour">5 Hour</option>
-                                    <option value="6 Hour">6 Hour</option>
-                                    <option value="7 Hour">7 Hour</option>
-                                    <option value="8 Hour">8 Hour</option>
-                                    <option value="9 Hour">9 Hour</option>
-                                    <option value="10 Hour">10 Hour</option>
-                                    <option value="11 Hour">11 Hour</option>
-                                    <option value="Daily">Daily</option>
-                                    <option value="Weekly">Weekly</option>
-                                    <option value="Monthly">Monthly</option>
-                                    <option value="Quarterly">Quarterly</option>
-                                    <option value="Yearly">Yearly</option> */}
-
-                                </select>
+                                <div>
+                                    <input value={dataToSend?.MaintenanceFrequency} className='w-100' name='FormDescription' type="text" readOnly />
+                                </div>
                             </div>
+
                             <div className='w-100'>
                                 <p className='text-black'>Form Name</p>
                                 <div>
 
-                                    <input value={dataToSend?.FormName}  className='w-100' name='FormName' type="text" readOnly />
+                                    <input value={dataToSend?.FormName} className='w-100' name='FormName' type="text" readOnly />
                                 </div>
                             </div>
                             <div className='w-100'>
                                 <p className='text-black'>Form Description</p>
                                 <div>
-
-                                    <input  value={dataToSend?.FormDescription} className='w-100' name='FormDescription' type="text" readOnly />
+                                    <input value={dataToSend?.FormDescription} className='w-100' name='FormDescription' type="text" readOnly />
                                 </div>
                             </div>
 
@@ -194,67 +172,71 @@ function ViewForm() {
                                             <div style={{
                                                 width: '100%'
                                             }} className=' me-3 d-flex flex-column'>
-                                                <input value={dataToSend?.questions[index]?.questionText}  style={{
+                                                <input value={dataToSend?.questions[index]?.questionText} style={{
                                                     borderRadius: '0px'
-                                                }} name='questionText'  className='border-bottom border-secondary bg-light mt-2 mb-3 w-100 p-3' readOnly />
+                                                }} name='questionText' className='border-bottom border-secondary bg-light mt-2 mb-3 w-100 p-3' readOnly />
 
                                             </div>
-                                            {/* <div style={{
-                                                width: '40%'
-                                            }} className=' mt-2'>
-                                                
-
-                                            </div> */}
+                                            
                                         </div>
 
 
                                         {(questions[index].questionType === 'ShortText' || questions[index].questionType === 'LongText') && (
                                             <div>
-                                           
+
 
                                             </div>
 
                                         )}
 
                                         {(questions[index].questionType === 'Multiplechoicegrid') && (
-                                            <div className=' d-flex flex-column'>
-                                                <div className='d-flex my-2 flex-row'>
-                                                    <span className=' px-2 py-0 d-inline'>R\C</span>
-                                                    {questions[index]?.columns.map((column, colIndex) => {
-                                                        return (
-                                                            <input value={dataToSend?.questions[index].columns[colIndex].colTitle}  className='bg-light border-bottom border-secondary d-inline py-0 px-1 mx-1 ' type='text' readOnly />
-                                                        )
-                                                    })}
-                                                </div>
+                                            <>
 
-
-                                                {questions[index]?.rows?.map((row, rowIndex) => {
-                                                    return (
-
-                                                        <div className='my-2 d-flex flex-row'>
-
-
-                                                            <span>{rowIndex + 1}.</span>
-
-                                                            <input value={dataToSend?.questions[index].rows[rowIndex].rowTitle}  name='rowTitle' type='text' style={{
-                                                                borderRadius: '0px'
-                                                            }} className='bg-light border-bottom border-secondary w-50 px-2 py-0 d-inline' readOnly/>
-
-                                                            {questions[index]?.columns.map((colnum, colIndex) => {
+                                                <div className={`${style.gridCover}`}>
+                                                    <table className='table table-bordered'>
+                                                        <thead>
+                                                            <tr>
+                                                                <th style={{
+                                                                    minWidth: '120px'
+                                                                }}>R\C</th>
+                                                                {questions[index]?.columns.map((column, colIndex) => {
+                                                                    return (
+                                                                        <th style={{
+                                                                            minWidth: '80px'
+                                                                        }}>
+                                                                            <input value={dataToSend?.questions[index].columns[colIndex].colTitle}  className={`bg-light border-bottom border-secondary d-inline py-0 px-1 mx-1 ${style.noRadius}`} type='text' required readOnly/>
+                                                                        </th>
+                                                                    )
+                                                                })}
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {questions[index]?.rows?.map((row, rowIndex) => {
                                                                 return (
-                                                                    <input className='mx-2' style={{
-                                                                        width: '20px',
-                                                                        height: '20px'
 
-                                                                    }} name={`R${rowIndex}`} type='radio' readOnly/>
+                                                                    <tr>
+                                                                        <td>
+                                                                            <span>{rowIndex + 1}.</span>
+                                                                            <input value={dataToSend?.questions[index].rows[rowIndex].rowTitle}  name='rowTitle' type='text' style={{
+                                                                                borderRadius: '0px'
+                                                                            }} className='bg-light border-bottom border-secondary  px-2 py-0 d-inline' readOnly/>
+                                                                        </td>
+                                                                        {questions[index]?.columns.map((colnum, colIndex) => {
+                                                                            return (
+                                                                                <td>
+                                                                                    <input className='mx-2' style={{
+                                                                                        width: '20px',
+                                                                                        height: '20px'
+                                                                                    }} name={`R${rowIndex}`} type='radio' readOnly/>
+                                                                                </td>
+                                                                            )
+                                                                        })}
+                                                                    </tr>
                                                                 )
                                                             })}
-                                                        </div>
-                                                    )
-                                                })}
-
-
-
+                                                        </tbody>
+                                                    </table>
+                                                </div>
                                                 {/* <div className='d-flex justify-content-between mt-3'>
 
                                                     <div>
@@ -263,7 +245,7 @@ function ViewForm() {
                                                         <a onClick={() => {
                                                             const updatedQuestions = [...questions];
 
-                                                            updatedQuestions[index].rows.push({rowTitle : ''});
+                                                            updatedQuestions[index].rows.push({ rowTitle: '' });
                                                             setQuestions(updatedQuestions)
                                                         }} className='btn px-1 py-1 btn-primary'><BiPlus className='text-white' />Row</a>
                                                         {questions[index]?.rows.length > 1 && (
@@ -301,7 +283,7 @@ function ViewForm() {
                                                         <a onClick={() => {
 
                                                             const updatedQuestions = [...questions];
-                                                            updatedQuestions[index].columns.push({colTitle : ''});
+                                                            updatedQuestions[index].columns.push({ colTitle: '' });
 
                                                             setQuestions(updatedQuestions)
                                                         }} className='btn px-1 py-1 btn-primary'><BiPlus className='text-white' />Column</a>
@@ -309,55 +291,65 @@ function ViewForm() {
                                                     </div>
 
                                                 </div> */}
-
-                                            </div>
-
+                                            </>
                                         )}
 
                                         {(questions[index].questionType === 'Checkboxgrid') && (
-                                            <div className=' d-flex flex-column'>
-                                                <div className='d-flex my-2 flex-row'>
-                                                    <span className=' px-2 py-0 d-inline'>R\C</span>
-                                                    {questions[index]?.columns.map((column, colIndex) => {
-                                                        return (
-                                                            <input value={dataToSend?.questions[index].columns[colIndex].colTitle}  className='bg-light border-bottom border-secondary d-inline py-0 px-1 mx-1 ' type='text' readOnly />
-                                                        )
-                                                    })}
-                                                </div>
-
-
-                                                {questions[index]?.rows?.map((row, rowIndex) => {
-                                                    return (
-
-                                                        <div className='my-2 d-flex flex-row'>
-
-
-                                                            <span>{rowIndex + 1}.</span>
-
-                                                            <input value={dataToSend?.questions[index].rows[rowIndex].rowTitle} type='text' style={{
-                                                                borderRadius: '0px'
-                                                            }} className='bg-light border-bottom border-secondary w-50 px-2 py-0 d-inline' readOnly/>
-
-                                                            {questions[index]?.columns.map((colnum, colIndex) => {
+                                            <>
+                                            <div className={`${style.gridCover}`}>
+                                                    <table className='table table-bordered'>
+                                                        <thead>
+                                                            <tr>
+                                                                <th style={{
+                                                                    minWidth: '120px'
+                                                                }}>R\C</th>
+                                                                {questions[index]?.columns.map((column, colIndex) => {
+                                                                    return (
+                                                                        <th style={{
+                                                                            minWidth: '80px'
+                                                                        }}>
+                                                                            <input value={dataToSend?.questions[index].columns[colIndex].colTitle}  className={`bg-light border-bottom border-secondary d-inline py-0 px-1 mx-1 ${style.noRadius}`} type='text' required readOnly/>
+                                                                        </th>
+                                                                    )
+                                                                })}
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {questions[index]?.rows?.map((row, rowIndex) => {
                                                                 return (
-                                                                    <input className='mx-2' type='checkbox' />
+
+                                                                    <tr>
+                                                                        <td>
+                                                                            <span>{rowIndex + 1}.</span>
+                                                                            <input value={dataToSend?.questions[index].rows[rowIndex].rowTitle}  name='rowTitle' type='text' style={{
+                                                                                borderRadius: '0px'
+                                                                            }} className='bg-light border-bottom border-secondary  px-2 py-0 d-inline' readOnly/>
+                                                                        </td>
+                                                                        {questions[index]?.columns.map((colnum, colIndex) => {
+                                                                            return (
+                                                                                <td>
+                                                                                    <input className='mx-2' style={{
+                                                                                        width: '20px',
+                                                                                        height: '20px'
+                                                                                    }}  type='checkbox' readOnly/>
+                                                                                </td>
+                                                                            )
+                                                                        })}
+                                                                    </tr>
                                                                 )
                                                             })}
-                                                        </div>
-                                                    )
-                                                })}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
 
-
+                                                
 
                                                 {/* <div className='d-flex justify-content-between mt-3'>
-
                                                     <div>
-
-
                                                         <a onClick={() => {
                                                             const updatedQuestions = [...questions];
 
-                                                            updatedQuestions[index].rows.push('');
+                                                            updatedQuestions[index].rows.push({});
                                                             setQuestions(updatedQuestions)
                                                         }} className='btn px-1 py-1 btn-primary'><BiPlus className='text-white' />Row</a>
                                                         {questions[index]?.rows.length > 1 && (
@@ -369,8 +361,6 @@ function ViewForm() {
                                                             }} onClick={() => {
                                                                 const updatedQuestions = [...questions];
                                                                 updatedQuestions[index].rows.pop();
-
-
                                                                 setQuestions(updatedQuestions);
                                                             }} className='btn mx-1 p-0 btn-outline-primary'><FaMinus /></a>
                                                         )}
@@ -378,33 +368,27 @@ function ViewForm() {
                                                     <div>
 
                                                         {questions[index]?.columns.length > 1 && (
-
                                                             <a style={{
                                                                 borderRadius: '50px',
                                                                 width: '30px',
                                                                 height: '30px'
                                                             }} onClick={() => {
-
                                                                 const updatedQuestions = [...questions]
                                                                 updatedQuestions[index].columns.pop();
                                                                 setQuestions(updatedQuestions);
                                                             }} className='btn mx-1 p-0 btn-outline-primary'><FaMinus /></a>
                                                         )}
 
-
                                                         <a onClick={() => {
-
                                                             const updatedQuestions = [...questions];
-                                                            updatedQuestions[index].columns.push('');
+                                                            updatedQuestions[index].columns.push({ colTitle: '' });
 
                                                             setQuestions(updatedQuestions)
                                                         }} className='btn px-1 py-1 btn-primary'><BiPlus className='text-white' />Column</a>
 
                                                     </div>
-
                                                 </div> */}
-
-                                            </div>
+                                            </>
 
                                         )}
 
@@ -423,9 +407,9 @@ function ViewForm() {
 
                                                             <span>{optindex + 1}.</span>
 
-                                                            <input  type='text' value={dataToSend?.questions[index]?.options[optindex].optionText} style={{
+                                                            <input type='text' value={dataToSend?.questions[index]?.options[optindex].optionText} style={{
                                                                 borderRadius: '0px'
-                                                            }} name='optionText' className='bg-light border-bottom border-secondary w-50 px-2 py-0 d-inline' readOnly/>
+                                                            }} name='optionText' className='bg-light border-bottom border-secondary w-50 px-2 py-0 d-inline' readOnly />
                                                         </div>
                                                     )
                                                 })}
@@ -469,7 +453,7 @@ function ViewForm() {
                                                     <div className='d-flex flex-column'>
                                                         <span>Low :</span>
 
-                                                        <Select  value={dataToSend?.questions[index].minValue} isDisabled/>
+                                                        <Select value={dataToSend?.questions[index].minValue} isDisabled />
                                                     </div>
                                                     <div className='d-flex flex-column'>
                                                         <span>-</span>

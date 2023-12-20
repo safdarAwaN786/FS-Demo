@@ -5,6 +5,13 @@
   .sidebar {
     width: 17.5%;
   }
+  .gridCover {
+    width: 100%;
+    overflow-x: scroll;
+  }
+  .noRadius {
+    border-radius: 0px !important;
+  }
   
   .form {
     width: 635px;

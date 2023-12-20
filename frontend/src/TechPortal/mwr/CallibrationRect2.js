@@ -14,8 +14,6 @@ function CallibrationRect2() {
     const [alert, setalert] = useState(false);
     const [alert2, setalert2] = useState(false);
     const [alert3, setalert3] = useState(false);
-    const [alert4, setalert4] = useState(false);
-    const [popUpData, setPopUpData] = useState(null);
     const imageInputRef = useRef(null);
     const certificateInputRef = useRef(null);
     const masterCertificateInputRef = useRef(null);
@@ -82,7 +80,7 @@ function CallibrationRect2() {
     }, [])
 
 
-    const navigate = useNavigate()
+
 
     const updateFormValues = (e) => {
         setFormValues({ ...formValues, [e.target.name]: e.target.value })
@@ -256,6 +254,7 @@ function CallibrationRect2() {
                                 <input
                                     type="file"
                                     name='Image'
+                                    accept='.jpg, .jpeg, .png'
                                     style={{ display: 'none' }}
                                     ref={imageInputRef}
                                     onChange={updateFormFiles}
@@ -269,6 +268,7 @@ function CallibrationRect2() {
                                 <input
                                     name='Certificate'
                                     type="file"
+                                    accept='.pdf'
                                     style={{ display: 'none' }}
                                     ref={certificateInputRef}
                                     onChange={updateFormFiles}
@@ -282,6 +282,7 @@ function CallibrationRect2() {
                                 <input
                                     name='masterCertificate'
                                     type="file"
+                                    accept='.pdf'
                                     style={{ display: 'none' }}
                                     ref={masterCertificateInputRef}
                                     onChange={updateFormFiles}
@@ -315,6 +316,7 @@ function CallibrationRect2() {
                                 <input
                                     name='exCertificate'
                                     type="file"
+                                    accept='.pdf'
                                     style={{ display: 'none' }}
                                     ref={exCertificateInputRef}
                                     onChange={updateFormFiles}

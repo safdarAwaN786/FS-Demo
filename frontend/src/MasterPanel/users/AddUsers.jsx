@@ -194,6 +194,7 @@ function AddUsers() {
                     }
                 }).catch(err => {
                     dispatch(setLoading(false));
+                    console.log(err);
                     Swal.fire({
                         icon : 'error',
                         title : 'OOps..',

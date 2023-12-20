@@ -43,13 +43,62 @@ function ViewCorrectiveAction() {
     }, []);
 
     const [correctiveAnswers, setCorrectiveAnswers] = useState([]);
+    const user = useSelector(state => state.auth.user);
+    
+    const handleDownloadImage = async (imageURL) => {
+        try {
+            if (imageURL) {
 
+                dispatch(setLoading(true))
+                const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/download-image`, {
+                    params: {
+                        url: imageURL,
+                    },
+                    responseType: 'blob', headers: { Authorization: `Bearer ${userToken}` } // Specify the response type as 'blob' to handle binary data
+                });
+
+
+                let blob;
+
+                blob = new Blob([response.data]);
+                // }
+
+                // Create a temporary anchor element
+                const link = document.createElement('a');
+                link.href = window.URL.createObjectURL(blob);
+
+                // Set the download attribute and suggested filename for the downloaded image
+                link.download = `${user.Department.DepartmentName}-FSMS${imageURL.substring(imageURL.lastIndexOf('.'))}`;
+
+                // Append the anchor element to the document body and click it to trigger the download
+                document.body.appendChild(link);
+                dispatch(setLoading(false))
+                link.click();
+                // Clean up by removing the temporary anchor element
+                document.body.removeChild(link);
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'OOps..',
+                    text: 'No any file uploaded here!'
+                })
+            }
+        } catch (error) {
+            dispatch(setLoading(false))
+            Swal.fire({
+                icon: 'error',
+                title: 'OOps..',
+                text: 'Something went wrong, Try Again!'
+            })
+        }
+
+    };
 
 
     useEffect(() => {
         console.log(idToWatch);
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readCorrectiveActionByReportId/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readCorrectiveActionById/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
             console.log(response.data.data);
             setActionData(response.data.data)
             setCorrectiveAnswers(response.data.data.Answers);
@@ -63,7 +112,7 @@ function ViewCorrectiveAction() {
 
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        dispatch(updateTabData({...tabData, Tab : 'Corrective Action'}))
+                        dispatch(updateTabData({...tabData, Tab : 'Corrective Action Plan'}))
                         
                     }
                 })
@@ -98,7 +147,7 @@ function ViewCorrectiveAction() {
                     <div className='mx-lg-5 px-4 mx-md-4 mx-2  mb-1 '>
 
                         <BsArrowLeftCircle onClick={(e) => {
-                            dispatch(updateTabData({ ...tabData, Tab: 'Conduct Audit' }))
+                            dispatch(updateTabData({ ...tabData, Tab: 'Corrective Action Plan' }))
                         }} className='fs-3 text-danger mx-1' role='button' />
                     </div>
                     <div className={`${style.headers} d-flex justify-content-start ps-3 align-items-center `}>
@@ -245,7 +294,9 @@ function ViewCorrectiveAction() {
 
                                                     <div className='d-flex flex-column w-50'>
                                                         <label>Evidence Document :</label>
-                                                        <a href={correctiveAnswer.question.EvidenceDoc} className='btn btn-outline-danger' download>Download</a>
+                                                        <a onClick={()=>{
+                                                            handleDownloadImage(correctiveAnswer.question.EvidenceDoc)
+                                                        }} className='btn btn-outline-danger' >Download</a>
                                                     </div>
                                                 )}
                                             </div>
@@ -275,7 +326,9 @@ function ViewCorrectiveAction() {
                                             {correctiveAnswer?.CorrectiveDoc && (
                                             <div className='col-lg-6 col-md-12'>
                                                 <p><b>Corrective Document : </b></p>
-                                                <a href={correctiveAnswer?.CorrectiveDoc} className='btn btn-danger py-2 mt-3 mx-2 w-100'  >Download</a>
+                                                <a onClick={()=>{
+                                                    handleDownloadImage(correctiveAnswer?.CorrectiveDoc)
+                                                }}  className='btn btn-danger py-2 mt-3 mx-2 w-100'  >Download</a>
                                             </div>
                                             )}
 

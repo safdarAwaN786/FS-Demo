@@ -212,7 +212,7 @@ function Formtype() {
                         <a className='btn btn-outline-danger' onClick={() => {
                             // navigate('/tech/maintanancerect2')
                         }}>Generate Certificate</a>
-                        <input onChange={handleImageChange} name='Image' type='file' ref={fileInputRef} style={{ display: 'none' }} />
+                        <input onChange={handleImageChange} accept='.jpg, .jpeg, .png' name='Image' type='file' ref={fileInputRef} style={{ display: 'none' }} />
                     </div>
 
                     <div className={style.btnparent2}>

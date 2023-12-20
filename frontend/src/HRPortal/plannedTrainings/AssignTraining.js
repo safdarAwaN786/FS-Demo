@@ -123,7 +123,7 @@ function AssignTrainings() {
 
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        dispatch(updateTabData({...tabData, Tab : 'Planned Trainings'}));
+                        dispatch(updateTabData({...tabData, Tab : 'Training Record'}));
                     }
                 })
             }).catch(err => {
@@ -152,7 +152,7 @@ function AssignTrainings() {
                 <div className='d-flex flex-row mt-5 px-lg-5 px-3'>
                     <BsArrowLeftCircle role='button' className='fs-4 mt-1 text-danger' onClick={(e) => {
                         {
-                            dispatch(updateTabData({...tabData, Tab : 'Planned Trainings'}))
+                            dispatch(updateTabData({...tabData, Tab : 'Training Record'}))
                         }
                     }} />
                     

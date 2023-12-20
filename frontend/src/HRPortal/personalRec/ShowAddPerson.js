@@ -38,7 +38,7 @@ function ShowAddPerson() {
             <div className='d-flex flex-row bg-white px-lg-5  px-2 py-2'>
                 <BsArrowLeftCircle role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
                     {
-                        dispatch(updateTabData({ ...tabData, Tab: 'Personal Rec' }));
+                        dispatch(updateTabData({ ...tabData, Tab: 'Employee Requisition' }));
                     }
                 }} />
 

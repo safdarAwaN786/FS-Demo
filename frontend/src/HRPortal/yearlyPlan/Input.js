@@ -158,7 +158,7 @@ function Input() {
 
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        dispatch(updateTabData({ ...tabData, Tab: 'Yearly Plan H' }))
+                        dispatch(updateTabData({ ...tabData, Tab: 'Create Yearly Training Plan' }))
                     }
                 })
             }).catch(err => {
@@ -201,7 +201,7 @@ function Input() {
                     <div className='d-flex flex-row px-lg-5  px-2 my-2'>
                         <BsArrowLeftCircle role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
                             {
-                                dispatch(updateTabData({ ...tabData, Tab: 'Yearly Plan H' }))
+                                dispatch(updateTabData({ ...tabData, Tab: 'Create Yearly Training Plan' }))
                             }
                         }} />
 

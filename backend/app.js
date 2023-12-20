@@ -75,17 +75,17 @@ app.use(cors());
 app.use(express.json())
 // app.use(express.json());
 
-app.use(express.urlencoded({extended: false}))
-  
+app.use(express.urlencoded({ extended: false }))
+
 // Set CORS headers manually
 // Add middleware to set CORS headers
 app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin',  '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET','POST','OPTIONS,PATCH,DELETE,POST,PUT')
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET', 'POST', 'OPTIONS,PATCH,DELETE,POST,PUT')
   res.setHeader('Access-Control-Allow-Credentials', true);
   next();
 });
-  
+
 
 app.use(employeeRouter);
 app.use(monthlyPlanRouter);
@@ -133,36 +133,40 @@ app.use(departmentRouter)
 app.use(userRouter)
 
 app.get('/download-image', async (req, res) => {
-  console.log('Downloading file');
   try {
     const imageURL = req.query.url;
-
     // Extract the file extension from the imageURL
-    const fileExtension = imageURL.substring(imageURL.lastIndexOf('.'));
-
-    //  // Extract the public ID from the imageURL (the part after the last '/')
-    // //  const publicID = imageURL.substring(imageURL.lastIndexOf('/') + 1, imageURL.lastIndexOf('.'));
-
-    // Download the image data from Cloudinary using the SDK
-    // const imageResponse = await cloudinary.api.download(publicID);
-    // const imageBuffer = Buffer.from(imageResponse.data, 'binary');
+    // const fileExtension = imageURL.substring(imageURL.lastIndexOf('.'));
     var imageResponse;
     var imageBuffer;
-
-
-    if (fileExtension !== '.pdf') {
-      
-      
-      // Fetch the image data from the provided URL
-       imageResponse = await axios.get(imageURL, { responseType: 'arraybuffer' });
-       imageBuffer = Buffer.from(imageResponse.data, 'binary');
-    } else {
-       imageResponse = await axios.get(imageURL);
-      imageBuffer = Buffer.from(imageResponse.data, 'binary');
+    imageResponse = await axios.get(imageURL, { responseType: 'arraybuffer' });
+    imageBuffer = Buffer.from(imageResponse.data, 'binary');
+    const { fileTypeFromBuffer } = await import('file-type');
+    const fileTypeResult = await fileTypeFromBuffer(imageBuffer);
+    if (!fileTypeResult) {
+      // If file type is not detected, handle accordingly
+      throw new Error('Unknown file type');
+    }
+    console.log(fileTypeResult);
+    const fileExtension = `.${fileTypeResult.ext}`;
+    if (fileExtension === '.pdf') {
+      res.setHeader('Content-Type', 'application/pdf'); // For PDF files
+    } else if (fileExtension === '.docx' || fileExtension === '.rtf') {
+      // For DOCX files
+      res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+    } else if (fileExtension === '.pptx') {
+      // For PPTX files
+      res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.presentationml.presentation');
+    } else if (fileExtension === '.xlsx') {
+      // For Excel files
+      res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
     }
 
+    console.log(imageBuffer);
+    console.log(fileExtension);
+
     // Set the appropriate Content-Disposition header for download with the correct file extension
-    res.setHeader('Content-Disposition', `attachment; filename="your_desired_filename${fileExtension}"`);
+    res.setHeader('Content-Disposition', `attachment; filename="Download${fileExtension}"`);
 
     // Send the image data as a response
     res.send(imageBuffer);
@@ -172,7 +176,8 @@ app.get('/download-image', async (req, res) => {
   }
 });
 
+
 // * listening To Port
-app.listen(port, () => {
-    console.log(`This is the ${port} active port! Wait for DB Connection...`);
+app.listen(5000, () => {
+  console.log(`This is the 5000 active port! Wait for DB Connection...`);
 });

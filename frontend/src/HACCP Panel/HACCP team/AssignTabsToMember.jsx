@@ -64,7 +64,7 @@ function AssignTabsToMember() {
     const tabsList5 = [
         { Tab: 'Conduct HACCP' },
         { Tab: 'Process Details' },
-        { Tab: 'HACCP Teams' },
+        { Tab: 'HACCP Team Management' },
         { Tab: 'Product Details' },
         
         { Tab: 'Decision Tree' },

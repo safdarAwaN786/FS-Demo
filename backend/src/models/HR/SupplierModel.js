@@ -46,7 +46,21 @@ const supplierSchema = new mongoose.Schema({
         enum: ['Pending', 'Approved', 'Disapproved'],
         default : 'Pending'
     },
-
+    RiskCategory: {
+        type: String,
+        enum: ['Low', 'Medium', 'High'],
+    },
+    CurrentApprovalDate : {
+        type : Date,
+        required : true
+    },
+    NextApprovalDate : {
+        type : Date,
+        required : true
+    },
+    PhoneNumber2 : {
+        type : Number,
+    },
     CreatedBy: {
         type: String
     },

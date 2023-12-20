@@ -4,8 +4,7 @@ import add from '../../assets/images/employees/Application Add.svg'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import axios from "axios";
-import Swal from 'sweetalert2'
-import { BsArrowLeftCircle } from 'react-icons/bs'
+import Swal from 'sweetalert2';
 import Cookies from 'js-cookie'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateTabData } from '../../redux/slices/tabSlice'

@@ -30,20 +30,21 @@ function ShowFormAnswers() {
     const dispatch = useDispatch();
     const idToWatch = useSelector(state => state.idToProcess);
 
- 
+
 
     useEffect(() => {
         dispatch(setLoading(true))
         axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-record-by-recordId/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
             setDataToSend(res.data.data);
+            console.log(res.data);
             setAnswers(res.data.data.answers);
             dispatch(setLoading(false))
         }).catch(err => {
             dispatch(setLoading(false));
             Swal.fire({
-                icon : 'error',
-                title : 'OOps..',
-                text : 'Something went wrong, Try Again!'
+                icon: 'error',
+                title: 'OOps..',
+                text: 'Something went wrong, Try Again!'
             })
         })
     }, [])
@@ -94,9 +95,9 @@ function ShowFormAnswers() {
                             event.preventDefault();
                             alertManager();
                         }}>
-                            
-                           
-                            
+
+
+
                             <div className='w-100'>
                                 <p className='text-black'>Form Name</p>
                                 <div>
@@ -137,7 +138,7 @@ function ShowFormAnswers() {
                                             <div className='pe-4'>
                                                 <span>Short Answer :</span>
 
-                                                <input value={answer.shortTextAnswer}  className='bg-light border-bottom border-secondary py-1 my-1  w-100' type='text' readOnly/>
+                                                <input value={answer.shortTextAnswer} className='bg-light border-bottom border-secondary py-1 my-1  w-100' type='text' readOnly />
 
                                             </div>
 
@@ -145,86 +146,125 @@ function ShowFormAnswers() {
                                         {(answer.question.questionType === 'LongText') && (
                                             <div className='pe-4'>
                                                 <span>Long Answer :</span>
-                                                <textarea value={answer.longTextAnswer}  rows={3} name='longTextAnswer' className='w-100 bg-light border-0 p-1 border-bottom border-secondary' readOnly/>
+                                                <textarea value={answer.longTextAnswer} rows={3} name='longTextAnswer' className='w-100 bg-light border-0 p-1 border-bottom border-secondary' readOnly />
 
                                             </div>
 
                                         )}
 
                                         {(answer.question.questionType === 'Multiplechoicegrid') && (
-                                            <div className=' d-flex flex-column'>
-                                                <div className='d-flex my-2 flex-row'>
-                                                    <span className='me-5 pe-4 px-2 py-0 d-inline'>R\C</span>
-                                                    {answer?.question.columns.map((column, colIndex) => {
-                                                        return (
-                                                            <input value={column.colTitle} className='bg-light border-bottom border-secondary d-inline py-0 px-1 mx-1 ' type='text' readOnly />
-                                                        )
-                                                    })}
-                                                </div>
-
-
-                                                {answer?.question.rows?.map((row, rowIndex) => {
-                                                    return (
-
-                                                        <div className='my-2 d-flex flex-row'>
-
-
-                                                            <span>{rowIndex + 1}.</span>
-
-                                                            <input value={row.rowTitle} name='rowTitle' type='text' style={{
-                                                                borderRadius: '0px'
-                                                            }} className='bg-light border-bottom border-secondary w-25 px-2 py-0 d-inline' readOnly />
-                                                            <div className='d-flex justify-content-between w-75'>
-
-
-                                                                {answer.question?.columns.map((colnum, colIndex) => {
+                                            <>
+                                                <div className={`${style.gridCover}`}>
+                                                    <table className='table table-bordered'>
+                                                        <thead>
+                                                            <tr>
+                                                                <th style={{
+                                                                    minWidth: '120px'
+                                                                }}>R\C</th>
+                                                                {answer?.question.columns.map((column, colIndex) => {
                                                                     return (
-                                                                        <input checked={answer.multipleChoiceGridAnswers.includes(`R${rowIndex}-C${colIndex}`)} name={`R${rowIndex}`} type='radio' readOnly />
+                                                                        <th style={{
+                                                                            minWidth: '80px'
+                                                                        }}>
+                                                                            <input value={column.colTitle} className={`bg-light border-bottom border-secondary d-inline py-0 px-1 mx-1 ${style.noRadius}`} type='text' readOnly />
+                                                                        </th>
                                                                     )
                                                                 })}
-                                                            </div>
-                                                        </div>
-                                                    )
-                                                })}
-                                            </div>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {answer?.question.rows?.map((row, rowIndex) => {
+                                                                return (
+
+                                                                    <tr>
+                                                                        <td>
+                                                                            <span>{rowIndex + 1}.</span>
+                                                                            <input value={row.rowTitle} name='rowTitle' type='text' style={{
+                                                                                borderRadius: '0px'
+                                                                            }} className='bg-light border-bottom border-secondary  px-2 py-0 d-inline' readOnly />
+                                                                        </td>
+
+                                                                        {answer.question?.columns.map((colnum, colIndex) => {
+                                                                            return (
+                                                                                <td>
+                                                                                    <input style={{
+                                                                                        width: '20px',
+                                                                                        height: '20px'
+                                                                                    }} checked={answer.multipleChoiceGridAnswers.includes(`R${rowIndex}-C${colIndex}`)} name={`R${rowIndex}`} type='radio' readOnly />
+                                                                                </td>
+                                                                            )
+                                                                        })}
+
+                                                                    </tr>
+                                                                )
+                                                            })}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+
+                                            </>
                                         )}
 
                                         {(answer.question.questionType === 'Checkboxgrid') && (
-                                            <div className=' d-flex flex-column'>
-                                                <div className='d-flex my-2 flex-row'>
-                                                    <span className='me-25 pe-25 px-2 py-0 d-inline'>R\C</span>
-                                                    {answer.question?.columns.map((column, colIndex) => {
-                                                        return (
-                                                            <input value={column.colTitle} className='bg-light border-bottom border-secondary d-inline py-0 px-1 mx-1 ' type='text' readOnly />
-                                                        )
-                                                    })}
-                                                </div>
-
-
-                                                {answer.question?.rows?.map((row, rowIndex) => {
-                                                    return (
-
-                                                        <div className='my-2 d-flex flex-row'>
-
-
-                                                            <span>{rowIndex + 1}.</span>
-
-                                                            <input value={row.rowTitle} type='text' style={{
-                                                                borderRadius: '0px'
-                                                            }} className='bg-light border-bottom border-secondary w-50 px-2 py-0 d-inline' readOnly />
-
-                                                            <div className='d-flex justify-content-between w-75'>
-
-                                                                {answer.question?.columns.map((colnum, colIndex) => {
+                                            <>
+                                                <div className={`${style.gridCover}`}>
+                                                    <table className='table table-bordered'>
+                                                        <thead>
+                                                            <tr>
+                                                                <th style={{
+                                                                    minWidth: '120px'
+                                                                }}>R\C</th>
+                                                                {answer.question?.columns.map((column, colIndex) => {
                                                                     return (
-                                                                        <input value={answer.checkboxGridAnswers.includes(`R${rowIndex}-C${colIndex}`)}  className='mx-2' type='checkbox' readOnly/>
+                                                                        <th style={{
+                                                                            minWidth: '80px'
+                                                                        }}>
+                                                                            <input value={column.colTitle} className={`bg-light border-bottom border-secondary d-inline py-0 px-1 mx-1 ${style.noRadius}`} type='text' readOnly />
+                                                                        </th>
                                                                     )
                                                                 })}
-                                                            </div>
-                                                        </div>
-                                                    )
-                                                })}
-                                            </div>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {answer.question?.rows?.map((row, rowIndex) => {
+                                                                return (
+
+                                                                    <tr>
+                                                                        <td>
+                                                                            <span>{rowIndex + 1}.</span>
+                                                                            <input value={row.rowTitle} type='text' style={{
+                                                                                borderRadius: '0px'
+                                                                            }} className='bg-light border-bottom border-secondary  px-2 py-0 d-inline' readOnly />
+                                                                        </td>
+
+
+                                                                        {answer.question?.columns.map((colnum, colIndex) => {
+                                                                            return (
+                                                                                <td>
+                                                                                    <input style={{
+                                                                                        width: '20px',
+                                                                                        height: '20px'
+                                                                                    }} checked={answer.checkboxGridAnswers.includes(`R${rowIndex}-C${colIndex}`)} className='mx-2' type='checkbox' readOnly />
+                                                                                </td>
+                                                                            )
+                                                                        })}
+
+                                                                    </tr>
+                                                                )
+                                                            })}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div className=' d-flex flex-column'>
+                                                    <div className='d-flex my-2 flex-row'>
+                                                        <span className='me-25 pe-25 px-2 py-0 d-inline'>R\C</span>
+
+                                                    </div>
+
+
+
+                                                </div>
+                                            </>
 
                                         )}
 
@@ -252,7 +292,7 @@ function ShowFormAnswers() {
                                                         <div className='my-2 d-flex flex-row'>
 
 
-                                                            <input value={answer.CheckboxesAnswers.includes(option.optionText)}  className='mx-2 mt-1' type='checkbox' readOnly/>                                               <input type='text' value={option.optionText} style={{
+                                                            <input value={answer.CheckboxesAnswers.includes(option.optionText)} className='mx-2 mt-1' type='checkbox' readOnly />                                               <input type='text' value={option.optionText} style={{
                                                                 borderRadius: '0px'
                                                             }} name='optionText' className='bg-light border-bottom border-secondary w-50 px-2 py-0 d-inline' readOnly />
                                                         </div>
@@ -270,7 +310,7 @@ function ShowFormAnswers() {
                                                     return (
 
                                                         <div className='my-2 d-flex flex-row'>
-                                                            <input value={(answer.multipleChoiceAnswer === option.optionText)}  style={{
+                                                            <input value={(answer.multipleChoiceAnswer === option.optionText)} style={{
                                                                 width: '23px'
                                                             }} className='mx-2' type='radio' name={`question-${index}`} readOnly />
 
@@ -301,7 +341,7 @@ function ShowFormAnswers() {
 
 
                                                 <span>Selected Date :</span>
-                                                <input value={answer.dateAnswer}  type='date' className='w-50 bg-light p-2 border-0 border-bottom border-secondary'  readOnly/>
+                                                <input value={answer.dateAnswer} type='date' className='w-50 bg-light p-2 border-0 border-bottom border-secondary' readOnly />
 
 
 
@@ -312,7 +352,7 @@ function ShowFormAnswers() {
                                         {answer.question.questionType === 'Time' && (
                                             <div className=' d-flex my-3 flex-column pe-4'>
 
-                                                <input value={answer.timeAnswer}  type='time' className='w-50 bg-light p-2 border-0 border-bottom border-secondary'  readOnly/>
+                                                <input value={answer.timeAnswer} type='time' className='w-50 bg-light p-2 border-0 border-bottom border-secondary' readOnly />
                                             </div>
 
                                         )}

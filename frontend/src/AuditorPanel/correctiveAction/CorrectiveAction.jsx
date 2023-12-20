@@ -103,13 +103,9 @@ function CorrectiveActions() {
                             <tr className={style.headers}>
                                 <td>Document ID</td>
                                 <td>Department</td>
-                                <td>Target Date</td>
                                 <td>Actual Date</td>
-
-
                                 <td>Checklist Status</td>
                                 <td>Non Conformance Report</td>
-
                             </tr>
                             {
                                 reportsList?.map((report, i) => {
@@ -126,11 +122,7 @@ function CorrectiveActions() {
                                                 lineHeight: "20px",
                                             }}>{report.ConductAudit.Checklist.ChecklistId}</p></td>
                                             <td className={style.simpleContent}>{report.ConductAudit.Checklist.Department.DepartmentName}</td>
-                                            {report.TargetDate ? (
-                                                <td>{report.TargetDate?.slice(0, 10).split('-')[2]}/{report.TargetDate?.slice(0, 10).split('-')[1]}/{report.TargetDate?.slice(0, 10).split('-')[0]}</td>
-                                            ) : (
-                                                <td><div className={`text-center ${style.yellowStatus}  `}><p>Pending</p></div></td>
-                                            )}
+                                            
                                             {report.ReportDate ? (
                                                 <td>{report.ReportDate?.slice(0, 10).split('-')[2]}/{report.ReportDate?.slice(0, 10).split('-')[1]}/{report.ReportDate?.slice(0, 10).split('-')[0]}</td>
                                             ) : (
@@ -145,7 +137,7 @@ function CorrectiveActions() {
                                                     dispatch(changeId(report._id))
                                                 }} className='btn btn-outline-success p-1 m-0'>Take Action</p>
                                                 <p onClick={() => {
-                                                    dispatch(updateTabData({...tabData, Tab : 'viewCorrectiveAction'}))
+                                                    dispatch(updateTabData({...tabData, Tab : 'viewCorrectiveActionsList'}))
                                                     dispatch(changeId(report._id))
                                                 }} className={style.redclick}>View</p>
                                             </td>

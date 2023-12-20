@@ -156,7 +156,7 @@ function AddAuditor() {
 
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        dispatch(updateTabData({ ...tabData, Tab: 'Internal Auditors' }))
+                        dispatch(updateTabData({ ...tabData, Tab: 'Internal Auditor Management' }))
                     }
                 })
 
@@ -202,7 +202,7 @@ function AddAuditor() {
                     <div className='d-flex flex-row px-lg-5 bg-white px-2 '>
                         <BsArrowLeftCircle role='button' className='fs-3 my-1 text-danger' onClick={(e) => {
                             {
-                                dispatch(updateTabData({ ...tabData, Tab: 'Internal Auditors' }))
+                                dispatch(updateTabData({ ...tabData, Tab: 'Internal Auditor Management' }))
                             }
                         }} />
 
@@ -236,7 +236,7 @@ function AddAuditor() {
                             </div>
                             <input
                                 type="file"
-
+                                accept='.png, .jpg, .jpeg'
                                 name='AuditorImage'
                                 style={{ display: 'none' }}
                                 ref={imageInputRef}
@@ -246,6 +246,7 @@ function AddAuditor() {
                                 type="file"
                                 id="file-input"
                                 name='AuditorDocument'
+                                accept='.pdf'
                                 style={{ display: 'none' }}
                                 ref={documentRef}
                                 onChange={handleDocumentChange}
@@ -254,6 +255,7 @@ function AddAuditor() {
                                 type="file"
                                 id="file-input"
                                 name='ApprovedAuditorLetter'
+                                accept='.pdf'
                                 style={{ display: 'none' }}
                                 ref={letterRef}
                                 onChange={handleLetterChange}

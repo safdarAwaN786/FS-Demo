@@ -149,6 +149,10 @@ import AuditsHistory from './AuditorPanel/conductAudits/Auditshistory'
 import { FadeLoader, ScaleLoader } from 'react-spinners'
 import AddSupplier from './HRPortal/Supplier/AddSuppier'
 import Suppliers from './HRPortal/Supplier/Suppliers'
+import ActionsList from './AuditorPanel/correctiveAction/ActionsList'
+import ReportsList from './AuditorPanel/reportsrecords/ReportsList'
+import ReportActionsList from './AuditorPanel/reportsrecords/ReportActionsList'
+import ViewActionInReport from './AuditorPanel/reportsrecords/ViewActionInReport'
 
 
 
@@ -205,8 +209,12 @@ function MainPage() {
             )}
             <>
                 <div className={`${style.myNavbar} align-items-center px-lg-5 px-md-4 px-sm-3 px-1  d-flex justify-content-between bg-light`}>
+                    <div className='d-flex flex-row align-items-center gap-2'>
+                        <img className={`${style.logoImg}`} src={user?.Company?.CompanyLogo} alt="logo" />
+                        <span className='fs-5 text-secondary fw-bold'>{user?.Company?.CompanyName}</span>
+                    </div>
                     <div>
-                        <img className={`${style.logoImg}`} src={logo} alt="logo" />
+                        <span className='fs-4 fw-bold text-secondary mt-1'>Food Safety Management System Software</span>
                     </div>
                     <div className='d-flex flex-row align-items-center'>
                         <ProfileUser setRedTab={setRedTab} />
@@ -219,9 +227,7 @@ function MainPage() {
                 </div>
                 <div className={style.parent}>
                     <div className={style.sidebar}>
-
-
-
+                    {/* This is the sidebar for smaller screen */}
                         <div className={offcanvas ? `${style.sidebarParentoffcanvas}  ${style.mkvisiable}` : `${style.sidebarParentoffcanvas}`}>
                             <div className={`${style.offcanvas} ${style.block}`}>
                                 <div className={style.parent}>
@@ -296,13 +302,11 @@ function MainPage() {
                                 </div>
                             </div>
                         </div>
+                        {/* This is the sidebar for large screens */}
                         <div className={`${style.sidebarParent} bg-light`}>
-
                             <div className={isOpen ? `${style.offcanvas} ${style.block}` : style.offcanvas}>
                                 <div >
                                     <div className='ms-2'>
-
-
                                         <div className={style.dropdown}>
                                             <div style={{
                                                 cursor: "pointer",
@@ -322,7 +326,7 @@ function MainPage() {
                                                     letterSpacing: '0em',
                                                     color: '#ffffff',
                                                     marginBottom: '0'
-                                                }}>{user?.Department.ShortName} Panel</p>
+                                                }}>{user?.Department?.ShortName} Panel</p>
                                                 <div style={{
                                                     borderRadius: '1.5rem',
                                                     width: '1.5rem',
@@ -344,7 +348,7 @@ function MainPage() {
 
                                         {isOpen ? <div className={style.optsParent}>
                                             <ul style={{
-                                                height: '395px',
+                                                height: '70vh',
                                                 overflowY: 'scroll',
                                                 paddingBottom: '10px'
                                             }} className={style.opts}>
@@ -377,16 +381,16 @@ function MainPage() {
                     </div>
 
 
-                    {Tab === 'HACCP Teams' && (
+                    {Tab === 'HACCP Team Management' && (
                         <HACCPteams />
                     )}
                     {Tab === 'addSupplier' && (
                         <AddSupplier />
                     )}
-                    {Tab === 'Suppliers' && (
+                    {Tab === 'Approved Supplier List' && (
                         <Suppliers />
                     )}
-                    {Tab === 'Employees' && (
+                    {Tab === 'Employee Registration' && (
 
                         <Employees />
                     )}
@@ -406,7 +410,7 @@ function MainPage() {
 
                         <TrainedEmployeesForTrainer />
                     )}
-                    {Tab === 'Trainings Records' && (
+                    {Tab === 'Conduct Trainings' && (
 
                         <Trainings />
                     )}
@@ -418,7 +422,7 @@ function MainPage() {
 
                         <InfoForPlanned />
                     )}
-                    {Tab === 'Trainings' && (
+                    {Tab === 'Add Trainings' && (
 
                         <TrainingsRef />
                     )}
@@ -426,7 +430,7 @@ function MainPage() {
 
                         <AddTraining />
                     )}
-                    {Tab === 'Planned Trainings' && (
+                    {Tab === 'Training Record' && (
 
                         <PlannedTrainings />
                     )}
@@ -434,7 +438,7 @@ function MainPage() {
 
                         <AssignTrainings />
                     )}
-                    {Tab === 'Trainers' && (
+                    {Tab === 'Add Trainers' && (
 
                         <Trainers />
                     )}
@@ -442,7 +446,7 @@ function MainPage() {
 
                         <AddTrainer />
                     )}
-                    {Tab === 'Personal Rec' && (
+                    {Tab === 'Employee Requisition' && (
 
                         <Main />
                     )}
@@ -462,7 +466,7 @@ function MainPage() {
 
                         <PersonalRec />
                     )}
-                    {Tab === 'Yearly Plan H' && (
+                    {Tab === 'Create Yearly Training Plan' && (
 
                         <YearlyPlan />
                     )}
@@ -479,12 +483,12 @@ function MainPage() {
 
                         <Input />
                     )}
-                    {Tab === 'Monthly Plan H' && (
+                    {Tab === 'Craete Monthly Training Plan' && (
 
                         <AddPlan />
                     )}
 
-                    {Tab === 'Machinery' && (
+                    {Tab === 'Master List of Machinery' && (
 
                         <Machines />
                     )}
@@ -520,7 +524,7 @@ function MainPage() {
 
                         <MaintananceRectForMWR />
                     )}
-                    {Tab === 'Measuring Devices' && (
+                    {Tab === 'Master List of Monitoring and Measuring Devices' && (
 
                         <Devices />
                     )}
@@ -528,7 +532,7 @@ function MainPage() {
 
                         <AddDevices />
                     )}
-                    {Tab === 'MWR Requests' && (
+                    {Tab === 'Generate MWR Corrective' && (
 
                         <TechMWR />
                     )}
@@ -557,7 +561,7 @@ function MainPage() {
                         <CompletedTasks />
                     )}
 
-                    {Tab === 'Food Safety Plan' && (
+                    {Tab === 'Generate Food Safety Plan' && (
                         <FoodSafetyPlan />
                     )}
                     {Tab === 'updateFoodSafetyPlan' && (
@@ -582,7 +586,7 @@ function MainPage() {
                         <ViewDecisionTree />
                     )}
 
-                    {Tab === 'Decision Tree' && (
+                    {Tab === 'Identify CCP/OPRP' && (
 
                         <DecisionTree />
                     )}
@@ -594,11 +598,11 @@ function MainPage() {
 
                         <DecisionTreeMembers />
                     )}
-                    {Tab === 'Product Details' && (
+                    {Tab === 'Describe Product' && (
 
                         <ProductDetails />
                     )}
-                    {Tab === 'Process Details' && (
+                    {Tab === 'Construct Flow Diagram' && (
 
                         <ProcessDetails />
                     )}
@@ -638,7 +642,7 @@ function MainPage() {
 
                         <HACCPTeamMembers />
                     )}
-                    {Tab === 'Internal Auditors' && (
+                    {Tab === 'Internal Auditor Management' && (
 
                         <Auditors />
                     )}
@@ -646,11 +650,11 @@ function MainPage() {
 
                         <AddAuditor />
                     )}
-                    {Tab === 'Monthly Plan A' && (
+                    {Tab === 'Audit Plan (Monthly)' && (
 
                         <AddPlanAuditing />
                     )}
-                    {Tab === 'Processes' && (
+                    {Tab === 'Define Process' && (
 
                         <Processes />
                     )}
@@ -662,7 +666,7 @@ function MainPage() {
 
                         <Wellcome />
                     )}
-                    {Tab === 'Yearly Plan A' && (
+                    {Tab === 'Audit Program (Yearly Plan)' && (
 
                         <YearlyPlanAuditing />
                     )}
@@ -683,7 +687,7 @@ function MainPage() {
                         <ProcessInfo />
                     )}
 
-                    {Tab === 'List of Documents' && (
+                    {Tab === 'Master List of Documents' && (
 
                         <DocumentsList />
                     )}
@@ -699,7 +703,7 @@ function MainPage() {
 
                         <EditDocument />
                     )}
-                    {Tab === 'List of Forms' && (
+                    {Tab === 'Master List of Records/Forms' && (
 
                         <FormsList />
                     )}
@@ -715,7 +719,7 @@ function MainPage() {
 
                         <EditForm />
                     )}
-                    {Tab === 'Form Records' && (
+                    {Tab === 'Record Keeping' && (
 
                         <FormRecords />
                     )}
@@ -723,7 +727,7 @@ function MainPage() {
 
                         <FillForm />
                     )}
-                    {Tab === 'Conduct HACCP' && (
+                    {Tab === 'Conduct Risk Assessment' && (
 
                         <ConductHACCP />
                     )}
@@ -744,7 +748,7 @@ function MainPage() {
 
                         <ResultsHistory />
                     )}
-                    {Tab === 'Change Requests' && (
+                    {Tab === 'Document Change Creation' && (
 
                         <ChangeRequests />
                     )}
@@ -755,7 +759,7 @@ function MainPage() {
                     {Tab === 'viewChangeRequest' && (
                         <ViewChangeRequest />
                     )}
-                    {Tab === 'Upload Document' && (
+                    {Tab === 'Upload Document Manually' && (
                         <UploadedDocuments />
                     )}
                     {Tab === 'uploadDocument' && (
@@ -768,7 +772,7 @@ function MainPage() {
                     {Tab === 'dashboard' && (
                         <Dashboard />
                     )}
-                    {Tab === 'Checklist' && (
+                    {Tab === 'Internal Audit Check List' && (
                         <Checklist />
                     )}
                     {Tab === 'viewChecklist' && (
@@ -789,7 +793,7 @@ function MainPage() {
                     {Tab === 'viewAuditAnswers' && (
                         <ViewAudit />
                     )}
-                    {Tab === 'Reports Records' && (
+                    {Tab === 'Non-Conformity Report' && (
                         <ReportsRecords />
                     )}
                     {Tab === 'recordReport' && (
@@ -798,7 +802,7 @@ function MainPage() {
                     {Tab === 'viewReport' && (
                         <ViewReport />
                     )}
-                    {Tab === 'Corrective Action' && (
+                    {Tab === 'Corrective Action Plan' && (
                         <CorrectiveActions />
                     )}
                     {Tab === 'actionOnCorrective' && (
@@ -807,7 +811,7 @@ function MainPage() {
                     {Tab === 'viewCorrectiveAction' && (
                         <ViewCorrectiveAction />
                     )}
-                    {Tab === 'Participants' && (
+                    {Tab === 'Management Review Team' && (
                         <Participants />
                     )}
                     {Tab === 'addParticipant' && (
@@ -817,13 +821,13 @@ function MainPage() {
                         <Notifications />
                     )}
 
-                    {Tab === 'Send Notification' && (
+                    {Tab === 'Management Review Plan' && (
                         <Notifications />
                     )}
                     {Tab === 'sendNotification' && (
                         <SendNotification />
                     )}
-                    {Tab === 'Generate MRM' && (
+                    {Tab === 'Minutes of Meeting' && (
                         <MRMs />
                     )}
                     {Tab === 'sendMRM' && (
@@ -892,7 +896,22 @@ function MainPage() {
                     {Tab === 'viewAuditsHistory' && (
                         <AuditsHistory />
                     )}
+                    {Tab === 'viewCorrectiveActionsList' && (
+                        <ActionsList />
+                    )}
+                    {Tab === 'viewCorrectiveActionInReport' && (
+                        <ViewActionInReport />
+                    )}
+                    {Tab === 'viewReportActions' && (
+                        <ReportActionsList />
+                    )}
+                    {Tab === 'viewReportsList' && (
+                        <ReportsList />
+                    )}
 
+                </div>
+                <div className={`${style.myFooter} d-flex justify-content-center bg-light`}>
+                    <span className='text-center'>Powered by FEAT Technologies</span>
                 </div>
             </>
 
