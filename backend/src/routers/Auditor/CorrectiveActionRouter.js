@@ -9,7 +9,7 @@ const cloudinary = require('cloudinary').v2;
 const multer = require('multer');
 const authMiddleware = require('../../middleware/auth');
 const { rgb, degrees, PDFDocument, StandardFonts } = require('pdf-lib');
-
+const axios = require('axios');
 router.use(authMiddleware);
 
 cloudinary.config({
@@ -108,7 +108,7 @@ router.post('/addCorrectiveAction', upload.fields(generateCorrectiveDocArray()),
                 const fileData = filesObj[key][0];
                 const index = fileData.fieldname.split('-')[1];
                 const response = await axios.get(req.user.Company.CompanyLogo, { responseType: 'arraybuffer' });
-                const pdfDoc = await PDFDocument.load(req.file.buffer);
+                const pdfDoc = await PDFDocument.load(fileData.buffer);
                 const logoImage = Buffer.from(response.data);
                 const logoImageDataUrl = `data:image/jpeg;base64,${logoImage.toString('base64')}`;
                 const isJpg = logoImageDataUrl.includes('data:image/jpeg') || logoImageDataUrl.includes('data:image/jpg');

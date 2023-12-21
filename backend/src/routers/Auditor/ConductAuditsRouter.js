@@ -7,7 +7,7 @@ const cloudinary = require('cloudinary').v2;
 const multer = require('multer');
 const { rgb, degrees, PDFDocument, StandardFonts } = require('pdf-lib');
 const authMiddleware = require('../../middleware/auth');
-
+const axios = require('axios')
 router.use(authMiddleware);
 
 cloudinary.config({

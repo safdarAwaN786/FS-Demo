@@ -336,7 +336,7 @@ function ActionOnCorrective() {
                                                     <label class="btn btn-outline-secondary m-2" for={`N/A-${index}`}>N/A</label>
                                                 </div>
                                             )}
-                                            <textarea value={answer.Answer.Remarks} rows={3} className='w-100 p-2 my-2' placeholder='Remarks...' required />
+                                            <textarea value={answer.Answer.Remarks} rows={3} className='w-100 p-2 my-2' placeholder='Remarks...' readOnly />
                                         </div>
 
                                         <div style={{

@@ -11,6 +11,7 @@ const smtpTransport = require('nodemailer-smtp-transport');
 const emailTemplates = require('../../EmailTemplates/userEmail.json');
 const template = emailTemplates.registrationConfirmation;
 const authMiddleware = require('../../middleware/auth');
+const axios = require('axios');
 router.use(authMiddleware);
 const { rgb, degrees, PDFDocument, StandardFonts } = require('pdf-lib');
 // * Cloudinary Setup 
@@ -191,7 +192,6 @@ router.post("/addTrainer", upload.fields([{ name: 'TrainerImage' }, { name: 'Tra
       const emailBody = template.body.replace('{{name}}', newUser.Name)
         .replace('{{username}}', newUser.UserName)
         .replace('{{password}}', req.body.Password);
-
       const mailOptions = {
         from: process.env.email, // Sender email address
         to: newUser.Email, // Recipient's email address
