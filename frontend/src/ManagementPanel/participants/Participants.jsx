@@ -4,7 +4,6 @@ import Search from '../../assets/images/employees/Search.svg'
 import add from '../../assets/images/employees/Application Add.svg'
 import { useEffect, useState } from 'react'
 import axios from "axios";
-import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { setLoading } from '../../redux/slices/loading';
@@ -14,22 +13,17 @@ function Participants() {
     const [participantsList, setParticipantsList] = useState(null);
     const [showBox, setShowBox] = useState(false);
     const [dataToShow, setDataToShow] = useState(null);
-    const [showOwner, setShowOwner] = useState(false);
-    const [ownerInfo, setOwnerInfo] = useState(null);
     const [startIndex, setStartIndex] = useState(0);
     const [endIndex, setEndIndex] = useState(8);
     const [allDataArr, setAllDataArr] = useState(null);
-    const [sendEmail, setSendEmail] = useState(false);
-    const [emailTo, setEmailTo] = useState(null);
-
-    const userToken = Cookies.get('userToken');
+    const user = useSelector(state => state.auth.user);
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
 
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-participants`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-participants`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             setAllDataArr(response.data.data)
             setParticipantsList(response.data.data.slice(startIndex, endIndex));
             dispatch(setLoading(false))
@@ -47,31 +41,24 @@ function Participants() {
     const nextPage = () => {
         setStartIndex(startIndex + 8);
         setEndIndex(endIndex + 8);
-
     }
 
     const backPage = () => {
         setStartIndex(startIndex - 8);
         setEndIndex(endIndex - 8);
-
-
     }
 
     useEffect(() => {
-
         setParticipantsList(allDataArr?.slice(startIndex, endIndex))
     }, [startIndex, endIndex])
 
 
     const search = (event) => {
         if (event.target.value !== "") {
-            console.log(event.target.value);
-
             const searchedList = allDataArr.filter((obj) =>
-
                 obj.ParticipantId.includes(event.target.value) || obj?.Name?.includes(event.target.value)
             )
-            console.log(searchedList);
+            
             setParticipantsList(searchedList);
         } else {
             setParticipantsList(allDataArr?.slice(startIndex, endIndex))

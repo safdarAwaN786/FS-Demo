@@ -1,9 +1,7 @@
 import style from './CreateChecklist.module.css'
 import { useEffect, useRef, useState } from 'react'
 import axios from "axios";
-import { useNavigate } from 'react-router-dom'
 import Swal from 'sweetalert2'
-import JoditEditor from 'jodit-react';
 import { FaMinus } from 'react-icons/fa'
 import { BsArrowLeftCircle } from 'react-icons/bs';
 import Cookies from 'js-cookie';
@@ -17,16 +15,14 @@ function EditChecklist() {
     const [alert, setalert] = useState(false);
     const [dataToSend, setDataToSend] = useState({});
     const [screenWidth, setScreenWidth] = useState(window.innerWidth);
-    // Initialize an array to store the content and styles of each editor
-    const [editorData, setEditorData] = useState([]);
-
+    const user = useSelector(state => state.auth.user);
     const userToken = Cookies.get('userToken');
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
     const idToWatch = useSelector(state => state.idToProcess);
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/getChecklistById/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/getChecklistById/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             setDataToSend(response.data.data);
             setQuestions(response.data.data.ChecklistQuestions);
             if (departmentsToShow) {
@@ -47,17 +43,7 @@ function EditChecklist() {
     const updateDataToSend = (event) => {
         setDataToSend({ ...dataToSend, [event.target.name]: event.target.value })
     }
-    // Function to handle changes in each editor
-    const handleEditorChange = (index, content) => {
-        // Create a copy of the editorData array
-        const updatedEditorData = [...editorData];
 
-        // Update the content for the specific editor
-        updatedEditorData[index] = content;
-
-        // Update the state with the new editor data
-        setEditorData(updatedEditorData);
-    };
 
     useEffect(() => {
         const handleResize = () => {
@@ -77,11 +63,10 @@ function EditChecklist() {
     }
 
     const [departmentsToShow, SetDepartmentsToShow] = useState(null);
-    const user = useSelector(state => state.auth?.user);
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
             SetDepartmentsToShow(res.data.data);
             if (questions) {
                 dispatch(setLoading(false))
@@ -132,7 +117,7 @@ function EditChecklist() {
     const makeRequest = () => {
         if (dataToSend) {
             dispatch(setLoading(true))
-            axios.put(`${process.env.REACT_APP_BACKEND_URL}/updateChecklist`, dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+            axios.put(`${process.env.REACT_APP_BACKEND_URL}/updateChecklist`, dataToSend, { headers: { Authorization: `${user._id}` } }).then(() => {
                 console.log("request made !");
                 setDataToSend(null);
                 setQuestions([])
@@ -214,13 +199,12 @@ function EditChecklist() {
                                             <p>Document Type</p>
                                         </div>
                                         <div className='border border-dark-subtle'>
-                                            <select value={dataToSend?.DocumentType} onChange={updateDataToSend} name='DocumentType' style={{ width: "100%" }} required >
+                                            <select className='form-select  form-select-lg' value={dataToSend?.DocumentType} onChange={updateDataToSend} name='DocumentType' style={{ width: "100%" }} required >
                                                 <option value="" disabled>Choose Type</option>
                                                 <option value="Manuals">Manuals</option>
                                                 <option value="Procedures">Procedures</option>
                                                 <option value="SOPs">SOPs</option>
                                                 <option value="Forms">Forms</option>
-
                                             </select>
                                         </div>
                                     </div>
@@ -231,24 +215,19 @@ function EditChecklist() {
                                             <p>Department</p>
                                         </div>
                                         <div className='border border-dark-subtle'>
-                                            <select value={dataToSend?.Department?.DepartmentName} onChange={updateDataToSend} name='Department' style={{ width: "100%" }} required >
+                                            <select className='form-select  form-select-lg' value={dataToSend?.Department?.DepartmentName} onChange={updateDataToSend} name='Department' style={{ width: "100%" }} required >
                                                 <option value="" disabled>Choose Department</option>
                                                 {departmentsToShow?.map((depObj) => {
                                                     return (
                                                         <option value={depObj._id}>{depObj?.DepartmentName}</option>
                                                     )
                                                 })}
-
                                             </select>
-
                                         </div>
                                     </div>
-
                                 </div>
-
                             </div>
                             <div className={`${style.formDivider} flex-column justify-content-center`}>
-
                                 {questions?.map((question, index) => {
                                     return (
                                         <div style={{
@@ -266,7 +245,6 @@ function EditChecklist() {
                                                     }} style={{
                                                         borderRadius: '0px'
                                                     }} name='questionText' placeholder='Untitled Question' className='border-0  border-secondary bg-light mt-2 mb-3 w-100 p-3' required />
-
                                                 </div>
                                                 <div>
                                                     Compliance Type : {question.ComplianceType}

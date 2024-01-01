@@ -4,7 +4,6 @@ import axios from "axios";
 import Swal from 'sweetalert2'
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
-import Cookies from 'js-cookie';
 import { setLoading } from '../../redux/slices/loading';
 
 function AssignTabs() {
@@ -12,7 +11,6 @@ function AssignTabs() {
     const [selectedTabsArr, setSelectedTabsArr] = useState([]);
     const [alert, setalert] = useState(false);
     const [dataToSend, setDataToSend] = useState(null);
-    const [usersObj, setUsersObj] = useState(null);
     const [tabsArr1, setTabsArr1] = useState([]);
     const [tabsArr2, setTabsArr2] = useState([]);
     const [tabsArr3, setTabsArr3] = useState([]);
@@ -20,19 +18,15 @@ function AssignTabs() {
     const [tabsArr5, setTabsArr5] = useState([]);
     const [tabsArr6, setTabsArr6] = useState([]);
     const [tabsArr7, setTabsArr7] = useState([]);
-
     const alertManager = () => {
         setalert(!alert)
     }
-
-
     const idToWatch = useSelector(state => state.idToProcess);
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
     const user = useSelector(state => state.auth?.user)
 
     // Tabs from where no functionality will be choosen..
-
     const tabsList1 = [
         { Tab: 'Process Records' },
         // Monthly Plan A
@@ -138,10 +132,6 @@ function AssignTabs() {
         { Tab: 'Master List of Records/Forms' },
     ]
 
-
-
-
-
     useEffect(() => {
         setSelectedTabsArr([...tabsArr1, ...tabsArr2, ...tabsArr3, ...tabsArr4, ...tabsArr5, ...tabsArr6, ...tabsArr7]);
     }, [tabsArr1, tabsArr2, tabsArr3, tabsArr4, tabsArr5, tabsArr6, tabsArr7])
@@ -149,25 +139,12 @@ function AssignTabs() {
 
     useEffect(() => {
         setDataToSend({  Tabs: selectedTabsArr })
-
     }, [selectedTabsArr])
 
-
-    useEffect(() => {
-        console.log(dataToSend);
-    }, [dataToSend])
-
-
-
-
-
-
     const makeRequest = () => {
-        const userToken = Cookies.get('userToken');
-
         if (dataToSend.Tabs.length > 0) {
             dispatch(setLoading(true));
-            axios.patch(`${process.env.REACT_APP_BACKEND_URL}/assign-tabs/${idToWatch}`, dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+            axios.patch(`${process.env.REACT_APP_BACKEND_URL}/assign-tabs/${idToWatch}`, dataToSend, { headers: { Authorization: `${user._id}` } }).then(() => {
                 dispatch(setLoading(false));
                 setDataToSend(null);
                 Swal.fire({
@@ -188,7 +165,6 @@ function AssignTabs() {
                     text : 'Something went wrong, Try Again!'
                 })
             })
-
         } else {
             Swal.fire({
                 icon: 'error',
@@ -198,9 +174,6 @@ function AssignTabs() {
             })
         }
     }
-
-
-
 
 
 

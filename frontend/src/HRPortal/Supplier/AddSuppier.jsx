@@ -4,7 +4,6 @@ import axios from "axios";
 import Swal from 'sweetalert2'
 import { BsArrowLeftCircle } from 'react-icons/bs';
 import { useDispatch, useSelector } from 'react-redux';
-import Cookies from 'js-cookie';
 import { updateTabData } from '../../redux/slices/tabSlice'
 import { setLoading } from '../../redux/slices/loading';
 
@@ -16,14 +15,13 @@ function AddSupplier() {
     }
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
-    const userToken = Cookies.get('userToken');
     const user = useSelector(state => state.auth.user);
 
     const makeRequest = () => {
 
         if (dataToSend) {
             dispatch(setLoading(true))
-            axios.post(`${process.env.REACT_APP_BACKEND_URL}/create-supplier`, dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/create-supplier`, dataToSend, { headers: { Authorization: `${user._id}` } }).then(() => {
                 dispatch(setLoading(false))
                 setDataToSend(null);
                 Swal.fire({
@@ -114,7 +112,7 @@ function AddSupplier() {
                                         <div >
                                             <select value={dataToSend?.DueDate} onChange={(e) => {
                                                 setDataToSend({ ...dataToSend, [e.target.name]: e.target.value });
-                                            }} name='DueDate' className='w-100 text-dark' required>
+                                            }} name='DueDate' className='w-100 text-dark form-select  form-select-lg' required>
                                                 <option value='' selected disabled>Due Date</option>
                                                 <option>1 Year</option>
                                                 <option>2 Year</option>
@@ -129,7 +127,7 @@ function AddSupplier() {
                                         <div >
                                             <select value={dataToSend?.RiskCategory} onChange={(e) => {
                                                 setDataToSend({ ...dataToSend, [e.target.name]: e.target.value });
-                                            }} name='RiskCategory' className='w-100 text-dark' required>
+                                            }} name='RiskCategory' className='w-100 text-dark form-select  form-select-lg' required>
                                                 <option value='' selected disabled>Risk Category</option>
                                                 <option>Low</option>
                                                 <option>Medium</option>

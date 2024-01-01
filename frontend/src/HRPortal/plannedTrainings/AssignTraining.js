@@ -2,15 +2,12 @@ import style from './AssignTrainings.module.css'
 import search from '../../assets/images/employees/Search.svg'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
-import { useNavigate, useParams } from 'react-router-dom'
 import profile from '../../assets/images/addEmployee/prof.svg'
 import Swal from 'sweetalert2'
 import { BsArrowLeftCircle } from 'react-icons/bs'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateTabData } from '../../redux/slices/tabSlice'
-import Cookies from 'js-cookie'
 import { setLoading } from '../../redux/slices/loading'
-
 
 function AssignTrainings() {
 
@@ -24,14 +21,13 @@ function AssignTrainings() {
     const alertManager = () => {
         setalert(!alert)
     }
-    const userToken = Cookies.get('userToken');
     const dispatch = useDispatch();
     const tabData = useSelector(state => state.tab);
     const idToWatch = useSelector(state => state.idToProcess);
-
+    const user = useSelector(state => state.auth.user);
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readMonthlyPlan`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readMonthlyPlan`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             const plannedTrainingsList = response.data.data;
             setPlannedTraining(plannedTrainingsList.find((training) => training._id === idToWatch))
             dispatch(setLoading(false))
@@ -54,7 +50,7 @@ function AssignTrainings() {
     useEffect(() => {
         if (plannedTraining !== null) {
             dispatch(setLoading(true))
-            axios.get(`${process.env.REACT_APP_BACKEND_URL}/readEmployee`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+            axios.get(`${process.env.REACT_APP_BACKEND_URL}/readEmployee`, { headers: { Authorization: `${user._id}` } }).then((response) => {
                 const allEmployees = response.data.data;
                 dispatch(setLoading(false))
                 setAllDataArr(allEmployees);
@@ -107,12 +103,10 @@ function AssignTrainings() {
 
     }
 
-    const navigate = useNavigate();
-
     const makeRequest = () => {
         if (dataToSend) {
             dispatch(setLoading(true))
-            axios.patch(`${process.env.REACT_APP_BACKEND_URL}/assignEmployee`, dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+            axios.patch(`${process.env.REACT_APP_BACKEND_URL}/assignEmployee`, dataToSend, { headers: { Authorization: `${user._id}` } }).then((res) => {
                 dispatch(setLoading(false))
                 setDataToSend(null);
                 Swal.fire({

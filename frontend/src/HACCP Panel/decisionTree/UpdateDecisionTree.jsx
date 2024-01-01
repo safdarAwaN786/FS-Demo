@@ -1,9 +1,8 @@
 import style from './AddDecisionTree.module.css'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import axios from "axios";
 import Swal from 'sweetalert2'
 import { BsArrowLeftCircle } from 'react-icons/bs';
-import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { setLoading } from '../../redux/slices/loading';
@@ -15,21 +14,16 @@ function AddDecisionTree() {
     const [alert, setalert] = useState(false);
     const [allConductHaccps, setAllConductHaccps] = useState(null);
     const [selectedConductHaccp, setSelectedConductHaccp] = useState(null);
- 
-
-
-    const userToken = Cookies.get('userToken');
+    const user = useSelector(state => state.auth.user);
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
-
-
     const alertManager = () => {
         setalert(!alert)
     }
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-conduct-haccp`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-conduct-haccp`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             setAllConductHaccps(response.data.data);
             if(departmentsToShow){
                 dispatch(setLoading(false))
@@ -44,11 +38,9 @@ function AddDecisionTree() {
         })
     }, [])
     const [departmentsToShow, SetDepartmentsToShow] = useState(null);
-    const user = useSelector(state => state.auth?.user);
-
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
             SetDepartmentsToShow(res.data.data);
             if(allConductHaccps){
                 dispatch(setLoading(false))
@@ -69,13 +61,12 @@ function AddDecisionTree() {
         } else {
             dispatch(setLoading(true))
         }
-
     }, [departmentsToShow, allConductHaccps, dataToSend])
 
     const idToWatch = useSelector(state => state.idToProcess);
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-decision-tree/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-decision-tree/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
             setDataToSend(res.data.data);
             if(departmentsToShow && allConductHaccps){
                 dispatch(setLoading(false))
@@ -89,11 +80,6 @@ function AddDecisionTree() {
             })
         })
     }, [])
-
-
-    useEffect(() => {
-        console.log(dataToSend);
-    }, [dataToSend])
 
     useEffect(() => {
         let redAndBlueHazards = [];
@@ -114,7 +100,7 @@ function AddDecisionTree() {
     const makeRequest = () => {
         if (dataToSend.Decisions.length > 0) {
             dispatch(setLoading(true))
-            axios.patch(`${process.env.REACT_APP_BACKEND_URL}/update-decision-tree/${idToWatch}`, dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+            axios.patch(`${process.env.REACT_APP_BACKEND_URL}/update-decision-tree/${idToWatch}`, dataToSend, { headers: { Authorization: `${user._id}` } }).then(() => {
                 console.log("request made !");
                 setDataToSend(null);
                 dispatch(setLoading(false))
@@ -187,7 +173,7 @@ function AddDecisionTree() {
                                         <div style={{
                                             border: '1px solid silver'
                                         }}>
-                                            <select value={dataToSend?.DocumentType} onChange={(e) => {
+                                            <select className='form-select  form-select-lg' value={dataToSend?.DocumentType} onChange={(e) => {
                                                 setDataToSend({ ...dataToSend, [e.target.name]: e.target.value});
                                                 
                                             }} name='DocumentType' style={{ width: "100%" }} required >
@@ -211,40 +197,29 @@ function AddDecisionTree() {
                                             <div style={{
                                                 border: '1px solid silver'
                                             }}>
-                                                <select name='ConductHaccp' onChange={(e) => {
+                                                <select className='form-select  form-select-lg' name='ConductHaccp' onChange={(e) => {
                                                     setDataToSend({ ...dataToSend, [e.target.name]: JSON.parse(e.target.value)._id });
                                                     setSelectedConductHaccp(JSON.parse(e.target.value))
                                                 }} style={{ width: "100%" }} required >
                                                     <option value=""  disabled>Choose Hazard of</option>
                                                     {allConductHaccps.map((obj) => (
                                                         <option value={JSON.stringify(obj)}>{obj.Process.ProcessName}</option>
-
                                                     ))}
-
                                                 </select>
-
                                             </div>
                                         </div>
-
                                     )}
-
-
-
                                 </div>
                                 <div className={style.sec2}>
                                     <div className={style.inputParent}>
                                         <div className={style.para}>
                                             <p>Department</p>
-
                                         </div>
                                         <div style={{
                                             border: '1px solid silver'
                                         }}>
-                                            <select name='Department' value={dataToSend?.Department.DepartmentName} onChange={(e) => {
-                                                setDataToSend({ ...dataToSend, [e.target.name]: e.target.value });
-                                               
-                                                
-                                               
+                                            <select className='form-select  form-select-lg' name='Department' value={dataToSend?.Department.DepartmentName} onChange={(e) => {
+                                                setDataToSend({ ...dataToSend, [e.target.name]: e.target.value });  
                                             }} style={{ width: "100%" }} required>
                                                 <option value=""  disabled>Choose Department</option>
                                                 {departmentsToShow?.map((depObj) => {
@@ -253,8 +228,6 @@ function AddDecisionTree() {
                                                     )
                                                 })}
                                             </select>
-
-
                                         </div>
                                     </div>
                                 </div>

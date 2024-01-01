@@ -5,16 +5,12 @@ import add from '../../assets/images/employees/Application Add.svg'
 import { useEffect, useState } from 'react'
 import axios from "axios";
 import Swal from 'sweetalert2';
-import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { changeId } from '../../redux/slices/idToProcessSlice';
 import { setLoading } from '../../redux/slices/loading';
 
-
-
 function FoodSafetyPlan() {
-
     const [safetyPlansList, setSafetyPlansList] = useState(null);
     const [showBox, setShowBox] = useState(false);
     const [send, setSend] = useState(false);
@@ -28,15 +24,14 @@ function FoodSafetyPlan() {
     const [planData, setPlanData] = useState(null);
     const [idForAction, setIdForAction] = useState(null);
     const [reason, setReason] = useState(null);
-
-    const userToken = Cookies.get('userToken');
+    const user = useSelector(state => state.auth.user);
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
 
 
     const refreshData = () => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-food-safety`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-food-safety`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             setAllDataArr(response.data.data)
             setSafetyPlansList(response.data.data.slice(startIndex, endIndex));
             dispatch(setLoading(false))
@@ -54,9 +49,8 @@ function FoodSafetyPlan() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-food-safety`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-food-safety`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             setAllDataArr(response.data.data);
-            console.log(response.data.data);
             setSafetyPlansList(response.data.data.slice(startIndex, endIndex));
             dispatch(setLoading(false))
         }).catch(err => {
@@ -79,25 +73,18 @@ function FoodSafetyPlan() {
     const backPage = () => {
         setStartIndex(startIndex - 8);
         setEndIndex(endIndex - 8);
-
-
     }
 
     useEffect(() => {
-
         setSafetyPlansList(allDataArr?.slice(startIndex, endIndex))
     }, [startIndex, endIndex])
 
 
     const search = (event) => {
         if (event.target.value !== "") {
-            console.log(event.target.value);
-
             const searchedList = allDataArr.filter((obj) =>
-
                 obj.DocumentId.includes(event.target.value)
             )
-            console.log(searchedList);
             setSafetyPlansList(searchedList);
         } else {
             setSafetyPlansList(allDataArr?.slice(startIndex, endIndex))
@@ -309,7 +296,7 @@ function FoodSafetyPlan() {
                                 e.preventDefault();
                                 setReject(false);
                                 dispatch(setLoading(true))
-                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/disapprove-food-safety`, { id: idForAction, Reason: reason }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/disapprove-food-safety`, { id: idForAction, Reason: reason }, { headers: { Authorization: `${user._id}` } }).then(() => {
                                     dispatch(setLoading(false))
                                     Swal.fire({
                                         title: 'Success',
@@ -317,8 +304,6 @@ function FoodSafetyPlan() {
                                         icon: 'success',
                                         confirmButtonText: 'Go!',
                                     })
-
-
                                     refreshData();
                                 }).catch(err => {
                                     dispatch(setLoading(false));
@@ -354,7 +339,7 @@ function FoodSafetyPlan() {
                                 <button onClick={() => {
                                     setApprove(false)
                                     dispatch(setLoading(true))
-                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/approve-food-safety`, { id: idForAction }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/approve-food-safety`, { id: idForAction }, { headers: { Authorization: `${user._id}` } }).then(() => {
                                         dispatch(setLoading(false))
                                         Swal.fire({
                                             title: 'Success',

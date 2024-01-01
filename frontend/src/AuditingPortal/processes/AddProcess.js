@@ -6,7 +6,6 @@ import { useEffect, useState } from 'react'
 import axios from "axios";
 import Swal from 'sweetalert2'
 import { BsArrowLeftCircle } from 'react-icons/bs'
-import Cookies from 'js-cookie'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateTabData } from '../../redux/slices/tabSlice'
 import { setLoading } from '../../redux/slices/loading'
@@ -22,31 +21,21 @@ function AddProcess() {
     const [processInfo, setProcessInfo] = useState({});
     const [ownerDetail, setOwnerDetail] = useState({});
     const [ownerError, setOwnerError] = useState(false);
-
-    const userToken = Cookies.get('userToken');
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
 
     const updateProcessInfo = (e) => {
         setProcessInfo({ ...processInfo, [e.target.name]: e.target.value });
     }
-    useEffect(() => {
-        console.log(processInfo);
-    }, [processInfo])
-    useEffect(() => {
-        console.log(ownerDetail);
-    }, [ownerDetail])
-
     const updateOwnerDetail = (e) => {
         setOwnerDetail({ ...ownerDetail, [e.target.name]: e.target.value })
     }
-
     const [departmentsToShow, SetDepartmentsToShow] = useState(null);
     const user = useSelector(state => state.auth?.user);
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
             SetDepartmentsToShow(res.data.data);
             dispatch(setLoading(false))
         }).catch(err => {
@@ -59,17 +48,11 @@ function AddProcess() {
         })
     }, [])
 
-
-
-
-
     function generateRandomPassword() {
         const lowercaseCharset = 'abcdefghijklmnopqrstuvwxyz';
         const uppercaseCharset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
         const numberCharset = '0123456789';
-
         let password = '';
-
         // Ensure at least one lowercase character
         password += lowercaseCharset.charAt(Math.floor(Math.random() * lowercaseCharset.length));
 
@@ -126,7 +109,7 @@ function AddProcess() {
     const makeRequest = () => {
         if (processInfo) {
             dispatch(setLoading(true))
-            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addProcess`, processInfo, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addProcess`, processInfo, { headers: { Authorization: `${user._id}` } }).then(() => {
                 setProcessInfo(null);
                 dispatch(setLoading(false))
                 Swal.fire({
@@ -191,20 +174,16 @@ function AddProcess() {
 
                             if (processInfo?.ProcessOwner === null) {
                                 setOwnerError(true);
-                            } else if(validationMessage !== 'Password is valid!') {
+                            } else if (validationMessage !== 'Password is valid!') {
                                 Swal.fire({
-                                    icon : 'error',
-                                    title : 'OOps..',
-                                    text : validationMessage
+                                    icon: 'error',
+                                    title: 'OOps..',
+                                    text: validationMessage
                                 })
                             } else {
                                 alertManager();
                             }
-                            // const data = new FormData(event.target);
-                            // setTrainingData(data);
-                            // alertManager();
                         }}>
-
                             <div>
                                 <p>Process Name</p>
                                 <div>
@@ -339,17 +318,11 @@ function AddProcess() {
                                 }} type='checkbox' required />
                                 <p>Deputy Process Owner</p>
                             </div>
-
-
                             <div className={style.btns}>
-
                                 <button onClick={() => {
-                                    
-                                        if (validationMessage == 'Password is valid!') {
-                                            setProcessInfo({ ...processInfo, ProcessOwner: ownerDetail });
-                                        } 
-
-
+                                    if (validationMessage == 'Password is valid!') {
+                                        setProcessInfo({ ...processInfo, ProcessOwner: ownerDetail });
+                                    }
                                 }} className='mt-5' type='submit'>Submit</button>
                             </div>
                         </form>

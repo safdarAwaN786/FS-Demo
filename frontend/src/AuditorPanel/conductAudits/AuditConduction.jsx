@@ -2,10 +2,7 @@ import style from './AuditConduction.module.css'
 import { useEffect, useRef, useState } from 'react'
 import axios from "axios";
 import Swal from 'sweetalert2'
-import JoditEditor from 'jodit-react';
-import Select from 'react-select';
 import { BsArrowLeftCircle } from 'react-icons/bs';
-import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import Slider from 'rc-slider';
@@ -13,17 +10,14 @@ import { setLoading } from '../../redux/slices/loading';
 
 function AuditConduction() {
 
-    const [dataToSend, setDataToSend] = useState({})
     const [finalFormData, setFinalFormData] = useState(null);
     const [screenWidth, setScreenWidth] = useState(window.innerWidth);
     const [checklistData, setChecklistData] = useState(null);
     const [alert, setalert] = useState(false);
-    const [clickedIndex, setClickedIndex] = useState(null);
     const [answers, setAnswers] = useState([]);
     const [auditData, setAuditData] = useState(null);
     const [questions, setQuestions] = useState([]);
-
-    const userToken = Cookies.get('userToken');
+    const user = useSelector(state => state.auth?.user);
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
     const idToWatch = useSelector(state => state.idToProcess);
@@ -47,7 +41,7 @@ function AuditConduction() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/getChecklistById/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/getChecklistById/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             const checklistData = response.data.data;
             setChecklistData(response.data.data);
             setQuestions(response.data.data.ChecklistQuestions);
@@ -67,19 +61,11 @@ function AuditConduction() {
     }, [answers])
 
 
-
-
-
-    useEffect(() => {
-        console.log(auditData);
-    }, [auditData])
-
-
     const makeRequest = () => {
         console.log(finalFormData)
         if (finalFormData) {
             dispatch(setLoading(true))
-            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addConductAudit`, finalFormData, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addConductAudit`, finalFormData, { headers: { Authorization: `${user._id}` } }).then(() => {
                 console.log("request made !");
                 dispatch(setLoading(false))
                 Swal.fire({
@@ -111,28 +97,6 @@ function AuditConduction() {
             })
         }
     }
-
-    const gradingSystem = [
-        { value: '1', label: <div>1</div> },
-        { value: '2', label: <div>2</div> },
-        { value: '3', label: <div>3</div> },
-        { value: '4', label: <div>4</div> },
-        { value: '5', label: <div>5</div> },
-        { value: '6', label: <div>6</div> },
-        { value: '7', label: <div>7</div> },
-        { value: '8', label: <div>8 </div> },
-        { value: '9', label: <div>9</div> },
-        { value: '10', label: <div>10</div> },
-    ]
-    const dropdown = [
-        { value: 'Conform', label: <div>Conform</div> },
-        { value: 'Minor NC', label: <div>Minor NC</div> },
-        { value: 'Major NC', label: <div>Major NC</div> },
-        { value: 'Critical NC', label: <div>Critical NC</div> },
-        { value: 'Observation', label: <div>Observation</div> },
-
-    ]
-
 
 
     return (

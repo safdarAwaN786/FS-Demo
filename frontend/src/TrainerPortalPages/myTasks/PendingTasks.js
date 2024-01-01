@@ -3,7 +3,6 @@ import Search from '../../assets/images/employees/Search.svg'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { useDispatch, useSelector } from 'react-redux';
-import Cookies from 'js-cookie';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { changeId } from '../../redux/slices/idToProcessSlice';
 import { setLoading } from '../../redux/slices/loading';
@@ -14,16 +13,15 @@ function PendingTasks() {
     const [startIndex, setStartIndex] = useState(0);
     const [endIndex, setEndIndex] = useState(8);
     const [allDataArr, setAllDataArr] = useState(null);
-
-    const userToken = Cookies.get('userToken');
+    const user = useSelector(state => state.auth.user)
     const tabData = useSelector(state => state.tab)
     const dispatch = useDispatch();
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readMonthlyPlan`, { headers: { Authorization: `Bearer ${userToken}` } }).then((Response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readMonthlyPlan`, { headers: { Authorization: `${user._id}` } }).then((Response) => {
             const plannedTrainingsList = Response.data.data;
-            const assignedTrainingsArr = plannedTrainingsList.filter((training)=> training.Assigned === true && training.TrainingResultStatus === 'Not Conducted');
+            const assignedTrainingsArr = plannedTrainingsList.filter((training)=> training.Assigned === true && training.TrainingResultStatus === 'Not Conducted' && training.Trainer._id == user._id);
             setAllDataArr(assignedTrainingsArr);
             setAssignedtrainings(assignedTrainingsArr.slice(startIndex, endIndex));
             dispatch(setLoading(false))

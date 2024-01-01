@@ -1,18 +1,15 @@
-import style from './AddAuditors.module.css'
+import style from './AddAuditors.module.css';
 import edit from '../../assets/images/addEmployee/edit.svg'
 import profile from '../../assets/images/addEmployee/prof.svg'
 import Office from '../../assets/images/employeeProfile/Office.svg'
 import msg from '../../assets/images/hrprofile/mail.svg'
 import { useEffect, useRef, useState } from 'react'
 import axios from "axios";
-import { useNavigate } from 'react-router-dom'
 import Swal from 'sweetalert2'
 import { BsArrowLeftCircle } from 'react-icons/bs'
-import Cookies from 'js-cookie'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateTabData } from '../../redux/slices/tabSlice'
 import { setLoading } from '../../redux/slices/loading'
-
 
 function AddAuditor() {
 
@@ -28,17 +25,11 @@ function AddAuditor() {
     const handleImageClick = () => {
         imageInputRef.current.click(); // Trigger the click event on the file input
     };
-
-    const userToken = Cookies.get('userToken');
+    const user = useSelector(state => state.auth.user)
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
-
-
-
-
     const handleImageChange = (event) => {
         const file = event.target.files[0];
-
         if (file) {
             const reader = new FileReader();
             reader.onloadend = () => {
@@ -48,58 +39,43 @@ function AddAuditor() {
         }
     };
     const [approvedAuditor, setApprovedAuditor] = useState(false);
-
     const [selectedDocument, setSelectedDocument] = useState(null);
     const [selectedLetter, setSelectedLetter] = useState(null);
-
-
-    const navigate = useNavigate();
-
     const handleDocumentClick = () => {
         documentRef.current.click();
     };
     const handleLetterClick = () => {
         letterRef.current.click();
     };
-
     function generateRandomPassword() {
         const lowercaseCharset = 'abcdefghijklmnopqrstuvwxyz';
         const uppercaseCharset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
         const numberCharset = '0123456789';
-
         let password = '';
-
         // Ensure at least one lowercase character
         password += lowercaseCharset.charAt(Math.floor(Math.random() * lowercaseCharset.length));
-
         // Ensure at least one uppercase character
         password += uppercaseCharset.charAt(Math.floor(Math.random() * uppercaseCharset.length));
-
         // Ensure at least one number
         password += numberCharset.charAt(Math.floor(Math.random() * numberCharset.length));
-
         // Generate the remaining characters
         for (let i = 3; i < 8; i++) {
             const charset = lowercaseCharset + uppercaseCharset + numberCharset;
             const randomIndex = Math.floor(Math.random() * charset.length);
             password += charset.charAt(randomIndex);
         }
-
         // Shuffle the password characters to randomize their positions
         password = password.split('').sort(() => Math.random() - 0.5).join('');
-
         CheckPassword(password)
         return password;
     }
     const [validationMessage, setValidationMessage] = useState(null);
     const [generatedPassword, setGeneratedPassowrd] = useState(null);
-
     function CheckPassword(submittedPassword) {
         if (submittedPassword?.length < 8) {
             setValidationMessage('Password must be at least 8 characters long.');
             return;
         }
-
         if (
             !/[a-z]/.test(submittedPassword) ||
             !/[A-Z]/.test(submittedPassword) ||
@@ -108,17 +84,13 @@ function AddAuditor() {
             setValidationMessage('Password must contain at least one uppercase letter, one lowercase letter, and one number.');
             return;
         }
-
         // Password is valid
         setValidationMessage('Password is valid!');
     }
-
     const [departmentsToShow, SetDepartmentsToShow] = useState(null);
-    const user = useSelector(state => state.auth?.user);
-
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
             SetDepartmentsToShow(res.data.data);
             dispatch(setLoading(false))
         }).catch(err => {
@@ -130,7 +102,6 @@ function AddAuditor() {
             })
         })
     }, [])
-
     useEffect(() => {
         if (generatedPassword != null) {
             CheckPassword(generatedPassword)
@@ -141,11 +112,10 @@ function AddAuditor() {
         const newPassword = generateRandomPassword();
         setGeneratedPassowrd(newPassword)
     }
-
     const makeRequest = () => {
         if (auditorData !== null) {
             dispatch(setLoading(true))
-            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addAuditor`, auditorData, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addAuditor`, auditorData, { headers: { Authorization: `${user._id}` } }).then(() => {
                 setAuditorData(null);
                 dispatch(setLoading(false))
                 Swal.fire({
@@ -153,13 +123,11 @@ function AddAuditor() {
                     text: 'Submitted Successfully',
                     icon: 'success',
                     confirmButtonText: 'Go!',
-
                 }).then((result) => {
                     if (result.isConfirmed) {
                         dispatch(updateTabData({ ...tabData, Tab: 'Internal Auditor Management' }))
                     }
                 })
-
             }).catch(err => {
                 dispatch(setLoading(false));
                 Swal.fire({
@@ -180,14 +148,12 @@ function AddAuditor() {
 
     const handleDocumentChange = (event) => {
         const file = event.target.files[0];
-
         if (file) {
             setSelectedDocument(file.name);
         }
     };
     const handleLetterChange = (event) => {
         const file = event.target.files[0];
-
         if (file) {
             setSelectedLetter(file.name);
         }
@@ -195,9 +161,7 @@ function AddAuditor() {
 
     return (
         <>
-
             <div className={style.parent}>
-
                 <div className={`${style.form} mt-5`}>
                     <div className='d-flex flex-row px-lg-5 bg-white px-2 '>
                         <BsArrowLeftCircle role='button' className='fs-3 my-1 text-danger' onClick={(e) => {
@@ -205,7 +169,6 @@ function AddAuditor() {
                                 dispatch(updateTabData({ ...tabData, Tab: 'Internal Auditor Management' }))
                             }
                         }} />
-
                     </div>
                     <div className={`${style.headers} d-flex justify-content-start align-items-center p-2`}>
                         <div className={style.spans}>
@@ -216,7 +179,6 @@ function AddAuditor() {
                         <div className={`${style.para} ms-2`}>
                             Add Auditor
                         </div>
-
                     </div>
                     <form className='px-lg-5 px-3' encType='multipart/form-data' onSubmit={(event) => {
                         event.preventDefault();
@@ -224,7 +186,6 @@ function AddAuditor() {
                         setAuditorData(data)
                         alertManager();
                     }}>
-
                         <div className={style.profile}>
                             <img style={{
                                 width: "200px",
@@ -289,7 +250,6 @@ function AddAuditor() {
                             <div className='d-flex align-items-center justify-content-between'>
                                 <input value={generatedPassword} onChange={(e) => {
                                     setGeneratedPassowrd(e.target.value);
-
                                 }} name='Password' type="text" placeholder='Password here' required />
                                 <a onClick={handleGenerateClick} className='btn btn-outline-primary  mx-2' >Generate</a>
                             </div>
@@ -299,19 +259,15 @@ function AddAuditor() {
                             <div >
                                 <input name='Experience' type="text" placeholder='Experience here' required />
                                 <img style={{ width: '20px', height: '20px', cursor: 'pointer' }} src={Office} alt="" />
-
                             </div>
                             <div >
                                 <input name='Skills' type="text" placeholder='Skills here' required />
                                 <img style={{ width: '20px', height: '20px', cursor: 'pointer' }} src={Office} alt="" />
-
                             </div>
                             <div >
                                 <input name='Education' type="text" placeholder='Education here' required />
                                 <img style={{ width: '20px', height: '20px', cursor: 'pointer' }} src={Office} alt="" />
-
                             </div>
-
                             <select name='Department' class="form-select fs-6 form-select-lg mb-3" aria-label="Large select example" required>
                                 <option selected> Department</option>
                                 {departmentsToShow?.map((depObj) => {
@@ -324,18 +280,10 @@ function AddAuditor() {
                                 <option disabled selected>Role in team</option>
                                 <option value="Team Auditor">Team Auditor</option>
                                 <option value="Lead Auditor">Lead Auditor</option>
-
                             </select>
                             <div className='text-center bg-body-tertiary'>
-
-
                                 <a onClick={handleDocumentClick} className='btn btn-outline-primary '>{selectedDocument?.slice(0, 15) || "Upload Document"}</a>
                             </div>
-
-
-
-
-
                             <div className='p-3 d-flex justify-content-between'>
                                 <div className='w-75 m-0 d-flex align-items-center'><p><b>Approved Internal Auditor</b></p> <input value={approvedAuditor} name='ApprovedInternalAuditor' style={{
                                     width: '20px',
@@ -349,19 +297,12 @@ function AddAuditor() {
                                 }} />
                                 </div>
                                 {approvedAuditor && (
-
                                     <a onClick={handleLetterClick} className='btn w-50 pt-1 btn-outline-primary'>
                                         {selectedLetter?.slice(0, 15) || "Upload Document"}
                                     </a>
                                 )}
-
-
                             </div>
-
-
                             <div className={style.btns}>
-
-
                                 <button className='mt-4 ' type='submit'>Submit</button>
                             </div>
                         </div>
@@ -377,13 +318,8 @@ function AddAuditor() {
                                 <button onClick={() => {
                                     alertManager();
                                     makeRequest();
-
-                                }
-                                } className={style.btn1}>Submit</button>
-
-
+                                }} className={style.btn1}>Submit</button>
                                 <button onClick={alertManager} className={style.btn2}>Cencel</button>
-
                             </div>
                         </div>
                     </div> : null

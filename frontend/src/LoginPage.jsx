@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Cookies from 'js-cookie'
 import { logInUser } from './redux/slices/authSlice';
 import { setLoading } from './redux/slices/loading';
-import { FadeLoader, ScaleLoader } from 'react-spinners'
+import { ScaleLoader } from 'react-spinners'
 
 export default function LoginPage() {
 
@@ -27,9 +27,7 @@ export default function LoginPage() {
         const userToken = Cookies.get('userToken');
         if (loggedIn) {
             navigate('/quality-and-maintenance')
-        } else {
-            navigate('/')
-        }
+        } 
         if (userToken) {
             axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-user`, { headers: { Authorization: `Bearer ${userToken}` } }).then(response => {
                 dispatch(logInUser(response.data.data));

@@ -1,14 +1,11 @@
 
 import style from './Departments.module.css'
 import Search from '../../assets/images/employees/Search.svg'
-import add from '../../assets/images/employees/Application Add.svg'
 import { useEffect, useState } from 'react'
 import axios from "axios";
-import profile from '../../assets/images/addEmployee/prof.svg'
 import { BsArrowLeftCircle } from 'react-icons/bs';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
-import Cookies from 'js-cookie';
 import { setLoading } from '../../redux/slices/loading';
 import Swal from 'sweetalert2';
 
@@ -23,12 +20,11 @@ function ViewDepartments() {
     const [startIndex, setStartIndex] = useState(0);
     const [endIndex, setEndIndex] = useState(8);
     const [allDataArr, setAllDataArr] = useState(null);
-
+    const user = useSelector(state => state.auth.user);
 
     useEffect(() => {
-        const userToken = Cookies.get('userToken');
         dispatch(setLoading(true));
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             dispatch(setLoading(false));
             setAllDataArr(response.data.data)
             setDepartments(response.data.data.slice(startIndex, endIndex));

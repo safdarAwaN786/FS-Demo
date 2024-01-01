@@ -1,11 +1,9 @@
 
 import style from './ConductHACCPTeamMembers.module.css'
 import Search from '../../assets/images/employees/Search.svg'
-
 import { useEffect, useState } from 'react'
 import axios from "axios";
 import { BsArrowLeftCircle } from 'react-icons/bs';
-import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { setLoading } from '../../redux/slices/loading';
@@ -18,17 +16,15 @@ function ConductHACCPTeamMembers() {
     const [dataToShow, setDataToShow] = useState(null);
     const [startIndex, setStartIndex] = useState(0);
     const [endIndex, setEndIndex] = useState(8);
-    const [reject, setReject] = useState(false);
     const [conductedHACCP, setConductedHACCP] = useState(null);
-
-    const userToken = Cookies.get('userToken');
+    const user = useSelector(state => state.auth?.user);
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
     const idToWatch = useSelector(state => state.idToProcess);
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-conduct-haccp/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-conduct-haccp/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             setConductedHACCP(response.data.data);
             setMembers(response.data.data?.Members.slice(startIndex, endIndex));
             dispatch(setLoading(false))
@@ -52,25 +48,18 @@ function ConductHACCPTeamMembers() {
     const backPage = () => {
         setStartIndex(startIndex - 8);
         setEndIndex(endIndex - 8);
-
-
     }
 
     useEffect(() => {
-
         setMembers(conductedHACCP?.Members?.slice(startIndex, endIndex))
     }, [startIndex, endIndex])
 
 
     const search = (event) => {
         if (event.target.value !== "") {
-            console.log(event.target.value);
-
             const searchedList = conductedHACCP?.Members.filter((obj) =>
-
                 obj.Name.includes(event.target.value)
             )
-            console.log(searchedList);
             setMembers(searchedList);
         } else {
             setMembers(conductedHACCP?.Members.slice(startIndex, endIndex))
@@ -84,12 +73,10 @@ function ConductHACCPTeamMembers() {
                 params: {
                     url: imageURL,
                 },
-                responseType: 'blob', headers: { Authorization: `Bearer ${userToken}` }  // Specify the response type as 'blob' to handle binary data
+                responseType: 'blob', headers: { Authorization: `${user._id}` }  // Specify the response type as 'blob' to handle binary data
             });
-
             // Create a Blob object from the response data
             const blob = new Blob([response.data]);
-
             // Create a temporary anchor element
             const link = document.createElement('a');
             link.href = window.URL.createObjectURL(blob);

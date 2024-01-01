@@ -4,11 +4,9 @@ import axios from "axios";
 import Swal from 'sweetalert2';
 import { BsArrowLeftCircle } from 'react-icons/bs'
 import { useDispatch, useSelector } from 'react-redux';
-import Cookies from 'js-cookie';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { changeId } from '../../redux/slices/idToProcessSlice';
 import { setLoading } from '../../redux/slices/loading';
-
 
 function ResultsHistory() {
 
@@ -23,25 +21,20 @@ function ResultsHistory() {
     const [idForAction, setIdForAction] = useState(null);
     const [formData, setFormData] = useState(null);
     const [verify, setVerify] = useState(false);
-    const userToken = Cookies.get('userToken');
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
     const idToWatch = useSelector(state => state.idToProcess)
-
+    const user = useSelector(state => state.auth.user)
     function extractTimeFromDate(dateString) {
         const dateObject = new Date(dateString);
-
         const hours = dateObject.getHours().toString().padStart(2, '0');
         const minutes = dateObject.getMinutes().toString().padStart(2, '0');
         const seconds = dateObject.getSeconds().toString().padStart(2, '0');
-
         return `${hours}:${minutes}:${seconds}`;
     }
-
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-responses-by-formId/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
-            console.log(res.data);
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-responses-by-formId/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
             setFormResults(res.data.data);
             setFormData(res.data.data[0]?.Form);
             dispatch(setLoading(false))
@@ -56,7 +49,7 @@ function ResultsHistory() {
     }, [])
     const refreshData = () => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-responses-by-formId/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-responses-by-formId/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
             setFormResults(res.data.data);
             setFormData(res.data.data[0]?.Form);
             dispatch(setLoading(false))
@@ -88,7 +81,6 @@ function ResultsHistory() {
                     <div className={style.para}>
                         Record Keeping
                     </div>
-
                 </div>
                 <div className={style.form}>
                     <div className={style.sec1}>
@@ -103,7 +95,6 @@ function ResultsHistory() {
                         <div>
                             <p>Creation Date</p>
                             {formData?.CreationDate ? (
-
                                 <input value={`${formData?.CreationDate?.slice(0, 10).split('-')[2]}/${formData?.CreationDate?.slice(0, 10).split('-')[1]}/${formData?.CreationDate?.slice(0, 10).split('-')[0]}`} type="text" readOnly />
                             ) : (
                                 <input value='- - -' />
@@ -161,7 +152,6 @@ function ResultsHistory() {
                                         <td>{result?.verificationDate || 'Pending'}</td>
                                         <td>{formData?.Department.DepartmentName}</td>
                                         <td>{result.User.Designation}</td>
-
                                         <td><button className={style.btn} onClick={() => {
                                             dispatch(updateTabData({ ...tabData, Tab: 'viewFormAnswers' }))
                                             dispatch(changeId(result._id));
@@ -170,23 +160,18 @@ function ResultsHistory() {
                                             <td><button className={style.btn} onClick={() => {
                                                 setIdForAction(result._id)
                                                 setVerify(true)
-
                                             }}>Verify</button></td>
                                         )}
                                         <td >
                                             <button className={`${style.btn} my-1`} onClick={() => {
                                                 setIdForAction(result._id);
                                                 setCommentBox(true)
-
                                             }}>Add</button>
                                             <button className={`${style.btn} my-1`} onClick={() => {
                                                 setPopUpData(result.Comment || 'No comment added');
                                                 alertManager();
-
                                             }}>View</button>
-
                                         </td>
-
                                     </tr>
                                 )
                             })
@@ -197,7 +182,6 @@ function ResultsHistory() {
                     <button className={style.download}>Download</button>
                 </div>
             </div>
-
             {
                 alert ?
                     <div class={style.alertparent}>
@@ -218,7 +202,7 @@ function ResultsHistory() {
                                 <button onClick={() => {
                                     setVerify(false);
                                     dispatch(setLoading(true))
-                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/verify-response`, { resultId: idForAction }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/verify-response`, { resultId: idForAction }, { headers: { Authorization: `${user._id}` } }).then(() => {
                                         dispatch(setLoading(false))
                                         Swal.fire({
                                             title: 'Success',
@@ -240,12 +224,10 @@ function ResultsHistory() {
                                 <button onClick={() => {
                                     setVerify(false)
                                 }} className={style.btn2}>Cancel</button>
-
                             </div>
                         </div>
                     </div> : null
             }
-
             {
                 commentBox && (
                     <div class={style.alertparent}>
@@ -254,9 +236,8 @@ function ResultsHistory() {
                                 e.preventDefault();
                                 setCommentBox(false);
                                 dispatch(setLoading(true))
-                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/addComment`, { resultId: idForAction, comment: comment }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/addComment`, { resultId: idForAction, comment: comment }, { headers: { Authorization: `${user._id}` } }).then(() => {
                                     dispatch(setLoading(false))
-
                                     Swal.fire({
                                         title: 'Success',
                                         text: 'Commented Successfully',
@@ -277,8 +258,6 @@ function ResultsHistory() {
                                 <textarea onChange={(e) => {
                                     setComment(e.target.value);
                                 }} name="Reason" id="" cols="30" rows="10" placeholder='Comment here' required />
-
-
                                 <div className={`$ mt-3 d-flex justify-content-end `}>
                                     <button type='submit' className='btn btn-danger px-3 py-2 m-3'>Add</button>
                                     <a onClick={() => {
@@ -290,7 +269,6 @@ function ResultsHistory() {
                     </div>
                 )
             }
-
         </>
     )
 }

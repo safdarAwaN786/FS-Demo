@@ -5,43 +5,40 @@ require('dotenv').config();
 // Middleware function for user authentication
 const authMiddleware = async (req, res, next) => {
   try {
-
     // Skip authentication for the login route
-
     if (req.path === '/user/login') {
       return next();
-    } else {
-
-      // Get the token from the request headers
+    } else if (req.path === '/get-user') {
+      console.log('in token');
       const token = req.header('Authorization');
-
-
       if (!token) {
         return res.status(401).json({ error: 'No token, authorization denied' });
       }
-
-      // Check if the token starts with 'Bearer '
       if (!token.startsWith('Bearer ')) {
         return res.status(401).json({ error: 'Invalid token format' });
       }
-
-      // Remove 'Bearer ' from the token
       const tokenWithoutBearer = token.replace('Bearer ', '');
-
       // Verify the token
       const decoded = jwt.verify(tokenWithoutBearer, process.env.JWT_CODE);
-
-      // Find the user by the decoded token information
       const user = await User.findById(decoded.id).populate('Company');
-     
-
       if (!user) {
         return res.status(404).json({ error: 'User not found' });
       }
-
       // Set the user in the request object for further use
       req.user = user;
+      // Call the next middleware
+      next();
 
+    } else {
+      // Get the user Id from the request headers
+      const userId = req.header('Authorization');
+      console.log(userId);
+      const user = await User.findById(userId).populate('Company');
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+      // Set the user in the request object for further use
+      req.user = user;
       // Call the next middleware
       next();
     }

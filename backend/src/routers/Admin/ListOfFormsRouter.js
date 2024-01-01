@@ -167,19 +167,12 @@ router.put('/send-form', async (req, res) => {
       console.log('Form not found');
       return res.status(404).json({ message: 'Form not found' });
     }
-
-
-
-
     const updates = {
       ...req.body,
     };
-
-
     // Update the form fields
     Object.assign(form, updates);
     await form.save();
-
     console.log(form);
     console.log('Form Sended successfully');
     res.status(200).json({ status: true, message: 'Form updated successfully', form });

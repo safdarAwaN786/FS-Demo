@@ -1,5 +1,5 @@
 import style from './AddCompany.module.css'
-import { useEffect, useRef, useState } from 'react'
+import { useState } from 'react'
 import axios from "axios";
 import man from '../../assets//images/hrprofile/man.svg'
 import profile from '../../assets/images/addEmployee/prof.svg'
@@ -10,9 +10,7 @@ import Location from '../../assets/images/employeeProfile/Location.svg'
 import { BsArrowLeftCircle } from 'react-icons/bs';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
-import Cookies from 'js-cookie';
 import { setLoading } from '../../redux/slices/loading';
-
 
 function AddCompany() {
 
@@ -23,12 +21,11 @@ function AddCompany() {
     const alertManager = () => {
         setalert(!alert)
     }
-    const userToken = Cookies.get('userToken');
+    const user = useSelector(state => state.auth.user);
     const makeRequest = () => {
         if (dataToSend) {
             dispatch(setLoading(true));
-            axios.post(`${process.env.REACT_APP_BACKEND_URL}/create-company`, dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
-                console.log("request made !");
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/create-company`, dataToSend, { headers: { Authorization: `${user._id}` } }).then(() => {
                 setDataToSend(null);
                 dispatch(setLoading(false));
                 Swal.fire({

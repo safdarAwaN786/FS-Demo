@@ -14,53 +14,34 @@ function AddHACCPTeam() {
     const [finalFormData, setFinalFormData] = useState(null);
     const [alert, setalert] = useState(false);
     const [dataToSend, setDataToSend] = useState(null);
-
-
     const [members, setMembers] = useState([]);
-
     const updateMembers = (event, index) => {
         const updatedMembers = [...members];
-
         // Update the existing object at the specified index
         updatedMembers[index][event.target.name] = event.target.value;
-
-
         setMembers(updatedMembers);
     }
-
     useEffect(() => {
         setDataToSend({ ...dataToSend, TeamMembers: members });
     }, [members])
-
-    
-
-
     const addMember = () => {
         const updatedMembers = [...members];
         updatedMembers.push({});
         setMembers(updatedMembers);
     }
-
     const clearLastMember = () => {
         if (members.length > 0) {
-
             const updatedMembers = [...members]
             updatedMembers.pop();
             setMembers(updatedMembers)
         }
     };
 
-
-    useEffect(() => {
-        console.log(dataToSend);
-    }, [dataToSend])
-
     const alertManager = () => {
         setalert(!alert)
     }
     function CheckPassword(submittedPassword, index) {
         if (submittedPassword?.length < 8) {
-
             const updatedMembers = [...members];
             updatedMembers[index].validationMessage = 'Password must be at least 8 characters long.'
             setMembers(updatedMembers);
@@ -124,7 +105,7 @@ function AddHACCPTeam() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
             SetDepartmentsToShow(res.data.data);
             dispatch(setLoading(false))
         }).catch(err => {
@@ -140,23 +121,20 @@ function AddHACCPTeam() {
     const makeRequest = () => {
         if (finalFormData && dataToSend.TeamMembers.length !== 0) {
             dispatch(setLoading(true))
-            axios.post(`${process.env.REACT_APP_BACKEND_URL}/create-haccp-team`, finalFormData, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/create-haccp-team`, finalFormData, { headers: { Authorization: `${user._id}` } }).then(() => {
                 console.log("request made !");
                 setDataToSend(null);
                 dispatch(setLoading(false))
-
                 Swal.fire({
                     title: 'Success',
                     text: 'Submitted Successfully',
                     icon: 'success',
                     confirmButtonText: 'Go!',
-
                 }).then((result) => {
                     if (result.isConfirmed) {
                         dispatch(updateTabData({ ...tabData, Tab: 'HACCP Team Management' }))
                     }
                 })
-
             }).catch(err => {
                 dispatch(setLoading(false));
                 Swal.fire({
@@ -175,26 +153,17 @@ function AddHACCPTeam() {
         }
     }
 
-
-
-
-
-
     return (
         <>
             <div className={`${style.parent} mx-auto`}>
-
-
                 <div className={`${style.subparent} mx-2 mx-sm-4 mt-5 mx-lg-5`}>
                     <div className='d-flex flex-row bg-white px-lg-5 mx-lg-5 mx-3 px-2 py-2'>
                         <BsArrowLeftCircle
                             role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
                                 {
                                     dispatch(updateTabData({ ...tabData, Tab: 'HACCP Team Management' }))
-
                                 }
                             }} />
-
                     </div>
                     <div className={`${style.headers} d-flex justify-content-start ps-3 align-items-center `}>
                         <div className={style.spans}>
@@ -213,13 +182,9 @@ function AddHACCPTeam() {
                         // Append the data to the FormData object
                         formData.append('Data', JSON.stringify(dataToSend));
                         setFinalFormData(formData);
-
                         alertManager();
-
-
                     }}>
                         <div className={`${style.myBox} bg-light pb-3`}>
-
                             <div className={style.formDivider}>
                                 <div className={style.sec1}>
                                     <div className={style.inputParent}>
@@ -227,7 +192,7 @@ function AddHACCPTeam() {
                                             <p></p>
                                         </div>
                                         <div className='border border-dark-subtle'>
-                                            <select onChange={(e) => {
+                                            <select className='form-select  form-select-lg' onChange={(e) => {
                                                 setDataToSend({ ...dataToSend, [e.target.name]: e.target.value })
                                             }} name='DocumentType' style={{ width: "100%" }} required >
                                                 <option value="" selected disabled>Choose Document Type</option>
@@ -235,24 +200,17 @@ function AddHACCPTeam() {
                                                 <option value="Procedures">Procedures</option>
                                                 <option value="SOPs">SOPs</option>
                                                 <option value="Forms">Forms</option>
-
                                             </select>
-
                                         </div>
                                     </div>
-
-
-
-
                                 </div>
                                 <div className={style.sec2}>
                                     <div className={style.inputParent}>
                                         <div className={style.para}>
                                             <p></p>
-
                                         </div>
                                         <div className='border border-dark-subtle'>
-                                            <select onChange={(e) => {
+                                            <select className='form-select  form-select-lg' onChange={(e) => {
                                                 setDataToSend({ ...dataToSend, [e.target.name]: e.target.value })
                                             }} name='Department' style={{ width: "100%" }} required>
                                                 <option value="" selected disabled>Choose Department</option>
@@ -261,24 +219,15 @@ function AddHACCPTeam() {
                                                         <option value={depObj._id}>{depObj.DepartmentName}</option>
                                                     )
                                                 })}
-
                                             </select>
-
-
                                         </div>
                                     </div>
-
                                 </div>
                             </div>
-
-
-
                             {members.map((member, index) => {
                                 return (
-
                                     <div className='bg-white   m-lg-5 m-2 p-3 '>
                                         <div className='row'>
-
                                             <div className='col-lg-6 col-md-12 p-2'>
                                                 <input onChange={(event) => {
                                                     updateMembers(event, index)
@@ -311,13 +260,11 @@ function AddHACCPTeam() {
                                                 }} value={member.RoleInTeam} name='RoleInTeam' type='text' className='p-3 bg-light my-3 w-100 border-0' placeholder='Role in Team' required />
                                                 <div className='p-3 d-flex justify-content-between flex-row  bg-light my-3 w-100 border-0'>
                                                     <p className='text-secondary'>Training Date</p>
-
                                                     <input onChange={(event) => {
                                                         updateMembers(event, index)
                                                     }} value={member.TrainingDate} name='TrainingDate' className='bg-light border-0' type='date' placeholder='Training Date' required />
                                                 </div>
                                                 <div className='d-flex flex-row'>
-
                                                     <input onChange={(event) => {
                                                         updateMembers(event, index);
                                                         CheckPassword(member.Password, index);
@@ -338,49 +285,35 @@ function AddHACCPTeam() {
                                         <div className='d-flex w-100 justify-content-center align-items-center'>
                                             <p><b>Upload Document :</b></p>
                                             <input name={`Document-${index}`} type='file' accept='.pdf' className='p-2 m-2 btn btn-danger ' />
-
                                         </div>
                                     </div>
                                 )
                             })}
-
                             <div className='d-flex justify-content-center p-lg-5 py-4 px-2'>
-
                                 <a onClick={addMember} className='btn btn-outline-danger py-2 fs-4 w-50'>Add Member</a>
                                 {members.length > 0 && (
-
                                     <a style={{
                                         borderRadius: '100px',
                                         width: '40px',
                                         height: '40px',
-
                                     }} onClick={clearLastMember} className='btn  btn-outline-danger mx-4 my-auto pt-1  '><FaMinus /></a>
                                 )}
                             </div>
                         </div>
-
-
                         <div className={`${style.btn} px-lg-4 px-2 d-flex justify-content-between`}>
                             <div className={style.inputParent}>
                                 <div className={style.para}>
                                     <p></p>
                                 </div>
                                 <div className='border w-50 border-dark-subtle'>
-                                    <select className='w-100' name='Department'  >
+                                    <select className='w-100 form-select  form-select-lg' name='Department'  >
                                         <option value="" selected >Added Members</option>
-
                                         {members?.map((member) => {
-
                                             return (
-
                                                 <option disabled>{member.Name}</option>
                                             )
                                         })}
-
-
                                     </select>
-
-
                                 </div>
                             </div>
                             <button type='submit' >Submit</button>
@@ -397,18 +330,12 @@ function AddHACCPTeam() {
                                 <button onClick={() => {
                                     alertManager();
                                     makeRequest();
-
-                                }
-                                } className={style.btn1}>Submit</button>
-
-
+                                }} className={style.btn1}>Submit</button>
                                 <button onClick={alertManager} className={style.btn2}>Cancel</button>
-
                             </div>
                         </div>
                     </div> : null
             }
-
         </>
     )
 }

@@ -3,11 +3,9 @@ import Search from '../../assets/images/employees/Search.svg'
 import add from '../../assets/images/employees/Application Add.svg'
 import { useEffect, useState } from 'react'
 import axios from "axios";
-import profile from '../../assets/images/addEmployee/prof.svg'
 import { useDispatch, useSelector } from 'react-redux';
 import { changeId } from '../../redux/slices/idToProcessSlice';
 import { updateTabData } from '../../redux/slices/tabSlice';
-import Cookies from 'js-cookie';
 import { setLoading } from '../../redux/slices/loading';
 import Swal from 'sweetalert2';
 
@@ -22,12 +20,11 @@ function UsersDepartments() {
     const [endIndex, setEndIndex] = useState(8);
     const [allDataArr, setAllDataArr] = useState(null);
     const idToWatch = useSelector(state => state.idToProcess);
-
+    const user = useSelector(state => state.auth.user);
 
     useEffect(() => {
-        const userToken = Cookies.get('userToken');
         dispatch(setLoading(true));
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-userByCompany/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-userByCompany/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             // Create a Set to keep track of unique property values
             const uniqueCompanyObjects = new Set();
             // Use reduce to build the new array with distinct property values

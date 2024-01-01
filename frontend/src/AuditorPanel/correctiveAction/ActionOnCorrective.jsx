@@ -4,47 +4,27 @@ import { useEffect, useRef, useState } from 'react'
 import axios from "axios";
 import Swal from 'sweetalert2';
 import { BsArrowLeftCircle } from 'react-icons/bs';
-import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import Slider from 'rc-slider';
 import { setLoading } from '../../redux/slices/loading';
 
-
 function ActionOnCorrective() {
 
     const [showBox, setShowBox] = useState(false);
-    const [screenWidth, setScreenWidth] = useState(window.innerWidth);
     const [reportData, setReportData] = useState(null);
     const [alert, setalert] = useState(false);
     const [dataToShow, setDataToShow] = useState(null);
     const [finalFormData, setFinalFormData] = useState(null);
     const [questions, setQuestions] = useState(null);
-
-
-    const userToken = Cookies.get('userToken');
+    const user = useSelector(state => state.auth?.user);
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
     const idToWatch = useSelector(state => state.idToProcess);
 
-
-
     const alertManager = () => {
         setalert(!alert)
     }
-
-    useEffect(() => {
-        const handleResize = () => {
-            setScreenWidth(window.innerWidth);
-        };
-
-        window.addEventListener('resize', handleResize);
-
-        // Remove the event listener when the component unmounts
-        return () => {
-            window.removeEventListener('resize', handleResize);
-        };
-    }, []);
 
     const [auditData, setAuditData] = useState(null);
     const [answers, setAnswers] = useState([]);
@@ -53,7 +33,7 @@ function ActionOnCorrective() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readReportById/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readReportById/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             console.log(response.data.data);
             setReportData(response.data.data)
             setAuditData(response.data.data.ConductAudit);
@@ -86,8 +66,6 @@ function ActionOnCorrective() {
         })
     }, [])
 
-    const user = useSelector(state => state.auth.user);
-
     const handleDownloadImage = async (imageURL) => {
         try {
             if (imageURL) {
@@ -97,7 +75,7 @@ function ActionOnCorrective() {
                     params: {
                         url: imageURL,
                     },
-                    responseType: 'blob', headers: { Authorization: `Bearer ${userToken}` } // Specify the response type as 'blob' to handle binary data
+                    responseType: 'blob', headers: { Authorization: `${user._id}` } // Specify the response type as 'blob' to handle binary data
                 });
 
 
@@ -138,16 +116,11 @@ function ActionOnCorrective() {
     };
 
 
-    useEffect(() => {
-        console.log(questions);
-    }, [questions])
-
-
     const makeRequest = () => {
         console.log(finalFormData)
         if (finalFormData) {
             dispatch(setLoading(true))
-            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addCorrectiveAction`, finalFormData, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addCorrectiveAction`, finalFormData, { headers: { Authorization: `${user._id}` } }).then(() => {
                 console.log("request made !");
                 dispatch(setLoading(false))
                 Swal.fire({
@@ -178,12 +151,6 @@ function ActionOnCorrective() {
             })
         }
     }
-
-
-
-
-
-
 
 
     return (

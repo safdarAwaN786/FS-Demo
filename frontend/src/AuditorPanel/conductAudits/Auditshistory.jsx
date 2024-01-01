@@ -4,11 +4,9 @@ import axios from "axios";
 import Swal from 'sweetalert2';
 import { BsArrowLeftCircle } from 'react-icons/bs'
 import { useDispatch, useSelector } from 'react-redux';
-import Cookies from 'js-cookie';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { changeId } from '../../redux/slices/idToProcessSlice';
 import { setLoading } from '../../redux/slices/loading';
-
 
 function AuditsHistory() {
 
@@ -19,15 +17,13 @@ function AuditsHistory() {
     }
     const [checklistResults, setChecklistResults] = useState(null);
     const [checklistData, setChecklistData] = useState(null);
-
-    const userToken = Cookies.get('userToken');
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
     const idToWatch = useSelector(state => state.idToProcess)
-
+    const user = useSelector(state => state.auth?.user);
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-conduct-audits-by-ChecklistId/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-conduct-audits-by-ChecklistId/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
             console.log(res.data);
             setChecklistResults(res.data.data);
             setChecklistData(res.data.data[0]?.Checklist);
@@ -74,7 +70,6 @@ function AuditsHistory() {
                         <div>
                             <p>Creation Date</p>
                             {checklistData?.CreationDate ? (
-
                                 <input value={`${checklistData?.CreationDate?.slice(0, 10).split('-')[2]}/${checklistData?.CreationDate?.slice(0, 10).split('-')[1]}/${checklistData?.CreationDate?.slice(0, 10).split('-')[0]}`} type="text" readOnly />
                             ) : (
                                 <input value='- - -' />
@@ -82,7 +77,6 @@ function AuditsHistory() {
                         </div>
                     </div>
                     <div className={style.sec2}>
-                        
                         <div>
                             <p>Approved By</p>
                             <input value={checklistData?.ApprovedBy || '- - -'} type="text" readOnly />
@@ -107,26 +101,20 @@ function AuditsHistory() {
                             <th>Department</th>
                             <th>Designation</th>
                             <th>Action</th>
-
                         </tr>
                         {
                             checklistResults?.map((result, index) => {
                                 return (
                                     <tr key={index}>
                                         <td>{result.AuditDate}</td>
-                                        
-                                        
                                         <td>{result?.TargetDate?.slice(0, 10).split('-')[2]}/{result?.TargetDate?.slice(0, 10).split('-')[1]}/{result?.TargetDate?.slice(0, 10).split('-')[0]}</td>
                                         <td>{result.AuditBy}</td>
                                         <td>{result.User.Department.DepartmentName}</td>
                                         <td>{result.User.Designation}</td>
-
                                         <td><button className={style.btn} onClick={() => {
                                             dispatch(updateTabData({...tabData, Tab : 'viewAuditAnswers'}))
                                             dispatch(changeId(result._id));
                                         }}>View Audit</button></td>
-                                       
-
                                     </tr>
                                 )
                             })
@@ -137,7 +125,6 @@ function AuditsHistory() {
                     <button className={style.download}>Download</button>
                 </div>
             </div>
-
             {
                 alert ?
                     <div class={style.alertparent}>

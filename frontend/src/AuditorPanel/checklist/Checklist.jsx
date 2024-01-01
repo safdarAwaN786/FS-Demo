@@ -4,7 +4,6 @@ import add from '../../assets/images/employees/Application Add.svg'
 import { useEffect, useState } from 'react'
 import axios from "axios";
 import Swal from 'sweetalert2'
-import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { changeId } from '../../redux/slices/idToProcessSlice';
@@ -26,14 +25,13 @@ function Checklist() {
     const [Reason, setReason] = useState(null);
     const [allDataArr, setAllDataArr] = useState(null);
 
-
-    const userToken = Cookies.get('userToken');
+    const user = useSelector(state => state.auth.user);
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
 
     const statusChange = () => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/getChecklists`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/getChecklists`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             setAllDataArr(response.data.data)
             setChecklists(response.data.data.slice(startIndex, endIndex));
             dispatch(setLoading(false))
@@ -50,7 +48,7 @@ function Checklist() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/getChecklists`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/getChecklists`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             setAllDataArr(response.data.data)
             setChecklists(response.data.data.slice(startIndex, endIndex));
             dispatch(setLoading(false))
@@ -297,7 +295,7 @@ function Checklist() {
                             <div className={style.alertbtns}>
                                 <button onClick={() => {
                                     dispatch(setLoading(true))
-                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/approveChecklist`, { id: checklistIdForAction }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/approveChecklist`, { id: checklistIdForAction }, { headers: { Authorization: `${user._id}` }}).then(() => {
                                         dispatch(setLoading(false))
                                         statusChange();
                                         Swal.fire({
@@ -335,7 +333,7 @@ function Checklist() {
                             <div className={style.alertbtns}>
                                 <button onClick={() => {
                                     dispatch(setLoading(true))
-                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/disapproveChecklist`, { id: checklistIdForAction, Reason: Reason }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/disapproveChecklist`, { id: checklistIdForAction, Reason: Reason }, { headers: { Authorization: `${user._id}` } }).then(() => {
                                         dispatch(setLoading(false))
                                         statusChange();
                                         Swal.fire({

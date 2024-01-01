@@ -1,7 +1,6 @@
 import style from './CreateForm.module.css'
 import { useEffect, useRef, useState } from 'react'
 import axios from "axios";
-import { useNavigate } from 'react-router-dom'
 import Swal from 'sweetalert2'
 import { BiMenuAltLeft, BiTimeFive } from 'react-icons/bi'
 import { BsTextParagraph, BsFillGrid3X3GapFill, BsGrid3X3, BsArrowLeftCircle } from "react-icons/bs"
@@ -11,7 +10,6 @@ import { AiOutlineLine } from 'react-icons/ai';
 import { FaMinus } from 'react-icons/fa'
 import Select from 'react-select';
 import { BiPlus } from 'react-icons/bi'
-import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { setLoading } from '../../redux/slices/loading';
@@ -24,17 +22,14 @@ function CreateForm() {
         setalert(!alert)
     }
     const [questions, setQuestions] = useState([]);
-
-    const userToken = Cookies.get('userToken');
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
-
     const [departmentsToShow, SetDepartmentsToShow] = useState(null);
     const user = useSelector(state => state.auth?.user);
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
             SetDepartmentsToShow(res.data.data);
             dispatch(setLoading(false))
         }).catch(err => {
@@ -64,14 +59,6 @@ function CreateForm() {
         setDataToSend({ ...dataToSend, questions: questions })
     }, [questions])
 
-    useEffect(() => {
-        console.log(dataToSend);
-    }, [dataToSend])
-
-
-
-
-
 
     const options = [
         { value: 'ShortText', label: <div><BiMenuAltLeft /> Short Answer </div> },
@@ -86,8 +73,6 @@ function CreateForm() {
         { value: 'Time', label: <div><BiTimeFive /> Time </div> },
     ]
 
-
-
     const customStyles = {
         control: (provided) => ({
             ...provided,
@@ -98,7 +83,7 @@ function CreateForm() {
     const makeRequest = () => {
         if (dataToSend?.questions.length > 0) {
             dispatch(setLoading(true))
-            axios.post(`${process.env.REACT_APP_BACKEND_URL}/create-form`, dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/create-form`, dataToSend, { headers: { Authorization: `${user._id}` } }).then(() => {
                 dispatch(setLoading(false))
                 setDataToSend(null);
                 Swal.fire({
@@ -145,7 +130,6 @@ function CreateForm() {
                                     dispatch(updateTabData({ ...tabData, Tab: 'Master List of Records/Forms' }))
                                 }
                             }} />
-
                     </div>
                     <div className={style.headers}>
                         <div className={style.spans}>
@@ -512,24 +496,13 @@ function CreateForm() {
                                                     </div>
                                                 </div>
                                             </>
-
                                         )}
-
-
-
-
                                         {(questions[index].questionType === 'Dropdown' || questions[index].questionType === 'Checkbox' || questions[index].questionType === 'Multiplechoice') && (
                                             <div className=' d-flex flex-column'>
-
-
                                                 {questions[index]?.options?.map((option, optindex) => {
                                                     return (
-
                                                         <div className='my-2 d-flex flex-row'>
-
-
                                                             <span>{optindex + 1}.</span>
-
                                                             <input onChange={(e) => {
                                                                 const updatedQuestions = [...questions];
                                                                 updatedQuestions[index].options[optindex][e.target.name] = e.target.value;
@@ -540,46 +513,31 @@ function CreateForm() {
                                                         </div>
                                                     )
                                                 })}
-
-
-
                                                 <div className='d-flex justify-content-end'>
-
                                                     {questions[index]?.options?.length > 2 && (
-
                                                         <a style={{
                                                             borderRadius: '50px',
                                                             width: '30px',
                                                             height: '30px'
                                                         }} onClick={() => {
-
                                                             const updatedQuestions = [...questions];
                                                             updatedQuestions[index].options.pop();
-
                                                             setQuestions(updatedQuestions);
                                                         }} className='btn me-2 p-0 btn-outline-primary'><FaMinus /></a>
                                                     )}
                                                     <a onClick={() => {
                                                         const updatedQuestions = [...questions];
                                                         updatedQuestions[index].options.push({ optionText: '' });
-
                                                         setQuestions(updatedQuestions)
                                                     }} className='btn p-1 btn-primary'>Add option</a>
-
                                                 </div>
-
                                             </div>
-
                                         )}
-
-
                                         {questions[index].questionType === 'Linearscale' && (
                                             <div className=' d-flex flex-column'>
-
                                                 <div className='d-flex flex-row '>
                                                     <div className='d-flex flex-column'>
                                                         <span>Low :</span>
-
                                                         <Select onChange={(selected) => {
                                                             const updatedQuestions = [...questions]
                                                             updatedQuestions[index].minValue = selected.value;
@@ -600,7 +558,6 @@ function CreateForm() {
                                                     </div>
                                                     <div className='d-flex flex-column'>
                                                         <span>-</span>
-
                                                         <span className='mx-2'>To</span>
                                                     </div>
                                                     <div className='d-flex flex-column'>
@@ -624,17 +581,9 @@ function CreateForm() {
                                                         ]} />
                                                     </div>
                                                 </div>
-
                                             </div>
-
                                         )}
-
-
-
-
                                         <div className='my-2 mt-4 d-flex justify-content-end'>
-
-
                                             <p className='mx-2 mt-1' style={{
                                                 fontFamily: 'Inter',
                                                 color: 'black'
@@ -643,24 +592,17 @@ function CreateForm() {
                                                 <input className='ms-3' name='IsPass' type="checkbox" onChange={(event) => {
                                                     const updatedQuestions = [...questions];
                                                     updatedQuestions[index].Required = event.target.checked;
-
                                                     setQuestions(updatedQuestions);
-
                                                 }} />
                                                 <span className={`${style.slider} ${style.round}`} ></span>
-                                            </label >
-
+                                            </label>
                                         </div>
                                     </div>
                                 )
                             })}
-
-
                             <div className='d-flex flex-row'>
-
                                 <a onClick={addQuestion} className='btn btn-outline-danger my-4 fs-4 w-100'>Add Question</a>
                                 {questions.length > 0 && (
-
                                     <a style={{
                                         borderRadius: '100px',
                                         width: '40px',
@@ -669,20 +611,11 @@ function CreateForm() {
                                     }} onClick={clearLastQuestion} className='btn  btn-outline-danger mx-4 my-auto pt-1  '><FaMinus /></a>
                                 )}
                             </div>
-
-
-
-
-
-
-
                             <div className={style.btns}>
-
                                 <button className='mt-3' type='submit'>Submit</button>
                             </div>
                         </form>
                     </div>
-
                 </div>
             </div>
             {

@@ -311,7 +311,6 @@ router.post('/user/login', async (req, res) => {
     }
 
     if (user.isSuspended) {
- 
       return res.status(403).json({ message: 'Access denied!.' });
     }
 
@@ -322,12 +321,9 @@ router.post('/user/login', async (req, res) => {
       process.env.JWT_CODE,
       { expiresIn: '2d' }
     )
-
     const { Password, ...userData } = user._doc
-
     console.log(`User Logged In: ${user} successfully`);
     res.status(200).json({ status: true, message: 'User Logged In successfully', ...userData, Token: accessToken });
-
   } catch (error) {
     console.error(error);
     res.status(400).json({ message: 'Invalid credentials.' });

@@ -1,10 +1,8 @@
 import style from './Machines.module.css'
 import search from '../../assets/images/employees/Search.svg'
 import add from '../../assets/images/employees/Application Add.svg'
-import { useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
-import Cookies from 'js-cookie'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateTabData } from '../../redux/slices/tabSlice'
 import { changeId } from '../../redux/slices/idToProcessSlice'
@@ -19,15 +17,14 @@ function Machines() {
     const [endIndex, setEndIndex] = useState(8);
     const [allDataArr, setAllDataArr] = useState(null);
     const [maintenances, setMaintenances] = useState(null);
-
-    const userToken = Cookies.get('userToken');
+    const user = useSelector(state => state.auth.user);
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
 
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/getAllMaintenanceRecords`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/getAllMaintenanceRecords`, { headers: { Authorization: `${user._id}` } }).then((res) => {
             setMaintenances(res.data.data);
             if(machinaries){
                 dispatch(setLoading(false))
@@ -40,7 +37,7 @@ function Machines() {
                 text : 'Something went wrong, Try Again!'
             })
         })
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readAllMachinery`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readAllMachinery`, { headers: { Authorization: `${user._id}` } }).then((res) => {
             setAllDataArr(res.data.data);
             setMachineries(res.data.data.slice(startIndex, endIndex));
             
@@ -56,19 +53,11 @@ function Machines() {
         })
     }, [])
 
-
-
-  
-
     const [popUpData, setPopUpData] = useState(null)
-    const navigate = useNavigate()
-
-
 
     const nextPage = () => {
         setStartIndex(startIndex + 8);
         setEndIndex(endIndex + 8);
-
     }
 
     const backPage = () => {
@@ -76,7 +65,6 @@ function Machines() {
         setEndIndex(endIndex - 8);
     }
     useEffect(() => {
-
         setMachineries(allDataArr?.slice(startIndex, endIndex))
     }, [startIndex, endIndex])
 

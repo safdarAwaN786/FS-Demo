@@ -7,11 +7,9 @@ import calender from '../../assets/images/employeeProfile/Calendar.svg'
 import office from '../../assets/images/employeeProfile/Office.svg'
 import cnic from '../../assets/images/employeeProfile/UserCard.svg'
 import { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
 import { BsArrowLeftCircle } from "react-icons/bs"
 import { useDispatch, useSelector } from 'react-redux'
-import Cookies from 'js-cookie'
 import { updateTabData } from '../../redux/slices/tabSlice'
 import { changeId } from '../../redux/slices/idToProcessSlice'
 import { setLoading } from '../../redux/slices/loading'
@@ -25,17 +23,12 @@ function InfoForAssigned() {
     const idToWatch =  useSelector(state => state.idToProcess);
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
-    const userToken = Cookies.get('userToken');
     const [assignedTrainingData, setAssignedTrainingData] = useState(null);
     const [popUpData, setPopUpData] = useState(null);
-
-    const { assignedTrainingID } = useParams();
-
-
-    console.log(assignedTrainingID);
+    const user = useSelector(state => state.auth.user);
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readMonthlyPlan`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readMonthlyPlan`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             const assignedTrainingsList = response.data.data;
             setAssignedTrainingData(assignedTrainingsList.find((training) => training._id === idToWatch));
             dispatch(setLoading(false))
@@ -59,9 +52,6 @@ function InfoForAssigned() {
         }
 
     }
-    const user = useSelector(state => state.auth.user)
-
-
     const handleDownloadImage = async (imageURL) => {
         try {
             if (imageURL) {
@@ -71,7 +61,7 @@ function InfoForAssigned() {
                     params: {
                         url: imageURL,
                     },
-                    responseType: 'blob', headers: { Authorization: `Bearer ${userToken}` } // Specify the response type as 'blob' to handle binary data
+                    responseType: 'blob', headers: { Authorization: `${user._id}` } // Specify the response type as 'blob' to handle binary data
                 });
 
 

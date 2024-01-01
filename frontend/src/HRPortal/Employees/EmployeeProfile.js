@@ -15,7 +15,6 @@ import { BsArrowLeftCircle } from 'react-icons/bs'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateTabData } from '../../redux/slices/tabSlice'
 import { changeId } from '../../redux/slices/idToProcessSlice'
-import Cookies from 'js-cookie'
 import { setLoading } from '../../redux/slices/loading'
 import Swal from 'sweetalert2'
 
@@ -27,18 +26,13 @@ function EmployeeProfile() {
     const idToWatch = useSelector(state => state.idToProcess);
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
-    const userToken = Cookies.get('userToken');
-
-
-
+    const user = useSelector(state => state.auth.user);
     useEffect(() => {
         dispatch(setLoading(true));
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readEmployee`, { headers: { Authorization: `Bearer ${userToken}` } }).then((Response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readEmployee`, { headers: { Authorization: `${user._id}` } }).then((Response) => {
             const employeesList = Response.data.data;
             const foundEmployee = employeesList.find((employee) => employee._id === idToWatch)
-           
                 dispatch(setLoading(false));
-            
             if (foundEmployee) {
                 setEmployeeData(foundEmployee);
             } else {
@@ -62,7 +56,7 @@ function EmployeeProfile() {
 
     useEffect(() => {
         dispatch(setLoading(true));
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readMonthlyPlan`, { headers: { Authorization: `Bearer ${userToken}` } }).then((Response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readMonthlyPlan`, { headers: { Authorization: `${user._id}` } }).then((Response) => {
             const trainings = Response.data.data;
             setPlannedTrainings(trainings);
             if (employeeData) {   
@@ -77,7 +71,7 @@ function EmployeeProfile() {
             })
         })
     }, []);
-    const user = useSelector(state => state.auth.user);
+    
 
     const handleDownloadImage = async (imageURL) => {
         try {
@@ -88,7 +82,7 @@ function EmployeeProfile() {
                     params: {
                         url: imageURL,
                     },
-                    responseType: 'blob', headers: { Authorization: `Bearer ${userToken}` } // Specify the response type as 'blob' to handle binary data
+                    responseType: 'blob', headers: { Authorization: `${user._id}` } // Specify the response type as 'blob' to handle binary data
                 });
 
 
@@ -142,12 +136,8 @@ function EmployeeProfile() {
     const [showBox, setShowBox] = useState(false);
 
 
-
-
     return (
         <>
-
-
             <div className={style.profile}>
                 <div className='d-flex flex-row px-lg-5  px-2 my-2'>
                     <BsArrowLeftCircle role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {

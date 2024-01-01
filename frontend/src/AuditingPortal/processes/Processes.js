@@ -4,7 +4,6 @@ import add from '../../assets/images/employees/Application Add.svg'
 import { useEffect, useState } from 'react'
 import axios from "axios";
 import { useDispatch, useSelector } from 'react-redux';
-import Cookies from 'js-cookie';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { changeId } from '../../redux/slices/idToProcessSlice';
 import { setLoading } from '../../redux/slices/loading';
@@ -22,14 +21,12 @@ function Processes() {
     const [allDataArr, setAllDataArr] = useState(null);
     const [sendEmail, setSendEmail] = useState(false);
     const [emailTo, setEmailTo] = useState(null);
-
-    const userToken = Cookies.get('userToken');
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
-
+    const user = useSelector(state => state.auth.user);
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readProcess`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readProcess`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             setAllDataArr(response.data.data)
             console.log(response.data);
             setProcessesList(response.data.data.slice(startIndex, endIndex));
@@ -56,17 +53,13 @@ function Processes() {
     }
 
     useEffect(() => {
-
         setProcessesList(allDataArr?.slice(startIndex, endIndex))
     }, [startIndex, endIndex])
 
 
     const search = (event) => {
         if (event.target.value !== "") {
-            console.log(event.target.value);
-
             const searchedList = allDataArr.filter((obj) =>
-
                 obj.ProcessCode.includes(event.target.value) || obj?.ProcessName?.includes(event.target.value)
             )
             console.log(searchedList);
@@ -219,12 +212,9 @@ function Processes() {
                                     <span></span>
                                     <span></span>
                                 </div>
-
                                 <div className={style.para}>
-
                                     Process Owner Details
                                 </div>
-
                             </div>
 
                             <div className='p-lg-5 p-3 d-flex justify-content-center flex-column'>
@@ -245,15 +235,13 @@ function Processes() {
                                     <p>Email Address</p>
                                     <input value={ownerInfo.Email} className={`p-2 w-100`} readOnly />
                                 </div>
-                                <div className={`mx-auto my-2 ${style.ownerInput}`}>
+                                {/* <div className={`mx-auto my-2 ${style.ownerInput}`}>
                                     <p>Password</p>
                                     <div className='d-flex flex-row justify-content-start'>
                                         <input value={ownerInfo.Password} className={`p-2 w-100`} readOnly />
-
-
                                     </div>
 
-                                </div>
+                                </div> */}
 
                             </div>
                             <div className={` d-flex justify-content-center`}>

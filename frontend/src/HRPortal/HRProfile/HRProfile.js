@@ -1,24 +1,20 @@
 import style from './HRProfile.module.css'
 import larr from '../../assets/images/hrprofile/larr.svg'
-import lock from '../../assets/images/hrprofile/lock.svg'
 import mail from '../../assets/images/hrprofile/mail.svg'
 import man from '../../assets/images/hrprofile/man.svg'
 import { useState } from 'react'
 import profile from '../../assets/images/addEmployee/prof.svg'
 import Swal from 'sweetalert2'
 import axios from 'axios'
-import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import Cookies from 'js-cookie'
 import { setLoading } from '../../redux/slices/loading'
 
 
 function HRProfile() {
-    const [offcanvas, setOffcanvas] = useState(false)
     const [newPassword, setNewPassword] = useState(null);
     const [confirmPassword, setConfirmPassword] = useState(null);
     const [validationMessage, setValidationMessage] = useState(null);
-
+    const user = useSelector(state => state.auth.user);
     function CheckPassword(submittedPassword) {
         if (submittedPassword?.length < 8) {
             setValidationMessage('Password must be at least 8 characters long.');
@@ -41,9 +37,8 @@ function HRProfile() {
     const makeRequest = () => {
         if (newPassword === confirmPassword) {
             if (validationMessage === 'Password is valid!') {
-                const userToken = Cookies.get('userToken');
                 dispatch(setLoading(true))
-                axios.put(`${process.env.REACT_APP_BACKEND_URL}/change-password`, { newPassword: newPassword }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+                axios.put(`${process.env.REACT_APP_BACKEND_URL}/change-password`, { newPassword: newPassword }, { headers: { Authorization: `${user._id}` } }).then(() => {
                     dispatch(setLoading(false));
                     setNewPassword(null);
                     setConfirmPassword(null);
@@ -82,8 +77,6 @@ function HRProfile() {
             })
         }
     }
-
-    const user = useSelector(state => state.auth.user);
 
     return (
 
@@ -133,16 +126,7 @@ function HRProfile() {
                                 <p className={style.card1para2}>{user.Email}</p>
                             </div>
                         </div>
-                        {/* <div>
-                            <img src={lock} alt="" />
-                            <div>
-                                <p className={style.card1para}>Password</p>
-                                <p className={style.card1para2}>{user.Password}</p>
-                            </div>
-                        </div> */}
-
                     </div>
-
                 </div>
                 <div className={style.card2}>
                     <div className={style.card2headers}>

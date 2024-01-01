@@ -1,8 +1,8 @@
 const express = require('express')
 const cors = require('cors');
 const axios = require('axios');
-const mime = require('mime-types');
 const app = express();
+// const authMiddleware = require('./src/middleware/auth');
 require('./src/db/connectdb')
 const path = require('path')
 const employeeRouter = require('./src/routers/HR/EmployeeRouter')
@@ -66,9 +66,6 @@ cloudinary.config({
 // }));
 
 
-
-// * Connecting To Port
-const port = process.env.PORT || 1126;
 app.use(cors());
 
 // * Automatically parse incoming JSON to an object so we access it in our request handlers
@@ -162,9 +159,6 @@ app.get('/download-image', async (req, res) => {
       res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
     }
 
-    console.log(imageBuffer);
-    console.log(fileExtension);
-
     // Set the appropriate Content-Disposition header for download with the correct file extension
     res.setHeader('Content-Disposition', `attachment; filename="Download${fileExtension}"`);
 
@@ -175,6 +169,8 @@ app.get('/download-image', async (req, res) => {
     res.status(500).send('Error downloading the image.');
   }
 });
+
+
 
 
 // * listening To Port

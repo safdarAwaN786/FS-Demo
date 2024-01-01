@@ -2,7 +2,6 @@ import style from './ProductDetails.module.css'
 import Search from '../../assets/images/employees/Search.svg'
 import add from '../../assets/images/employees/Application Add.svg'
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import axios from "axios";
 import Swal from 'sweetalert2'
 import { useDispatch, useSelector } from 'react-redux'
@@ -10,8 +9,6 @@ import { updateTabData } from '../../redux/slices/tabSlice'
 import { changeId } from '../../redux/slices/idToProcessSlice'
 import Cookies from 'js-cookie'
 import { setLoading } from '../../redux/slices/loading'
-
-
 
 function ProductDetails() {
 
@@ -23,20 +20,18 @@ function ProductDetails() {
     const [send, setSend] = useState(false);
     const [reason, setReason] = useState(null);
     const [dataToShow, setDataToShow] = useState(null);
-
     const [approve, setApprove] = useState(false);
-
     const [idForAction, setIdForAction] = useState(null);
     const [startIndex, setStartIndex] = useState(0);
     const [endIndex, setEndIndex] = useState(8);
     const [reject, setReject] = useState(false);
-
+    const user = useSelector(state => state.auth.user);
     const [allDataArr, setAllDataArr] = useState(null);
     const userToken = Cookies.get('userToken');
 
     const refreshData = () => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-products`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-products`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             setAllDataArr(response.data.data)
             setProductsList(response.data.data.slice(startIndex, endIndex));
             dispatch(setLoading(false))
@@ -52,7 +47,7 @@ function ProductDetails() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-products`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-products`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             console.log(response.data);
             setAllDataArr(response.data.data)
             setProductsList(response.data.data.slice(startIndex, endIndex));
@@ -71,31 +66,23 @@ function ProductDetails() {
     const nextPage = () => {
         setStartIndex(startIndex + 8);
         setEndIndex(endIndex + 8);
-
     }
 
     const backPage = () => {
         setStartIndex(startIndex - 8);
         setEndIndex(endIndex - 8);
-
-
     }
 
     useEffect(() => {
-
         setProductsList(allDataArr?.slice(startIndex, endIndex))
     }, [startIndex, endIndex])
 
 
     const search = (event) => {
         if (event.target.value !== "") {
-            console.log(event.target.value);
-
             const searchedList = allDataArr.filter((obj) =>
-
                 obj.DocumentId.includes(event.target.value)
             )
-            console.log(searchedList);
             setProductsList(searchedList);
         } else {
             setProductsList(allDataArr?.slice(startIndex, endIndex))
@@ -106,19 +93,15 @@ function ProductDetails() {
 
     return (
         <>
-
             <div className={style.subparent}>
-
                 <div className={style.searchbar}>
                     <div className={style.sec1}>
                         <img src={Search} alt="" />
                         <input onChange={search} type="text" placeholder='Search product by name' />
                     </div>
                     {tabData?.Creation && (
-
                         <div className={style.sec2} onClick={() => {
                             dispatch(updateTabData({ ...tabData, Tab: 'addProductDetails' }))
-
                         }}>
                             <img src={add} alt="" />
                             <p>Add Product</p>
@@ -131,7 +114,6 @@ function ProductDetails() {
                             <p className='text-center'>No any Records Available here.</p>
                         </div>
                     ) : (
-
                         <table className={style.table}>
                             <tr className={style.headers}>
                                 <td>Document ID</td>
@@ -142,20 +124,15 @@ function ProductDetails() {
                                 <td>Creation Date</td>
                                 <td>Reason</td>
                                 {tabData?.Edit && (
-
                                     <td>Action</td>
                                 )}
                                 {tabData?.Approval && (
-
-
                                     <td></td>
                                 )}
-
                                 <td>Product Details</td>
                                 <td>Approved By</td>
                                 <td>Approval Date</td>
                                 <td>Status</td>
-
                             </tr>
                             {
                                 productsList?.map((product, i) => {
@@ -177,7 +154,6 @@ function ProductDetails() {
                                             <td>{product.CreatedBy}</td>
                                             <td>{product.CreationDate?.slice(0, 10).split('-')[2]}/{product.CreationDate?.slice(0, 10).split('-')[1]}/{product.CreationDate?.slice(0, 10).split('-')[0]}</td>
                                             <td >
-
                                                 <p onClick={() => {
                                                     if (product.Status === 'Disapproved') {
                                                         setDataToShow(product.Reason)
@@ -188,20 +164,15 @@ function ProductDetails() {
                                                 }} className={style.redclick}>View</p>
                                             </td>
                                             {tabData?.Edit && (
-
-                                                <td >
-
+                                                <td>
                                                     <p onClick={() => {
                                                         dispatch(changeId(product._id))
                                                         dispatch(updateTabData({ ...tabData, Tab: 'updateProductsDetail' }))
-
                                                     }} className='btn btn-outline-success p-1 '>Update</p>
                                                 </td>
                                             )}
                                             {tabData?.Approval && (
-
                                                 <td className='ps-0'>
-
                                                     <p onClick={() => {
                                                         setIdForAction(product._id);
                                                         setApprove(true);
@@ -213,56 +184,35 @@ function ProductDetails() {
                                                             setDataToShow('Sorry, Team is already Approved');
                                                             setShowBox(true);
                                                         } else {
-
                                                             setIdForAction(product._id);
                                                             setReject(true);
                                                         }
                                                     }} style={{
                                                         height: '28px'
-
                                                     }} className={`btn btn-outline-danger pt-0 px-1`}>Disaprrove</p>
                                                 </td>
-
                                             )}
-                                            <td >
-
+                                            <td>
                                                 <p onClick={() => {
-
                                                     dispatch(updateTabData({ ...tabData, Tab: 'viewProductDetails' }))
                                                     dispatch(changeId(product._id))
-
                                                 }} style={{
                                                     height: '28px'
-
                                                 }} className={`btn btn-outline-warning pt-0 px-1`}>Click Here</p>
-
                                             </td>
                                             {product.ApprovedBy ? (
-
                                                 <td>{product.ApprovedBy}</td>
                                             ) : (
                                                 <td>- - -</td>
-
                                             )}
                                             {product.ApprovalDate ? (
-
-
                                                 <td>{product.ApprovalDate?.slice(0, 10).split('-')[2]}/{product.ApprovalDate?.slice(0, 10).split('-')[1]}/{product.ApprovalDate?.slice(0, 10).split('-')[0]}</td>
                                             ) : (
                                                 <td>- - -</td>
                                             )}
                                             <td><div className={`text-center ${product.Status === 'Approved' && style.greenStatus} ${product.Status === 'Disapproved' && style.redStatus} ${product.Status === 'Pending' && style.yellowStatus}  `}><p>{product.Status}</p></div></td>
-
-
-
-
-
-
-
                                         </tr>
-
                                     )
-
                                 })
                             }
                         </table>
@@ -270,35 +220,26 @@ function ProductDetails() {
                 </div>
                 <div className={style.Btns}>
                     {startIndex > 0 && (
-
                         <button onClick={backPage}>
                             {'<< '}Back
                         </button>
                     )}
                     {allDataArr?.length > endIndex && (
-
                         <button onClick={nextPage}>
                             next{'>> '}
                         </button>
                     )}
                 </div>
             </div>
-
             {
                 showBox && (
-
                     <div class={style.alertparent}>
                         <div class={style.alert}>
-
                             <p class={style.msg}>{dataToShow}</p>
-
                             <div className={style.alertbtns}>
-
                                 <button onClick={() => {
                                     setShowBox(false);
-
                                 }} className={style.btn2}>OK</button>
-
                             </div>
                         </div>
                     </div>
@@ -313,7 +254,7 @@ function ProductDetails() {
                                 <button onClick={() => {
                                     setApprove(false)
                                     dispatch(setLoading(true))
-                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/approve-product`, { id: idForAction }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/approve-product`, { id: idForAction }, { headers: { Authorization: `${user._id}` } }).then(() => {
                                         dispatch(setLoading(false))
                                         Swal.fire({
                                             title: 'Success',
@@ -331,17 +272,13 @@ function ProductDetails() {
                                         })
                                     })
                                 }} className={style.btn1}>Submit</button>
-
-
                                 <button onClick={() => {
                                     setApprove(false);
                                 }} className={style.btn2}>Cancel</button>
-
                             </div>
                         </div>
                     </div> : null
             }
-
             {
                 reject && (
                     <div class={style.alertparent}>
@@ -350,7 +287,7 @@ function ProductDetails() {
                                 e.preventDefault();
                                 setReject(false);
                                 dispatch(setLoading(true))
-                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/disapprove-product`, { id: idForAction, Reason: reason }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/disapprove-product`, { id: idForAction, Reason: reason }, { headers: { Authorization: `${user._id}` } }).then(() => {
                                     dispatch(setLoading(false))
                                     Swal.fire({
                                         title: 'Success',
@@ -358,8 +295,6 @@ function ProductDetails() {
                                         icon: 'success',
                                         confirmButtonText: 'Go!',
                                     })
-
-
                                     refreshData();
                                 }).catch(err => {
                                     dispatch(setLoading(false));
@@ -373,8 +308,6 @@ function ProductDetails() {
                                 <textarea onChange={(e) => {
                                     setReason(e.target.value);
                                 }} name="Reason" id="" cols="30" rows="10" placeholder='Comment here' required />
-
-
                                 <div className={`$ mt-3 d-flex justify-content-end `}>
                                     <button type='submit' className='btn btn-danger px-3 py-2 m-3'>Disapprove</button>
                                     <a onClick={() => {
@@ -386,8 +319,6 @@ function ProductDetails() {
                     </div>
                 )
             }
-
-
         </>
     )
 }

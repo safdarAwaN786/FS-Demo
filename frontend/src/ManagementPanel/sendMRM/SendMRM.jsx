@@ -3,11 +3,9 @@ import { useEffect, useRef, useState } from 'react'
 import axios from "axios";
 import Swal from 'sweetalert2'
 import { BsArrowLeftCircle } from 'react-icons/bs';
-import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { setLoading } from '../../redux/slices/loading';
-
 
 function SendMRM() {
     const [dataToSend, setDataToSend] = useState(null);
@@ -18,13 +16,12 @@ function SendMRM() {
     }
     const [agendasArr, setAgendasArr] = useState(null);
     const [selectedNotification, setSelectedNotification] = useState(null);
-    const userToken = Cookies.get('userToken');
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
-
+    const user = useSelector(state => state.auth.user);
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-notifications`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-notifications`, { headers: { Authorization: `${user._id}` } }).then((res) => {
             {
                 setNotifications(res.data.data);
                 dispatch(setLoading(false))
@@ -39,9 +36,6 @@ function SendMRM() {
         })
     }, [])
 
-    useEffect(() => {
-        console.log(dataToSend);
-    }, [dataToSend])
 
     useEffect(() => {
         const fetchData = async () => {
@@ -76,7 +70,7 @@ function SendMRM() {
 
         if (dataToSend) {
             dispatch(setLoading(true))
-            axios.post(`${process.env.REACT_APP_BACKEND_URL}/create-mrm`, dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/create-mrm`, dataToSend, { headers: { Authorization: `${user._id}` } }).then(() => {
                 console.log("request made !");
                 setDataToSend(null);
                 dispatch(setLoading(false))
@@ -149,7 +143,7 @@ function SendMRM() {
                                 <div >
                                     <select onChange={(e) => {
                                         setDataToSend({ ...dataToSend, [e.target.name]: e.target.value });
-                                    }} name='Notification' className='w-100' required>
+                                    }} name='Notification' className='w-100 form-select  form-select-lg' required>
                                         <option value='' selected disabled>MRM #</option>
                                         {notifications?.map((notif) => {
                                             return (
@@ -229,7 +223,6 @@ function SendMRM() {
                                                 <div className='d-flex flex-column'>
                                                     {selectedNotification.Participants?.map((participant) => {
                                                         return (
-
                                                             <div className='d-flex flex-row my-1'>
                                                                 <input onChange={(e) => {
                                                                     let updatedParticipants;
@@ -238,7 +231,6 @@ function SendMRM() {
                                                                     } else {
                                                                         updatedParticipants = [];
                                                                     }
-
                                                                     if (e.target.checked) {
                                                                         updatedParticipants.push(participant._id);
 

@@ -56,6 +56,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { logInUser } from "./redux/slices/authSlice";
 import axios from "axios";
 import { setLoading } from "./redux/slices/loading";
+import BlankScreen from "./BlankWhite";
 
 
 
@@ -64,10 +65,7 @@ function App() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const loggedIn = useSelector(state => state.auth.loggedIn);
-
-
   useEffect(() => {
-
     if (loggedIn) {
       navigate('/quality-and-maintenance')
     } else {
@@ -85,19 +83,19 @@ function App() {
           dispatch(setLoading(false));
           navigate('/');
           console.error('Error fetching user data:', error)});
+    } else {
+      navigate('/login')
     }
   }, []);
 
 
   useEffect(() => {
-
     if (loggedIn) {
       navigate('/quality-and-maintenance')
     } else {
       navigate('/')
     }
     const userToken = Cookies.get('userToken');
-    console.log(userToken);
     if (userToken) {
       console.log(userToken);
       dispatch(setLoading(true));
@@ -112,20 +110,17 @@ function App() {
           console.error('Error fetching user data:', error)});
     } else {
       dispatch(setLoading(false));
-      navigate('/')
+      navigate('/login')
       console.log('Token not exist');
     }
   }, [loggedIn]);
-
-
-
-
 
   const [personFormData, setPersonFormData] = useState({});
   return (
     < >
       <Routes>
-        <Route path='/' element={<LoginPage  />}></Route>
+        <Route path='/' element={<BlankScreen  />}></Route>
+        <Route path='/login' element={<LoginPage  />}></Route>
         <Route path='/quality-and-maintenance' element={<MainPage  />}></Route>
 
         {/* --->HR Portal<--- */}

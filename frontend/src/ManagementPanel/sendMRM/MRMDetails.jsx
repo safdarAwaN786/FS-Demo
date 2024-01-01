@@ -3,7 +3,6 @@ import { useEffect, useRef, useState } from 'react'
 import axios from "axios";
 import Swal from 'sweetalert2'
 import { BsArrowLeftCircle } from 'react-icons/bs';
-import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { setLoading } from '../../redux/slices/loading';
@@ -15,14 +14,13 @@ function MRMDetails() {
     const alertManager = () => {
         setalert(!alert)
     }
-    const userToken = Cookies.get('userToken');
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
     const idToWatch = useSelector(state => state.idToProcess);
-
+    const user = useSelector(state => state.auth.user);
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-mrmbyId/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-mrmbyId/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
             {
                 setDataToSend(res.data.data);
                 dispatch(setLoading(false))
@@ -36,10 +34,6 @@ function MRMDetails() {
             })
         })
     }, [])
-
-    useEffect(() => {
-        console.log(dataToSend);
-    }, [dataToSend])
 
     const formatDate = (date) => {
         const newDate = new Date(date);
@@ -79,21 +73,16 @@ function MRMDetails() {
                     </div>
                     <form encType='multipart/form-data' onSubmit={(event) => {
                         event.preventDefault();
-
                         alertManager();
-
-
                     }}>
                         <div className={`${style.myBox} bg-light pb-3`}>
                             <div className={`${style.inputParent} w-50 p-3`}>
                                 <div className={style.para}>
                                     {/* <p>Document Type</p> */}
                                 </div>
-                                <div >
-                                    <select value={dataToSend?.Notification?.MRMNo} name='Notification' className='w-100' readOnly required>
-                                        <option value={dataToSend?.Notification?.MRMNo} selected disabled>{dataToSend?.Notification?.MRMNo}</option>
-
-                                    </select>
+                                <div>
+                                <input value={dataToSend?.Notification?.MRMNo} className='w-100' type='text' readOnly/>
+                                    
                                 </div>
                             </div>
                             {dataToSend?.AgendaDetails?.map((agendaObj, index) => {

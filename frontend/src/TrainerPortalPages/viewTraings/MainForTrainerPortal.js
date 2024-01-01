@@ -5,7 +5,6 @@ import axios from 'axios'
 import profile from '../../assets/images/addEmployee/prof.svg'
 import Swal from 'sweetalert2'
 import { BsArrowLeftCircle } from 'react-icons/bs'
-import Cookies from 'js-cookie'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateTabData } from '../../redux/slices/tabSlice'
 import { setLoading } from '../../redux/slices/loading'
@@ -20,8 +19,7 @@ function MainForTrainerPortal() {
     const showRemarksInput = () => {
         setRemarksInput(!remarksInput)
     }
-
-    const userToken = Cookies.get('userToken');
+    const user = useSelector(state => state.auth.user);
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
     const idToWatch = useSelector(state => state.idToProcess)
@@ -31,7 +29,7 @@ function MainForTrainerPortal() {
 
     const makeRequest = () => {
         dispatch(setLoading(true))
-        axios.patch(`${process.env.REACT_APP_BACKEND_URL}/update-training-status`, dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.patch(`${process.env.REACT_APP_BACKEND_URL}/update-training-status`, dataToSend, { headers: { Authorization: `${user._id}` } }).then((res) => {
            dispatch(setLoading(false))
             setDataToSend(null);
             Swal.fire({
@@ -172,7 +170,7 @@ function MainForTrainerPortal() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readMonthlyPlan`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readMonthlyPlan`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             const plannedTrainingsList = response.data.data;
             setTrainingToShow(plannedTrainingsList.find((training) => training._id === idToWatch));
             setTrainingEmployees(plannedTrainingsList.find((training) => training._id === idToWatch)?.Employee.slice(startIndex, endIndex))

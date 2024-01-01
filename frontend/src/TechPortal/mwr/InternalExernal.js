@@ -2,7 +2,6 @@ import style from './InternalExernal.module.css'
 import { useEffect, useState } from 'react'
 import axios from "axios";
 import { BsArrowLeftCircle } from 'react-icons/bs'
-import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { setLoading } from '../../redux/slices/loading';
@@ -15,8 +14,7 @@ function InternalExernal() {
     const alertManager = () => {
         setalert(!alert)
     }
-
-    const userToken =  Cookies.get('userToken');
+    const user = useSelector(state => state.auth.user);
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
     const dateType = useSelector(state => state.appData.dateType);
@@ -25,7 +23,7 @@ function InternalExernal() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readCalibrationByEquipmentId/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readCalibrationByEquipmentId/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
             if (res.data.data) {
                 const dataArr = res.data.data;
                 setCallibrationsToShow(dataArr.filter((data) => data.dateType === dateType && data.callibrationType === callibrationType));

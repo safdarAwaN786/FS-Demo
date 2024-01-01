@@ -2,7 +2,6 @@ import style from './CallibrationRect.module.css'
 import { useEffect, useState } from 'react'
 import axios from "axios";
 import { BsArrowLeftCircle } from 'react-icons/bs';
-import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { setLoading } from '../../redux/slices/loading';
@@ -16,8 +15,7 @@ function CallibrationRect() {
     }
     const [callibrationsToShow, setCallibrationsToShow] = useState(null);
     const [equipmentToShow, setEquipmentToShow] = useState(null);
-
-    const userToken = Cookies.get('userToken');
+    const user = useSelector(state => state.auth.user);
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
     const callibrationType = useSelector(state => state.appData.callibrationType);
@@ -26,7 +24,7 @@ function CallibrationRect() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readCalibrationByEquipmentId/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readCalibrationByEquipmentId/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
             if (res.data.data) {
                 const dataArr = res.data.data;
                 setCallibrationsToShow(dataArr.filter((data) => data.dateType === dateType && data.callibrationType === callibrationType))
@@ -42,8 +40,7 @@ function CallibrationRect() {
                 text : 'Something went wrong, Try Again!'
             })
         })
-
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readEquipment/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readEquipment/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
             setEquipmentToShow(res.data.data);
             if(callibrationsToShow){
                 dispatch(setLoading(false))
@@ -58,10 +55,6 @@ function CallibrationRect() {
         })
 
     }, [])
-
-    useEffect(() => {
-        console.log(callibrationsToShow);
-    }, [callibrationsToShow])
 
     useEffect(()=>{
         if(callibrationsToShow?.length === 0){

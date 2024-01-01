@@ -24,11 +24,11 @@ function Employees() {
     const userToken = Cookies.get('userToken');
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
-    
+    const user = useSelector(state => state.auth.user);
     const [allDataArr, setAllDataArr] = useState(null);
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readEmployee`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readEmployee`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             dispatch(setLoading(false))
             setAllDataArr(response.data.data);
             setEmployeesList(response.data.data.slice(startIndex, endIndex))
@@ -46,7 +46,6 @@ function Employees() {
     const nextPage = () => {
         setStartIndex(startIndex + 8);
         setEndIndex(endIndex + 8);
-
     }
 
     const backPage = () => {
@@ -55,10 +54,8 @@ function Employees() {
     }
 
     useEffect(() => {
-
         setEmployeesList(allDataArr?.slice(startIndex, endIndex))
     }, [startIndex, endIndex])
-    const user = useSelector(state => state.auth.user);
 
      const handleDownloadImage = async (imageURL) => {
         try {
@@ -69,7 +66,7 @@ function Employees() {
                     params: {
                         url: imageURL,
                     },
-                    responseType: 'blob', headers: { Authorization: `Bearer ${userToken}` } // Specify the response type as 'blob' to handle binary data
+                    responseType: 'blob', headers: { Authorization: `${user._id}` } // Specify the response type as 'blob' to handle binary data
                 });
 
 
@@ -171,10 +168,6 @@ function Employees() {
                                 <td>CV Certificate</td>
                                 <td></td>
                             </tr>
-
-
-
-
 
                             {
                                 employeesList?.map((employee, i) => {

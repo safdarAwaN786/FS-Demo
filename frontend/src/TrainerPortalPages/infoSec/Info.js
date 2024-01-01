@@ -7,11 +7,9 @@ import calender from '../../assets/images/employeeProfile/Calendar.svg'
 import office from '../../assets/images/employeeProfile/Office.svg'
 import cnic from '../../assets/images/employeeProfile/UserCard.svg'
 import { useEffect, useRef, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
 import Swal from 'sweetalert2'
 import { BsArrowLeftCircle } from 'react-icons/bs'
-import Cookies from 'js-cookie'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateTabData } from '../../redux/slices/tabSlice'
 import { changeId } from '../../redux/slices/idToProcessSlice'
@@ -25,15 +23,14 @@ function Info() {
     const [popUpData, setPopUpData] = useState(null);
     const [assignedTrainingToShow, setassignedTrainingToShow] = useState(null);
     const fileInputRef = useRef(null);
-
-    const userToken = Cookies.get('userToken');
+    const user = useSelector(state => state.auth.user);
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
     const idToWatch = useSelector(state => state.idToProcess)
 
     useEffect(() => {
         dispatch(setLoading(true));
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readMonthlyPlan`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readMonthlyPlan`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             const assignedTrainingsList = response.data.data;
             setassignedTrainingToShow(assignedTrainingsList.find((training) => training._id === idToWatch));
             dispatch(setLoading(false))
@@ -68,7 +65,7 @@ function Info() {
                 formData.append("Images", image); // Use the correct field name "Images"
             });
             console.log(formData);
-            axios.patch(`${process.env.REACT_APP_BACKEND_URL}/upload-images`, formData, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+            axios.patch(`${process.env.REACT_APP_BACKEND_URL}/upload-images`, formData, { headers: { Authorization: `${user._id}` } }).then(() => {
                 console.log("request made !");
                 dispatch(setLoading(false))
                 Swal.fire({
@@ -96,7 +93,6 @@ function Info() {
             })
         }
     }
-    const user = useSelector(state => state.auth.user);
     
     const handleDownloadImage = async (imageURL) => {
         try {
@@ -107,7 +103,7 @@ function Info() {
                     params: {
                         url: imageURL,
                     },
-                    responseType: 'blob', headers: { Authorization: `Bearer ${userToken}` } // Specify the response type as 'blob' to handle binary data
+                    responseType: 'blob', headers: { Authorization: `${user._id}` } // Specify the response type as 'blob' to handle binary data
                 });
 
 

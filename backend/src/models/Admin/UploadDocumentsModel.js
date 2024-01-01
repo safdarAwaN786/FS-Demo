@@ -30,7 +30,10 @@ const UploadDocumentsSchema = new mongoose.Schema({
     required: true,
     enum: ['Manuals', 'Procedures', 'SOPs', 'Forms']
   },
-
+  SendToDepartments : [{
+    type : Schema.Types.ObjectId,
+    ref : 'Department'
+  }],
   RevisionNo: {
     type: Number,
     default: 0

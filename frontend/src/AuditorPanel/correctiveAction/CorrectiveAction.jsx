@@ -2,9 +2,7 @@
 import style from './CorrectiveAction.module.css'
 import Search from '../../assets/images/employees/Search.svg'
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import axios from "axios";
-import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { changeId } from '../../redux/slices/idToProcessSlice';
@@ -21,16 +19,13 @@ function CorrectiveActions() {
     const [endIndex, setEndIndex] = useState(8);
     const [reject, setReject] = useState(false);
     const [allDataArr, setAllDataArr] = useState(null);
-
-    const userToken = Cookies.get('userToken');
+    const user = useSelector(state => state.auth?.user);
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
 
-
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readReports`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
-            console.log(response.data.data);
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readReports`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             setAllDataArr(response.data.data)
             setReportsList(response.data.data.slice(startIndex, endIndex));
             dispatch(setLoading(false))
@@ -48,25 +43,20 @@ function CorrectiveActions() {
     const nextPage = () => {
         setStartIndex(startIndex + 8);
         setEndIndex(endIndex + 8);
-
     }
 
     const backPage = () => {
         setStartIndex(startIndex - 8);
         setEndIndex(endIndex - 8);
-
-
     }
 
     useEffect(() => {
-
         setReportsList(allDataArr?.slice(startIndex, endIndex))
     }, [startIndex, endIndex])
 
 
     const search = (event) => {
         if (event.target.value !== "") {
-            console.log(event.target.value);
 
             const searchedList = allDataArr.filter((obj) =>
 
@@ -141,14 +131,8 @@ function CorrectiveActions() {
                                                     dispatch(changeId(report._id))
                                                 }} className={style.redclick}>View</p>
                                             </td>
-
-
-
-
                                         </tr>
-
                                     )
-
                                 })
                             }
                         </table>

@@ -2,8 +2,7 @@
 import style from './ProcessRecords.module.css'
 import Search from '../../assets/images/employees/Search.svg'
 import { useEffect, useState } from 'react'
-import axios from 'axios'
-import Cookies from 'js-cookie';
+import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { changeId } from '../../redux/slices/idToProcessSlice';
@@ -17,14 +16,12 @@ function ProcessRecords() {
     const [startIndex, setStartIndex] = useState(0);
     const [endIndex, setEndIndex] = useState(8);
     const [allDataArr, setAllDataArr] = useState(null);
-
-    const userToken = Cookies.get('userToken');
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
-
+    const user = useSelector(state => state.auth.user);
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readMonthlyAuditPlan`, { headers: { Authorization: `Bearer ${userToken}` } }).then((Response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readMonthlyAuditPlan`, { headers: { Authorization: `${user._id}` } }).then((Response) => {
             setAllDataArr(Response.data.data);
             setPlanProcesses(Response.data.data.slice(startIndex, endIndex));
             dispatch(setLoading(false))
@@ -128,10 +125,8 @@ function ProcessRecords() {
                                             dispatch(changeId(plan?._id))
                                         }} className={style.viewBtn}>View</button>
                                         </td>
-
                                     </tr>
                                 )
-
                             })
                         }
                     </table>
@@ -139,20 +134,17 @@ function ProcessRecords() {
             </div>
             <div className={style.Btns}>
                 {startIndex > 0 && (
-
                     <button onClick={backPage}>
                         {'<< '}Back
                     </button>
                 )}
                 {allDataArr?.length > endIndex && (
-
                     <button onClick={nextPage}>
                         next{'>> '}
                     </button>
                 )}
             </div>
         </div>
-
     )
 }
 

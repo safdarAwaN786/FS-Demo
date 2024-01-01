@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import style from './welcome.module.css'
 import welcomeImg from '../../assets/images/sidebar/welcomeimg.svg'
 import { useSelector } from 'react-redux';

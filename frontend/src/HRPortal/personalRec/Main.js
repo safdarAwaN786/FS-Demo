@@ -1,11 +1,9 @@
 import style from './Main.module.css'
 import Search from '../../assets/images/employees/Search.svg'
 import add from '../../assets/images/employees/Application Add.svg'
-import { useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import Swal from 'sweetalert2'
-import Cookies from 'js-cookie'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateTabData } from '../../redux/slices/tabSlice'
 import { changeId } from '../../redux/slices/idToProcessSlice'
@@ -17,15 +15,13 @@ function Main() {
     const [startIndex, setStartIndex] = useState(0);
     const [endIndex, setEndIndex] = useState(8);
     const [allDataArr, setAllDataArr] = useState(null);
-
-    const userToken = Cookies.get('userToken');
     const dispatch = useDispatch();
     const tabData = useSelector(state => state.tab);
-
+    const user = useSelector(state => state.auth.user);
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readPersonalRecuisition`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readPersonalRecuisition`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             dispatch(setLoading(false))
             setAllDataArr(response.data.data);
             setPersonReqList(response.data.data.slice(startIndex, endIndex));
@@ -40,7 +36,7 @@ function Main() {
     }, [])
 
     const statusUpdated = () => {
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readPersonalRecuisition`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readPersonalRecuisition`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             dispatch(setLoading(false))
             setAllDataArr(response.data.data);
             setPersonReqList(response.data.data.slice(startIndex, endIndex));
@@ -235,7 +231,7 @@ function Main() {
                         <div class={style.alert}>
                             <form onSubmit={() => {
                                 dispatch(setLoading(true))
-                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/updatePersonStatus`, dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/updatePersonStatus`, dataToSend, { headers: { Authorization: `${user._id}` } }).then(() => {
                                     statusUpdated();
                                     Swal.fire({
                                         title: 'Success',
@@ -275,7 +271,7 @@ function Main() {
                             <div className={style.alertbtns}>
                                 <button onClick={() => {
                                     dispatch(setLoading(true))
-                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/updatePersonStatus`, dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/updatePersonStatus`, dataToSend, { headers: { Authorization: `${user._id}` } }).then(() => {
                                         statusUpdated()
                                         Swal.fire({
                                             title: 'Success',

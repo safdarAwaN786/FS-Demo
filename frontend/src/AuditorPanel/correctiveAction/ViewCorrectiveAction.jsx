@@ -1,50 +1,124 @@
 
 import style from './ActionOnCorrective.module.css'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import axios from "axios";
 import Swal from 'sweetalert2';
 import { BsArrowLeftCircle } from 'react-icons/bs';
-import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import Slider from 'rc-slider';
 import { setLoading } from '../../redux/slices/loading';
+import html2pdf from 'html2pdf.js';
+
+const formatDate = (date) => {
+    const newDate = new Date(date);
+    const formatDate = newDate.toLocaleDateString('en-GB', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+    });
+    return formatDate;
+}
 
 function ViewCorrectiveAction() {
 
     const [showBox, setShowBox] = useState(false);
-    const [screenWidth, setScreenWidth] = useState(window.innerWidth);
     const [actionData, setActionData] = useState(null);
-    const [alert, setalert] = useState(false);
     const [dataToShow, setDataToShow] = useState(null);
-
-    const userToken = Cookies.get('userToken');
+    const user = useSelector(state => state.auth?.user);
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
     const idToWatch = useSelector(state => state.idToProcess);
 
-    
-
-    const alertManager = () => {
-        setalert(!alert)
-    }
-
-    useEffect(() => {
-        const handleResize = () => {
-            setScreenWidth(window.innerWidth);
-        };
-
-        window.addEventListener('resize', handleResize);
-
-        // Remove the event listener when the component unmounts
-        return () => {
-            window.removeEventListener('resize', handleResize);
-        };
-    }, []);
+  
 
     const [correctiveAnswers, setCorrectiveAnswers] = useState([]);
-    const user = useSelector(state => state.auth.user);
-    
+    const [dataToSend, setDataToSend] = useState(null);
+
+    const downloadPDF = async () => {
+        var element = document.getElementById('printable');
+        var opt = {
+            margin: [1.3, 0, 0, 0],
+            filename: `${user.Department.DepartmentName}-doc.pdf`,
+            enableLinks: false,
+            pagebreak: { mode: 'avoid-all' },
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 4 },
+            jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+        };
+
+        html2pdf().from(element).set(opt).toPdf().get('pdf').then(async function (pdf) {
+            pdf.insertPage(1);
+
+            var totalPages = pdf.internal.getNumberOfPages();
+            //print current pdf width & height to console
+            console.log("getHeight:" + pdf.internal.pageSize.getHeight());
+            console.log("getWidth:" + pdf.internal.pageSize.getWidth());
+            for (var i = 1; i <= totalPages; i++) {
+                pdf.setPage(i);
+                pdf.setFillColor(0, 0, 0);
+                if (i === 1) {
+                    try {
+                        console.log(user.Company.CompanyLogo);
+                        const response = await fetch(user.Company.CompanyLogo);
+                        const blob = await response.blob();
+                        const imageBitmap = await createImageBitmap(blob);
+                        // create a canvas element and draw the image bitmap on it
+                        const canvas = document.createElement('canvas');
+                        canvas.width = imageBitmap.width;
+                        canvas.height = imageBitmap.height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(imageBitmap, 0, 0);
+                        // get the data URL of the canvas
+                        const dataURL = canvas.toDataURL('image/jpeg');
+                        // pass the data URL to the pdf.addImage method
+                        pdf.addImage(dataURL, 'JPEG', (pdf.internal.pageSize.getWidth() / 2) - 1.5, 2.5, 3, 3);
+                        pdf.setFontSize(25);
+                        pdf.text(`${user.Company.CompanyName}`, (pdf.internal.pageSize.getWidth() / 2) - 1.5, (pdf.internal.pageSize.getHeight() / 2));
+                        pdf.text(`${user.Company.Address}`, (pdf.internal.pageSize.getWidth() / 2) - 1.5, (pdf.internal.pageSize.getHeight() / 2) + 0.5);
+                        pdf.setFontSize(15);
+                        pdf.setLineWidth(0.1); // Example line width
+                        pdf.line(0.1, (pdf.internal.pageSize.getHeight() / 2) + 1, pdf.internal.pageSize.getWidth() - 0.2, (pdf.internal.pageSize.getHeight() / 2) + 1)
+                        pdf.text("Document Id", 1, (pdf.internal.pageSize.getHeight() / 2) + 1.5);
+                        pdf.text(`${dataToSend.DocumentId}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 1.5);
+                        pdf.text("Created By", 1, (pdf.internal.pageSize.getHeight() / 2) + 1.8);
+                        pdf.text(`${dataToSend.CreatedBy}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 1.8);
+                        pdf.text("Creation Date", 1, (pdf.internal.pageSize.getHeight() / 2) + 2.1);
+                        pdf.text(`${formatDate(dataToSend.CreationDate)}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 2.1);
+                        pdf.text("Revision Number", 1, (pdf.internal.pageSize.getHeight() / 2) + 2.4);
+                        pdf.text(`${dataToSend.RevisionNo}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 2.4);
+                        if (dataToSend.Status == 'Approved') {
+
+                            pdf.text("Approved By", 1, (pdf.internal.pageSize.getHeight() / 2) + 2.7);
+                            pdf.text(`${dataToSend.ApprovedBy}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 2.7);
+                            pdf.text("Approval Date", 1, (pdf.internal.pageSize.getHeight() / 2) + 3.0);
+                            pdf.text(`${formatDate(dataToSend.ApprovalDate)}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 3.0);
+                        }
+                        if (dataToSend.ReviewedBy) {
+
+                            pdf.text("Reviewed By", 1, (pdf.internal.pageSize.getHeight() / 2) + 3.3);
+                            pdf.text(`${dataToSend.ReviewedBy}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 3.3);
+                            pdf.text("Reviewed Date", 1, (pdf.internal.pageSize.getHeight() / 2) + 3.6);
+                            pdf.text(`${formatDate(dataToSend.ReviewDate)}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 3.6);
+                        }
+                    } catch (error) {
+                        console.log(error);
+                    }
+                } else {
+                    pdf.setFontSize(15)
+                    pdf.text('Powered By Feat Technology', (pdf.internal.pageSize.getWidth() / 2) - 1.3, 0.5);
+                    pdf.setFontSize(10);
+                    pdf.text(`${user.Company.CompanyName}`, pdf.internal.pageSize.getWidth() - 2, 0.3);
+                    pdf.text('Corrective Action', pdf.internal.pageSize.getWidth() - 2, 0.5);
+                    pdf.text(`${dataToSend.DocumentId}`, pdf.internal.pageSize.getWidth() - 2, 0.7);
+                    pdf.text(`Revision No :${dataToSend.RevisionNo}`, pdf.internal.pageSize.getWidth() - 2, 0.9);
+                    pdf.text(`Creation : ${formatDate(dataToSend.CreationDate)}`, pdf.internal.pageSize.getWidth() - 2, 1.1);
+                }
+            }
+        }).save();
+
+    };
+
     const handleDownloadImage = async (imageURL) => {
         try {
             if (imageURL) {
@@ -54,7 +128,7 @@ function ViewCorrectiveAction() {
                     params: {
                         url: imageURL,
                     },
-                    responseType: 'blob', headers: { Authorization: `Bearer ${userToken}` } // Specify the response type as 'blob' to handle binary data
+                    responseType: 'blob', headers: { Authorization: `${user._id}` } // Specify the response type as 'blob' to handle binary data
                 });
 
 
@@ -96,11 +170,10 @@ function ViewCorrectiveAction() {
 
 
     useEffect(() => {
-        console.log(idToWatch);
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readCorrectiveActionById/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
-            console.log(response.data.data);
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readCorrectiveActionById/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             setActionData(response.data.data)
+            setDataToSend(response.data.data)
             setCorrectiveAnswers(response.data.data.Answers);
             dispatch(setLoading(false))
             if (response.data.data == undefined) {
@@ -112,8 +185,8 @@ function ViewCorrectiveAction() {
 
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        dispatch(updateTabData({...tabData, Tab : 'Corrective Action Plan'}))
-                        
+                        dispatch(updateTabData({ ...tabData, Tab: 'Corrective Action Plan' }))
+
                     }
                 })
             }
@@ -121,31 +194,18 @@ function ViewCorrectiveAction() {
         }).catch(err => {
             dispatch(setLoading(false));
             Swal.fire({
-                icon : 'error',
-                title : 'OOps..',
-                text : 'Something went wrong, Try Again!'
+                icon: 'error',
+                title: 'OOps..',
+                text: 'Something went wrong, Try Again!'
             })
         })
-
-
     }, [])
-
-
-
-
-
-
-
-
 
     return (
         <>
             <div className={`${style.parent} mx-auto`}>
-
-
                 <div className={`${style.subparent} mx-2 mx-sm-4 mt-5 mx-lg-5`}>
                     <div className='mx-lg-5 px-4 mx-md-4 mx-2  mb-1 '>
-
                         <BsArrowLeftCircle onClick={(e) => {
                             dispatch(updateTabData({ ...tabData, Tab: 'Corrective Action Plan' }))
                         }} className='fs-3 text-danger mx-1' role='button' />
@@ -160,14 +220,9 @@ function ViewCorrectiveAction() {
                             Corrective Action
                         </div>
                     </div>
-                    <form className='bg-white' encType='multipart/form-data' onSubmit={(event) => {
+                    <form id='printable' className='bg-white' encType='multipart/form-data' onSubmit={(event) => {
                         event.preventDefault();
-
                     }}>
-
-
-
-
                         {correctiveAnswers?.map((correctiveAnswer, index) => {
                             return (
                                 <div style={{
@@ -294,7 +349,7 @@ function ViewCorrectiveAction() {
 
                                                     <div className='d-flex flex-column w-50'>
                                                         <label>Evidence Document :</label>
-                                                        <a onClick={()=>{
+                                                        <a onClick={() => {
                                                             handleDownloadImage(correctiveAnswer.question.EvidenceDoc)
                                                         }} className='btn btn-outline-danger' >Download</a>
                                                     </div>
@@ -313,41 +368,33 @@ function ViewCorrectiveAction() {
 
                                             <div className='col-lg-6 col-md-12'>
                                                 <p className='fw-bold'>Correction : </p>
-                                                <textarea placeholder='write here..' name='Correction' value={correctiveAnswer?.Correction} rows={4}  className='w-100 border-0 p-2 m-2' type='text' required readOnly/>
+                                                <textarea placeholder='write here..' name='Correction' value={correctiveAnswer?.Correction} rows={4} className='w-100 border-0 p-2 m-2' type='text' required readOnly />
                                             </div>
                                             <div className='col-lg-6 col-md-12'>
                                                 <p className='fw-bold'>Corrective Action : </p>
-                                                <textarea placeholder='write here..'  value={correctiveAnswer?.CorrectiveAction} rows={4} className='w-100 border-0 p-2 m-2' type='text' required readOnly/>
+                                                <textarea placeholder='write here..' value={correctiveAnswer?.CorrectiveAction} rows={4} className='w-100 border-0 p-2 m-2' type='text' required readOnly />
                                             </div>
                                             <div className='col-lg-6 col-md-12'>
                                                 <p className='fw-bold'>Root Cause : </p>
-                                                <textarea placeholder='write here..' value={correctiveAnswer?.RootCause}  rows={4} className='w-100 border-0 p-2 m-2' type='text' required readOnly/>
+                                                <textarea placeholder='write here..' value={correctiveAnswer?.RootCause} rows={4} className='w-100 border-0 p-2 m-2' type='text' required readOnly />
                                             </div>
                                             {correctiveAnswer?.CorrectiveDoc && (
-                                            <div className='col-lg-6 col-md-12'>
-                                                <p><b>Corrective Document : </b></p>
-                                                <a onClick={()=>{
-                                                    handleDownloadImage(correctiveAnswer?.CorrectiveDoc)
-                                                }}  className='btn btn-danger py-2 mt-3 mx-2 w-100'  >Download</a>
-                                            </div>
+                                                <div className='col-lg-6 col-md-12'>
+                                                    <p><b>Corrective Document : </b></p>
+                                                    <a onClick={() => {
+                                                        handleDownloadImage(correctiveAnswer?.CorrectiveDoc)
+                                                    }} className='btn btn-danger py-2 mt-3 mx-2 w-100'  >Download</a>
+                                                </div>
                                             )}
-
-
-
-
                                         </div>
                                     </div>
                                 </div>
                             )
                         })}
-
-
-
-
-
-
-
                     </form>
+                    <div className={`${style.btn} px-lg-4 px-2 d-flex justify-content-center`}>
+                        <button onClick={downloadPDF} type='button' >Download</button>
+                    </div>
                 </div>
             </div>
             {

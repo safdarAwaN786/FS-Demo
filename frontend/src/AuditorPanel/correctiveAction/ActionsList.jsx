@@ -4,11 +4,9 @@ import axios from "axios";
 import Swal from 'sweetalert2';
 import { BsArrowLeftCircle } from 'react-icons/bs'
 import { useDispatch, useSelector } from 'react-redux';
-import Cookies from 'js-cookie';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { changeId } from '../../redux/slices/idToProcessSlice';
 import { setLoading } from '../../redux/slices/loading';
-
 
 function ActionsList() {
 
@@ -18,13 +16,12 @@ function ActionsList() {
         setalert(!alert)
     }
     const [actions, setActions] = useState(null);
-    const userToken = Cookies.get('userToken');
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
     const idToWatch = useSelector(state => state.idToProcess)
-
+    const user = useSelector(state => state.auth?.user);
+    
     const formatDate = (date) => {
-
         const newDate = new Date(date);
         const formatDate = newDate.toLocaleDateString('en-GB', {
             day: '2-digit',
@@ -34,12 +31,9 @@ function ActionsList() {
         return formatDate;
     }
     useEffect(() => {
-        console.log(idToWatch);
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readCorrectiveActionByReportId/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
-            console.log(response.data.data);
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readCorrectiveActionByReportId/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             setActions(response.data.data);
-
             dispatch(setLoading(false))
             if (response.data.data == undefined) {
                 Swal.fire({
@@ -47,11 +41,9 @@ function ActionsList() {
                     title: 'Oops...',
                     text: 'Report is not Created for this Audit yet!',
                     confirmButtonText: 'OK.'
-
                 }).then((result) => {
                     if (result.isConfirmed) {
                         dispatch(updateTabData({...tabData, Tab : 'Corrective Action Plan'}))
-                        
                     }
                 })
             }

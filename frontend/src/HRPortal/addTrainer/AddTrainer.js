@@ -6,12 +6,10 @@ import Office from '../../assets/images/employeeProfile/Office.svg'
 import msg from '../../assets/images/hrprofile/mail.svg'
 import { useRef, useState } from 'react'
 import axios from "axios";
-import { useNavigate } from 'react-router-dom'
 import Swal from 'sweetalert2'
 import { BsArrowLeftCircle } from 'react-icons/bs';
 import { useDispatch, useSelector } from "react-redux";
 import { updateTabData } from '../../redux/slices/tabSlice'
-import Cookies from 'js-cookie'
 import { setLoading } from '../../redux/slices/loading'
 
 function AddTrainer() {
@@ -23,8 +21,8 @@ function AddTrainer() {
     const alertManager = () => {
         setalert(!alert)
     }
+    const user = useSelector(state => state.auth.user);
     const [selectedImage, setSelectedImage] = useState(null);
-
     const handleImageClick = () => {
         fileInputRef.current.click(); // Trigger the click event on the file input
     };
@@ -33,9 +31,7 @@ function AddTrainer() {
         const lowercaseCharset = 'abcdefghijklmnopqrstuvwxyz';
         const uppercaseCharset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
         const numberCharset = '0123456789';
-
         let password = '';
-
         // Ensure at least one lowercase character
         password += lowercaseCharset.charAt(Math.floor(Math.random() * lowercaseCharset.length));
 
@@ -94,11 +90,8 @@ function AddTrainer() {
 
     const [selectedDocument, setSelectedDocument] = useState(null);
 
-
-    const navigate = useNavigate();
     const handleDocumentClick = () => {
         documentRef.current.click();
-
     };
 
     function handleGenerateClick() {
@@ -107,12 +100,11 @@ function AddTrainer() {
     }
 
     const tabData = useSelector(state => state.tab);
-    const userToken = Cookies.get('userToken');
     const dispatch = useDispatch();
     const makeRequest = () => {
         if (trainerData !== null) {
             dispatch(setLoading(true))
-            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addTrainer`, trainerData, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addTrainer`, trainerData, { headers: { Authorization: `${user._id}` } }).then(() => {
                 setTrainerData(null);
                 dispatch(setLoading(false))
                 Swal.fire({
@@ -156,8 +148,6 @@ function AddTrainer() {
 
     return (
         <>
-
-
             <div style={{
                 marginBottom: '20px'
             }} className={`${style.form}`}>
@@ -165,10 +155,8 @@ function AddTrainer() {
                     <BsArrowLeftCircle role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
                         {
                             dispatch(updateTabData({...tabData, Tab : 'Add Trainers'}))
-                           
                         }
                     }} />
-
                 </div>
                 <div className={style.headers}>
                     <div className={style.spans}>
@@ -179,17 +167,12 @@ function AddTrainer() {
                     <div className={style.para}>
                         Add Trainer
                     </div>
-
                 </div>
                 <form className='py-4' encType='multipart/form-data' onSubmit={(event) => {
                     event.preventDefault();
                     const data = new FormData(event.target);
-
                     setTrainerData(data)
-
-
                     alertManager();
-
                 }}>
 
                     <div className={style.profile}>
@@ -255,7 +238,6 @@ function AddTrainer() {
                         </div>
                         <input onChange={handleDocumentChange} name='TrainerDocument' type='file' accept='.pdf' ref={documentRef} style={{ display: 'none' }} />
                         <div className={`${style.btns}`}>
-
                             <p style={{
                                 padding: "13px 20px",
                                 cursor: 'pointer',
@@ -291,13 +273,8 @@ function AddTrainer() {
                                 <button onClick={() => {
                                     alertManager();
                                     makeRequest();
-
-                                }
-                                } className={style.btn1}>Submit</button>
-
-
+                                }} className={style.btn1}>Submit</button>
                                 <button onClick={alertManager} className={style.btn2}>Cancel</button>
-
                             </div>
                         </div>
                     </div> : null

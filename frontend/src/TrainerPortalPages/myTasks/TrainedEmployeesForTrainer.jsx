@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react'
 import axios from 'axios'
 import profile from '../../assets/images/addEmployee/prof.svg'
 import { BsArrowLeftCircle } from 'react-icons/bs'
-import Cookies from 'js-cookie'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateTabData } from '../../redux/slices/tabSlice'
 import { setLoading } from '../../redux/slices/loading'
@@ -19,8 +18,7 @@ function TrainedEmployeesForTrainer() {
     const [trainingToShow, setTrainingToShow] = useState(null);
     const [startIndex, setStartIndex] = useState(0);
     const [endIndex, setEndIndex] = useState(8);
-
-    const userToken = Cookies.get('userToken');
+    const user = useSelector(state => state.auth.user);
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
     const idToWatch = useSelector(state => state.idToProcess);
@@ -44,7 +42,7 @@ function TrainedEmployeesForTrainer() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readMonthlyPlan`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readMonthlyPlan`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             const plannedTrainingsList = response.data.data;
             const foundTraining = plannedTrainingsList.find((training) => training._id === idToWatch);
             if (foundTraining) {
@@ -66,22 +64,17 @@ function TrainedEmployeesForTrainer() {
     const nextPage = () => {
         setStartIndex(startIndex + 8);
         setEndIndex(endIndex + 8);
-
     }
 
     const backPage = () => {
         setStartIndex(startIndex - 8);
         setEndIndex(endIndex - 8);
-
-
     }
     useEffect(() => {
-
         setTrainedEmployees(trainingToShow?.Employee.slice(startIndex, endIndex))
     }, [startIndex, endIndex])
 
     function findObjectIndexByPropertyValue(array) {
-
         const foundObject = array.find((data) => data.Training === idToWatch);
         if (foundObject) {
             return (array.indexOf(foundObject))

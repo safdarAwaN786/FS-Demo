@@ -1,14 +1,11 @@
 import style from './CallibrationRect2.module.css'
-import { useNavigate, useParams } from 'react-router-dom'
 import { useEffect, useRef, useState } from 'react'
 import axios from "axios";
 import Swal from 'sweetalert2'
 import { BsArrowLeftCircle } from 'react-icons/bs';
-import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { setLoading } from '../../redux/slices/loading';
-
 
 function CallibrationRect2() {
     const [alert, setalert] = useState(false);
@@ -19,8 +16,6 @@ function CallibrationRect2() {
     const masterCertificateInputRef = useRef(null);
     const exCertificateInputRef = useRef(null);
     const [comment, setComment] = useState(null);
-
-    const userToken = Cookies.get('userToken');
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
     const idToWatch = useSelector(state => state.idToProcess);
@@ -35,22 +30,15 @@ function CallibrationRect2() {
 
     if (dateType === 'Daily') {
         nextdate.setDate(nextdate.getDate() + 1);
-
     } else if (dateType === 'Weekly') {
         nextdate.setDate(nextdate.getDate() + 7);
-
     } else if (dateType === 'Monthly') {
         nextdate.setMonth(nextdate.getMonth() + 1);
-
     } else if (dateType === 'Quarterly') {
         nextdate.setMonth(nextdate.getMonth() + 3)
-
     } else if (dateType === 'Yearly') {
         nextdate.setFullYear(nextdate.getFullYear() + 1)
-
     }
-
-
 
     const [formValues, setFormValues] = useState({
         dateType: dateType,
@@ -61,12 +49,11 @@ function CallibrationRect2() {
         CR: 'User'
     });
     const [submitAlert, setSubmitAlert] = useState(false);
-
     const [equipment, setEquipment] = useState(null);
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readEquipment/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readEquipment/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
             setEquipment(res.data.data);
             dispatch(setLoading(false))
         }).catch(err => {
@@ -80,8 +67,6 @@ function CallibrationRect2() {
     }, [])
 
 
-
-
     const updateFormValues = (e) => {
         setFormValues({ ...formValues, [e.target.name]: e.target.value })
     }
@@ -91,7 +76,6 @@ function CallibrationRect2() {
 
     const convertStateToFormData = (state) => {
         const formData = new FormData();
-
         // Iterate through the state object
         for (const key in state) {
             if (state.hasOwnProperty(key)) {
@@ -340,14 +324,13 @@ function CallibrationRect2() {
                                     setSubmitAlert(false)
                                     const formData = convertStateToFormData(formValues);
                                     dispatch(setLoading(true))
-                                    axios.post(`${process.env.REACT_APP_BACKEND_URL}/addCalibration/${idToWatch}`, formData, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+                                    axios.post(`${process.env.REACT_APP_BACKEND_URL}/addCalibration/${idToWatch}`, formData, { headers: { Authorization: `${user._id}` } }).then((res) => {
                                         dispatch(setLoading(false))
                                         Swal.fire({
                                             title: 'Success',
                                             text: 'Submitted Successfully',
                                             icon: 'success',
                                             confirmButtonText: 'Go!',
-
                                         }).then((result) => {
                                             if (result.isConfirmed) {
                                                 dispatch(updateTabData({ ...tabData, Tab: 'Measuring Devices' }))
@@ -363,10 +346,7 @@ function CallibrationRect2() {
                                     })
 
                                 }} className={style.btn1}>Submit</button>
-
-
                                 <button onClick={() => { setSubmitAlert(false) }} className={style.btn2}>Cancel</button>
-
                             </div>
                         </div>
                     </div> : null
@@ -379,7 +359,6 @@ function CallibrationRect2() {
                             <p class={`${style.msg} text-center p-4 mt-3 fs-5 fw-bold`}>Please provide all data in internal, external, remarks and readings..</p>
                             <div className={style.alertbtns}>
                                 <button onClick={() => { setAlertData(false) }} className={style.btn2}>Close</button>
-
                             </div>
                         </div>
                     </div> : null

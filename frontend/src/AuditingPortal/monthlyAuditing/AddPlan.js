@@ -3,7 +3,6 @@ import style from './AddPlan.module.css'
 import { useEffect, useState } from 'react'
 import axios from "axios";
 import Swal from 'sweetalert2'
-import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { setLoading } from '../../redux/slices/loading';
 
@@ -26,14 +25,13 @@ function AddPlanAuditing() {
 
 
     const dispatch = useDispatch()
-    const userToken = Cookies.get('userToken');
 
     const [departmentsToShow, SetDepartmentsToShow] = useState(null);
-    const user = useSelector(state => state.auth?.user);
+    const user = useSelector(state => state.auth.user);
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
             SetDepartmentsToShow(res.data.data);
             if (yearlyPlans) {
                 dispatch(setLoading(false))
@@ -58,7 +56,7 @@ function AddPlanAuditing() {
         } else {
             setDaysNums(array1To31)
         }
-        console.log(dataToSend);
+        
     }, [dataToSend])
 
     const alertManager = () => {
@@ -67,7 +65,7 @@ function AddPlanAuditing() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readYearlyAuditPlan`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readYearlyAuditPlan`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             console.log(response.data);
             setYearlyPlans(response.data.data);
             if (departmentsToShow) {
@@ -82,16 +80,12 @@ function AddPlanAuditing() {
             })
         })
 
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readAuditor`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readAuditor`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             console.log(response.data);
             const auditors = response.data.data;
-
-
             setLeadAuditors(auditors.filter((obj) => obj.Role === 'Lead Auditor'))
             setTeamAuditors(auditors.filter((obj) => obj.Role === 'Team Auditor'))
         });
-
-
     }, [])
 
     useEffect(() => {
@@ -109,7 +103,7 @@ function AddPlanAuditing() {
     const makeRequest = () => {
         if (planData) {
             dispatch(setLoading(true))
-            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addMonthlyAuditingPlan`, planData, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addMonthlyAuditingPlan`, planData, { headers: { Authorization: `${user._id}` } }).then(() => {
                 console.log("request made !");
                 setPlanData(null);
                 setDataToSend(null)
@@ -139,16 +133,9 @@ function AddPlanAuditing() {
         }
     }
 
-
-
-
-
-
     return (
         <>
             <div className={`${style.parent} mx-auto`}>
-
-
                 <div className={`${style.subparent} mx-2 mx-sm-4 mt-5  mx-lg-5`}>
                     <div className={`${style.headers} d-flex justify-content-start ps-3 align-items-center `}>
                         <div className={style.spans}>
@@ -165,8 +152,6 @@ function AddPlanAuditing() {
                         console.log(dataToSend);
                         setPlanData(dataToSend);
                         alertManager();
-
-
                     }}>
                         <div className={style.formDivider}>
                             <div className={style.sec1}>
@@ -175,26 +160,18 @@ function AddPlanAuditing() {
                                         <p>Year : </p>
                                     </div>
                                     <div>
-                                        <select onChange={(e) => {
+                                        <select className='form-select  form-select-lg' onChange={(e) => {
                                             const choosenPlan = yearlyPlans.find((plan) => plan._id === e.target.value); // Find the selected plan object 
-
                                             setSelectedPlan(choosenPlan);
                                             setDataToSend({ ...dataToSend, YearlyAuditingPlan: e.target.value, Year: choosenPlan.Year })
-
                                         }} placeholder='Choose year' style={{ width: "100%" }} name='Month' required>
                                             <option value="" selected disabled>Choose Year</option>
-
                                             {yearlyPlans?.map((plan) => {
                                                 return (
-
                                                     <option value={plan._id}>{plan.Year}</option>
                                                 )
                                             })}
-
-
-
                                         </select>
-
                                     </div>
                                 </div>
                                 <div className={style.inputParent}>
@@ -206,20 +183,14 @@ function AddPlanAuditing() {
                                             setDataToSend({ ...dataToSend, Date: e.target.value })
                                         }} name='Date' style={{ width: "100%" }} required >
                                             <option value="" selected></option>
-
                                             {daysNums?.map((dayNum) => {
                                                 return (
-
                                                     <option value={dayNum}>{dayNum}</option>
                                                 )
                                             })}
-
-
                                         </select>
-
                                     </div>
                                 </div>
-
                                 <div className={style.inputParent}>
                                     <div className={style.para}>
                                         <p>Department : </p>
@@ -234,13 +205,9 @@ function AddPlanAuditing() {
                                                     <option value={depObj._id}>{depObj.DepartmentName}</option>
                                                 )
                                             })}
-
                                         </select>
-
                                     </div>
                                 </div>
-
-
                                 <div className={style.inputParent}>
                                     <div className={style.para}>
                                         <p>Process : </p>
@@ -248,25 +215,18 @@ function AddPlanAuditing() {
                                     <div>
                                         <select onChange={(e) => {
                                             const choosenProcessObj = selectedPlan.Selected.find((obj) => obj.Process._id === e.target.value);
-
-
                                             setDataToSend({ ...dataToSend, ProcessOwner: e.target.value });
                                             setSelectedPlanProcess(choosenProcessObj)
                                         }} name='Training' style={{ width: "100%" }} required>
                                             <option value="" selected disabled>Choose Process</option>
                                             {selectedPlan?.Selected.map((obj) => {
-
                                                 return (
-
                                                     <option value={obj.Process._id}>{obj.Process.ProcessName}</option>
                                                 )
                                             })}
                                         </select>
-
                                     </div>
                                 </div>
-
-
                             </div>
                             <div className={style.sec2}>
                                 <div className={style.inputParent}>
@@ -283,9 +243,7 @@ function AddPlanAuditing() {
                                                     <option value={month}>{month}</option>
                                                 )
                                             })}
-
                                         </select>
-
                                     </div>
                                 </div>
                                 <div className={style.inputParent}>
@@ -295,10 +253,8 @@ function AddPlanAuditing() {
                                     <div>
                                         <input value={selectedPlanProcess?.Process.ProcessOwner.Name} className='text-black' name='Duration' type="text" readOnly
                                             required />
-
                                     </div>
                                 </div>
-
                                 <div className={style.inputParent}>
                                     <div className={style.para}>
                                         <p>Lead Auditor : </p>
@@ -309,17 +265,13 @@ function AddPlanAuditing() {
                                         }} name='Trainer' style={{ width: "100%" }} >
                                             <option value="" selected disabled></option>
                                             {LeadAuditors?.map((auditor) => {
-
                                                 return (
-
                                                     <option key={auditor._id} value={auditor._id}>{auditor.Name}</option>
                                                 )
                                             })}
                                         </select>
-
                                     </div>
                                 </div>
-
                                 <div className={style.inputParent}>
                                     <div className={style.para}>
                                         <p>Team Auditor : </p>
@@ -335,10 +287,8 @@ function AddPlanAuditing() {
                                                 )
                                             })}
                                         </select>
-
                                     </div>
                                 </div>
-
                             </div>
                         </div>
                         <div className={style.btn}>
@@ -356,18 +306,12 @@ function AddPlanAuditing() {
                                 <button onClick={() => {
                                     alertManager();
                                     makeRequest();
-
-                                }
-                                } className={style.btn1}>Submit</button>
-
-
+                                }} className={style.btn1}>Submit</button>
                                 <button onClick={alertManager} className={style.btn2}>Cencel</button>
-
                             </div>
                         </div>
                     </div> : null
             }
-
         </>
     )
 }

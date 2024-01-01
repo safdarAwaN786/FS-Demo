@@ -3,7 +3,6 @@ import style from './CreateDocument.module.css'
 import { useEffect, useRef, useState } from 'react'
 import axios from "axios";
 import { BsArrowLeftCircle } from 'react-icons/bs';
-import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { setLoading } from '../../redux/slices/loading';
@@ -16,15 +15,14 @@ function ViewDocument() {
     const alertManager = () => {
         setalert(!alert)
     }
-
-    const userToken = Cookies.get('userToken');
+    const user = useSelector(state => state.auth.user);
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
     const idToWatch = useSelector(state => state.idToProcess);
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-documentById/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-documentById/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             setDocumentData(response.data.data);
             dispatch(setLoading(false))
         }).catch(err => {
@@ -53,7 +51,6 @@ function ViewDocument() {
                                     dispatch(updateTabData({...tabData, Tab : 'Master List of Documents'}))
                                 }
                             }} />
-
                     </div>
                     <div className={`${style.headers} d-flex justify-content-start ps-3 align-items-center `}>
                         <div className={style.spans}>
@@ -90,33 +87,22 @@ function ViewDocument() {
                                         </div>
                                         <div>
                                             <input className='text-dark'  value={documentData?.RevisionNo} readOnly />
-
-
                                         </div>
                                     </div>
                                     <div className={style.inputParent}>
                                         <div className={style.para}>
                                             <p className='text-black'>Department</p>
-
                                         </div>
                                         <div>
                                             <input className='text-dark'  value={documentData?.Department.DepartmentName} readOnly />
-
-
                                         </div>
                                     </div>
                                     <div className={style.inputParent}>
                                         <div className={style.para}>
                                             <p className='text-black'>Created Date</p>
-
                                         </div>
                                         <div>
-
-
                                             <input className='text-dark'  value={`${documentData?.CreationDate?.slice(0, 10).split('-')[2]}/${documentData?.CreationDate?.slice(0, 10).split('-')[1]}/${documentData?.CreationDate?.slice(0, 10).split('-')[0]}`} readOnly />
-
-
-
                                         </div>
                                     </div>
                                     <div className={style.inputParent}>
@@ -238,26 +224,7 @@ function ViewDocument() {
                     </form>
                 </div>
             </div>
-            {/* {
-                alert ?
-                    <div class={style.alertparent}>
-                        <div class={style.alert}>
-                            <p class={style.msg}>Do you want to submit this information?</p>
-                            <div className={style.alertbtns}>
-                                <button onClick={() => {
-                                    alertManager();
-                                    makeRequest();
-
-                                }
-                                } className={style.btn1}>Submit</button>
-
-
-                                <button onClick={alertManager} className={style.btn2}>Cencel</button>
-
-                            </div>
-                        </div>
-                    </div> : null
-            } */}
+            
 
         </>
     )

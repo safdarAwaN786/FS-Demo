@@ -7,7 +7,6 @@ import Swal from 'sweetalert2';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { changeId } from '../../redux/slices/idToProcessSlice';
-import Cookies from 'js-cookie';
 import { setLoading } from '../../redux/slices/loading';
 
 function FormsList() {
@@ -27,16 +26,14 @@ function FormsList() {
     const [allDataArr, setAllDataArr] = useState(null);
     const [formToProcess, setFormToProcess] = useState(null);
 
-    const userToken = Cookies.get('userToken');
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
-
     const [departmentsToShow, SetDepartmentsToShow] = useState(null);
     const user = useSelector(state => state.auth?.user);
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
             SetDepartmentsToShow(res.data.data);
 
         }).catch(err => {
@@ -60,7 +57,7 @@ function FormsList() {
 
     const refreshData = () => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-forms`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-forms`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             setAllDataArr(response.data.forms)
             setFormsList(response.data.forms.slice(startIndex, endIndex));
 
@@ -77,7 +74,7 @@ function FormsList() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-forms`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-forms`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             console.log(response.data.forms);
             setAllDataArr(response.data.forms)
             setFormsList(response.data.forms.slice(startIndex, endIndex));
@@ -384,7 +381,7 @@ function FormsList() {
                             <div className={style.alertbtns}>
                                 <button onClick={() => {
                                     dispatch(setLoading(true))
-                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/approveForm`, { id: idForAction }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/approveForm`, { id: idForAction }, { headers: { Authorization: `${user._id}` } }).then(() => {
                                         dispatch(setLoading(false))
                                         refreshData();
                                         Swal.fire({
@@ -426,7 +423,7 @@ function FormsList() {
                                 <button onClick={() => {
                                     setReview(false);
                                     dispatch(setLoading(true))
-                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/reviewForm`, { formId: idForAction }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/reviewForm`, { formId: idForAction }, { headers: { Authorization: `${user._id}` } }).then(() => {
                                         dispatch(setLoading(false))
                                         refreshData();
                                         Swal.fire({
@@ -466,7 +463,7 @@ function FormsList() {
                                 e.preventDefault();
                                 setDisApprove(false);
                                 dispatch(setLoading(true))
-                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/disapproveForm`, { formId: idForAction, reason: reason }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/disapproveForm`, { formId: idForAction, reason: reason }, { headers: { Authorization: `${user._id}` } }).then(() => {
                                     dispatch(false)
                                     Swal.fire({
                                         title: 'Success',
@@ -509,7 +506,7 @@ function FormsList() {
                                 e.preventDefault();
                                 setReject(false);
                                 dispatch(setLoading(true))
-                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/rejectForm`, { formId: idForAction, reason: reason }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/rejectForm`, { formId: idForAction, reason: reason }, { headers: { Authorization: `${user._id}` } }).then(() => {
                                     dispatch(setLoading(false))
                                     Swal.fire({
                                         title: 'Success',
@@ -552,7 +549,7 @@ function FormsList() {
                                 e.preventDefault();
                                 if (formToProcess?.SendToDepartments.length > 0) {
                                     dispatch(setLoading(true))
-                                    axios.put(`${process.env.REACT_APP_BACKEND_URL}/send-form`, formToProcess, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+                                    axios.put(`${process.env.REACT_APP_BACKEND_URL}/send-form`, formToProcess, { headers: { Authorization: `${user._id}` } }).then(() => {
                                         dispatch(setLoading(false))
                                         setFormToProcess(null);
                                         setSend(false)

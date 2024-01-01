@@ -7,7 +7,6 @@ import axios from "axios";
 import profile from '../../assets/images/addEmployee/prof.svg'
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
-import Cookies from 'js-cookie';
 import { setLoading } from '../../redux/slices/loading';
 import Swal from 'sweetalert2';
 
@@ -20,11 +19,10 @@ function Companies() {
     const [startIndex, setStartIndex] = useState(0);
     const [endIndex, setEndIndex] = useState(8);
     const [allDataArr, setAllDataArr] = useState(null);
-    const userToken = Cookies.get('userToken');
-
+    const user = useSelector(state => state.auth.user);
     useEffect(() => {
         dispatch(setLoading(true));
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-companies`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-companies`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             dispatch(setLoading(false));
             setAllDataArr(response.data.data)
             console.log(response.data);
@@ -43,18 +41,14 @@ function Companies() {
     const nextPage = () => {
         setStartIndex(startIndex + 8);
         setEndIndex(endIndex + 8);
-
     }
 
     const backPage = () => {
         setStartIndex(startIndex - 8);
         setEndIndex(endIndex - 8);
-
-
     }
 
     useEffect(() => {
-
         setCompaniesList(allDataArr?.slice(startIndex, endIndex))
     }, [startIndex, endIndex])
 
@@ -62,13 +56,9 @@ function Companies() {
     const dispatch = useDispatch();
     const search = (event) => {
         if (event.target.value !== "") {
-            console.log(event.target.value);
-
             const searchedList = allDataArr.filter((obj) =>
-
                 obj.CompanyId.includes(event.target.value) || obj?.CompanyName?.includes(event.target.value)
             )
-            console.log(searchedList);
             setCompaniesList(searchedList);
         } else {
             setCompaniesList(allDataArr?.slice(startIndex, endIndex))
@@ -111,8 +101,6 @@ function Companies() {
                                 <td>Email</td>
                                 <td>Address</td>
                                 <td>Contact #</td>
-
-
                             </tr>
                             {
                                 companiesList?.map((company, i) => {
@@ -133,8 +121,6 @@ function Companies() {
                                                 height: "40px",
                                                 borderRadius: "50%",
                                                 overflow: "hidden",
-
-
                                                 backgroundImage: `url(${profile})`,
                                                 backgroundSize: 'cover',
                                                 backgroundPosition: 'center',
@@ -153,14 +139,8 @@ function Companies() {
                                             <td>{company.Email}</td>
                                             <td>{company.Address}</td>
                                             <td>{company.PhoneNo}</td>
-
-
-
-
                                         </tr>
-
                                     )
-
                                 })
                             }
                         </table>

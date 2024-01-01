@@ -13,6 +13,7 @@ const template = emailTemplates.registrationConfirmation;
 const CryptoJS = require('crypto-js');
 router.use(authMiddleware);
 const { rgb, degrees, PDFDocument, StandardFonts } = require('pdf-lib');
+const axios = require('axios')
 
 // * Cloudinary Setup 
 cloudinary.config({
@@ -24,12 +25,12 @@ cloudinary.config({
 const upload = multer();
 
 // Function to add the company logo and information to the first page
-const addFirstPage = async (page, logoImage, Company) => {
+const addFirstPage = async (page, logoImage, Company, user) => {
     const { width, height } = page.getSize();
-  
+
     const pdfDoc = await PDFDocument.create();
-    const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica); 
-    const logoDims = { width: 300, height: 300 }; 
+    const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
+    const logoDims = { width: 300, height: 300 };
     const centerTextX = width / 2;
     page.drawImage(logoImage, { x: centerTextX - logoDims.width / 2, y: height - 400, width: logoDims.width, height: logoDims.height });
     // Add company name (centered)
@@ -44,7 +45,19 @@ const addFirstPage = async (page, logoImage, Company) => {
     const companyEmailText = `${Company.Email}`;
     const companyEmailTextWidth = (helveticaFont.widthOfTextAtSize(companyEmailText, 25));
     page.drawText(companyEmailText, { x: centerTextX - companyEmailTextWidth / 2, y: height - 480, color: rgb(0, 0, 0), fontSize: 25 });
-  };
+    // Add company email (centered)
+    const companyAddressText = `${Company.Address}`;
+    const companyAddressTextWidth = (helveticaFont.widthOfTextAtSize(companyAddressText, 25));
+    page.drawText(companyAddressText, { x: centerTextX - companyAddressTextWidth / 2, y: height - 510, color: rgb(0, 0, 0), fontSize: 25 });
+
+    const uploadByText = `Uploaded By : ${user.Name}`;
+    const uploadByTextWidth = (helveticaFont.widthOfTextAtSize(uploadByText, 20));
+    page.drawText(uploadByText, { x: centerTextX - uploadByTextWidth / 2, y: height - 560, color: rgb(0, 0, 0), size: 20 });
+
+    const uploadDateText = `Uploaded Date : ${formatDate(new Date())}`;
+    const uploadDateTextWidth = (helveticaFont.widthOfTextAtSize(uploadDateText, 20));
+    page.drawText(uploadDateText, { x: centerTextX - uploadDateTextWidth / 2, y: height - 590, color: rgb(0, 0, 0), size: 20 });
+};
 
 // * Upload Documents To Cloudinary
 const uploadToCloudinary = (buffer) => {
@@ -136,10 +149,8 @@ router.post("/addAuditor", upload.fields([{ name: 'AuditorImage' }, { name: 'Aud
             if (req.body.ApprovedInternalAuditor === 'on') {
                 approvedAuditor = true
             }
-
             if (req.files['AuditorImage']) {
                 auditorImageFile = req.files['AuditorImage'][0];
-
                 auditorImageUrl = await uploadToCloudinary(auditorImageFile.buffer).then((result) => {
                     return (result.secure_url)
                 }).catch((err) => {
@@ -150,7 +161,6 @@ router.post("/addAuditor", upload.fields([{ name: 'AuditorImage' }, { name: 'Aud
 
             if (req.files['AuditorDocument']) {
                 auditorDocumentFile = req.files['AuditorDocument'][0];
-
                 const response = await axios.get(req.user.Company.CompanyLogo, { responseType: 'arraybuffer' });
                 const pdfDoc = await PDFDocument.load(auditorDocumentFile.buffer);
                 const logoImage = Buffer.from(response.data);
@@ -159,25 +169,38 @@ router.post("/addAuditor", upload.fields([{ name: 'AuditorImage' }, { name: 'Aud
                 const isPng = logoImageDataUrl.includes('data:image/png');
                 let pdfLogoImage;
                 if (isJpg) {
-                  pdfLogoImage = await pdfDoc.embedJpg(logoImage);
+                    pdfLogoImage = await pdfDoc.embedJpg(logoImage);
                 } else if (isPng) {
-                  pdfLogoImage = await pdfDoc.embedPng(logoImage);
+                    pdfLogoImage = await pdfDoc.embedPng(logoImage);
                 }
                 const firstPage = pdfDoc.insertPage(0);
-                addFirstPage(firstPage, pdfLogoImage, req.user.Company);
-                const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica); 
+                addFirstPage(firstPage, pdfLogoImage, req.user.Company, req.user);
+                const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
                 pdfDoc.getPages().slice(1).forEach(async (page) => {
-                  const { width, height } = page.getSize();
-                  const watermarkText = 'Powered By Feat Technology';
-                  const watermarkFontSize = 20; 
-                  const watermarkTextWidth = (helveticaFont.widthOfTextAtSize(watermarkText, watermarkFontSize));
-                  const centerWatermarkX = width / 2 - watermarkTextWidth / 2;
-                  const centerWatermarkY = height / 2 + 150;
-                  page.drawText(watermarkText, { x: centerWatermarkX, y: centerWatermarkY, fontSize: 20, color: rgb(0, 0, 0), opacity : 0.35 , rotate: degrees(-45) });
+                    page.translateContent(0, -30);
+                    const { width, height } = page.getSize();
+                    const watermarkText = 'Powered By Feat Technology';
+                    const watermarkFontSize = 15;
+                    const watermarkTextWidth = (helveticaFont.widthOfTextAtSize(watermarkText, watermarkFontSize));
+                    const centerWatermarkX = width / 2 - watermarkTextWidth / 2;
+                    const centerWatermarkY = height - 18;
+                    page.drawText(watermarkText, { x: centerWatermarkX, y: centerWatermarkY, size: watermarkFontSize, color: rgb(0, 0, 0) });
+                    const companyText = `${req.user.Company.CompanyName}`;
+                    const companyTextFontSize = 10;
+                    const companyTextWidth = (helveticaFont.widthOfTextAtSize(companyText, companyTextFontSize));
+                    const centerCompanyTextX = width - companyTextWidth - 20;
+                    const centerCompanyTextY = height - 16;
+                    page.drawText(companyText, { x: centerCompanyTextX, y: centerCompanyTextY, size: companyTextFontSize, color: rgb(0, 0, 0) });
+                    const dateText = `Upload Date : ${formatDate(new Date())}`;
+                    const dateTextFontSize = 10;
+                    const dateTextWidth = (helveticaFont.widthOfTextAtSize(dateText, dateTextFontSize));
+                    const centerDateTextX = width - dateTextWidth - 20;
+                    const centerDateTextY = height - 30;
+                    page.drawText(dateText, { x: centerDateTextX, y: centerDateTextY, size: dateTextFontSize, color: rgb(0, 0, 0) });
                 });
                 // Save the modified PDF
                 const modifiedPdfBuffer = await pdfDoc.save();
-                
+
                 auditorDocumentUrl = await uploadToCloudinary(modifiedPdfBuffer).then((result) => {
                     return (result.secure_url)
                 }).catch((err) => {
@@ -197,25 +220,38 @@ router.post("/addAuditor", upload.fields([{ name: 'AuditorImage' }, { name: 'Aud
                 const isPng = logoImageDataUrl.includes('data:image/png');
                 let pdfLogoImage;
                 if (isJpg) {
-                  pdfLogoImage = await pdfDoc.embedJpg(logoImage);
+                    pdfLogoImage = await pdfDoc.embedJpg(logoImage);
                 } else if (isPng) {
-                  pdfLogoImage = await pdfDoc.embedPng(logoImage);
+                    pdfLogoImage = await pdfDoc.embedPng(logoImage);
                 }
                 const firstPage = pdfDoc.insertPage(0);
-                addFirstPage(firstPage, pdfLogoImage, req.user.Company);
-                const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica); 
+                addFirstPage(firstPage, pdfLogoImage, req.user.Company, req.user);
+                const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
                 pdfDoc.getPages().slice(1).forEach(async (page) => {
-                  const { width, height } = page.getSize();
-                  const watermarkText = 'Powered By Feat Technology';
-                  const watermarkFontSize = 20; 
-                  const watermarkTextWidth = (helveticaFont.widthOfTextAtSize(watermarkText, watermarkFontSize));
-                  const centerWatermarkX = width / 2 - watermarkTextWidth / 2;
-                  const centerWatermarkY = height / 2 + 150;
-                  page.drawText(watermarkText, { x: centerWatermarkX, y: centerWatermarkY, fontSize: 20, color: rgb(0, 0, 0), opacity : 0.35 , rotate: degrees(-45) });
+                    page.translateContent(0, -30);
+                    const { width, height } = page.getSize();
+                    const watermarkText = 'Powered By Feat Technology';
+                    const watermarkFontSize = 15;
+                    const watermarkTextWidth = (helveticaFont.widthOfTextAtSize(watermarkText, watermarkFontSize));
+                    const centerWatermarkX = width / 2 - watermarkTextWidth / 2;
+                    const centerWatermarkY = height - 18;
+                    page.drawText(watermarkText, { x: centerWatermarkX, y: centerWatermarkY, size: watermarkFontSize, color: rgb(0, 0, 0) });
+                    const companyText = `${req.user.Company.CompanyName}`;
+                    const companyTextFontSize = 10;
+                    const companyTextWidth = (helveticaFont.widthOfTextAtSize(companyText, companyTextFontSize));
+                    const centerCompanyTextX = width - companyTextWidth - 20;
+                    const centerCompanyTextY = height - 16;
+                    page.drawText(companyText, { x: centerCompanyTextX, y: centerCompanyTextY, size: companyTextFontSize, color: rgb(0, 0, 0) });
+                    const dateText = `Upload Date : ${formatDate(new Date())}`;
+                    const dateTextFontSize = 10;
+                    const dateTextWidth = (helveticaFont.widthOfTextAtSize(dateText, dateTextFontSize));
+                    const centerDateTextX = width - dateTextWidth - 20;
+                    const centerDateTextY = height - 30;
+                    page.drawText(dateText, { x: centerDateTextX, y: centerDateTextY, size: dateTextFontSize, color: rgb(0, 0, 0) });
                 });
                 // Save the modified PDF
                 const modifiedPdfBuffer = await pdfDoc.save();
-                
+
                 approvedAuditorDocumentUrl = await uploadToCloudinary(modifiedPdfBuffer).then((result) => {
                     return (result.secure_url)
                 }).catch((err) => {
@@ -234,9 +270,9 @@ router.post("/addAuditor", upload.fields([{ name: 'AuditorImage' }, { name: 'Aud
                 ApprovedAuditorLetter: approvedAuditorDocumentUrl,
                 CreatedBy: createdBy,
                 CreationDate: new Date(),
-                User : req.user._id,
+                User: req.user._id,
                 Password: CryptoJS.AES.encrypt(req.body.Password, process.env.PASS_CODE).toString(),
-                isAuditor : true
+                isAuditor: true
             });
 
             // Send email to the new user
@@ -279,7 +315,7 @@ router.post("/addAuditor", upload.fields([{ name: 'AuditorImage' }, { name: 'Aud
 router.get("/readAuditor", async (req, res) => {
     try {
 
-        const auditors = await User.find({isAuditor : true}).populate('Department User')
+        const auditors = await User.find({ isAuditor: true }).populate('Department User')
 
         const auditorsToSend = auditors.filter(Obj => Obj.User.Department.equals(req.user.Department));
 

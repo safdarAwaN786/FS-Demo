@@ -2,7 +2,6 @@ import style from './GenerateMWR.module.css'
 import { useEffect, useState } from 'react'
 import axios from "axios";
 import { BsArrowLeftCircle } from 'react-icons/bs';
-import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import Swal from 'sweetalert2';
@@ -15,15 +14,14 @@ function GenerateMWR2() {
         setalert(!alert)
     }
     const [request, setRequest] = useState(null);
-
-    const userToken = Cookies.get('userToken');
+    const user = useSelector(state => state.auth.user);
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
     const idToWatch = useSelector(state => state.idToProcess);
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/getWorkRequestById/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/getWorkRequestById/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
             setRequest(res.data.data);
             dispatch(setLoading(false))
         }).catch(err => {
@@ -36,11 +34,6 @@ function GenerateMWR2() {
         })
     }, [])
     
-
-    const user = useSelector(state => state.auth.user);
-    
-
-    
     const handleDownloadImage = async (imageURL) => {
        try {
            if (imageURL) {
@@ -50,7 +43,7 @@ function GenerateMWR2() {
                    params: {
                        url: imageURL,
                    },
-                   responseType: 'blob', headers: { Authorization: `Bearer ${userToken}` } // Specify the response type as 'blob' to handle binary data
+                   responseType: 'blob', headers: { Authorization: `${user._id}` } // Specify the response type as 'blob' to handle binary data
                });
 
 

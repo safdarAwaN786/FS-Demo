@@ -1,9 +1,7 @@
 import style from './Monthly.module.css'
-import { useNavigate, useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { BsArrowLeftCircle } from 'react-icons/bs'
-import Cookies from 'js-cookie'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateTabData } from '../../redux/slices/tabSlice'
 import { changeId } from '../../redux/slices/idToProcessSlice'
@@ -14,14 +12,13 @@ import Swal from 'sweetalert2'
 function Monthly() {   
 
     const [planToShow, setPlanToShow] = useState(null);
-    const userToken = Cookies.get('userToken');
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
     const idToWatch = useSelector(state => state.idToProcess);
-
+    const user = useSelector(state => state.auth.user);
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readYearlyPlan`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readYearlyPlan`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             const yearlyPlansList = response.data.data;
             setPlanToShow(yearlyPlansList.find((plan) => plan._id === idToWatch))
             dispatch(setLoading(false));
@@ -46,13 +43,9 @@ function Monthly() {
                         dispatch(updateTabData({...tabData, Tab : 'Create Yearly Training Plan'}))
                     }
                 }} />
-
             </div>
-
             <div className={`${style.searchbar} mt-1 `}>
-
                 <div className={style.sec1}>
-
                 </div>
             </div>
             <div className={style.tableParent2}>

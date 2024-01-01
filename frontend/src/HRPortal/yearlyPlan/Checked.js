@@ -4,20 +4,17 @@ import tick from '../../assets/images/tick.svg'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { BsArrowLeftCircle } from 'react-icons/bs'
-import Cookies from 'js-cookie'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateTabData } from '../../redux/slices/tabSlice'
 import { setLoading } from '../../redux/slices/loading'
 import Swal from 'sweetalert2'
-
 
 function Checked() {
     const [monthToShow, setMonthToShow] = useState(null);
     const [monthTrainings, setMonthTrainings] = useState(null);
     const [startIndex, setStartIndex] = useState(0);
     const [endIndex, setEndIndex] = useState(8);
-
-    const userToken = Cookies.get('userToken');
+    const user = useSelector(state => state.auth.user);
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
     const monthName = useSelector(state => state.appData.monthName);
@@ -25,7 +22,7 @@ function Checked() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readYearlyPlan`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readYearlyPlan`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             {
                 const yearlyPlansList = response.data.data;
                 const foundObj = yearlyPlansList.find((plan) => plan._id === idToWatch).Month.find((month) => month.MonthName === monthName);
@@ -42,26 +39,13 @@ function Checked() {
             })
         })
     }, [])
-    console.log(monthToShow);
 
-    const nextPage = () => {
-        setStartIndex(startIndex + 8);
-        setEndIndex(endIndex + 8);
 
-    }
-
-    const backPage = () => {
-        setStartIndex(startIndex - 8);
-        setEndIndex(endIndex - 8);
-    }
 
     const search = (event) => {
         if (event.target.value !== "") {
-            console.log(event.target.value);
-
             const searchedList = monthToShow?.Trainings.filter((obj) => obj.Training?.TrainingName.includes(event.target.value)
             )
-            console.log(searchedList);
             setMonthTrainings(searchedList);
         } else {
             setMonthTrainings(monthToShow?.Trainings)
@@ -139,20 +123,7 @@ function Checked() {
                     }
                 </table>
             </div>
-            {/* <div className={style.Btns}>
-                    {startIndex > 0 && (
-
-                        <button onClick={backPage}>
-                            {'<< '}Back
-                        </button>
-                    )}
-                    {monthToShow?.Trainings?.length > endIndex && (
-
-                        <button onClick={nextPage}>
-                            next{'>> '}
-                        </button>
-                    )}
-                </div> */}
+            
 
         </div>
 

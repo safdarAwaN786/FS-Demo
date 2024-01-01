@@ -22,13 +22,11 @@ function Departments() {
     const [allDataArr, setAllDataArr] = useState(null);
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
-
-
+    const user = useSelector(state => state.auth.user);
 
     useEffect(() => {
-        const userToken = Cookies.get('userToken');
         dispatch(setLoading(true));
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-departments`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-departments`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             // Create a Set to keep track of unique property values
             const uniqueCompanyObjects = new Set();
             // Use reduce to build the new array with distinct property values
@@ -117,9 +115,6 @@ function Departments() {
                                 <td>Company Name</td>
                                 <td>Short Name</td>
                                 <td>Departments</td>
-
-
-
                             </tr>
                             {
                                 depCompaniesList?.map((depCompany, i) => {
@@ -140,8 +135,6 @@ function Departments() {
                                                 height: "40px",
                                                 borderRadius: "50%",
                                                 overflow: "hidden",
-
-
                                                 backgroundImage: `url(${profile})`,
                                                 backgroundSize: 'cover',
                                                 backgroundPosition: 'center',
@@ -154,7 +147,6 @@ function Departments() {
                                                 }} onError={(e) => {
                                                     e.target.style.display = 'none'; // Hide the img tag on error
                                                 }} src={depCompany.Company?.CompanyLogo || profile} alt="Image" />
-
                                             </div> {depCompany.Company?.CompanyName}</td>
                                             <td>{depCompany.Company?.ShortName}</td>
                                             <td> <p onClick={() => {
@@ -162,13 +154,7 @@ function Departments() {
                                                  console.log(depCompany.Company)
                                                 dispatch(changeId(depCompany.Company._id))
                                             }} className={style.click}>View</p></td>
-
-
-
-
-
                                         </tr>
-
                                     )
 
                                 })

@@ -7,11 +7,9 @@ import { FaMinus } from 'react-icons/fa'
 import { BsArrowLeftCircle } from 'react-icons/bs';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import Cookies from 'js-cookie';
 import { setLoading } from '../../redux/slices/loading';
 
 function AddUsers() {
-
 
     const [alert, setalert] = useState(false);
     const [dataToSend, setDataToSend] = useState(null);
@@ -27,11 +25,10 @@ function AddUsers() {
         updatedUsers[index][event.target.name] = event.target.value;
         setUsers(updatedUsers);
     }
-    const userToken = Cookies.get('userToken');
-
+    const user = useSelector(state => state.auth.user);
     useEffect(() => {
         dispatch(setLoading(true));
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-departments`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-departments`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             // Those Companies which have some departments
             setAllDepartments(response.data.data);
             // Create a Set to keep track of unique property values
@@ -64,8 +61,6 @@ function AddUsers() {
     }, [users])
 
 
-
-
     const addUser = () => {
         const updatedUsers = [...users];
         updatedUsers.push({});
@@ -82,9 +77,6 @@ function AddUsers() {
     };
 
 
-    useEffect(() => {
-        console.log(dataToSend);
-    }, [dataToSend])
 
     const alertManager = () => {
         setalert(!alert)
@@ -113,15 +105,12 @@ function AddUsers() {
             const randomIndex = Math.floor(Math.random() * charset.length);
             password += charset.charAt(randomIndex);
         }
-
         // Shuffle the password characters to randomize their positions
         password = password.split('').sort(() => Math.random() - 0.5).join('');
 
         CheckPassword(password, index)
         return password;
     }
-
-
 
 
     function CheckPassword(submittedPassword, index) {
@@ -164,13 +153,10 @@ function AddUsers() {
 
 
     const makeRequest = () => {
-        const userToken = Cookies.get('userToken');
-
         if (dataToSend.Users.length > 0) {
-
             if (dataToSend.Users.filter((obj) => obj.validationMessage !== 'Password is valid!').length === 0) {
                 dispatch(setLoading(true));
-                axios.post(`${process.env.REACT_APP_BACKEND_URL}/create-user`, dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+                axios.post(`${process.env.REACT_APP_BACKEND_URL}/create-user`, dataToSend, { headers: { Authorization: `${user._id}` } }).then((res) => {
                     dispatch(setLoading(false));
                     setDataToSend(null);
                     if (res.data.status === 201) {
@@ -267,76 +253,44 @@ function AddUsers() {
                                             <p></p>
                                         </div>
                                         <div className='border border-dark-subtle'>
-                                            <select onChange={(e) => {
-
+                                            <select className='form-select  form-select-lg' onChange={(e) => {
                                                 const depCompanyObj = JSON.parse(e.target.value);
-
                                                 setSelectedCompany(depCompanyObj);
-
-
                                                 setDataToSend({ ...dataToSend, companyId: depCompanyObj.Company._id })
                                             }} style={{ width: "100%" }} required >
                                                 <option value="" selected disabled>Select Company</option>
                                                 {companies?.map((depCompany) => {
-
                                                     return (
                                                         <option value={JSON.stringify(depCompany)}>{depCompany.Company?.CompanyName}</option>
                                                     )
                                                 })}
-
-
                                             </select>
-
                                         </div>
                                     </div>
-
-
-
-
                                 </div>
                                 <div className={style.sec2}>
                                     <div className={style.inputParent}>
                                         <div className={style.para}>
                                             <p></p>
-
                                         </div>
                                         <div className='border border-dark-subtle'>
-
-
-                                            <select onChange={(e) => {
-
+                                            <select className='form-select  form-select-lg' onChange={(e) => {
                                                 const depObj = JSON.parse(e.target.value);
-
                                                 setSelectedDepartment(depObj);
-
-
                                                 setDataToSend({ ...dataToSend, departmentId: depObj._id })
                                             }} name='DepartmentIndex' style={{ width: "100%" }} required>
                                                 <option value="" selected >Select Department</option>
-
                                                 {departmentsToShow?.map((depObj, i) => {
                                                     console.log(depObj)
                                                     return (
                                                         <option value={JSON.stringify(depObj)}>{depObj.DepartmentName}</option>
                                                     )
                                                 })}
-
-
                                             </select>
-
-
-
-
-
-
-
                                         </div>
                                     </div>
-
                                 </div>
                             </div>
-
-
 
                             {users?.map((user, index) => {
                                 return (
@@ -383,7 +337,7 @@ function AddUsers() {
                                                 }} value={user.Email} name='Email' type='email' className='p-3 bg-light my-3 w-100 border-0' placeholder='Email Addess' required />
                                                 <select onChange={(event) => {
                                                     updateUsers(event, index)
-                                                }} value={user.Role} name='Role' type='text' className='p-3 bg-light my-3 w-100 border-0' required>
+                                                }} value={user.Role} name='Role' type='text' className='p-3 bg-light my-3 w-100 border-0 form-select  form-select-lg' required>
                                                     <option selected disabled>Role</option>
                                                     <option value='Manager'>Manager</option>
                                                     <option value='Executive'>Executive</option>
@@ -418,13 +372,10 @@ function AddUsers() {
                                     <p></p>
                                 </div>
                                 <div className='border w-50 border-dark-subtle'>
-                                    <select className='w-100' name='Department'  >
-                                        <option value="" selected >Added Members</option>
-
+                                    <select className='w-100 form-select  form-select-lg' name='Department'  >
+                                        <option value="" selected >Added Users</option>
                                         {users?.map((user) => {
-
                                             return (
-
                                                 <option disabled>{user.Name}</option>
                                             )
                                         })}

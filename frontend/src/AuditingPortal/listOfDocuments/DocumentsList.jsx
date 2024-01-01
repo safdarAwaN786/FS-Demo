@@ -5,8 +5,6 @@ import add from '../../assets/images/employees/Application Add.svg'
 import { useEffect, useState } from 'react'
 import axios from "axios";
 import Swal from 'sweetalert2'
-import { MdPending } from 'react-icons/md'
-import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { changeId } from '../../redux/slices/idToProcessSlice';
@@ -27,14 +25,14 @@ function DocumentsList() {
     const [disApprove, setDisApprove] = useState(false);
     const [review, setReview] = useState(false);
     const [allDataArr, setAllDataArr] = useState(null);
-
-    const userToken = Cookies.get('userToken');
+    const user = useSelector(state => state.auth.user);
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
-
+    const [departmentsToShow, SetDepartmentsToShow] = useState(null);
+    const [documentToProcess, setDocumentToProcess] = useState(null);
     const refreshData = () => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-documents`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-documents`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             setAllDataArr(response.data.data)
             setDocumentsList(response.data.data.slice(startIndex, endIndex));
             dispatch(setLoading(false))
@@ -48,10 +46,23 @@ function DocumentsList() {
         })
     }
 
-
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-documents`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
+            SetDepartmentsToShow(res.data.data);
+
+        }).catch(err => {
+            dispatch(setLoading(false));
+            Swal.fire({
+                icon: 'error',
+                title: 'OOps..',
+                text: 'Something went wrong, Try Again!'
+            })
+        })
+    }, [])
+    useEffect(() => {
+        dispatch(setLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-documents`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             setAllDataArr(response.data.data)
             setDocumentsList(response.data.data.slice(startIndex, endIndex));
             dispatch(setLoading(false))
@@ -69,28 +80,21 @@ function DocumentsList() {
     const nextPage = () => {
         setStartIndex(startIndex + 8);
         setEndIndex(endIndex + 8);
-
     }
 
     const backPage = () => {
         setStartIndex(startIndex - 8);
         setEndIndex(endIndex - 8);
-
-
     }
 
     useEffect(() => {
-
         setDocumentsList(allDataArr?.slice(startIndex, endIndex))
     }, [startIndex, endIndex])
 
 
     const search = (event) => {
         if (event.target.value !== "") {
-            console.log(event.target.value);
-
             const searchedList = allDataArr.filter((obj) =>
-
                 obj.DocumentId.includes(event.target.value) || obj.DocumentTitle.includes(event.target.value)
             )
             console.log(searchedList);
@@ -100,11 +104,8 @@ function DocumentsList() {
         }
     }
 
-
-
     return (
         <>
-
             <div className={style.subparent}>
 
                 <div className={style.searchbar}>
@@ -193,8 +194,8 @@ function DocumentsList() {
                                             <td >
 
                                                 <p onClick={() => {
-
                                                     setSend(true);
+                                                    setDocumentToProcess(document)
                                                 }} className={style.click}>Send</p>
                                             </td>
                                             <td >
@@ -236,15 +237,12 @@ function DocumentsList() {
                                                 }} className={style.redclick}>View</p>
                                             </td>
                                             {tabData?.Approval && (
-
                                                 <td>
-
                                                     <p onClick={() => {
                                                         if (document.Status === 'Approved' || document.Status === 'Rejected') {
                                                             setDataToShow('Document is already Approved or Rejected!');
                                                             setShowBox(true)
                                                         } else {
-
                                                             setApprove(true);
                                                             setIdForAction(document._id)
                                                         }
@@ -256,20 +254,16 @@ function DocumentsList() {
                                                             setDataToShow(`Document is already ${document.Status}!`);
                                                             setShowBox(true);
                                                         } else {
-
                                                             setDisApprove(true);
                                                             setIdForAction(document._id);
                                                         }
-
                                                     }} style={{
                                                         height: '28px'
                                                     }} className={`btn btn-outline-danger pt-0 px-1`}>Disaprrove</p>
                                                 </td>
                                             )}
                                             {tabData?.Review && (
-
                                                 <td className='ms-4' >
-
                                                     <p onClick={() => {
                                                         if (document.Status === 'Reviewed') {
                                                             setDataToShow('Document is already Reviewed!');
@@ -296,9 +290,7 @@ function DocumentsList() {
                                                 </td>
                                             )}
                                         </tr>
-
                                     )
-
                                 })
                             }
                         </table>
@@ -306,13 +298,11 @@ function DocumentsList() {
                 </div>
                 <div className={style.Btns}>
                     {startIndex > 0 && (
-
                         <button onClick={backPage}>
                             {'<< '}Back
                         </button>
                     )}
                     {allDataArr?.length > endIndex && (
-
                         <button onClick={nextPage}>
                             next{'>> '}
                         </button>
@@ -322,19 +312,13 @@ function DocumentsList() {
 
             {
                 showBox && (
-
                     <div class={style.alertparent}>
                         <div class={style.alert}>
-
                             <p class={style.msg}>{dataToShow}</p>
-
                             <div className={style.alertbtns}>
-
                                 <button onClick={() => {
                                     setShowBox(false);
-
                                 }} className={style.btn2}>OK</button>
-
                             </div>
                         </div>
                     </div>
@@ -348,7 +332,7 @@ function DocumentsList() {
                             <div className={style.alertbtns}>
                                 <button onClick={() => {
                                     dispatch(setLoading(true))
-                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/approve-document`, { id: idForAction }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/approve-document`, { id: idForAction }, { headers: { Authorization: `${user._id}` } }).then(() => {
                                         dispatch(setLoading(false))
                                         refreshData();
                                         Swal.fire({
@@ -366,13 +350,8 @@ function DocumentsList() {
                                             text: 'Something went wrong, Try Again!'
                                         })
                                     })
-
                                     setApprove(false)
-
-                                }
-                                } className={style.btn1}>Approve</button>
-
-
+                                }} className={style.btn1}>Approve</button>
                                 <button onClick={() => {
                                     setApprove(false);
                                 }} className={style.btn2}>Cancel</button>
@@ -390,7 +369,7 @@ function DocumentsList() {
                                 <button onClick={() => {
                                     setReview(false);
                                     dispatch(setLoading(true))
-                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/review-document`, { documentId: idForAction }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/review-document`, { documentId: idForAction }, { headers: { Authorization: `${user._id}` } }).then(() => {
                                         dispatch(setLoading(false))
                                         refreshData();
                                         Swal.fire({
@@ -408,12 +387,7 @@ function DocumentsList() {
                                         })
                                     })
                                     setReview(false)
-
-
-                                }
-                                } className={style.btn1}>Review</button>
-
-
+                                }} className={style.btn1}>Review</button>
                                 <button onClick={() => {
                                     setReview(false);
                                 }} className={style.btn2}>Cancel</button>
@@ -431,7 +405,7 @@ function DocumentsList() {
                                 e.preventDefault();
                                 setDisApprove(false);
                                 dispatch(setLoading(true))
-                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/disapprove-document`, { documentId: idForAction, reason: reason }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/disapprove-document`, { documentId: idForAction, reason: reason }, { headers: { Authorization: `${user._id}` } }).then(() => {
                                     dispatch(setLoading(false))
                                     Swal.fire({
                                         title: 'Success',
@@ -452,8 +426,6 @@ function DocumentsList() {
                                 <textarea onChange={(e) => {
                                     setReason(e.target.value);
                                 }} name="Reason" id="" cols="30" rows="10" placeholder='Comment here' required />
-
-
                                 <div className={`$ mt-3 d-flex justify-content-end `}>
                                     <button type='submit' className='btn btn-danger px-3 py-2 m-3'>Disapprove</button>
                                     <a onClick={() => {
@@ -473,7 +445,7 @@ function DocumentsList() {
                                 e.preventDefault();
                                 setReject(false);
                                 dispatch(setLoading(true))
-                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/reject-document`, { documentId: idForAction, reason: reason }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/reject-document`, { documentId: idForAction, reason: reason }, { headers: { Authorization: `${user._id}` } }).then(() => {
                                     dispatch(setLoading(false))
                                     Swal.fire({
                                         title: 'Success',
@@ -481,8 +453,6 @@ function DocumentsList() {
                                         icon: 'success',
                                         confirmButtonText: 'Go!',
                                     })
-
-
                                     refreshData();
                                 }).catch(err => {
                                     dispatch(setLoading(false));
@@ -496,8 +466,6 @@ function DocumentsList() {
                                 <textarea onChange={(e) => {
                                     setReason(e.target.value);
                                 }} name="Reason" id="" cols="30" rows="10" placeholder='Comment here' required />
-
-
                                 <div className={`$ mt-3 d-flex justify-content-end `}>
                                     <button type='submit' className='btn btn-danger px-3 py-2 m-3'>Reject</button>
                                     <a onClick={() => {
@@ -514,25 +482,58 @@ function DocumentsList() {
                     <div class={style.alertparent}>
                         <div class={`${style.alert} p-3 pt-5`}>
                             <form onSubmit={(e) => {
+                                e.preventDefault();
+                                if (documentToProcess?.SendToDepartments.length > 0) {
+                                    dispatch(setLoading(true))
+                                    axios.put(`${process.env.REACT_APP_BACKEND_URL}/send-form`, documentToProcess, { headers: { Authorization: `${user._id}` } }).then(() => {
+                                        dispatch(setLoading(false))
+                                        setDocumentToProcess(null);
+                                        setSend(false)
+                                        Swal.fire({
+                                            title: 'Success',
+                                            text: 'Sended Successfully',
+                                            icon: 'success',
+                                            confirmButtonText: 'Go!',
 
+                                        })
+
+                                    }).catch(err => {
+                                        dispatch(setLoading(false));
+                                        setSend(false)
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'OOps..',
+                                            text: 'Something went wrong, Try Again!'
+                                        })
+                                    })
+                                } else {
+                                    setSend(false)
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Oops...',
+                                        text: 'Kindly, Mark at least one department!',
+                                        confirmButtonText: 'OK.'
+                                    })
+                                }
                             }}>
-                                <div className='mx-4 my-4 d-inline'>
-
-                                    <input type='checkbox' className='mx-3 my-2 p-2' /><span>Department 1</span>
-                                </div>
-                                <div className='mx-4 my-4 d-inline'>
-
-                                    <input type='checkbox' className='mx-3 my-2 p-2' /><span>Department 2</span>
-                                </div>
-                                <div className='mx-4 my-4 d-inline'>
-
-                                    <input type='checkbox' className='mx-3 my-2 p-2' /><span>Department 3</span>
-                                </div>
-                                <div className='mx-4 my-4 d-inline'>
-
-                                    <input type='checkbox' className='mx-3 my-2 p-2' /><span>Department 4</span>
-                                </div>
-
+                                {departmentsToShow.map((depObj) => {
+                                    return (
+                                        <div className='mx-4 my-4 d-inline'>
+                                            <input type='checkbox' onChange={(e) => {
+                                                const updatedDocument = { ...documentToProcess }
+                                                if (!updatedDocument.SendToDepartments) {
+                                                    updatedDocument.SendToDepartments = []
+                                                }
+                                                if (e.target.checked) {
+                                                    updatedDocument.SendToDepartments.push(depObj._id)
+                                                } else {
+                                                    updatedDocument.SendToDepartments = updatedDocument.SendToDepartments.filter(depId => depId !== depObj._id)
+                                                }
+                                                setDocumentToProcess(updatedDocument)
+                                            }} className='mx-3 mt-2 p-2' /><span>{depObj.DepartmentName}</span>
+                                        </div>
+                                    )
+                                })}
 
                                 <div className={`$ mt-3 d-flex justify-content-end `}>
                                     <button type='submit' className='btn btn-danger px-3 py-2 m-3'>Send</button>

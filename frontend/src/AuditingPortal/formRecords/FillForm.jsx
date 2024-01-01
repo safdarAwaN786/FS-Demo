@@ -1,11 +1,10 @@
 import style from './FillForm.module.css'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import axios from "axios";
 import Swal from 'sweetalert2'
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 import { BsArrowLeftCircle } from 'react-icons/bs';
-import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { setLoading } from '../../redux/slices/loading';
@@ -20,16 +19,13 @@ function FillForm() {
     const [answerData, setAnswerData] = useState(null);
     const [questions, setQuestions] = useState([]);
     const [answers, setAnswers] = useState([]);
-
-    const userToken = Cookies.get('userToken');
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
     const idToWatch = useSelector(state => state.idToProcess);
-    const [isFormValid, setIsFormValid] = useState(true);
-
+    const user = useSelector(state => state.auth.user)
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-form-by-id/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-form-by-id/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
             setDataToSend(res.data.form);
             setAnswerData({ Form: res.data.form._id })
             setQuestions(res.data.form.questions);
@@ -43,23 +39,14 @@ function FillForm() {
             })
         })
     }, [])
-
     useEffect(() => {
         setAnswerData({ ...answerData, answers: answers });
     }, [answers])
 
-
-    useEffect(() => {
-        console.log(answerData);
-    }, [answerData])
-
-
-
     const makeRequest = () => {
-        console.log(answerData);
         if (answerData.answers?.length > 0) {
             dispatch(setLoading(true))
-            axios.post(`${process.env.REACT_APP_BACKEND_URL}/submit-response`, answerData, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/submit-response`, answerData, { headers: { Authorization: `${user._id}` } }).then(() => {
                 dispatch(setLoading(false))
                 setAnswerData(null);
                 Swal.fire({
@@ -67,13 +54,11 @@ function FillForm() {
                     text: 'Submitted Successfully',
                     icon: 'success',
                     confirmButtonText: 'Go!',
-
                 }).then((result) => {
                     if (result.isConfirmed) {
                         dispatch(updateTabData({ ...tabData, Tab: 'Record Keeping' }))
                     }
                 })
-
             }).catch(err => {
                 dispatch(setLoading(false));
                 Swal.fire({
@@ -94,9 +79,7 @@ function FillForm() {
 
     return (
         <>
-
             <div className={style.parent}>
-
                 <div className={`${style.form} mt-5`}>
                     <div className='bg-white px-2    mb-1 '>
                         <BsArrowLeftCircle onClick={(e) => {
@@ -112,7 +95,6 @@ function FillForm() {
                         <div className={style.para}>
                             Fill Form
                         </div>
-
                     </div>
                     <div className={`${style.sec1}  px-3`}>
                         <form encType='multipart/form-data' onSubmit={(event) => {
@@ -127,7 +109,6 @@ function FillForm() {
                                 }
                                 return true; // For other question types or when not required
                             });
-
                             if (!isFormValid) {
                                 Swal.fire({
                                     icon: 'error',
@@ -136,14 +117,9 @@ function FillForm() {
                                     confirmButtonText: 'OK.'
                                 })
                             } else {
-
-                                console.log(answerData);
-
                                 alertManager();
                             }
                         }}>
-
-
                             <div className='w-100'>
                                 <p className='text-black'>Document Type</p>
                                 <div>
@@ -156,14 +132,12 @@ function FillForm() {
                                     <input value={dataToSend?.Department.DepartmentName} className='w-100' name='FormName' type="text" readOnly />
                                 </div>
                             </div>
-
                             <div className='w-100'>
                                 <p className='text-black'>Maintenance Frequency</p>
                                 <div>
                                     <input value={dataToSend?.MaintenanceFrequency} className='w-100' name='FormName' type="text" readOnly />
                                 </div>
                             </div>
-
                             <div className='w-100'>
                                 <p className='text-black'>Form Name</p>
                                 <div>
@@ -173,12 +147,9 @@ function FillForm() {
                             <div className='w-100'>
                                 <p className='text-black'>Form Description</p>
                                 <div>
-
                                     <input value={dataToSend?.FormDescription} className='w-100' name='FormDescription' type="text" readOnly />
                                 </div>
                             </div>
-
-
                             {questions.map((question, index) => {
                                 return (
                                     <div style={{
@@ -191,53 +162,38 @@ function FillForm() {
                                                 <input value={dataToSend?.questions[index]?.questionText} style={{
                                                     borderRadius: '0px'
                                                 }} name='questionText' className='border-bottom border-secondary bg-light mt-2 mb-3 w-100 p-3' readOnly />
-
                                             </div>
-
                                         </div>
-
-
                                         {(questions[index].questionType === 'ShortText') && (
                                             <div className='pe-4'>
                                                 <span>Short Answer :</span>
-
                                                 <input onChange={(e) => {
                                                     const updatedAnswers = [...answers]
                                                     if (!updatedAnswers[index]) {
                                                         updatedAnswers[index] = {};
                                                     }
-
                                                     updatedAnswers[index].question = questions[index]._id;
                                                     updatedAnswers[index].shortTextAnswer = e.target.value;
                                                     setAnswers(updatedAnswers);
-
                                                 }} style={{
                                                     borderRadius: '0px'
                                                 }} className='bg-light border-bottom border-secondary p-1 my-1  w-100' type='text' {...(questions[index].Required ? { required: true } : {})} />
-
                                             </div>
-
                                         )}
                                         {(questions[index].questionType === 'LongText') && (
                                             <div className='pe-4'>
                                                 <span>Long Answer :</span>
                                                 <textarea onChange={(e) => {
-
                                                     const updatedAnswers = [...answers]
                                                     if (!updatedAnswers[index]) {
                                                         updatedAnswers[index] = {};
                                                     }
-
                                                     updatedAnswers[index].question = questions[index]._id;
                                                     updatedAnswers[index].longTextAnswer = e.target.value;
                                                     setAnswers(updatedAnswers);
-
                                                 }} rows={3} name='longTextAnswer' className='w-100 bg-light border-0 p-1 border-bottom border-secondary' {...(questions[index].Required ? { required: true } : {})} />
-
                                             </div>
-
                                         )}
-
                                         {(questions[index].questionType === 'Multiplechoicegrid') && (
                                             <>
                                                 <div className={`${style.gridCover}`}>
@@ -268,7 +224,6 @@ function FillForm() {
                                                                                 borderRadius: '0px'
                                                                             }} className='bg-light border-bottom border-secondary px-2 py-0 d-inline' readOnly />
                                                                         </td>
-
                                                                         {questions[index]?.columns.map((colnum, colIndex) => {
                                                                             return (
                                                                                 <td>
@@ -278,23 +233,18 @@ function FillForm() {
                                                                                             if (!updatedAnswers[index]) {
                                                                                                 updatedAnswers[index] = {};
                                                                                             }
-
                                                                                             updatedAnswers[index].question = questions[index]._id;
                                                                                             if (!updatedAnswers[index].multipleChoiceGridAnswers) {
                                                                                                 updatedAnswers[index].multipleChoiceGridAnswers = [];
                                                                                             }
-
                                                                                             const radioValue = `R${rowIndex}-C${colIndex}`;
-
                                                                                             // Remove all other values from the same row
                                                                                             updatedAnswers[index].multipleChoiceGridAnswers = updatedAnswers[index].multipleChoiceGridAnswers.filter(
                                                                                                 (answer) => !answer.startsWith(`R${rowIndex}-`)
                                                                                             );
-
                                                                                             if (e.target.checked) {
                                                                                                 updatedAnswers[index].multipleChoiceGridAnswers.push(radioValue);
                                                                                             }
-
                                                                                             setAnswers(updatedAnswers);
                                                                                         }}
                                                                                         className='mx-2'
@@ -306,22 +256,17 @@ function FillForm() {
                                                                                         type='radio'
                                                                                         {...(questions[index].Required ? { required: true } : {})}
                                                                                     />
-
                                                                                 </td>
                                                                             )
                                                                         })}
-
                                                                     </tr>
                                                                 )
                                                             })}
                                                         </tbody>
                                                     </table>
                                                 </div>
-
                                             </>
-
                                         )}
-
                                         {(questions[index].questionType === 'Checkboxgrid') && (
                                             <>
                                                 <div className={`${style.gridCover}`}>
@@ -345,35 +290,25 @@ function FillForm() {
                                                         <tbody>
                                                             {questions[index]?.rows?.map((row, rowIndex) => {
                                                                 return (
-
                                                                     <tr>
-
                                                                         <td>
-
                                                                             <span>{rowIndex + 1}.</span>
-
                                                                             <input value={dataToSend?.questions[index].rows[rowIndex].rowTitle} type='text' style={{
                                                                                 borderRadius: '0px'
                                                                             }} className='bg-light border-bottom border-secondary  px-2 py-0 d-inline' readOnly />
                                                                         </td>
-
-
-
                                                                         {questions[index]?.columns.map((colnum, colIndex) => {
                                                                             return (
                                                                                 <td>
-
                                                                                     <input onChange={(e) => {
                                                                                         const updatedAnswers = [...answers]
                                                                                         if (!updatedAnswers[index]) {
                                                                                             updatedAnswers[index] = {};
                                                                                         }
-
                                                                                         updatedAnswers[index].question = questions[index]._id;
                                                                                         if (!updatedAnswers[index].checkboxGridAnswers) {
                                                                                             updatedAnswers[index].checkboxGridAnswers = [];
                                                                                         }
-
                                                                                         if (e.target.checked) {
                                                                                             updatedAnswers[index].checkboxGridAnswers.push(`R${rowIndex}-C${colIndex}`)
                                                                                         } else {
@@ -384,42 +319,30 @@ function FillForm() {
                                                                                             })
                                                                                         }
                                                                                         setAnswers(updatedAnswers);
-
                                                                                     }} className='mx-2' type='checkbox' />
                                                                                 </td>
                                                                             )
                                                                         })}
-
                                                                     </tr>
                                                                 )
                                                             })}
                                                         </tbody>
                                                     </table>
                                                 </div>
-
                                             </>
-
                                         )}
-
-
-
-
                                         {(questions[index].questionType === 'Dropdown') && (
                                             <div className=' d-flex flex-column'>
-
-
                                                 <div className='my-2 d-flex flex-row'>
                                                     <select onChange={(e) => {
                                                         const updatedAnswers = [...answers]
                                                         if (!updatedAnswers[index]) {
                                                             updatedAnswers[index] = {};
                                                         }
-
                                                         updatedAnswers[index].question = questions[index]._id;
                                                         updatedAnswers[index].dropdownAnswer = e.target.value;
                                                         setAnswers(updatedAnswers);
                                                     }} className='w-50 bg-light p-2 border-0 border-bottom border-secondary' {...(questions[index].Required ? { required: true } : {})}>
-
                                                         {questions[index]?.options?.map((option, optindex) => {
                                                             return (
                                                                 <option value={option.optionText}>{option.optionText}</option>
@@ -427,30 +350,18 @@ function FillForm() {
                                                         })}
                                                     </select>
                                                 </div>
-
-
-
-
-
                                             </div>
-
                                         )}
                                         {(questions[index].questionType === 'Checkbox') && (
                                             <div className=' d-flex flex-column'>
-
-
                                                 {questions[index]?.options?.map((option, optindex) => {
                                                     return (
-
                                                         <div className='my-2 d-flex flex-row'>
-
-
                                                             <input onChange={(e) => {
                                                                 const updatedAnswers = [...answers]
                                                                 if (!updatedAnswers[index]) {
                                                                     updatedAnswers[index] = {};
                                                                 }
-
                                                                 updatedAnswers[index].question = questions[index]._id;
                                                                 if (!updatedAnswers[index].CheckboxesAnswers) {
                                                                     updatedAnswers[index].CheckboxesAnswers = [];
@@ -464,7 +375,6 @@ function FillForm() {
                                                                         )
                                                                     })
                                                                 }
-
                                                                 setAnswers(updatedAnswers);
                                                             }} className='mx-2 mt-1' type='checkbox' />                                                            <input type='text' value={dataToSend?.questions[index]?.options[optindex].optionText} style={{
                                                                 borderRadius: '0px'
@@ -472,68 +382,43 @@ function FillForm() {
                                                         </div>
                                                     )
                                                 })}
-
-
-
-
-
                                             </div>
-
                                         )}
                                         {(questions[index].questionType === 'Multiplechoice') && (
                                             <div className=' d-flex flex-column'>
-
-
                                                 {questions[index]?.options?.map((option, optindex) => {
                                                     return (
-
                                                         <div className='my-2 d-flex flex-row'>
-
-
                                                             <input onChange={((e) => {
                                                                 const updatedAnswers = [...answers]
                                                                 if (!updatedAnswers[index]) {
                                                                     updatedAnswers[index] = {};
                                                                 }
-
                                                                 updatedAnswers[index].question = questions[index]._id;
                                                                 updatedAnswers[index].multipleChoiceAnswer = option.optionText;
                                                                 setAnswers(updatedAnswers);
                                                             })} style={{
                                                                 width: '23px'
                                                             }} className='mx-2' type='radio' name={`question-${index}`} {...(questions[index].Required ? { required: true } : {})} />
-
                                                             <input type='text' value={option.optionText} style={{
                                                                 borderRadius: '0px'
                                                             }} name='optionText' className='bg-light border-bottom border-secondary w-50 px-2 py-0 d-inline' readOnly />
                                                         </div>
                                                     )
                                                 })}
-
-
-
-
-
                                             </div>
-
                                         )}
-
-
                                         {questions[index].questionType === 'Linearscale' && (
                                             <div className=' d-flex my-3 flex-column pe-4'>
-
                                                 {answers[index]?.linearScaleAnswer && (
                                                     <span>Selected Value : {answers[index]?.linearScaleAnswer}</span>
                                                 )}
-
                                                 <Slider
-
                                                     onChange={(value) => {
                                                         const updatedAnswers = [...answers]
                                                         if (!updatedAnswers[index]) {
                                                             updatedAnswers[index] = {};
                                                         }
-
                                                         updatedAnswers[index].question = questions[index]._id;
                                                         updatedAnswers[index].linearScaleAnswer = value;
                                                         setAnswers(updatedAnswers);
@@ -542,63 +427,35 @@ function FillForm() {
                                                     max={dataToSend?.questions[index]?.maxValue} // Set your higher value
                                                     step={1} // Set the step size
                                                     {...(questions[index].Required ? { required: true } : {})} />
-
-
-
                                             </div>
-
                                         )}
                                         {questions[index].questionType === 'Date' && (
                                             <div className=' d-flex my-3 flex-column pe-4'>
-
-
-
-
                                                 <input onChange={(e) => {
                                                     const updatedAnswers = [...answers]
                                                     if (!updatedAnswers[index]) {
                                                         updatedAnswers[index] = {};
                                                     }
-
                                                     updatedAnswers[index].question = questions[index]._id;
                                                     updatedAnswers[index].dateAnswer = e.target.value;
                                                     setAnswers(updatedAnswers);
                                                 }} type='date' className='w-50 bg-light p-2 border-0 border-bottom border-secondary' {...(questions[index].Required ? { required: true } : {})} />
-
-
-
                                             </div>
-
                                         )}
                                         {questions[index].questionType === 'Time' && (
                                             <div className=' d-flex my-3 flex-column pe-4'>
-
-
-
-
                                                 <input onChange={(e) => {
                                                     const updatedAnswers = [...answers]
                                                     if (!updatedAnswers[index]) {
                                                         updatedAnswers[index] = {};
                                                     }
-
                                                     updatedAnswers[index].question = questions[index]._id;
                                                     updatedAnswers[index].timeAnswer = e.target.value;
                                                     setAnswers(updatedAnswers);
                                                 }} type='time' className='w-50 bg-light p-2 border-0 border-bottom border-secondary' {...(questions[index].Required ? { required: true } : {})} />
-
-
-
                                             </div>
-
                                         )}
-
-
-
-
                                         <div className='my-2 mt-4 d-flex justify-content-end'>
-
-
                                             <p className='mx-2 mt-1' style={{
                                                 fontFamily: 'Inter',
                                                 color: 'black'
@@ -607,22 +464,15 @@ function FillForm() {
                                                 <input className='ms-3' name='IsPass' type="checkbox" checked={dataToSend?.questions[index].Required} />
                                                 <span className={`${style.slider} ${style.round}`} ></span>
                                             </label>
-
                                         </div>
                                     </div>
                                 )
                             })}
-
-
-
-
-
                             <div className={style.btns}>
                                 <button className='mt-3' type='submit'>Submit</button>
                             </div>
                         </form>
                     </div>
-
                 </div>
             </div>
             {
@@ -636,12 +486,10 @@ function FillForm() {
                                     makeRequest();
                                 }} className={style.btn1}>Submit</button>
                                 <button onClick={alertManager} className={style.btn2}>Cancel</button>
-
                             </div>
                         </div>
                     </div> : null
             }
-
         </>
     )
 }

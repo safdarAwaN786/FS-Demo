@@ -10,7 +10,6 @@ import { AiOutlineLine } from 'react-icons/ai';
 import { FaMinus } from 'react-icons/fa'
 import Select from 'react-select';
 import { BiPlus } from 'react-icons/bi'
-import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { setLoading } from '../../redux/slices/loading';
@@ -23,18 +22,15 @@ function EditForm() {
         setalert(!alert)
     }
     const [questions, setQuestions] = useState([]);
-
-    const userToken = Cookies.get('userToken');
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
     const idToWatch = useSelector(state => state.idToProcess);
-
+    const user = useSelector(state => state.auth.user);
 
     const addQuestion = () => {
         const updatedQuestions = [...questions];
         updatedQuestions.push({ questionType: 'ShortText' });
         setQuestions(updatedQuestions);
-
     };
     const clearLastQuestion = () => {
         if (questions.length > 0) {
@@ -46,7 +42,7 @@ function EditForm() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-form-by-id/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-form-by-id/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
             setDataToSend(res.data.form);
             setQuestions(res.data.form.questions);
             if (departmentsToShow) {
@@ -68,11 +64,10 @@ function EditForm() {
 
 
     const [departmentsToShow, SetDepartmentsToShow] = useState(null);
-    const user = useSelector(state => state.auth?.user);
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
             SetDepartmentsToShow(res.data.data);
             if (questions) {
                 dispatch(setLoading(false))
@@ -114,7 +109,7 @@ function EditForm() {
     const makeRequest = () => {
         if (dataToSend?.questions.length > 0) {
             dispatch(setLoading(true))
-            axios.put(`${process.env.REACT_APP_BACKEND_URL}/update-form`, dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+            axios.put(`${process.env.REACT_APP_BACKEND_URL}/update-form`, dataToSend, { headers: { Authorization: `${user._id}` } }).then(() => {
                 dispatch(setLoading(false))
                 setDataToSend(null);
                 Swal.fire({

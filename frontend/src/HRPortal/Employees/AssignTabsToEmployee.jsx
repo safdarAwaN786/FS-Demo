@@ -4,7 +4,6 @@ import axios from "axios";
 import Swal from 'sweetalert2'
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
-import Cookies from 'js-cookie';
 import { setLoading } from '../../redux/slices/loading';
 
 function AssignTabsToEmployee() {
@@ -33,70 +32,48 @@ function AssignTabsToEmployee() {
     // Tabs from where no functionality will be choosen..
 
     const tabsList1 = [
-        // { Tab: 'Process Records' },
-        // { Tab: 'Monthly Plan A' },
+       
         { Tab: 'Monthly Plan H' },
-        // { Tab: 'Form Records' },
-        // { Tab: 'Conduct Audit' },
-        // { Tab: 'Reports Records' },
-        // { Tab: 'Corrective Action' },
+        
         { Tab: 'Trainings Records' },
         { Tab: 'Planned Trainings' },
-        // { Tab: 'Pending Tasks' },
-        // { Tab: 'Completed Tasks' },
+       
     ]
 
     // Tabs from where only  Creation functionality willl be choosen..
 
     const tabsList2 = [
-        // { Tab: 'Users Details' },
-        // { Tab: 'Departments' },
-        // { Tab: 'Companies' },
-        // { Tab: 'Generate MRM' },
-        // { Tab: 'Send Notification' },
-        // { Tab: 'Participants' },
-        // { Tab: 'Processes' },
-        // { Tab: 'Internal Auditors' },
-        // { Tab: 'Yearly Plan A' },
+       
         { Tab: 'Yearly Plan H' },
         { Tab: 'Employee Registration' },
         { Tab: 'Trainings' },
         { Tab: 'Trainers' },
-        // { Tab: 'Machinery' },
-        // { Tab: 'Measuring Devices' },
+       
     ]
     // Tabs where Creation and Approval functionality will be choosen
 
     const tabsList3 = [
         {Tab : 'Personal Rec'},
-        // {Tab : 'MWR Requests'},
+       
     ]
 
 
     // Tabs from where Creation, Approval, Review functionality willl be choosen..
 
     const tabsList4 = [
-        // { Tab: 'Change Requests' },
-        // { Tab: 'Upload Document' },
+        
     ]
 
 
     // Tabs from where   Creation, Approval and Edit functionality willl be choosen..
     const tabsList5 = [
-        // { Tab: 'Conduct HACCP' },
-        // { Tab: 'Process Details' },
-        // { Tab: 'HACCP Teams' },
-        // { Tab: 'Product Details' },
-        // { Tab: 'Checklist' },
-        // { Tab: 'Decision Tree' },
-        // { Tab: 'Food Safety Plan' },
+       
     ]
 
     // Tabs from where   Creation, Approval, Review and Edit functionality willl be choosen..
 
     const tabsList6 = [
-        // { Tab: 'List of Documents' },
-        // { Tab: 'List of Forms' },
+        
     ]
 
 
@@ -114,21 +91,11 @@ function AssignTabsToEmployee() {
     }, [selectedTabsArr])
 
 
-    useEffect(() => {
-        console.log(dataToSend);
-    }, [dataToSend])
-
-
-
-
-
 
     const makeRequest = () => {
-        const userToken = Cookies.get('userToken');
-
         if (dataToSend.Tabs.length > 0) {
             dispatch(setLoading(true));
-            axios.patch(`${process.env.REACT_APP_BACKEND_URL}/assign-tabs/${idToWatch}`, dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+            axios.patch(`${process.env.REACT_APP_BACKEND_URL}/assign-tabs/${idToWatch}`, dataToSend, { headers: { Authorization: `${user._id}` } }).then(() => {
                 dispatch(setLoading(true));
                 setDataToSend(null);
                 Swal.fire({
@@ -162,9 +129,6 @@ function AssignTabsToEmployee() {
             })
         }
     }
-
-
-
 
 
 

@@ -1,11 +1,8 @@
 
 import style from './AddPlan.module.css'
-
 import { useEffect, useState } from 'react'
 import axios from "axios";
-import { useNavigate } from 'react-router-dom'
 import Swal from 'sweetalert2'
-import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { setLoading } from '../../redux/slices/loading';
 
@@ -15,7 +12,6 @@ function AddPlan() {
     const [alert, setalert] = useState(false);
     const [yearlyPlans, setYearlyPlans] = useState(null);
     const [monthsToShow, setMonthsToShow] = useState(null);
-    const userToken = Cookies.get('userToken');
     const [trainings, setTrainings] = useState(null);
     const [trainers, setTrainers] = useState(null);
     const [selectedPlan, setSelectedPlan] = useState(null);
@@ -25,7 +21,7 @@ function AddPlan() {
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
             setDepartmentsToShow(res.data.data);
             if(trainings && yearlyPlans && trainers){
                 dispatch(setLoading(false))
@@ -90,7 +86,7 @@ function AddPlan() {
 
     useEffect(() => {
         dispatch(setLoading(true));
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readTraining`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readTraining`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             setTrainings(response.data.data);
             if(departmentsToShow && yearlyPlans && trainers){
                 dispatch(setLoading(false))
@@ -103,7 +99,7 @@ function AddPlan() {
                 text : 'Something went wrong, Try Again!'
             })
         });
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readYearlyPlan`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readYearlyPlan`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             setYearlyPlans(response.data.data);
             if(departmentsToShow && trainings && trainers){
                 dispatch(setLoading(false))
@@ -117,7 +113,7 @@ function AddPlan() {
             })
         })
 
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readTrainer`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readTrainer`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             setTrainers(response.data.data);
             if(departmentsToShow && yearlyPlans && trainings){
                 dispatch(setLoading(false))
@@ -136,7 +132,7 @@ function AddPlan() {
     const makeRequest = () => {
         if (planData) {
             dispatch(setLoading(true));
-            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addMonthlyPlan`, planData, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addMonthlyPlan`, planData, { headers: { Authorization: `${user._id}` } }).then(() => {
                 dispatch(setLoading(false));
                 setPlanData(null);
                 setDataToSend(null);
@@ -197,36 +193,27 @@ function AddPlan() {
                                     <p>Year : </p>
                                 </div>
                                 <div>
-                                    <select onChange={(e) => {
+                                    <select className='form-select  form-select-lg' onChange={(e) => {
                                         const choosenPlan = yearlyPlans.find((plan) => plan._id === e.target.value); // Find the selected plan object 
                                         console.log(choosenPlan);
                                         setSelectedPlan(choosenPlan);
                                         setDataToSend({ ...dataToSend, YearlyTrainingPlan: e.target.value, Year: choosenPlan.Year })
-
                                     }} placeholder='Choose year' style={{ width: "100%" }} name='Month' required>
                                         <option value="" selected disabled>Choose Year</option>
-
                                         {yearlyPlans?.map((plan) => {
                                             return (
-
                                                 <option value={plan._id}>{plan.Year}</option>
                                             )
                                         })}
-
-
-
                                     </select>
-
                                 </div>
                             </div>
-
-
                             <div className={style.inputParent}>
                                 <div className={style.para}>
                                     <p>Month : </p>
                                 </div>
                                 <div>
-                                    <select value={dataToSend?.Month === null ? 'Choose Month' : dataToSend?.Month} onChange={(e) => {
+                                    <select className='form-select  form-select-lg' value={dataToSend?.Month === null ? 'Choose Month' : dataToSend?.Month} onChange={(e) => {
                                         setDataToSend({ ...dataToSend, Month: e.target.value })
                                     }} style={{ width: "100%" }} name='Month' required>
                                         <option value="" selected>Choose Month</option>
@@ -247,30 +234,25 @@ function AddPlan() {
                                     <p>Date : </p>
                                 </div>
                                 <div>
-                                    <select onChange={(e) => {
+                                    <select className='form-select  form-select-lg' onChange={(e) => {
                                         setDataToSend({ ...dataToSend, Date: e.target.value })
                                     }} name='Date' style={{ width: "100%" }} required >
                                         <option value="" selected></option>
 
                                         {daysNums?.map((dayNum) => {
                                             return (
-
                                                 <option value={dayNum}>{dayNum}</option>
                                             )
                                         })}
-
-
                                     </select>
-
                                 </div>
                             </div>
-
                             <div className={style.inputParent}>
                                 <div className={style.para}>
                                     <p>Department : </p>
                                 </div>
                                 <div>
-                                    <select onChange={(e) => {
+                                    <select className='form-select  form-select-lg' onChange={(e) => {
                                         setDataToSend({ ...dataToSend, DepartmentText: e.target.value })
                                     }} name='DepartmentText' style={{ width: "100%" }} required >
                                         <option value="" selected disabled>Choose Department</option>
@@ -279,9 +261,7 @@ function AddPlan() {
                                                 <option value={depObj.DepartmentName}>{depObj.DepartmentName}</option>
                                             )
                                         })}
-
                                     </select>
-
                                 </div>
                             </div>
 
@@ -292,7 +272,7 @@ function AddPlan() {
                                     <p>Trainer</p>
                                 </div>
                                 <div>
-                                    <select onChange={(e) => {
+                                    <select className='form-select  form-select-lg' onChange={(e) => {
                                         setDataToSend({ ...dataToSend, [e.target.name]: e.target.value })
                                     }} name='Trainer' style={{ width: "100%" }} required >
                                         <option value="" selected disabled>Choose Trainer</option>
@@ -314,29 +294,20 @@ function AddPlan() {
                                     <p>Training : </p>
                                 </div>
                                 <div>
-                                    <select
-                                        onChange={(e) => {
-
-
-
+                                    <select className='form-select  form-select-lg' onChange={(e) => {
                                             setMonthsToShow(selectedPlan.Month.filter((monthObj) => {
                                                 return (
                                                     monthObj.Trainings.find((training) => training.Training._id === e.target.value)
                                                 )
                                             }))
-
                                             setDataToSend({ ...dataToSend, Training: e.target.value, Month: null });
-
                                         }}
                                         name='Training'
                                         style={{ width: "100%" }}
                                         required>
-
                                         <option value="" selected disabled>Select Training</option>
                                         {selectedPlan?.Month.map((obj) => {
-
                                             return obj.Trainings.map((training) => {
-
                                                 return (
                                                     <option key={training.Training._id} value={training.Training._id}>{training.Training.TrainingName}</option>
                                                 )
@@ -345,8 +316,6 @@ function AddPlan() {
                                     </select>
                                 </div>
                             </div>
-
-
                             <div className={style.inputParent}>
                                 <div className={style.para}>
                                     <p>Venue</p>

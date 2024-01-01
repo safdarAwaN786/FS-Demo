@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from 'react'
 import axios from "axios";
 import Swal from 'sweetalert2'
 import { BsArrowLeftCircle } from 'react-icons/bs';
-import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { setLoading } from '../../redux/slices/loading';
@@ -16,7 +15,6 @@ function UpdateConductHACCP() {
     const [alert, setalert] = useState(false);
     const [teamsToShow, setTeamsToShow] = useState(null);
     const [processesToShow, setProcessesToShow] = useState(null);
-    const userToken = Cookies.get('userToken')
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
     const [selectedProcess, setSelectedProcess] = useState(null);
@@ -28,7 +26,7 @@ function UpdateConductHACCP() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
             SetDepartmentsToShow(res.data.data);
             if(processesToShow && teamsToShow){
                 dispatch(setLoading(false))
@@ -45,7 +43,7 @@ function UpdateConductHACCP() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-haccp-teams`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-haccp-teams`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             setTeamsToShow(response.data.data);
             if(processesToShow, departmentsToShow){
                 dispatch(setLoading(false))
@@ -59,7 +57,7 @@ function UpdateConductHACCP() {
             })
         })
 
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-processes`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-processes`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             setProcessesToShow(response.data.data);
             if(teamsToShow && departmentsToShow){
                 dispatch(setLoading(false))
@@ -95,7 +93,7 @@ function UpdateConductHACCP() {
 
     useEffect(()=>{
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-conduct-haccp/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res)=>{
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-conduct-haccp/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((res)=>{
             setDataToSend(res.data.data);
             if(processesToShow && departmentsToShow && processesToShow){
                 dispatch(setLoading)
@@ -145,18 +143,13 @@ function UpdateConductHACCP() {
 
     const makeRequest = () => {
         if (dataToSend) {
-
-            axios.put(`${process.env.REACT_APP_BACKEND_URL}/update-conduct-haccp/${idToWatch}`, dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
-                console.log("request made !");
+            axios.put(`${process.env.REACT_APP_BACKEND_URL}/update-conduct-haccp/${idToWatch}`, dataToSend, { headers: { Authorization: `${user._id}` } }).then(() => {
                 setDataToSend(null);
-
-
                 Swal.fire({
                     title: 'Success',
                     text: 'Submitted Successfully',
                     icon: 'success',
                     confirmButtonText: 'Go!',
-
                 }).then((result) => {
                     if (result.isConfirmed) {
                         dispatch(updateTabData({ ...tabData, Tab: 'Conduct Risk Assessment' }))
@@ -164,13 +157,11 @@ function UpdateConductHACCP() {
                 })
 
             }).catch((error) => {
-
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
                     text: 'Try filling data again',
                     confirmButtonText: 'OK.'
-
                 })
             })
         } else {
@@ -186,8 +177,6 @@ function UpdateConductHACCP() {
     return (
         <>
             <div className={`${style.parent} mx-auto`}>
-
-
                 <div className={`${style.subparent} mx-2 mx-sm-4 mt-5 mx-lg-5`}>
                     <div className='d-flex flex-row bg-white px-lg-5 mx-lg-5 mx-3 px-2 py-2'>
                         <BsArrowLeftCircle
@@ -222,18 +211,14 @@ function UpdateConductHACCP() {
                                         <div style={{
                                             border: '1px solid silver'
                                         }}>
-                                            <select name='DocumentType' value={dataToSend?.DocumentType} onChange={(e) => {
+                                            <select className='form-select  form-select-lg' name='DocumentType' value={dataToSend?.DocumentType} onChange={(e) => {
                                                 setDataToSend({ ...dataToSend, [e.target.name]: e.target.value, });
-
-                                            }} style={{ width: "100%" }} required >
-                                                
+                                            }} style={{ width: "100%" }} required >          
                                                 <option value="Manuals">Manuals</option>
                                                 <option value="Procedures">Procedures</option>
                                                 <option value="SOPs">SOPs</option>
                                                 <option value="Forms">Forms</option>
-
                                             </select>
-
                                         </div>
                                     </div>
 
@@ -291,7 +276,7 @@ function UpdateConductHACCP() {
                                         <div style={{
                                             border: '1px solid silver'
                                         }}>
-                                            <select name='Department' value={dataToSend?.Department.DepartmentName} onChange={(e) => {
+                                            <select className='form-select  form-select-lg' name='Department' value={dataToSend?.Department.DepartmentName} onChange={(e) => {
                                                 setDataToSend({ ...dataToSend, [e.target.name]: e.target.value });
                                             }} style={{ width: "100%" }} required>
                                                 {/* <option value="" selected disabled>Choose Department</option> */}
@@ -316,7 +301,7 @@ function UpdateConductHACCP() {
                                             <div style={{
                                                 border: '1px solid silver'
                                             }}>
-                                                <select name='Process' value={dataToSend?.Process?.ProcessName} onChange={(e) => {
+                                                <select className='form-select  form-select-lg' name='Process' value={dataToSend?.Process?.ProcessName} onChange={(e) => {
                                                     setSelectedProcess(JSON.parse(e.target.value))
                                                     setDataToSend({ ...dataToSend, [e.target.name]: JSON.parse(e.target.value)._id });
                                                 }} style={{ width: "100%" }} required>

@@ -10,38 +10,34 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import Slider from 'rc-slider';
 import { setLoading } from '../../redux/slices/loading';
+import html2pdf from 'html2pdf.js';
 
+const formatDate = (date) => {
+    const newDate = new Date(date);
+    const formatDate = newDate.toLocaleDateString('en-GB', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+    });
+    return formatDate;
+}
 
 
 function ViewAudit() {
 
     const [dataToSend, setDataToSend] = useState({})
     const [finalFormData, setFinalFormData] = useState(null);
-    const [screenWidth, setScreenWidth] = useState(window.innerWidth);
     const [checklistData, setChecklistData] = useState(null);
     const [alert, setalert] = useState(false);
-    const [clickedIndex, setClickedIndex] = useState(null);
     const [answers, setAnswers] = useState([]);
     const [auditData, setAuditData] = useState(null);
-    const [questions, setQuestions] = useState([]);
-
+    const user = useSelector(state => state.auth?.user);
     const userToken = Cookies.get('userToken');
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
     const idToWatch = useSelector(state => state.idToProcess);
 
-    useEffect(() => {
-        const handleResize = () => {
-            setScreenWidth(window.innerWidth);
-        };
 
-        window.addEventListener('resize', handleResize);
-
-        // Remove the event listener when the component unmounts
-        return () => {
-            window.removeEventListener('resize', handleResize);
-        };
-    }, []);
 
     const alertManager = () => {
         setalert(!alert)
@@ -49,10 +45,11 @@ function ViewAudit() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-conduct-audit-by-auditId/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-conduct-audit-by-auditId/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             console.log(response.data.data);
             setChecklistData(response.data.data.Checklist);
             setAuditData(response.data.data);
+            setDataToSend(response.data.data);
             setAnswers(response.data.data.Answers);
             dispatch(setLoading(false))
         }).catch(err => {
@@ -68,8 +65,6 @@ function ViewAudit() {
         setAuditData({ ...auditData, Answers: answers });
     }, [answers])
 
-
-    const user = useSelector(state => state.auth.user);
     
     const handleDownloadImage = async (imageURL) => {
         try {
@@ -80,7 +75,7 @@ function ViewAudit() {
                     params: {
                         url: imageURL,
                     },
-                    responseType: 'blob', headers: { Authorization: `Bearer ${userToken}` } // Specify the response type as 'blob' to handle binary data
+                    responseType: 'blob', headers: { Authorization: `${user._id}` } // Specify the response type as 'blob' to handle binary data
                 });
 
 
@@ -120,70 +115,89 @@ function ViewAudit() {
 
     };
 
+    const downloadPDF = async () => {
+        var element = document.getElementById('printable');
+        var opt = {
+            margin: [1.3, 0, 0, 0],
+            filename: `${user.Department.DepartmentName}-doc.pdf`,
+            enableLinks: false,
+            pagebreak: { mode: 'avoid-all' },
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 4 },
+            jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+        };
 
-    useEffect(() => {
-        console.log(auditData);
-    }, [auditData])
+        html2pdf().from(element).set(opt).toPdf().get('pdf').then(async function (pdf) {
+            pdf.insertPage(1);
 
+            var totalPages = pdf.internal.getNumberOfPages();
+            //print current pdf width & height to console
+            console.log("getHeight:" + pdf.internal.pageSize.getHeight());
+            console.log("getWidth:" + pdf.internal.pageSize.getWidth());
+            for (var i = 1; i <= totalPages; i++) {
+                pdf.setPage(i);
+                pdf.setFillColor(0, 0, 0);
+                if (i === 1) {
+                    try {
+                        console.log(user.Company.CompanyLogo);
+                        const response = await fetch(user.Company.CompanyLogo);
+                        const blob = await response.blob();
+                        const imageBitmap = await createImageBitmap(blob);
+                        // create a canvas element and draw the image bitmap on it
+                        const canvas = document.createElement('canvas');
+                        canvas.width = imageBitmap.width;
+                        canvas.height = imageBitmap.height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(imageBitmap, 0, 0);
+                        // get the data URL of the canvas
+                        const dataURL = canvas.toDataURL('image/jpeg');
+                        // pass the data URL to the pdf.addImage method
+                        pdf.addImage(dataURL, 'JPEG', (pdf.internal.pageSize.getWidth() / 2) - 1.5, 2.5, 3, 3);
+                        pdf.setFontSize(25);
+                        pdf.text(`${user.Company.CompanyName}`, (pdf.internal.pageSize.getWidth() / 2) - 1.5, (pdf.internal.pageSize.getHeight() / 2));
+                        pdf.text(`${user.Company.Address}`, (pdf.internal.pageSize.getWidth() / 2) - 1.5, (pdf.internal.pageSize.getHeight() / 2) + 0.5);
+                        pdf.setFontSize(15);
+                        pdf.setLineWidth(0.1); // Example line width
+                        pdf.line(0.1, (pdf.internal.pageSize.getHeight() / 2) + 1, pdf.internal.pageSize.getWidth() - 0.2, (pdf.internal.pageSize.getHeight() / 2) + 1)
+                        pdf.text("Document Id", 1, (pdf.internal.pageSize.getHeight() / 2) + 1.5);
+                        pdf.text(`${dataToSend.DocumentId}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 1.5);
+                        pdf.text("Created By", 1, (pdf.internal.pageSize.getHeight() / 2) + 1.8);
+                        pdf.text(`${dataToSend.CreatedBy}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 1.8);
+                        pdf.text("Creation Date", 1, (pdf.internal.pageSize.getHeight() / 2) + 2.1);
+                        pdf.text(`${formatDate(dataToSend.CreationDate)}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 2.1);
+                        pdf.text("Revision Number", 1, (pdf.internal.pageSize.getHeight() / 2) + 2.4);
+                        pdf.text(`${dataToSend.RevisionNo}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 2.4);
+                        if (dataToSend.Status == 'Approved') {
 
-    const makeRequest = () => {
-        console.log(finalFormData)
-        if (finalFormData) {
-            dispatch(setLoading(true))
-            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addConductAudit`, finalFormData, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
-                console.log("request made !");
-                dispatch(setLoading(false))
-                Swal.fire({
-                    title: 'Success',
-                    text: 'Submitted Successfully',
-                    icon: 'success',
-                    confirmButtonText: 'Go!',
+                            pdf.text("Approved By", 1, (pdf.internal.pageSize.getHeight() / 2) + 2.7);
+                            pdf.text(`${dataToSend.ApprovedBy}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 2.7);
+                            pdf.text("Approval Date", 1, (pdf.internal.pageSize.getHeight() / 2) + 3.0);
+                            pdf.text(`${formatDate(dataToSend.ApprovalDate)}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 3.0);
+                        }
+                        if (dataToSend.ReviewedBy) {
 
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        dispatch(updateTabData({ ...tabData, Tab: 'Conduct Audit' }))
+                            pdf.text("Reviewed By", 1, (pdf.internal.pageSize.getHeight() / 2) + 3.3);
+                            pdf.text(`${dataToSend.ReviewedBy}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 3.3);
+                            pdf.text("Reviewed Date", 1, (pdf.internal.pageSize.getHeight() / 2) + 3.6);
+                            pdf.text(`${formatDate(dataToSend.ReviewDate)}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 3.6);
+                        }
+                    } catch (error) {
+                        console.log(error);
                     }
-                })
+                } else {
+                    pdf.setFontSize(15)
+                    pdf.text('Powered By Feat Technology', (pdf.internal.pageSize.getWidth() / 2) - 1.3, 0.5);
+                    pdf.setFontSize(10);
+                    pdf.text(`${user.Company.CompanyName}`, pdf.internal.pageSize.getWidth() - 2, 0.3);
+                    pdf.text('Audit', pdf.internal.pageSize.getWidth() - 2, 0.5);
+                    pdf.text(`${dataToSend.DocumentId}`, pdf.internal.pageSize.getWidth() - 2, 0.7);
+                    pdf.text(`Revision No :${dataToSend.RevisionNo}`, pdf.internal.pageSize.getWidth() - 2, 0.9);
+                    pdf.text(`Creation : ${formatDate(dataToSend.CreationDate)}`, pdf.internal.pageSize.getWidth() - 2, 1.1);
+                }
+            }
+        }).save();
 
-            }).catch(err => {
-                dispatch(setLoading(false));
-                Swal.fire({
-                    icon: 'error',
-                    title: 'OOps..',
-                    text: 'Something went wrong, Try Again!'
-                })
-            })
-        } else {
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Try filling data again',
-                confirmButtonText: 'OK.'
-            })
-        }
-    }
-
-    const gradingSystem = [
-        { value: '1', label: <div>1</div> },
-        { value: '2', label: <div>2</div> },
-        { value: '3', label: <div>3</div> },
-        { value: '4', label: <div>4</div> },
-        { value: '5', label: <div>5</div> },
-        { value: '6', label: <div>6</div> },
-        { value: '7', label: <div>7</div> },
-        { value: '8', label: <div>8 </div> },
-        { value: '9', label: <div>9</div> },
-        { value: '10', label: <div>10</div> },
-    ]
-    const dropdown = [
-        { value: 'Conform', label: <div>Conform</div> },
-        { value: 'Minor NC', label: <div>Minor NC</div> },
-        { value: 'Major NC', label: <div>Major NC</div> },
-        { value: 'Critical NC', label: <div>Critical NC</div> },
-        { value: 'Observation', label: <div>Observation</div> },
-
-    ]
-
+    };
 
 
     return (
@@ -216,7 +230,7 @@ function ViewAudit() {
                         alertManager();
 
                     }}>
-                        <div className={`${style.formDivider} flex-column justify-content-center`}>
+                        <div id='printable' className={`${style.formDivider} flex-column justify-content-center`}>
                             {answers?.map((answer, index) => {
                                 return (
                                     <div style={{
@@ -362,49 +376,14 @@ function ViewAudit() {
                                     </div>
                                 )
                             })}
-
-                            {/* <div className='d-flex flex-row mx-auto'>
-    <a onClick={addQuestion} className='btn btn-outline-danger my-4 fs-4 w-100'>Add Question</a>
-    {questions.length > 0 && (
-        <a style={{
-            borderRadius: '100px',
-            width: '40px',
-            height: '40px',
-        }} onClick={clearLastQuestion} className='btn  btn-outline-danger mx-4 my-auto pt-1  '><FaMinus /></a>
-    )}
-</div> */}
                         </div>
-
-
-
-
-
-
-
                     </form>
+                    <div className={`${style.btn} px-lg-4 px-2 d-flex justify-content-center`}>
+                        <button onClick={downloadPDF} type='button' >Download</button>
+                    </div>
                 </div>
             </div>
-            {
-                alert ?
-                    <div class={style.alertparent}>
-                        <div class={style.alert}>
-                            <p class={style.msg}>Do you want to submit this information?</p>
-                            <div className={style.alertbtns}>
-                                <button onClick={() => {
-                                    alertManager();
-                                    makeRequest();
-
-                                }
-                                } className={style.btn1}>Submit</button>
-
-
-                                <button onClick={alertManager} className={style.btn2}>Cancel</button>
-
-                            </div>
-                        </div>
-                    </div> : null
-            }
-
+            
         </>
     )
 }

@@ -1,17 +1,12 @@
 import style from './UsersList.module.css'
 import Search from '../../assets/images/employees/Search.svg'
-import add from '../../assets/images/employees/Application Add.svg'
-import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 import { useEffect, useState } from 'react'
 import axios from "axios";
 import Swal from 'sweetalert2';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { changeId } from '../../redux/slices/idToProcessSlice';
-import Cookies from 'js-cookie';
 import { setLoading } from '../../redux/slices/loading';
-
-
 
 function UsersList() {
     const [alert, setalert] = useState(false);
@@ -20,15 +15,8 @@ function UsersList() {
     const [showBox, setShowBox] = useState(false);
     const [passwordVisible, setPasswordVisible] = useState(false); // State to control password visibility
     const [selectedUser, setSelectedUser] = useState(null); // State to keep track of the selected user
-
-    // Function to toggle password visibility for a specific user
-    const togglePasswordVisibility = (userIndex) => {
-        if (selectedUser === userIndex) {
-            setSelectedUser(null); // Hide the password if it's already visible
-        } else {
-            setSelectedUser(userIndex); // Show the password for the selected user
-        }
-    };
+    const user = useSelector(state => state.auth.user);
+  
     const alertManager = () => {
         setalert(!alert)
     }
@@ -37,15 +25,11 @@ function UsersList() {
     const dispatch = useDispatch()
     const [startIndex, setStartIndex] = useState(0);
     const [endIndex, setEndIndex] = useState(8);
-    const [idForAction, setIdForAction] = useState(null);
     const [allDataArr, setAllDataArr] = useState(null);
-    const [usersObj, setUsersObj] = useState(null)
     const idToWatch = useSelector(state => state.idToProcess);
-
-    const userToken = Cookies.get('userToken');
     useEffect(() => {
         dispatch(setLoading(true));
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-usersByDepartment/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-usersByDepartment/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             dispatch(setLoading(false));
             setAllDataArr(response.data.data);
             setUsersList(response.data.data.slice(startIndex, endIndex));
@@ -61,7 +45,7 @@ function UsersList() {
 
     const refreshData = () => {
         dispatch(setLoading(true));
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-usersByDepartment/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-usersByDepartment/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             dispatch(setLoading(false))
             setAllDataArr(response.data.data);
             setUsersList(response.data.data.slice(startIndex, endIndex));
@@ -163,22 +147,7 @@ function UsersList() {
                                             <td>{user.PhoneNo}</td>
                                             <td>{user.Email}</td>
                                             <td>{user.UserName}</td>
-                                            {/* <td> {selectedUser === i ? (
-                                                user.Password // Show the password if selectedUser matches the current user index
-                                            ) : (
-                                                '********' // Show asterisks by default
-                                            )}
-                                                {selectedUser === i ? (
-                                                    <AiFillEyeInvisible style={{
-                                                        cursor: 'pointer'
-                                                    }} className='fs-4' onClick={() => togglePasswordVisibility(i)} />
-                                                ) : (
-
-                                                    <AiFillEye style={{
-                                                        cursor: 'pointer'
-                                                    }} className='fs-4' onClick={() => togglePasswordVisibility(i)} />
-                                                )}
-                                            </td> */}
+                                           
                                             <td >
                                                 <p onClick={() => {
                                                     setUserTabs(user.Tabs);
@@ -278,11 +247,8 @@ function UsersList() {
                             <p class={style.msg}>Do you want to stop  the access for this user?</p>
                             <div className={style.alertbtns}>
                                 <button onClick={() => {
-                                    const userToken = Cookies.get('userToken');
-
-                                    console.log(userToken)
                                     alertManager();
-                                    axios.patch(`/suspend-user/${userIdForAccess}`, null, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+                                    axios.patch(`/suspend-user/${userIdForAccess}`, null, { headers: { Authorization: `${user._id}` } }).then((res) => {
                                         refreshData();
                                         Swal.fire({
                                             title: 'Success',
@@ -317,11 +283,8 @@ function UsersList() {
                             <p class={style.msg}>Do you want to Allow  the access for this user?</p>
                             <div className={style.alertbtns}>
                                 <button onClick={() => {
-                                    const userToken = Cookies.get('userToken');
-
-                                    console.log(userToken)
                                     setalert2(false);
-                                    axios.patch(`/reassign-access/${userIdForAccess}`, null, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+                                    axios.patch(`/reassign-access/${userIdForAccess}`, null, { headers: { Authorization: `${user._id}` } }).then((res) => {
                                         refreshData();
                                         Swal.fire({
                                             title: 'Success',

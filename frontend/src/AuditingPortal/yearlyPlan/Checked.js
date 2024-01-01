@@ -4,7 +4,6 @@ import tick from '../../assets/images/tick.svg'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { BsArrowLeftCircle } from 'react-icons/bs'
-import Cookies from 'js-cookie'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateTabData } from '../../redux/slices/tabSlice'
 import { setLoading } from '../../redux/slices/loading'
@@ -20,14 +19,13 @@ function AuditingChecked() {
     const months = ["January", "Febraury", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
     const [startIndex, setStartIndex] = useState(0);
     const [endIndex, setEndIndex] = useState(8);
-
-    const userToken = Cookies.get('userToken')
+    const user = useSelector(state => state.auth.user);
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readYearlyAuditPlanById/${planId}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readYearlyAuditPlanById/${planId}`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             setPlanToShow(response.data.data);
             setPlanProcesses(response.data.data.Selected);
             dispatch(setLoading(false))
@@ -126,20 +124,7 @@ function AuditingChecked() {
                     }
                 </table>
             </div>
-            {/* <div className={style.Btns}>
-                    {startIndex > 0 && (
-
-                        <button onClick={backPage}>
-                            {'<< '}Back
-                        </button>
-                    )}
-                    {monthToShow?.Trainings?.length > endIndex && (
-
-                        <button onClick={nextPage}>
-                            next{'>> '}
-                        </button>
-                    )}
-                </div> */}
+           
 
         </div>
 

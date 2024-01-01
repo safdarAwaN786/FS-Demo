@@ -1,11 +1,9 @@
 import style from './YearlyPlan.module.css'
 import Search from '../../assets/images/employees/Search.svg'
 import add from '../../assets/images/employees/Application Add.svg'
-import { useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { useDispatch, useSelector } from 'react-redux'
-import Cookies from 'js-cookie'
 import { updateTabData } from '../../redux/slices/tabSlice'
 import { changeId } from '../../redux/slices/idToProcessSlice'
 import { setLoading } from '../../redux/slices/loading'
@@ -18,11 +16,10 @@ function YearlyPlan() {
     const [allDataArr, setAllDataArr] = useState(null);
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
-    const userToken = Cookies.get('userToken')
-
+    const user = useSelector(state => state.auth.user);
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readYearlyPlan`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readYearlyPlan`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             setAllDataArr(response.data.data);
             setYearlyPlans(response.data.data.slice(startIndex, endIndex))
             dispatch(setLoading(false))
@@ -39,34 +36,24 @@ function YearlyPlan() {
     const nextPage = () => {
         setStartIndex(startIndex + 8);
         setEndIndex(endIndex + 8);
-
     }
 
     const backPage = () => {
         setStartIndex(startIndex - 8);
         setEndIndex(endIndex - 8);
-
-
     }
 
     useEffect(() => {
-
         setYearlyPlans(allDataArr?.slice(startIndex, endIndex))
     }, [startIndex, endIndex])
 
     const search = (event) => {
         if (event.target.value !== "") {
-            console.log(event.target.value);
-
             const searchedList = allDataArr?.filter((obj) => {
                 return (
-
                     obj.Year.toString().includes(event.target.value)
                 )
-
             })
-
-            console.log(searchedList);
             setYearlyPlans(searchedList);
         } else {
             setYearlyPlans(allDataArr?.slice(startIndex, endIndex))

@@ -1,16 +1,12 @@
 
 import style from './AddDepartments.module.css'
-
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import axios from "axios";
-import { useNavigate } from 'react-router-dom'
 import Swal from 'sweetalert2'
-
 import { FaMinus } from 'react-icons/fa'
 import { BsArrowLeftCircle } from 'react-icons/bs';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
-import Cookies from 'js-cookie';
 import { setLoading } from '../../redux/slices/loading';
 
 function AddDepartments() {
@@ -19,11 +15,10 @@ function AddDepartments() {
     const [alert, setalert] = useState(false);
     const [departments, setDepartments] = useState([]);
     const [companies, setCompanies] = useState(null);
-    const userToken = Cookies.get('userToken');
-
+    const user = useSelector(state => state.auth.user);
     useEffect(() => {
         dispatch(setLoading(true));
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-companies`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-companies`, { headers: { Authorization: `${user._id}` } }).then((res) => {
             setCompanies(res.data.data);
             dispatch(setLoading(false))
         }).catch(err => {
@@ -36,13 +31,10 @@ function AddDepartments() {
         })
     }, [])
 
-
-
     const addDepartment = () => {
         const updatedDepartments = [...departments];
         updatedDepartments.push({});
         setDepartments(updatedDepartments);
-
     };
     const clearLastDepartment = () => {
         if (departments.length > 0) {
@@ -54,35 +46,24 @@ function AddDepartments() {
 
     const updateDepartments = (event, index) => {
         const updatedDepartments = [...departments];
-
         // Update the existing object at the specified index
         updatedDepartments[index][event.target.name] = event.target.value;
-
         setDepartments(updatedDepartments);
     }
 
     useEffect(() => {
         setDataToSend({ ...dataToSend, Departments: departments });
     }, [departments])
-
-    useEffect(() => {
-        console.log(dataToSend);
-    }, [dataToSend])
-
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
-
     const alertManager = () => {
         setalert(!alert)
     }
 
-
-
-
     const makeRequest = () => {
         if (dataToSend.Departments.length !== 0) {
             dispatch(setLoading(true));
-            axios.post(`${process.env.REACT_APP_BACKEND_URL}/create-department`, dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/create-department`, dataToSend, { headers: { Authorization: `${user._id}` } }).then(() => {
                 dispatch(setLoading(false));
                 setDataToSend(null);
                 Swal.fire({
@@ -90,13 +71,11 @@ function AddDepartments() {
                     text: 'Submitted Successfully',
                     icon: 'success',
                     confirmButtonText: 'Go!',
-
                 }).then((result) => {
                     if (result.isConfirmed) {
                         dispatch(updateTabData({...tabData, Tab : 'Departments'}))
                     }
                 })
-
             }).catch(err => {
                 dispatch(setLoading(false));
                 Swal.fire({
@@ -117,9 +96,6 @@ function AddDepartments() {
 
 
 
-
-
-
     return (
         <>
             <div className={`${style.parent} mx-auto`}>
@@ -130,7 +106,6 @@ function AddDepartments() {
                                 dispatch(updateTabData({...tabData, Tab : 'Departments'}))
                             }
                         }} />
-
                     </div>
                     <div className={`${style.headers} d-flex justify-content-start ps-3 align-items-center `}>
                         <div className={style.spans}>
@@ -154,7 +129,7 @@ function AddDepartments() {
                                             {/* <p>Document Type</p> */}
                                         </div>
                                         <div className='border border-dark-subtle'>
-                                            <select onChange={(e) => {
+                                            <select className='form-select  form-select-lg' onChange={(e) => {
                                                 setDataToSend({ ...dataToSend, [e.target.name]: e.target.value })
                                             }} value={dataToSend?.Company} name='Company' style={{ width: "100%" }} required >
                                                 <option value="" selected disabled>Select Company</option>
@@ -170,25 +145,7 @@ function AddDepartments() {
                                     </div>
                                 </div>
                                 <div className={style.sec2}>
-                                    {/* <div className={style.inputParent}>
-                                        <div className={style.para}>
-                                            <p>Department</p>
-
-                                        </div>
-                                        <div className='border border-dark-subtle'>
-                                            <select value={dataToSend?.Department} onChange={(e) => {
-                                                setDataToSend({ ...dataToSend, [e.target.name]: e.target.value })
-                                            }} name='Department' style={{ width: "100%" }} required>
-                                                <option value="" selected disabled>Choose Department</option>
-                                                <option value='Department 1'>Department 1</option>
-                                                <option value='Department 2'>Department 2</option>
-                                                <option value='Department 3'>Department 3</option>
-
-                                            </select>
-
-
-                                        </div>
-                                    </div> */}
+                                    
 
                                 </div>
                             </div>
@@ -231,7 +188,7 @@ function AddDepartments() {
                                     <p></p>
                                 </div>
                                 <div className='border w-50 border-dark-subtle'>
-                                    <select className='w-100' name='Department'  >
+                                    <select className='w-100 form-select  form-select-lg' name='Department'  >
                                         <option value="" selected >Added Departments</option>
                                         {departments?.map((dep) => {
                                             return (

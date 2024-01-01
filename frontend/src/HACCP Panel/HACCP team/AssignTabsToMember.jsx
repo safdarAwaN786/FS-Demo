@@ -9,7 +9,6 @@ import { setLoading } from '../../redux/slices/loading';
 
 function AssignTabsToMember() {
 
-
     const [selectedTabsArr, setSelectedTabsArr] = useState([]);
     const [alert, setalert] = useState(false);
     const [dataToSend, setDataToSend] = useState(null);
@@ -106,9 +105,7 @@ function AssignTabsToMember() {
 
         if (dataToSend.Tabs.length > 0) {
             dispatch(setLoading(true))
-            axios.patch(`${process.env.REACT_APP_BACKEND_URL}/assign-tabs/${idToWatch}`, dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
-                console.log("request made !");
-
+            axios.patch(`${process.env.REACT_APP_BACKEND_URL}/assign-tabs/${idToWatch}`, dataToSend, { headers: { Authorization: `${user._id}` } }).then(() => {
                 setDataToSend(null);
                 dispatch(setLoading(false))
 

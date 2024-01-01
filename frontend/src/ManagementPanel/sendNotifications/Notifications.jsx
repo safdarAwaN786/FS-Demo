@@ -4,7 +4,6 @@ import Search from '../../assets/images/employees/Search.svg'
 import add from '../../assets/images/employees/Application Add.svg'
 import { useEffect, useState } from 'react'
 import axios from "axios";
-import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { setLoading } from '../../redux/slices/loading';
@@ -19,16 +18,13 @@ function Notifications() {
     const [endIndex, setEndIndex] = useState(8);
     const [participantsArr, setParticipantsArr] = useState(null);
     const [allDataArr, setAllDataArr] = useState(null);
-    const [sendEmail, setSendEmail] = useState(false);
-    const [emailTo, setEmailTo] = useState(null);
-
-    const userToken = Cookies.get('userToken');
+    const user = useSelector(state => state.auth.user);
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-notifications`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-notifications`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             setAllDataArr(response.data.data)
             setNotificationsList(response.data.data.slice(startIndex, endIndex));
             dispatch(setLoading(false))
@@ -46,18 +42,14 @@ function Notifications() {
     const nextPage = () => {
         setStartIndex(startIndex + 8);
         setEndIndex(endIndex + 8);
-
     }
 
     const backPage = () => {
         setStartIndex(startIndex - 8);
         setEndIndex(endIndex - 8);
-
-
     }
 
     useEffect(() => {
-
         setNotificationsList(allDataArr?.slice(startIndex, endIndex))
     }, [startIndex, endIndex])
 

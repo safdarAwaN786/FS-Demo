@@ -7,7 +7,6 @@ import Swal from 'sweetalert2';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { changeId } from '../../redux/slices/idToProcessSlice';
-import Cookies from 'js-cookie';
 import { setLoading } from '../../redux/slices/loading';
 
 
@@ -16,12 +15,8 @@ function HACCPteams() {
     const [teamsList, setTeamsList] = useState(null);
     const [showBox, setShowBox] = useState(false);
     const [send, setSend] = useState(false);
-
     const [dataToShow, setDataToShow] = useState(null);
-
-
     const [approve, setApprove] = useState(false);
-
     const [startIndex, setStartIndex] = useState(0);
     const [endIndex, setEndIndex] = useState(8);
     const [reject, setReject] = useState(false);
@@ -29,13 +24,10 @@ function HACCPteams() {
     const [allDataArr, setAllDataArr] = useState(null);
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
-    const userToken = Cookies.get('userToken');
-
-
+    const user = useSelector(state => state.auth.user);
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-haccp-teams`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
-            console.log(response.data.data);
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-haccp-teams`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             setAllDataArr(response.data.data)
             setTeamsList(response.data.data.slice(startIndex, endIndex));
             dispatch(setLoading(false))
@@ -64,7 +56,7 @@ function HACCPteams() {
 
     const refreshData = () => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-haccp-teams`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-haccp-teams`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             console.log(response.data.data);
             setAllDataArr(response.data.data)
             setTeamsList(response.data.data.slice(startIndex, endIndex));
@@ -84,31 +76,23 @@ function HACCPteams() {
     const nextPage = () => {
         setStartIndex(startIndex + 8);
         setEndIndex(endIndex + 8);
-
     }
 
     const backPage = () => {
         setStartIndex(startIndex - 8);
         setEndIndex(endIndex - 8);
-
-
     }
 
     useEffect(() => {
-
         setTeamsList(allDataArr?.slice(startIndex, endIndex))
     }, [startIndex, endIndex])
 
 
     const search = (event) => {
         if (event.target.value !== "") {
-            console.log(event.target.value);
-
             const searchedList = allDataArr.filter((obj) =>
-
                 obj.DocumentId.includes(event.target.value)
             )
-            console.log(searchedList);
             setTeamsList(searchedList);
         } else {
             setTeamsList(allDataArr?.slice(startIndex, endIndex))
@@ -244,35 +228,25 @@ function HACCPteams() {
                                                             setDataToShow('Sorry, Team is already Approved');
                                                             setShowBox(true);
                                                         } else {
-
                                                             setIdForAction(team._id);
                                                             setReject(true);
                                                         }
                                                     }} style={{
                                                         height: '28px'
-
                                                     }} className={`btn btn-outline-danger pt-0 px-1`}>Disaprrove</p>
                                                 </td>
                                             )}
-                                            <td >
-
+                                            <td>
                                                 <p onClick={() => {
                                                     dispatch(updateTabData({ ...tabData, Tab: 'HACCPTeamMembers' }))
                                                     dispatch(changeId(team._id))
-
                                                 }} style={{
                                                     height: '28px'
 
                                                 }} className={`btn btn-outline-warning pt-0 px-1`}>Click Here</p>
-
                                             </td>
-
-
-
                                         </tr>
-
                                     )
-
                                 })
                             }
                         </table>
@@ -324,7 +298,7 @@ function HACCPteams() {
                                 <button onClick={() => {
                                     setApprove(false)
                                     dispatch(setLoading(true))
-                                    axios.patch(`/approveHaccpTeam`, { id: idForAction }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/approveHaccpTeam`, { id: idForAction }, { headers: { Authorization: `${user._id}` } }).then(() => {
                                         dispatch(setLoading(false))
                                         Swal.fire({
                                             title: 'Success',
@@ -365,7 +339,7 @@ function HACCPteams() {
                                 e.preventDefault();
                                 setReject(false);
                                 dispatch(setLoading(true))
-                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/disapproveHaccpTeam`, { id: idForAction, Reason: reason }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/disapproveHaccpTeam`, { id: idForAction, Reason: reason }, { headers: { Authorization: `${user._id}` } }).then(() => {
                                     dispatch(setLoading(false))
                                     Swal.fire({
                                         title: 'Success',
@@ -373,8 +347,6 @@ function HACCPteams() {
                                         icon: 'success',
                                         confirmButtonText: 'Go!',
                                     })
-
-
                                     refreshData();
                                 }).catch(err => {
                                     dispatch(setLoading(false));
@@ -388,8 +360,6 @@ function HACCPteams() {
                                 <textarea onChange={(e) => {
                                     setReason(e.target.value);
                                 }} name="Reason" id="" cols="30" rows="10" placeholder='Comment here' required />
-
-
                                 <div className={`$ mt-3 d-flex justify-content-end `}>
                                     <button type='submit' className='btn btn-danger px-3 py-2 m-3'>Disapprove</button>
                                     <a onClick={() => {

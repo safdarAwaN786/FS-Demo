@@ -1,11 +1,10 @@
 
 import style from './CreateDocument.module.css'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import axios from "axios";
 import Swal from 'sweetalert2'
 import JoditEditor from 'jodit-react';
 import { BsArrowLeftCircle } from 'react-icons/bs';
-import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { setLoading } from '../../redux/slices/loading';
@@ -21,16 +20,14 @@ function CreateDocument() {
         console.log(dataToSend);
     }, [dataToSend])
 
-    const userToken = Cookies.get('userToken');
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
-
     const [departmentsToShow, SetDepartmentsToShow] = useState(null);
     const user = useSelector(state => state.auth?.user);
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
             SetDepartmentsToShow(res.data.data);
             dispatch(setLoading(false))
         }).catch(err => {
@@ -46,7 +43,7 @@ function CreateDocument() {
     const makeRequest = () => {
         if (dataToSend.EditorData) {
             dispatch(setLoading(true))
-            axios.post(`${process.env.REACT_APP_BACKEND_URL}/create-document`, dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/create-document`, dataToSend, { headers: { Authorization: `${user._id}` } }).then(() => {
                 setDataToSend(null);
                 dispatch(setLoading(false))
                 Swal.fire({
@@ -60,15 +57,12 @@ function CreateDocument() {
                         dispatch(updateTabData({ ...tabData, Tab: 'Master List of Documents' }))
                     }
                 })
-
             }).catch((error) => {
-
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
                     text: 'Try filling data again',
                     confirmButtonText: 'OK.'
-
                 })
             })
         } else {
@@ -85,17 +79,14 @@ function CreateDocument() {
     return (
         <>
             <div className={`${style.parent} mx-auto`}>
-
-
                 <div className={`${style.subparent} mx-2 mx-sm-4 mt-5 mx-lg-5`}>
                     <div className='d-flex flex-row bg-white px-lg-5 mx-lg-5 mx-3 px-2 py-2'>
                         <BsArrowLeftCircle
                             role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
                                 {
-                                    dispatch(updateTabData({ ...tabData, Tab: 'List of Documents' }))
+                                    dispatch(updateTabData({ ...tabData, Tab: 'Master List of Documents' }))
                                 }
                             }} />
-
                     </div>
                     <div className={`${style.headers} d-flex justify-content-start ps-3 align-items-center `}>
                         <div className={style.spans}>
@@ -109,10 +100,7 @@ function CreateDocument() {
                     </div>
                     <form encType='multipart/form-data' onSubmit={(event) => {
                         event.preventDefault();
-
                         alertManager();
-
-
                     }}>
                         <div className={style.myBox}>
 
@@ -126,17 +114,14 @@ function CreateDocument() {
                                             <input onChange={(e) => {
                                                 setDataToSend({ ...dataToSend, [e.target.name]: e.target.value });
                                             }} value={dataToSend?.DocumentTitle} name='DocumentTitle' className='text-dark' type="text" placeholder='Title Here' required />
-
                                         </div>
                                     </div>
-
                                     <div className={style.inputParent}>
                                         <div className={style.para}>
                                             <p>Department</p>
-
                                         </div>
                                         <div>
-                                            <select onChange={(e) => {
+                                            <select className='form-select  form-select-lg' onChange={(e) => {
                                                 setDataToSend({ ...dataToSend, [e.target.name]: e.target.value })
                                             }} value={dataToSend?.Department} name='Department' style={{ width: "100%" }} required>
                                                 <option value="" selected disabled>Choose Department</option>
@@ -146,12 +131,8 @@ function CreateDocument() {
                                                     )
                                                 })}
                                             </select>
-
-
                                         </div>
                                     </div>
-
-
                                 </div>
                                 <div className={style.sec2}>
                                     <div className={style.inputParent}>
@@ -159,7 +140,7 @@ function CreateDocument() {
                                             <p>Document Type</p>
                                         </div>
                                         <div>
-                                            <select value={dataToSend?.DocumentType} onChange={(e) => {
+                                            <select className='form-select  form-select-lg' value={dataToSend?.DocumentType} onChange={(e) => {
                                                 setDataToSend({ ...dataToSend, [e.target.name]: e.target.value })
                                             }} name='DocumentType' style={{ width: "100%" }} required >
                                                 <option value="" selected disabled>Choose Type</option>

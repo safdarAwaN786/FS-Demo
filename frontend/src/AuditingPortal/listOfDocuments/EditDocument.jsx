@@ -5,27 +5,23 @@ import axios from "axios";
 import Swal from 'sweetalert2'
 import JoditEditor from 'jodit-react';
 import { BsArrowLeftCircle } from 'react-icons/bs';
-import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { setLoading } from '../../redux/slices/loading';
 
 function EditDocument() {
-
     const [documentData, setDocumentData] = useState(null);
     const [alert, setalert] = useState(false);
     const alertManager = () => {
         setalert(!alert)
     }
-
-    const userToken = Cookies.get('userToken');
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
     const idToWatch = useSelector(state => state.idToProcess)
-
+    const user = useSelector(state => state.auth.user);
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-documentById/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-documentById/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             setDocumentData(response.data.data);
             dispatch(setLoading(false))
         }).catch(err => {
@@ -36,14 +32,12 @@ function EditDocument() {
                 text : 'Something went wrong, Try Again!'
             })
         })
-
-
     }, [])
 
     const makeRequest = () => {
         if (documentData.EditorData) {
             dispatch(setLoading(true))
-            axios.put(`${process.env.REACT_APP_BACKEND_URL}/updateDocument`, documentData, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+            axios.put(`${process.env.REACT_APP_BACKEND_URL}/updateDocument`, documentData, { headers: { Authorization: `${user._id}` } }).then(() => {
                 console.log("request made !");
                 setDocumentData(null);
                 dispatch(setLoading(false))
@@ -77,9 +71,6 @@ function EditDocument() {
     }
 
 
-
-
-
     return (
         <>
             <div className={`${style.parent} mx-auto`}>
@@ -91,7 +82,6 @@ function EditDocument() {
                                     dispatch(updateTabData({...tabData, Tab : 'Master List of Documents'}))
                                 }
                             }} />
-
                     </div>
                     <div className={`${style.headers} d-flex justify-content-start ps-3 align-items-center `}>
                         <div className={style.spans}>
@@ -106,16 +96,10 @@ function EditDocument() {
                     <form encType='multipart/form-data' onSubmit={(event) => {
                         event.preventDefault();
                         alertManager();
-
                     }}>
                         <div className={style.myBox}>
-
                             <div className={style.formDivider}>
-
-
-
                                 <div className='p-5'>
-
                                     <JoditEditor value={documentData?.EditorData} onChange={(content) => {
                                         setDocumentData({ ...documentData, EditorData: content });
                                     }} />
@@ -125,8 +109,6 @@ function EditDocument() {
                         <div className={style.btn}>
                             <button type='submit' >Submit</button>
                         </div>
-
-
                     </form>
                 </div>
             </div>

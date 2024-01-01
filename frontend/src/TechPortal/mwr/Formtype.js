@@ -1,10 +1,8 @@
 import style from './Formtype.module.css'
-import { useNavigate, useParams } from 'react-router-dom'
 import { useEffect, useRef, useState } from 'react'
 import axios from "axios";
 import Swal from 'sweetalert2'
 import { BsArrowLeftCircle } from 'react-icons/bs';
-import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { setLoading } from '../../redux/slices/loading';
@@ -17,84 +15,58 @@ function Formtype() {
         setalert(!alert)
     }
     const [machine, setMachine] = useState();
-
-    const userToken = Cookies.get('userToken');
-    const tabData =  useSelector(state => state.tab);
+    const user = useSelector(state => state.auth.user);
+    const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
     const dateType = useSelector(state => state.appData.dateType);
     const idToWatch = useSelector(state => state.idToProcess);
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readMachinery/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readMachinery/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
             setMachine(res.data.data)
             dispatch(setLoading(false))
         }).catch(err => {
             dispatch(setLoading(false));
             Swal.fire({
-                icon : 'error',
-                title : 'OOps..',
-                text : 'Something went wrong, Try Again!'
+                icon: 'error',
+                title: 'OOps..',
+                text: 'Something went wrong, Try Again!'
             })
         })
     }, [])
 
-    const [formState, setFormState] = useState({
-        dateType: dateType,
-        maintenanceType: 'Preventive'
-    });
-
-
-    const updateFormData = (e) => {
-        const { name, value } = e.target;
-        setFormState((prevState) => ({ ...prevState, [name]: value }));
-    };
-
     const handleImageChange = (event) => {
         const file = event.target.files[0];
-        console.log(file);
-
         setSelectedImage(file);
     };
-
     const [formData, setFormData] = useState(null);
-
     const handleImageClick = () => {
         fileInputRef.current.click(); // Trigger the click event on the file input
     };
 
 
-    useEffect(() => {
-        console.log(formState);
-    }, [formState])
-
-
-
-
     const makeRequest = () => {
-
-        console.log(formData);
         if (formData) {
             dispatch(setLoading(true))
-            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addPreventiveMaintaince/${idToWatch}`, formData, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addPreventiveMaintaince/${idToWatch}`, formData, { headers: { Authorization: `${user._id}` } }).then((res) => {
                 dispatch(setLoading(false))
                 Swal.fire({
                     title: 'Success',
                     text: 'Submitted Successfully',
                     icon: 'success',
                     confirmButtonText: 'Go!',
-
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        dispatch(updateTabData({...tabData, Tab : 'Machinery'}))
+                        dispatch(updateTabData({ ...tabData, Tab: 'Machinery' }))
                     }
                 })
             }).catch(err => {
                 dispatch(setLoading(false));
                 Swal.fire({
-                    icon : 'error',
-                    title : 'OOps..',
-                    text : 'Something went wrong, Try Again!'
+                    icon: 'error',
+                    title: 'OOps..',
+                    text: 'Something went wrong, Try Again!'
                 })
             })
         }
@@ -106,7 +78,7 @@ function Formtype() {
                 <div className='d-flex flex-row bg-white px-lg-5 mx-1 px-2 py-2'>
                     <BsArrowLeftCircle role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
                         {
-                            dispatch(updateTabData({...tabData,  Tab : 'Machinery'}))
+                            dispatch(updateTabData({ ...tabData, Tab: 'Machinery' }))
                         }
                     }} />
 

@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react'
 import axios from "axios";
 import Swal from 'sweetalert2';
 import { BsArrowLeftCircle } from 'react-icons/bs';
-import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { setLoading } from '../../redux/slices/loading';
@@ -17,26 +16,20 @@ function DocumentHistory() {
     const alertManager = () => {
         setalert(!alert)
     }
-
     const [documentData, setDocumentData] = useState(null);
-
-    const userToken = Cookies.get('userToken');
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
     const idToWatch = useSelector(state => state.idToProcess);
     const user = useSelector(state => state.auth.user);
-
-    
     const handleDownloadImage = async (imageURL) => {
         try {
             if (imageURL) {
-
                 dispatch(setLoading(true))
                 const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/download-image`, {
                     params: {
                         url: imageURL,
                     },
-                    responseType: 'blob', headers: { Authorization: `Bearer ${userToken}` } // Specify the response type as 'blob' to handle binary data
+                    responseType: 'blob', headers: { Authorization: `${user._id}` } // Specify the response type as 'blob' to handle binary data
                 });
 
 
@@ -79,7 +72,7 @@ function DocumentHistory() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readDocumentById/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readDocumentById/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
             console.log(res.data.data);
             setDocumentData(res.data.data);
             dispatch(setLoading(false))
@@ -96,7 +89,7 @@ function DocumentHistory() {
 
     const refreshData = () => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readDocumentById/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readDocumentById/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
             console.log(res.data.data);
             setDocumentData(res.data.data);
             dispatch(setLoading(false))
@@ -245,7 +238,7 @@ function DocumentHistory() {
                                 e.preventDefault();
                                 setCommentBox(false);
                                 dispatch(setLoading(true))
-                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/comment-document/${idToWatch}`, { objIndex: indexForAction, comment: comment }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/comment-document/${idToWatch}`, { objIndex: indexForAction, comment: comment }, { headers: { Authorization: `${user._id}` } }).then(() => {
                                     dispatch(setLoading(false))
                                     Swal.fire({
                                         title: 'Success',

@@ -4,7 +4,6 @@ import axios from "axios";
 import Swal from 'sweetalert2'
 import { BsArrowLeftCircle } from 'react-icons/bs';
 import { useDispatch, useSelector } from 'react-redux';
-import Cookies from 'js-cookie';
 import { updateTabData } from '../../redux/slices/tabSlice'
 import { setLoading } from '../../redux/slices/loading';
 
@@ -17,12 +16,11 @@ function AddParticipant() {
     const [departmentsToShow, setDepartmentsToShow] = useState(null);
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
-    const userToken = Cookies.get('userToken');
     const user = useSelector(state => state.auth.user);
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
             setDepartmentsToShow(res.data.data);
             dispatch(setLoading(false));
         }).catch(err => {
@@ -36,10 +34,9 @@ function AddParticipant() {
     }, [])
 
     const makeRequest = () => {
-        console.log(dataToSend);
         if (dataToSend) {
             dispatch(setLoading(true))
-            axios.post(`${process.env.REACT_APP_BACKEND_URL}/create-participants`, dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/create-participants`, dataToSend, { headers: { Authorization: `${user._id}` } }).then(() => {
                 dispatch(setLoading(false))
                 setDataToSend(null);
                 Swal.fire({
@@ -134,8 +131,8 @@ function AddParticipant() {
                                         <div >
                                             <select value={dataToSend?.Department} onChange={(e)=>{
                                                 setDataToSend({...dataToSend, [e.target.name] : e.target.value});
-                                            }} name='Department' className='w-100 text-dark' required>
-                                                <option value='' selected disabled>Department</option>
+                                            }} name='Department' className='w-100 text-dark form-select  form-select-lg' required>
+                                                <option value='' selected disabled>Choose Department</option>
                                                 {departmentsToShow?.map((depObj) => {
                                             return (
                                                 <option value={depObj.DepartmentName}>{depObj.DepartmentName}</option>

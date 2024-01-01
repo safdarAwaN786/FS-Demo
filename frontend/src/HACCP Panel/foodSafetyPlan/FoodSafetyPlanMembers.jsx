@@ -4,7 +4,6 @@ import Search from '../../assets/images/employees/Search.svg'
 import { useEffect, useState } from 'react'
 import axios from "axios";
 import { BsArrowLeftCircle } from 'react-icons/bs';
-import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { setLoading } from '../../redux/slices/loading';
@@ -18,8 +17,7 @@ function FoodSafetyPlanMembers() {
     const [startIndex, setStartIndex] = useState(0);
     const [endIndex, setEndIndex] = useState(8);
     const [safetyPlan, setSafetyPlan] = useState(null);
-
-    const userToken = Cookies.get('userToken');
+    const user = useSelector(state => state.auth.user);
     const tabData = useSelector(state => state.tab);
     const idToWatch = useSelector(state => state.idToProcess);
     const dispatch = useDispatch();
@@ -27,7 +25,7 @@ function FoodSafetyPlanMembers() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-food-safety/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-food-safety/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             setSafetyPlan(response.data.data);
             setMembers(response.data.data?.DecisionTree.ConductHaccp.Members?.slice(startIndex, endIndex));
             dispatch(setLoading(false))
@@ -79,7 +77,7 @@ function FoodSafetyPlanMembers() {
                 params: {
                     url: imageURL,
                 },
-                responseType: 'blob', headers: { Authorization: `Bearer ${userToken}` }  // Specify the response type as 'blob' to handle binary data
+                responseType: 'blob', headers: { Authorization: `${user._id}` }  // Specify the response type as 'blob' to handle binary data
             });
 
             // Create a Blob object from the response data

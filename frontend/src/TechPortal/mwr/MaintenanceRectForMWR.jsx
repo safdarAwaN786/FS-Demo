@@ -2,7 +2,6 @@ import style from './MaintananceRect.module.css'
 import { useEffect, useState } from 'react'
 import axios from "axios";
 import { BsArrowLeftCircle } from 'react-icons/bs';
-import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { setLoading } from '../../redux/slices/loading';
@@ -12,15 +11,14 @@ function MaintananceRectForMWR() {
     const [alert, setAlert] = useState(false);
     const [popUpData, setPopUpData] = useState(null);
     const [requests, setRequests] = useState(null);
-
-    const userToken = Cookies.get('userToken');
+    const user = useSelector(state => state.auth.user);
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
     const idToWatch = useSelector(state => state.idToProcess);
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/getWorkRequestsByMachineId/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/getWorkRequestsByMachineId/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
             setRequests(res.data.data);
             dispatch(setLoading(false))
         }).catch(err => {

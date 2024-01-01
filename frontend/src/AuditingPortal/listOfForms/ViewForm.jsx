@@ -1,7 +1,6 @@
 import style from './CreateForm.module.css'
 import { useEffect, useRef, useState } from 'react'
 import axios from "axios";
-import { useNavigate } from 'react-router-dom'
 import Swal from 'sweetalert2'
 import { BiMenuAltLeft, BiTimeFive } from 'react-icons/bi'
 import { BsTextParagraph, BsFillGrid3X3GapFill, BsGrid3X3, BsArrowLeftCircle } from "react-icons/bs"
@@ -24,29 +23,16 @@ function ViewForm() {
         setalert(!alert)
     }
     const [questions, setQuestions] = useState([]);
-
-    const userToken = Cookies.get('userToken');
+    const user = useSelector(state => state.auth.user);
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
     const idToWatch = useSelector(state => state.idToProcess);
 
-    const addQuestion = () => {
-        const updatedQuestions = [...questions];
-        updatedQuestions.push({ questionType: 'ShortText' });
-        setQuestions(updatedQuestions);
 
-    };
-    const clearLastQuestion = () => {
-        if (questions.length > 0) {
-            const updatedQuestions = [...questions];
-            updatedQuestions.pop(); // Remove the last element
-            setQuestions(updatedQuestions);
-        }
-    };
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-form-by-id/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-form-by-id/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
             setDataToSend(res.data.form);
             setQuestions(res.data.form.questions);
             dispatch(setLoading(false))
@@ -59,39 +45,6 @@ function ViewForm() {
             })
         })
     }, [])
-
-    useEffect(() => {
-        console.log(dataToSend);
-    }, [dataToSend])
-
-
-
-
-
-
-    const options = [
-        { value: 'ShortText', label: <div><BiMenuAltLeft /> Short Answer </div> },
-        { value: 'LongText', label: <div><BsTextParagraph /> Long Answer </div> },
-        { value: 'Multiplechoice', label: <div><MdRadioButtonChecked /> Multiple Choice </div> },
-        { value: 'Checkbox', label: <div><MdOutlineCheckBox /> Checkboxes </div> },
-        { value: 'Dropdown', label: <div><IoIosArrowDropdown /> Dropdown </div> },
-        { value: 'Linearscale', label: <div><AiOutlineLine /> Linear scale </div> },
-        { value: 'Multiplechoicegrid', label: <div><BsFillGrid3X3GapFill /> Multiple choice Grid </div> },
-        { value: 'Checkboxgrid', label: <div><BsGrid3X3 /> Checkbox Grid </div> },
-        { value: 'Date', label: <div><MdOutlineDateRange /> Date </div> },
-        { value: 'Time', label: <div><BiTimeFive /> Time </div> },
-    ]
-
-
-
-    const customStyles = {
-        control: (provided) => ({
-            ...provided,
-            height: '40px', // Set your desired height here
-        }),
-    };
-
-
 
 
     return (
@@ -177,7 +130,7 @@ function ViewForm() {
                                                 }} name='questionText' className='border-bottom border-secondary bg-light mt-2 mb-3 w-100 p-3' readOnly />
 
                                             </div>
-                                            
+
                                         </div>
 
 
@@ -204,7 +157,7 @@ function ViewForm() {
                                                                         <th style={{
                                                                             minWidth: '80px'
                                                                         }}>
-                                                                            <input value={dataToSend?.questions[index].columns[colIndex].colTitle}  className={`bg-light border-bottom border-secondary d-inline py-0 px-1 mx-1 ${style.noRadius}`} type='text' required readOnly/>
+                                                                            <input value={dataToSend?.questions[index].columns[colIndex].colTitle} className={`bg-light border-bottom border-secondary d-inline py-0 px-1 mx-1 ${style.noRadius}`} type='text' required readOnly />
                                                                         </th>
                                                                     )
                                                                 })}
@@ -217,9 +170,9 @@ function ViewForm() {
                                                                     <tr>
                                                                         <td>
                                                                             <span>{rowIndex + 1}.</span>
-                                                                            <input value={dataToSend?.questions[index].rows[rowIndex].rowTitle}  name='rowTitle' type='text' style={{
+                                                                            <input value={dataToSend?.questions[index].rows[rowIndex].rowTitle} name='rowTitle' type='text' style={{
                                                                                 borderRadius: '0px'
-                                                                            }} className='bg-light border-bottom border-secondary  px-2 py-0 d-inline' readOnly/>
+                                                                            }} className='bg-light border-bottom border-secondary  px-2 py-0 d-inline' readOnly />
                                                                         </td>
                                                                         {questions[index]?.columns.map((colnum, colIndex) => {
                                                                             return (
@@ -227,7 +180,7 @@ function ViewForm() {
                                                                                     <input className='mx-2' style={{
                                                                                         width: '20px',
                                                                                         height: '20px'
-                                                                                    }} name={`R${rowIndex}`} type='radio' readOnly/>
+                                                                                    }} name={`R${rowIndex}`} type='radio' readOnly />
                                                                                 </td>
                                                                             )
                                                                         })}
@@ -237,66 +190,13 @@ function ViewForm() {
                                                         </tbody>
                                                     </table>
                                                 </div>
-                                                {/* <div className='d-flex justify-content-between mt-3'>
 
-                                                    <div>
-
-
-                                                        <a onClick={() => {
-                                                            const updatedQuestions = [...questions];
-
-                                                            updatedQuestions[index].rows.push({ rowTitle: '' });
-                                                            setQuestions(updatedQuestions)
-                                                        }} className='btn px-1 py-1 btn-primary'><BiPlus className='text-white' />Row</a>
-                                                        {questions[index]?.rows.length > 1 && (
-
-                                                            <a style={{
-                                                                borderRadius: '50px',
-                                                                width: '30px',
-                                                                height: '30px'
-                                                            }} onClick={() => {
-                                                                const updatedQuestions = [...questions];
-                                                                updatedQuestions[index].rows.pop();
-
-
-                                                                setQuestions(updatedQuestions);
-                                                            }} className='btn mx-1 p-0 btn-outline-primary'><FaMinus /></a>
-                                                        )}
-                                                    </div>
-                                                    <div>
-
-                                                        {questions[index]?.columns.length > 1 && (
-
-                                                            <a style={{
-                                                                borderRadius: '50px',
-                                                                width: '30px',
-                                                                height: '30px'
-                                                            }} onClick={() => {
-
-                                                                const updatedQuestions = [...questions]
-                                                                updatedQuestions[index].columns.pop();
-                                                                setQuestions(updatedQuestions);
-                                                            }} className='btn mx-1 p-0 btn-outline-primary'><FaMinus /></a>
-                                                        )}
-
-
-                                                        <a onClick={() => {
-
-                                                            const updatedQuestions = [...questions];
-                                                            updatedQuestions[index].columns.push({ colTitle: '' });
-
-                                                            setQuestions(updatedQuestions)
-                                                        }} className='btn px-1 py-1 btn-primary'><BiPlus className='text-white' />Column</a>
-
-                                                    </div>
-
-                                                </div> */}
                                             </>
                                         )}
 
                                         {(questions[index].questionType === 'Checkboxgrid') && (
                                             <>
-                                            <div className={`${style.gridCover}`}>
+                                                <div className={`${style.gridCover}`}>
                                                     <table className='table table-bordered'>
                                                         <thead>
                                                             <tr>
@@ -308,7 +208,7 @@ function ViewForm() {
                                                                         <th style={{
                                                                             minWidth: '80px'
                                                                         }}>
-                                                                            <input value={dataToSend?.questions[index].columns[colIndex].colTitle}  className={`bg-light border-bottom border-secondary d-inline py-0 px-1 mx-1 ${style.noRadius}`} type='text' required readOnly/>
+                                                                            <input value={dataToSend?.questions[index].columns[colIndex].colTitle} className={`bg-light border-bottom border-secondary d-inline py-0 px-1 mx-1 ${style.noRadius}`} type='text' required readOnly />
                                                                         </th>
                                                                     )
                                                                 })}
@@ -321,9 +221,9 @@ function ViewForm() {
                                                                     <tr>
                                                                         <td>
                                                                             <span>{rowIndex + 1}.</span>
-                                                                            <input value={dataToSend?.questions[index].rows[rowIndex].rowTitle}  name='rowTitle' type='text' style={{
+                                                                            <input value={dataToSend?.questions[index].rows[rowIndex].rowTitle} name='rowTitle' type='text' style={{
                                                                                 borderRadius: '0px'
-                                                                            }} className='bg-light border-bottom border-secondary  px-2 py-0 d-inline' readOnly/>
+                                                                            }} className='bg-light border-bottom border-secondary  px-2 py-0 d-inline' readOnly />
                                                                         </td>
                                                                         {questions[index]?.columns.map((colnum, colIndex) => {
                                                                             return (
@@ -331,7 +231,7 @@ function ViewForm() {
                                                                                     <input className='mx-2' style={{
                                                                                         width: '20px',
                                                                                         height: '20px'
-                                                                                    }}  type='checkbox' readOnly/>
+                                                                                    }} type='checkbox' readOnly />
                                                                                 </td>
                                                                             )
                                                                         })}
@@ -342,52 +242,9 @@ function ViewForm() {
                                                     </table>
                                                 </div>
 
-                                                
 
-                                                {/* <div className='d-flex justify-content-between mt-3'>
-                                                    <div>
-                                                        <a onClick={() => {
-                                                            const updatedQuestions = [...questions];
 
-                                                            updatedQuestions[index].rows.push({});
-                                                            setQuestions(updatedQuestions)
-                                                        }} className='btn px-1 py-1 btn-primary'><BiPlus className='text-white' />Row</a>
-                                                        {questions[index]?.rows.length > 1 && (
 
-                                                            <a style={{
-                                                                borderRadius: '50px',
-                                                                width: '30px',
-                                                                height: '30px'
-                                                            }} onClick={() => {
-                                                                const updatedQuestions = [...questions];
-                                                                updatedQuestions[index].rows.pop();
-                                                                setQuestions(updatedQuestions);
-                                                            }} className='btn mx-1 p-0 btn-outline-primary'><FaMinus /></a>
-                                                        )}
-                                                    </div>
-                                                    <div>
-
-                                                        {questions[index]?.columns.length > 1 && (
-                                                            <a style={{
-                                                                borderRadius: '50px',
-                                                                width: '30px',
-                                                                height: '30px'
-                                                            }} onClick={() => {
-                                                                const updatedQuestions = [...questions]
-                                                                updatedQuestions[index].columns.pop();
-                                                                setQuestions(updatedQuestions);
-                                                            }} className='btn mx-1 p-0 btn-outline-primary'><FaMinus /></a>
-                                                        )}
-
-                                                        <a onClick={() => {
-                                                            const updatedQuestions = [...questions];
-                                                            updatedQuestions[index].columns.push({ colTitle: '' });
-
-                                                            setQuestions(updatedQuestions)
-                                                        }} className='btn px-1 py-1 btn-primary'><BiPlus className='text-white' />Column</a>
-
-                                                    </div>
-                                                </div> */}
                                             </>
 
                                         )}
@@ -416,30 +273,7 @@ function ViewForm() {
 
 
 
-                                                {/* <div className='d-flex justify-content-end'>
 
-                                                    {questions[index]?.options?.length > 2 && (
-
-                                                        <a style={{
-                                                            borderRadius: '50px',
-                                                            width: '30px',
-                                                            height: '30px'
-                                                        }} onClick={() => {
-
-                                                            const updatedQuestions = [...questions];
-                                                            updatedQuestions[index].options.pop();
-
-                                                            setQuestions(updatedQuestions);
-                                                        }} className='btn me-2 p-0 btn-outline-primary'><FaMinus /></a>
-                                                    )}
-                                                    <a onClick={() => {
-                                                        const updatedQuestions = [...questions];
-                                                        updatedQuestions[index].options.push({ optionText: '' });
-
-                                                        setQuestions(updatedQuestions)
-                                                    }} className='btn p-1 btn-primary'>Add option</a>
-
-                                                </div> */}
 
                                             </div>
 
@@ -483,60 +317,18 @@ function ViewForm() {
                                             <label className={style.switch}>
                                                 <input className='ms-3' name='IsPass' type="checkbox" checked={dataToSend?.questions[index].Required} />
                                                 <span className={`${style.slider} ${style.round}`} ></span>
-                                            </label >
+                                            </label>
 
                                         </div>
                                     </div>
                                 )
                             })}
 
-
-                            {/* <div className='d-flex flex-row'>
-
-                                <a onClick={addQuestion} className='btn btn-outline-danger my-4 fs-4 w-100'>Add Question</a>
-                                {questions.length > 0 && (
-
-                                    <a style={{
-                                        borderRadius: '100px',
-                                        width: '40px',
-                                        height: '40px',
-
-                                    }} onClick={clearLastQuestion} className='btn  btn-outline-danger mx-4 my-auto pt-1  '><FaMinus /></a>
-                                )}
-                            </div> */}
-
-
-
-
-
-
-
-                            {/* <div className={style.btns}>
-
-                                <button className='mt-3' type='submit'>Submit</button>
-                            </div> */}
                         </form>
                     </div>
 
                 </div>
             </div>
-            {/* {
-                alert ?
-                    <div class={style.alertparent}>
-                        <div class={style.alert}>
-                            <p class={style.msg}>Do you want to submit this information?</p>
-                            <div className={style.alertbtns}>
-                                <button onClick={() => {
-                                    alertManager();
-                                    makeRequest();
-                                }} className={style.btn1}>Submit</button>
-                                <button onClick={alertManager} className={style.btn2}>Cancel</button>
-
-                            </div>
-                        </div>
-                    </div> : null
-            } */}
-
         </>
     )
 }

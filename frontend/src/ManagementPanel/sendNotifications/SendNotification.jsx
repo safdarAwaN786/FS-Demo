@@ -3,12 +3,10 @@ import { useEffect, useRef, useState } from 'react'
 import axios from "axios";
 import Swal from 'sweetalert2'
 import { BsArrowLeftCircle } from 'react-icons/bs';
-import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { FaMinus } from 'react-icons/fa';
 import { setLoading } from '../../redux/slices/loading';
-
 
 function SendNotification() {
     const [dataToSend, setDataToSend] = useState(null);
@@ -18,15 +16,13 @@ function SendNotification() {
     const alertManager = () => {
         setalert(!alert)
     }
-
-    const userToken = Cookies.get('userToken');
     const dispatch = useDispatch();
     const tabData = useSelector(state => state.tab);
-
+    const user = useSelector(state => state.auth.user);
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-participants`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-participants`, { headers: { Authorization: `${user._id}` } }).then((res) => {
             {
                 setParticipants(res.data.data);
                 dispatch(setLoading(false))
@@ -44,21 +40,12 @@ function SendNotification() {
     useEffect(() => {
         setDataToSend({ ...dataToSend, Participants: selectedParticipants })
     }, [selectedParticipants])
-
-    useEffect(() => {
-        console.log(dataToSend);
-    }, [dataToSend])
     const [Agenda, setAgenda] = useState([]);
-
-
-
-
 
     const addAgenda = () => {
         const updatedAgenda = [...Agenda];
         updatedAgenda.push({});
         setAgenda(updatedAgenda);
-
     };
     const clearLastAgenda = () => {
         if (Agenda.length > 0) {
@@ -86,8 +73,7 @@ function SendNotification() {
 
         if (dataToSend.Participants.length > 0) {
             dispatch(setLoading(true))
-            axios.post(`${process.env.REACT_APP_BACKEND_URL}/create-notification`, dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
-                console.log("request made !");
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/create-notification`, dataToSend, { headers: { Authorization: `${user._id}` } }).then(() => {
                 setDataToSend(null);
                 dispatch(setLoading(false))
                 Swal.fire({
@@ -123,8 +109,6 @@ function SendNotification() {
     return (
         <>
             <div className={`${style.parent} mx-auto`}>
-
-
                 <div className={`${style.subparent} mx-2 mx-sm-4 mt-5 mx-lg-5`}>
                     <div className='d-flex flex-row px-lg-5 mx-lg-5 px-2 mx-2 my-1'>
                         <BsArrowLeftCircle role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
@@ -146,10 +130,7 @@ function SendNotification() {
                     </div>
                     <form encType='multipart/form-data' onSubmit={(event) => {
                         event.preventDefault();
-
                         alertManager();
-
-
                     }}>
                         <div className={`${style.myBox} bg-light pb-3`}>
 

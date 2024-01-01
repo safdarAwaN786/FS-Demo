@@ -3,10 +3,8 @@ import style from './UploadedDocuments.module.css'
 import Search from '../../assets/images/employees/Search.svg'
 import add from '../../assets/images/employees/Application Add.svg'
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import axios from "axios";
 import Swal from 'sweetalert2'
-import Cookies from 'js-cookie'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateTabData } from '../../redux/slices/tabSlice'
 import { changeId } from '../../redux/slices/idToProcessSlice'
@@ -27,21 +25,19 @@ function UploadedDocuments() {
     const [review, setReview] = useState(false);
     const [allDataArr, setAllDataArr] = useState(null);
     const [uploadDoc, setUploadDoc] = useState(false);
-
-    const userToken = Cookies.get('userToken');
+    const user = useSelector(state => state.auth.user);
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readAllDocuments`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
-            console.log(response);
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readAllDocuments`, { headers: { Authorization: `${user._id}` } }).then((response) => {
+
             setAllDataArr(response.data.data)
             setDocumentsList(response.data.data.slice(startIndex, endIndex));
             dispatch(setLoading(false))
         }).catch(err => {
             dispatch(setLoading(false));
-            console.log(err);
             Swal.fire({
                 icon: 'error',
                 title: 'OOps..',
@@ -52,7 +48,7 @@ function UploadedDocuments() {
 
     const refreshData = () => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readAllDocuments`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readAllDocuments`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             console.log(response);
             setAllDataArr(response.data.data)
             setDocumentsList(response.data.data.slice(startIndex, endIndex));
@@ -99,7 +95,7 @@ function UploadedDocuments() {
             setDocumentsList(allDataArr?.slice(startIndex, endIndex))
         }
     }
-    const user = useSelector(state => state.auth.user);
+
 
     
      const handleDownloadImage = async (imageURL) => {
@@ -111,7 +107,7 @@ function UploadedDocuments() {
                     params: {
                         url: imageURL,
                     },
-                    responseType: 'blob', headers: { Authorization: `Bearer ${userToken}` } // Specify the response type as 'blob' to handle binary data
+                    responseType: 'blob', headers: { Authorization: `${user._id}` } // Specify the response type as 'blob' to handle binary data
                 });
 
 
@@ -399,7 +395,7 @@ function UploadedDocuments() {
                                 setUploadDoc(false)
                                 dispatch(setLoading(true))
                                 const formData = new FormData(e.target);
-                                axios.put(`${process.env.REACT_APP_BACKEND_URL}/replaceDocument/${idForAction}`, formData, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+                                axios.put(`${process.env.REACT_APP_BACKEND_URL}/replaceDocument/${idForAction}`, formData, { headers: { Authorization: `${user._id}` } }).then(() => {
                                     dispatch(setLoading(false))
                                     refreshData();
                                     Swal.fire({
@@ -446,7 +442,7 @@ function UploadedDocuments() {
                             <div className={style.alertbtns}>
                                 <button onClick={() => {
                                     dispatch(setLoading(true))
-                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/approve-uploaded-document`, { documentId: idForAction }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/approve-uploaded-document`, { documentId: idForAction }, { headers: { Authorization: `${user._id}` } }).then(() => {
                                         dispatch(setLoading(false))
                                         refreshData();
                                         Swal.fire({
@@ -487,7 +483,7 @@ function UploadedDocuments() {
                                 <button onClick={() => {
                                     setReview(false);
                                     dispatch(setLoading(true))
-                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/review-uploaded-document`, { documentId: idForAction }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/review-uploaded-document`, { documentId: idForAction }, { headers: { Authorization: `${user._id}` } }).then(() => {
                                         dispatch(setLoading(false))
                                         refreshData();
                                         Swal.fire({
@@ -525,7 +521,7 @@ function UploadedDocuments() {
                                 e.preventDefault();
                                 setDisApprove(false);
                                 dispatch(setLoading(true))
-                                axios.patch(`/disapprove-uploaded-document`, { documentId: idForAction, reason: reason }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+                                axios.patch(`/disapprove-uploaded-document`, { documentId: idForAction, reason: reason }, { headers: { Authorization: `${user._id}` } }).then(() => {
                                     dispatch(setLoading(false))
                                     Swal.fire({
                                         title: 'Success',
@@ -568,7 +564,7 @@ function UploadedDocuments() {
                                 e.preventDefault();
                                 setReject(false);
                                 dispatch(setLoading(true))
-                                axios.patch(`/reject-uploaded-document`, { documentId: idForAction, reason: reason }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+                                axios.patch(`/reject-uploaded-document`, { documentId: idForAction, reason: reason }, { headers: { Authorization: `${user._id}` } }).then(() => {
                                     dispatch(setLoading(false))
                                     Swal.fire({
                                         title: 'Success',

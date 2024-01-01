@@ -1,9 +1,8 @@
 import style from './AddHACCPRiskAssessment.module.css'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect,  useState } from 'react'
 import axios from "axios";
 import Swal from 'sweetalert2'
 import { BsArrowLeftCircle } from 'react-icons/bs';
-import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { setLoading } from '../../redux/slices/loading';
@@ -15,7 +14,6 @@ function AddHACCPRiskAssessment() {
     const [alert, setalert] = useState(false);
     const [teamsToShow, setTeamsToShow] = useState(null);
     const [processesToShow, setProcessesToShow] = useState(null);
-    const userToken = Cookies.get('userToken')
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
     const [selectedProcess, setSelectedProcess] = useState(null);
@@ -27,62 +25,60 @@ function AddHACCPRiskAssessment() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
             SetDepartmentsToShow(res.data.data);
-            
+
         }).catch(err => {
             dispatch(setLoading(false));
             Swal.fire({
-                icon : 'error',
-                title : 'OOps..',
-                text : 'Something went wrong, Try Again!'
+                icon: 'error',
+                title: 'OOps..',
+                text: 'Something went wrong, Try Again!'
             })
         })
     }, [])
-    useEffect(()=>{
-        if(teamsToShow?.length === 0){
+    useEffect(() => {
+        if (teamsToShow?.length === 0) {
             dispatch(setLoading(false))
             Swal.fire({
-                icon : 'warning',
-                title : 'OOps..',
-                text : 'No, Any team available!'
+                icon: 'warning',
+                title: 'OOps..',
+                text: 'No, Any team available!'
             })
-        } else if(processesToShow?.length === 0){
+        } else if (processesToShow?.length === 0) {
             dispatch(setLoading(false))
             Swal.fire({
-                icon : 'warning',
-                title : 'OOps..',
-                text : 'No, Any Product flow diagram available!'
+                icon: 'warning',
+                title: 'OOps..',
+                text: 'No, Any Product flow diagram available!'
             })
-        } else if(teamsToShow && processesToShow && departmentsToShow){
+        } else if (teamsToShow && processesToShow && departmentsToShow) {
             dispatch(setLoading(false))
-            
+
         }
     }, [teamsToShow, processesToShow, departmentsToShow])
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-haccp-teams`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-haccp-teams`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             setTeamsToShow(response.data.data);
-            
         }).catch(err => {
             dispatch(setLoading(false));
             Swal.fire({
-                icon : 'error',
-                title : 'OOps..',
-                text : 'Something went wrong, Try Again!'
+                icon: 'error',
+                title: 'OOps..',
+                text: 'Something went wrong, Try Again!'
             })
         })
 
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-processes`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-processes`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             setProcessesToShow(response.data.data);
-            
         }).catch(err => {
             dispatch(setLoading(false));
             Swal.fire({
-                icon : 'error',
-                title : 'OOps..',
-                text : 'Something went wrong, Try Again!'
+                icon: 'error',
+                title: 'OOps..',
+                text: 'Something went wrong, Try Again!'
             })
         })
     }, [])
@@ -92,7 +88,7 @@ function AddHACCPRiskAssessment() {
             let hazardsArray = []
             console.log(selectedProcess);
             selectedProcess.ProcessDetails?.map((processObj) => {
-                const { _id,subProcesses, ...rest } = processObj; // Extract _id property
+                const { _id, subProcesses, ...rest } = processObj; // Extract _id property
                 hazardsArray.push({ ...rest, type: 'Biological', Process: processObj._id });
                 hazardsArray.push({ ...rest, type: 'Chemical', Process: processObj._id });
                 hazardsArray.push({ ...rest, type: 'Physical', Process: processObj._id });
@@ -101,7 +97,7 @@ function AddHACCPRiskAssessment() {
 
                 if (processObj.subProcesses?.length > 0) {
                     processObj.subProcesses.map((subProcess) => {
-                        const { _id,subProcesses, ...rest } = subProcess; // Extract _id property
+                        const { _id, subProcesses, ...rest } = subProcess; // Extract _id property
                         hazardsArray.push({ ...rest, type: 'Biological', Process: subProcess._id });
                         hazardsArray.push({ ...rest, type: 'Chemical', Process: subProcess._id });
                         hazardsArray.push({ ...rest, type: 'Physical', Process: subProcess._id });
@@ -123,7 +119,7 @@ function AddHACCPRiskAssessment() {
     const makeRequest = () => {
         if (dataToSend) {
             dispatch(setLoading(true))
-            axios.post(`${process.env.REACT_APP_BACKEND_URL}/create-conduct-haccp`, dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/create-conduct-haccp`, dataToSend, { headers: { Authorization: `${user._id}` } }).then(() => {
                 console.log("request made !");
                 setDataToSend(null);
                 dispatch(setLoading(false))
@@ -142,9 +138,9 @@ function AddHACCPRiskAssessment() {
             }).catch(err => {
                 dispatch(setLoading(false));
                 Swal.fire({
-                    icon : 'error',
-                    title : 'OOps..',
-                    text : 'Something went wrong, Try Again!'
+                    icon: 'error',
+                    title: 'OOps..',
+                    text: 'Something went wrong, Try Again!'
                 })
             })
         } else {
@@ -196,16 +192,14 @@ function AddHACCPRiskAssessment() {
                                         <div style={{
                                             border: '1px solid silver'
                                         }}>
-                                            <select name='DocumentType' value={dataToSend?.DocumentType} onChange={(e) => {
+                                            <select className='form-select  form-select-lg' name='DocumentType' value={dataToSend?.DocumentType} onChange={(e) => {
                                                 setDataToSend({ ...dataToSend, [e.target.name]: e.target.value, });
-
                                             }} style={{ width: "100%" }} required >
                                                 <option value="" selected disabled>Choose Type</option>
                                                 <option value="Manuals">Manuals</option>
                                                 <option value="Procedures">Procedures</option>
                                                 <option value="SOPs">SOPs</option>
                                                 <option value="Forms">Forms</option>
-
                                             </select>
 
                                         </div>
@@ -265,7 +259,7 @@ function AddHACCPRiskAssessment() {
                                         <div style={{
                                             border: '1px solid silver'
                                         }}>
-                                            <select name='Department' value={dataToSend?.Department} onChange={(e) => {
+                                            <select className='form-select  form-select-lg' name='Department' value={dataToSend?.Department} onChange={(e) => {
                                                 setDataToSend({ ...dataToSend, [e.target.name]: e.target.value });
                                             }} style={{ width: "100%" }} required>
                                                 <option value="" selected disabled>Choose Department</option>
@@ -290,20 +284,15 @@ function AddHACCPRiskAssessment() {
                                             <div style={{
                                                 border: '1px solid silver'
                                             }}>
-                                                <select name='Process' onChange={(e) => {
+                                                <select className='form-select  form-select-lg' name='Process' onChange={(e) => {
                                                     setSelectedProcess(JSON.parse(e.target.value))
                                                     setDataToSend({ ...dataToSend, [e.target.name]: JSON.parse(e.target.value)._id });
                                                 }} style={{ width: "100%" }} required>
                                                     <option value="" selected disabled>Choose Process</option>
                                                     {processesToShow?.map((processDoc) => (
-
                                                         <option value={JSON.stringify(processDoc)}>{processDoc.ProcessName}</option>
-
-
                                                     ))}
                                                 </select>
-
-
                                             </div>
                                         </div>
                                     )}
@@ -407,20 +396,17 @@ function AddHACCPRiskAssessment() {
 
                                                 </div>
                                             </div>
-                                          
+
                                         </div>
                                     </>
                                 )
                             })}
 
-
-
-
                         </div>
 
 
                         <div className={`${style.btn} px-lg-4 px-2 d-flex justify-content-center`}>
-                            
+
                             <button type='submit' >Submit</button>
                         </div>
                     </form>

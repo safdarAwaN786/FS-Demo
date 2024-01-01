@@ -1,7 +1,7 @@
 import style from './Adddevices.module.css'
 import profile from '../../assets/images/techPortal/SClock.svg'
 import Phone from '../../assets/images/employeeProfile/Location.svg'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import Swal from 'sweetalert2'
 import axios from 'axios'
 import { BsArrowLeftCircle } from 'react-icons/bs'
@@ -33,21 +33,15 @@ function AddDevices() {
     const [commentOpened, setCommentOpened] = useState(null);
     const [comment, setComment] = useState(null);
     const [callibration, setCallibration] = useState(null);
-
+    const user = useSelector(state => state.auth.user);
     const userToken = Cookies.get('userToken');
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
-
-    useEffect(() => {
-        console.log(callibration);
-    }, [callibration])
-
 
     const updateComment = (e) => {
         setComment(e.target.value)
     }
     const [submitAlert, setSubmitAlert] = useState(false);
-
     const toggleCommentBox = (e) => {
         if (e.target.checked === true) {
             setCommentOpened(e.target.name)
@@ -65,15 +59,9 @@ function AddDevices() {
         console.log('called');
         setFormValues({ ...formValues, [e.target.name]: e.target.value })
     }
-    useEffect(() => {
-        console.log(formValues);
-    }, [formValues])
-
-
 
     return (
         <>
-
             <div className={style.addEmployee}>
                 <div className='d-flex flex-row bg-white px-lg-5 mx-1 px-2 py-2'>
                     <BsArrowLeftCircle role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
@@ -82,7 +70,6 @@ function AddDevices() {
 
                         }
                     }} />
-
                 </div>
                 <div className={`${style.form} mt-1`}>
                     <div className={style.headers}>
@@ -461,18 +448,16 @@ function AddDevices() {
                                 <button onClick={() => {
                                     setSubmitAlert(false)
                                     dispatch(setLoading(true))
-                                    axios.post('/addEquipment', formValues, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+                                    axios.post('/addEquipment', formValues, { headers: { Authorization: `${user._id}` } }).then((res) => {
                                         dispatch(setLoading(false))
                                         Swal.fire({
                                             title: 'Success',
                                             text: 'Submitted Successfully',
                                             icon: 'success',
                                             confirmButtonText: 'Go!',
-
                                         }).then((result) => {
                                             if (result.isConfirmed) {
                                                 dispatch(updateTabData({ ...tabData, Tab: 'Master List of Monitoring and Measuring Devices' }))
-
                                             }
                                         })
                                     }).catch(err => {
@@ -485,7 +470,6 @@ function AddDevices() {
                                     })
                                 }} className={style.btn1}>Submit</button>
                                 <button onClick={() => { setSubmitAlert(false) }} className={style.btn2}>Cancel</button>
-
                             </div>
                         </div>
                     </div> : null

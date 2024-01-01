@@ -4,11 +4,9 @@ import { useEffect, useRef, useState } from 'react'
 import axios from "axios";
 import Swal from 'sweetalert2'
 import { BsArrowLeftCircle } from 'react-icons/bs';
-import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { setLoading } from '../../redux/slices/loading';
-
 
 function AddFoodSafetyPlan() {
 
@@ -16,7 +14,6 @@ function AddFoodSafetyPlan() {
     const [alert, setalert] = useState(false);
     const [treesToShow, setTreesToShow] = useState(null);
     const [selectedDecisionTree, setSelectedDecisionTree] = useState(null);
-    const userToken = Cookies.get('userToken');
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
     const [departmentsToShow, SetDepartmentsToShow] = useState(null);
@@ -24,7 +21,7 @@ function AddFoodSafetyPlan() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
             SetDepartmentsToShow(res.data.data);
         }).catch(err => {
             dispatch(setLoading(false));
@@ -37,9 +34,6 @@ function AddFoodSafetyPlan() {
     }, [])
 
 
-    useEffect(() => {
-        console.log(dataToSend);
-    }, [dataToSend])
 
     useEffect(()=>{
         if(departmentsToShow && treesToShow){
@@ -55,7 +49,7 @@ function AddFoodSafetyPlan() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-decision-trees`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-decision-trees`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             setTreesToShow(response.data.data);
             console.log(response.data.data);
         }).catch(err => {
@@ -66,7 +60,6 @@ function AddFoodSafetyPlan() {
                 text : 'Something went wrong, Try Again!'
             })
         })
-
     }, [])
 
     useEffect(() => {
@@ -87,7 +80,7 @@ function AddFoodSafetyPlan() {
     const makeRequest = () => {
         if (dataToSend.Plans?.length > 0) {
             dispatch(setLoading(true))
-            axios.post(`${process.env.REACT_APP_BACKEND_URL}/create-food-safety`, dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/create-food-safety`, dataToSend, { headers: { Authorization: `${user._id}` } }).then(() => {
                 console.log("request made !");
                 setDataToSend(null);
                 dispatch(setLoading(false))
@@ -96,13 +89,11 @@ function AddFoodSafetyPlan() {
                     text: 'Submitted Successfully',
                     icon: 'success',
                     confirmButtonText: 'Go!',
-
                 }).then((result) => {
                     if (result.isConfirmed) {
                         dispatch(updateTabData({ ...tabData, Tab: 'Generate Food Safety Plan' }))
                     }
                 })
-
             }).catch(err => {
                 dispatch(setLoading(false));
                 Swal.fire({
@@ -121,11 +112,6 @@ function AddFoodSafetyPlan() {
         }
     }
 
-
-
-
-
-
     return (
         <>
             <div className={`${style.parent} mx-auto`}>
@@ -137,7 +123,6 @@ function AddFoodSafetyPlan() {
                                     dispatch(updateTabData({ ...tabData, Tab: 'Food Saffety Plan' }))
                                 }
                             }} />
-
                     </div>
                     <div className={`${style.headers} d-flex justify-content-start ps-3 align-items-center `}>
                         <div className={style.spans}>
@@ -163,7 +148,7 @@ function AddFoodSafetyPlan() {
                                         <div style={{
                                             border: '1px solid silver'
                                         }}>
-                                            <select onChange={(e) => {
+                                            <select className='form-select  form-select-lg' onChange={(e) => {
                                                 setDataToSend({ ...dataToSend, [e.target.name]: e.target.value });
                                             }}
                                                 value={dataToSend?.DocumentType} name='DocumentType' style={{ width: "100%" }} required >
@@ -174,50 +159,9 @@ function AddFoodSafetyPlan() {
                                                 <option value="Forms">Forms</option>
 
                                             </select>
-
                                         </div>
                                     </div>
-                                    {/* {teamsToShow?.length > 0 && (
-
-                                        <div className='w-75 mx-4 d-flex flex-column justify-content-start'>
-                                            <div className={style.para}>
-                                                <p>HACCP team Members</p>
-                                            </div>
-                                            {teamsToShow?.map((team) => {
-                                                return (
-
-                                                    team.TeamMembers?.map((member) => {
-
-                                                        return (
-                                                            <div className='d-flex flex-row '>
-
-                                                                <input onChange={(e) => {
-                                                                    const updatedMembers = dataToSend?.Members || [];
-
-
-                                                                    if (e.target.checked) {
-                                                                        updatedMembers.push(member);
-                                                                        setDataToSend({ ...dataToSend, Members: updatedMembers })
-                                                                    } else {
-                                                                        setDataToSend({ ...dataToSend, Members: updatedMembers.filter((obj) => obj !== member) })
-                                                                    }
-                                                                }} className='m-1' type='checkbox' />
-                                                                <p style={{
-                                                                    fontFamily: 'Inter'
-                                                                }}>{member.Name}</p>
-                                                            </div>
-                                                        )
-                                                    })
-                                                )
-
-                                            })}
-                                        </div>
-                                    )} */}
-
-
-
-
-
+                                    
                                 </div>
                                 <div className={style.sec2}>
                                     <div className={style.inputParent}>
@@ -227,7 +171,7 @@ function AddFoodSafetyPlan() {
                                         <div style={{
                                             border: '1px solid silver'
                                         }}>
-                                            <select value={dataToSend?.Department} onChange={(e) => {
+                                            <select className='form-select  form-select-lg' value={dataToSend?.Department} onChange={(e) => {
                                                 setDataToSend({ ...dataToSend, [e.target.name]: e.target.value });
                                             }} name='Department' style={{ width: "100%" }} required>
                                                 <option value="" selected disabled>Choose Department</option>

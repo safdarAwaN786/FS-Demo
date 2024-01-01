@@ -4,25 +4,21 @@ import axios from "axios";
 import Swal from 'sweetalert2';
 import { BsArrowLeftCircle } from 'react-icons/bs'
 import { useDispatch, useSelector } from 'react-redux';
-import Cookies from 'js-cookie';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { changeId } from '../../redux/slices/idToProcessSlice';
 import { setLoading } from '../../redux/slices/loading';
 
-
 function ReportsList() {
-
     const [alert, setalert] = useState(false);
     const [popUpData, setPopUpData] = useState(null);
     const alertManager = () => {
         setalert(!alert)
     }
     const [reports, setReports] = useState(null);
-    const userToken = Cookies.get('userToken');
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
     const idToWatch = useSelector(state => state.idToProcess)
-
+    const user = useSelector(state => state.auth?.user);
     const formatDate = (date) => {
 
         const newDate = new Date(date);
@@ -35,26 +31,21 @@ function ReportsList() {
     }
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readReportByAuditId/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
-            console.log(response.data.data);
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readReportByAuditId/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             setReports(response.data.data)
             dispatch(setLoading(false))
-
             if (response.data.data == undefined) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
                     text: 'Report is not Created for this Audit yet!',
                     confirmButtonText: 'OK.'
-
                 }).then((result) => {
                     if (result.isConfirmed) {
                         dispatch(updateTabData({ ...tabData, Tab: 'Non-Conformity Report' }))
-
                     }
                 })
             }
-
         }).catch(err => {
             dispatch(setLoading(false));
             Swal.fire({
@@ -63,8 +54,6 @@ function ReportsList() {
                 text: 'Something went wrong, Try Again!'
             })
         })
-
-
     }, [])
    
 
@@ -86,9 +75,7 @@ function ReportsList() {
                     <div className={style.para}>
                         Reports List
                     </div>
-
                 </div>
-                
                 <div className={style.tableParent}>
                     <table className={style.table}>
                         <tr className={style.tableHeader}>
@@ -101,11 +88,8 @@ function ReportsList() {
                             reports?.map((report, index) => {
                                 return (
                                     <tr key={index}>
-                                        
                                         <td>{formatDate(report?.ReportDate)}</td>
-                                       
                                         <td>{report?.ReportBy}</td>
-                                        
                                         <td><button className={style.btn} onClick={() => {
                                             dispatch(updateTabData({ ...tabData, Tab: 'viewReport' }))
                                             dispatch(changeId(report._id));

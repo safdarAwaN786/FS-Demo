@@ -5,7 +5,6 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import axios from "axios";
 import Swal from 'sweetalert2';
-import Cookies from 'js-cookie'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateTabData } from '../../redux/slices/tabSlice'
 import { changeId } from '../../redux/slices/idToProcessSlice'
@@ -26,17 +25,12 @@ function TechMWR() {
     const [allDataArr, setAllDataArr] = useState(null);
     const [requests, setRequests] = useState(null);
     const [selectedPriority, setSelectedPriority] = useState(null);
-
-    const userToken = Cookies.get('userToken');
+    const user = useSelector(state => state.auth.user);
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
-
-
-
-
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/getAllWorkRequests`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/getAllWorkRequests`, { headers: { Authorization: `${user._id}` } }).then((res) => {
             setAllDataArr(res.data.data);
             setRequests(res.data.data.slice(startIndex, endIndex));
             dispatch(setLoading(false))
@@ -52,7 +46,7 @@ function TechMWR() {
 
     const reGetData = () => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/getAllWorkRequests`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/getAllWorkRequests`, { headers: { Authorization: `${user._id}` } }).then((res) => {
             setAllDataArr(res.data.data);
             setRequests(res.data.data.slice(startIndex, endIndex));
             dispatch(setLoading(false))
@@ -128,9 +122,7 @@ function TechMWR() {
         }
     }
 
-    useEffect(() => {
-        console.log(selectedPriority);
-    }, [selectedPriority])
+ 
 
 
 
@@ -336,7 +328,7 @@ function TechMWR() {
                             <form onSubmit={(e) => {
                                 e.preventDefault();
                                 dispatch(setLoading(true))
-                                axios.patch(`/rejectMWR/${openedRequestId}`, rejectObj, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+                                axios.patch(`/rejectMWR/${openedRequestId}`, rejectObj, { headers: { Authorization: `${user._id}` } }).then(() => {
                                     dispatch(setLoading(false))
                                     Swal.fire({
                                         title: 'Success',
@@ -380,7 +372,7 @@ function TechMWR() {
                             <div className={style.alertbtns}>
                                 <button onClick={() => {
                                     dispatch(setLoading(true))
-                                    axios.patch(`/completeMWR/${openedRequestId}`, null, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+                                    axios.patch(`/completeMWR/${openedRequestId}`, null, { headers: { Authorization: `${user._id}` } }).then(() => {
                                         dispatch(setLoading(false))
                                         Swal.fire({
                                             title: 'Success',
@@ -418,7 +410,7 @@ function TechMWR() {
                                 setalert3(false);
                                 console.log(acceptObj)
                                 dispatch(setLoading(true))
-                                axios.patch(`/acceptMWR/${openedRequestId}`, acceptObj, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+                                axios.patch(`/acceptMWR/${openedRequestId}`, acceptObj, { headers: { Authorization: `${user._id}` } }).then((res) => {
                                     dispatch(setLoading(false))
                                     Swal.fire({
                                         title: 'Success',

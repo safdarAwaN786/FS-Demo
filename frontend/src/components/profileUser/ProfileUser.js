@@ -42,7 +42,7 @@ function ProfileUser({ setRedTab }) {
                         </div>
                         <div onClick={() => {
                             Cookies.remove('userToken');
-                            navigate('/');
+                            navigate('/login');
                             dispatch(logOutUser());
                             dispatch(updateTabData(null))
                         }}>

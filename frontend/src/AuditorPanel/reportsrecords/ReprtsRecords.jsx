@@ -3,7 +3,6 @@ import style from './ReportsRecords.module.css'
 import Search from '../../assets/images/employees/Search.svg'
 import { useEffect, useState } from 'react'
 import axios from "axios";
-import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { changeId } from '../../redux/slices/idToProcessSlice'
@@ -16,13 +15,12 @@ function ReportsRecords() {
     const [startIndex, setStartIndex] = useState(0);
     const [endIndex, setEndIndex] = useState(8);
     const [allDataArr, setAllDataArr] = useState(null);
-    const userToken = Cookies.get('userToken');
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
-
+    const user = useSelector(state => state.auth?.user);
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readConductAudits`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readConductAudits`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             setAllDataArr(response.data.data)
             setAuditsList(response.data.data.slice(startIndex, endIndex));
             dispatch(setLoading(false))
@@ -40,31 +38,23 @@ function ReportsRecords() {
     const nextPage = () => {
         setStartIndex(startIndex + 8);
         setEndIndex(endIndex + 8);
-
     }
 
     const backPage = () => {
         setStartIndex(startIndex - 8);
         setEndIndex(endIndex - 8);
-
-
     }
 
     useEffect(() => {
-
         setAuditsList(allDataArr?.slice(startIndex, endIndex))
     }, [startIndex, endIndex])
 
 
     const search = (event) => {
         if (event.target.value !== "") {
-            console.log(event.target.value);
-
             const searchedList = allDataArr.filter((obj) =>
-
                 obj?.ChecklistId?.ChecklistId.includes(event.target.value)
             )
-            console.log(searchedList);
             setAuditsList(searchedList);
         } else {
             setAuditsList(allDataArr?.slice(startIndex, endIndex))

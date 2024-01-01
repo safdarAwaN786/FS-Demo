@@ -18,7 +18,7 @@ function UpdateHACCPTeam() {
     const userToken = Cookies.get('userToken');
     const idToWatch = useSelector(state => state.idToProcess);
     const dispatch = useDispatch();
-
+    const user = useSelector(state => state.auth.user);
     const [members, setMembers] = useState([]);
 
     const updateMembers = (event, index) => {
@@ -42,11 +42,10 @@ function UpdateHACCPTeam() {
     useEffect(() => {
         setDataToSend({ ...dataToSend, TeamMembers: members });
     }, [members])
-    const user = useSelector(state => state.auth.user);
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
             SetDepartmentsToShow(res.data.data);
             if (members) {
                 dispatch(setLoading(false))
@@ -63,7 +62,7 @@ function UpdateHACCPTeam() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-haccp-team/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-haccp-team/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
             setDataToSend(res.data.data);
             setMembers(res.data.data.TeamMembers);
             if (departmentsToShow) {
@@ -167,8 +166,7 @@ function UpdateHACCPTeam() {
     const makeRequest = () => {
         if (finalFormData && dataToSend.TeamMembers.length !== 0) {
             dispatch(setLoading(true))
-            axios.patch(`${process.env.REACT_APP_BACKEND_URL}/update-haccp-team/${idToWatch}`, finalFormData, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
-                console.log("request made !");
+            axios.patch(`${process.env.REACT_APP_BACKEND_URL}/update-haccp-team/${idToWatch}`, finalFormData, { headers: { Authorization: `${user._id}` } }).then(() => {
                 dispatch(setLoading(false))
                 Swal.fire({
                     title: 'Success',
@@ -209,7 +207,7 @@ function UpdateHACCPTeam() {
                     params: {
                         url: imageURL,
                     },
-                    responseType: 'blob', headers: { Authorization: `Bearer ${userToken}` } // Specify the response type as 'blob' to handle binary data
+                    responseType: 'blob', headers: { Authorization: `${user._id}` } // Specify the response type as 'blob' to handle binary data
                 });
 
 
@@ -297,7 +295,7 @@ function UpdateHACCPTeam() {
                                             <p></p>
                                         </div>
                                         <div className='border border-dark-subtle'>
-                                            <select value={dataToSend?.DocumentType} onChange={(e) => {
+                                            <select className='form-select  form-select-lg' value={dataToSend?.DocumentType} onChange={(e) => {
                                                 setDataToSend({ ...dataToSend, [e.target.name]: e.target.value })
                                             }} name='DocumentType' style={{ width: "100%" }} required >
                                                 <option value="" selected disabled>Choose Document Type</option>
@@ -322,7 +320,7 @@ function UpdateHACCPTeam() {
 
                                         </div>
                                         <div className='border border-dark-subtle'>
-                                            <select value={dataToSend?.Department} onChange={(e) => {
+                                            <select className='form-select  form-select-lg' value={dataToSend?.Department} onChange={(e) => {
                                                 setDataToSend({ ...dataToSend, [e.target.name]: e.target.value })
                                             }} name='Department' style={{ width: "100%" }} required>
                                                 <option value="" selected disabled>Choose Department</option>
@@ -448,7 +446,7 @@ function UpdateHACCPTeam() {
                                     <p></p>
                                 </div>
                                 <div className='border w-50 border-dark-subtle'>
-                                    <select className='w-100' name='Department'  >
+                                    <select className='w-100 form-select  form-select-lg' name='Department'  >
                                         <option value="" selected >Added Members</option>
 
                                         {members?.map((member) => {

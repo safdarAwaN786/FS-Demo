@@ -5,7 +5,6 @@ import { useEffect, useState } from 'react'
 import axios from "axios";
 import Swal from 'sweetalert2'
 import { BsArrowLeftCircle } from 'react-icons/bs';
-import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { setLoading } from '../../redux/slices/loading';
@@ -23,41 +22,27 @@ function AddMachine() {
         setalert(!alert)
     }
     const [commentOpened, setCommentOpened] = useState(null);
-
-    const userToken = Cookies.get('userToken');
+    const user = useSelector(state => state.auth.user);
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
-
-
     const updateData = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
-
     }
 
     const [comment, setComment] = useState(null);
-
-
     const updateComment = (e) => {
-
         setComment(e.target.value)
     }
-
-
     useEffect(() => {
-
         setFormData({ ...formData, maintenanceFrequency: maintenance });
     }, [maintenance])
-
     const [submitAlert, setSubmitAlert] = useState(false);
-
     const toggleCommentBox = (e) => {
         if (e.target.checked === true) {
             setCommentOpened(e.target.name)
             alertManager();
-
         } else {
             if (maintenance) {
-
                 const newObj = maintenance;
                 delete newObj[e.target.name];
                 setMaintenance(newObj)
@@ -129,40 +114,27 @@ function AddMachine() {
                                             setWeeklyChecked(e.target.checked);
                                         }} name='Weekly' type="checkbox" /> Weekly  {isWeeklyChecked && maintenance?.Weekly && <p className='text-success fs-6'> ( Added )</p>}  {isWeeklyChecked && !maintenance?.Weekly && <p className='text-danger fs-6'> ( Not Added )</p>}</p>
 
-
-
                                         <p className={style.optStyle} ><input onChange={(e) => {
                                             toggleCommentBox(e);
                                             setMonthlyChecked(e.target.checked);
                                         }} name='Monthly' type="checkbox" /> Monthly  {isMonthlyChecked && maintenance?.Monthly && <p className='text-success fs-6'> ( Added )</p>}  {isMonthlyChecked && !maintenance?.Monthly && <p className='text-danger fs-6'> ( Not Added )</p>}</p>
-
-
                                         <p className={style.optStyle} ><input onChange={(e) => {
                                             toggleCommentBox(e);
                                             setQuarterlyChecked(e.target.checked);
-
                                         }} name='Quarterly' type="checkbox" /> Quarterly  {isQuarterlyChecked && maintenance?.Quarterly && <p className='text-success fs-6'> ( Added )</p>}  {isQuarterlyChecked && !maintenance?.Quarterly && <p className='text-danger fs-6'> ( Not Added )</p>}</p>
-
-
                                         <p className={style.optStyle} ><input onChange={(e) => {
                                             toggleCommentBox(e);
                                             setYearlyChecked(e.target.checked);
                                         }} name='Yearly' type="checkbox" /> Yearly  {isYearlyChecked && maintenance?.Yearly && <p className='text-success fs-6'> ( Added )</p>}   {isYearlyChecked && !maintenance?.Yearly && <p className='text-danger fs-6'> ( Not Added )</p>}</p>
                                     </div>
-
                                 </div>
-
                             </div>
-
                         </div>
                         <div className={style.resbtns}>
                             <button type='submit' className={style.submit} >Submit</button>
                         </div>
-
                     </form>
                 </div>
-
-
             </div>
 
             {
@@ -194,7 +166,6 @@ function AddMachine() {
                                 fontWeight: "bold",
                                 fontSize: "18px",
                                 fontFamily: "Poppins"
-
                             }}>Choose At least one maintenance plan.</p>
                             <div className={style.alertbtns}>
 
@@ -215,7 +186,7 @@ function AddMachine() {
                                 <button onClick={() => {
                                     setSubmitAlert(false)
                                     dispatch(setLoading(true))
-                                    axios.post(`${process.env.REACT_APP_BACKEND_URL}/addMachinery`, formData, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+                                    axios.post(`${process.env.REACT_APP_BACKEND_URL}/addMachinery`, formData, { headers: { Authorization: `${user._id}` } }).then((res) => {
                                         dispatch(setLoading(false))
                                         setFormData(null)
                                         Swal.fire({
@@ -223,7 +194,6 @@ function AddMachine() {
                                             text: 'Submitted Successfully',
                                             icon: 'success',
                                             confirmButtonText: 'Go!',
-
                                         }).then((result) => {
                                             if (result.isConfirmed) {
                                                 dispatch(updateTabData({ ...tabData, Tab: 'Master List of Machinery' }))
@@ -237,12 +207,8 @@ function AddMachine() {
                                             text: 'Something went wrong, Try Again!'
                                         })
                                     })
-                                }
-                                } className={style.btn1}>Submit</button>
-
-
+                                }} className={style.btn1}>Submit</button>
                                 <button onClick={() => { setSubmitAlert(false) }} className={style.btn2}>Cancel</button>
-
                             </div>
                         </div>
                     </div> : null

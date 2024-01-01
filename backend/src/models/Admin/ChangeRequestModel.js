@@ -12,7 +12,6 @@ const ChangeRequestSchema = new mongoose.Schema({
     type : Schema.Types.ObjectId,
     ref : 'User'
   },
-
   Department: {
     type: Schema.Types.ObjectId,
     ref: 'Department',
@@ -88,8 +87,13 @@ const ChangeRequestSchema = new mongoose.Schema({
 
   Document: {
     type: Schema.Types.ObjectId,
-    ref: 'Document',
+    refPath: 'documentModel', // Reference path based on discriminator
     required: true
+  },
+  documentModel: {
+    type: String,
+    required: true,
+    enum: ['Document', 'UploadDocuments'] // Discriminator values
   },
 
 }, {

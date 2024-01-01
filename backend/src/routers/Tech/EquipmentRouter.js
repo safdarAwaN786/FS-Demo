@@ -24,7 +24,6 @@ router.post('/addEquipment',  async (req, res) => {
     equipmentLocation,
     Range,
     callibration,
-
   });
 
   try {

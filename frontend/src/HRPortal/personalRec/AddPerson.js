@@ -1,7 +1,6 @@
 
-import Cookies from 'js-cookie';
+
 import style from './AddPerson.module.css'
-import { useEffect, useState } from 'react'
 import { BsArrowLeftCircle } from 'react-icons/bs';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
@@ -9,18 +8,10 @@ import { updatePersonFormData } from '../../redux/slices/appSlice';
 
 function AddPerson() {
 
-    const userToken = Cookies.get('userToken');
+ 
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
     const personFormData = useSelector(state => state.appData.personFormData);
-
-
-    useEffect(() => {
-
-        console.log(personFormData);
-    }, [personFormData])
-
-
 
 
     return (

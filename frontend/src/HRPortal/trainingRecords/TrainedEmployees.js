@@ -5,7 +5,6 @@ import axios from 'axios'
 import profile from '../../assets/images/addEmployee/prof.svg'
 import { BsArrowLeftCircle } from 'react-icons/bs'
 import { useDispatch, useSelector } from 'react-redux'
-import Cookies from 'js-cookie'
 import { updateTabData } from '../../redux/slices/tabSlice'
 import { setLoading } from '../../redux/slices/loading'
 import Swal from 'sweetalert2'
@@ -18,18 +17,15 @@ function TrainedEmployees() {
     const [popUpData, setPopUpData] = useState(null);
     const [trainingToShow, setTrainingToShow] = useState(null);
     const tabData = useSelector(state => state.tab);
-    const userToken = Cookies.get('userToken');
     const dispatch = useDispatch();
     const idToWatch = useSelector(state => state.idToProcess);
     const [startIndex, setStartIndex] = useState(0);
     const [endIndex, setEndIndex] = useState(8);
-
+    const user = useSelector(state => state.auth.user);
     const search = (event) => {
         if (event.target.value !== "") {
             console.log(event.target.value);
-
             const searchedList = trainingToShow?.Employee?.filter((obj) =>
-
                 obj.EmployeeName.includes(event.target.value) || obj.EmployeeCode.includes(event.target.value)
             )
             console.log(searchedList);
@@ -42,7 +38,7 @@ function TrainedEmployees() {
     const [trainedEmployees, setTrainedEmployees] = useState(null);
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readMonthlyPlan`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readMonthlyPlan`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             const plannedTrainingsList = response.data.data;
             const foundTraining = plannedTrainingsList.find((training) => training._id === idToWatch);
             if (foundTraining) {
@@ -64,17 +60,13 @@ function TrainedEmployees() {
     const nextPage = () => {
         setStartIndex(startIndex + 8);
         setEndIndex(endIndex + 8);
-
     }
 
     const backPage = () => {
         setStartIndex(startIndex - 8);
         setEndIndex(endIndex - 8);
-
-
     }
     useEffect(() => {
-
         setTrainedEmployees(trainingToShow?.Employee.slice(startIndex, endIndex))
     }, [startIndex, endIndex])
 
@@ -155,7 +147,6 @@ function TrainedEmployees() {
                                             <td>{employee.CNIC}</td>
                                             <td>{employee.PhoneNumber}</td>
                                             <td>{employee.Email}</td>
-
                                             {(employee.EmployeeData.length !== 0 && findObjectIndexByPropertyValue(employee.EmployeeData) !== null) ? (
 
                                                 <>

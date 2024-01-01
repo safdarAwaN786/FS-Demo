@@ -9,43 +9,24 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import Slider from 'rc-slider';
 import { setLoading } from '../../redux/slices/loading';
+import html2pdf from 'html2pdf.js';
+
 
 function ViewReport() {
 
     const [showBox, setShowBox] = useState(false);
-    const [screenWidth, setScreenWidth] = useState(window.innerWidth);
     const [reportData, setReportData] = useState(null);
     const [alert, setalert] = useState(false);
     const [dataToShow, setDataToShow] = useState(null);
-
+    const [dataToSend, setDataToSend] = useState(null)
     const userToken = Cookies.get('userToken');
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
     const idToWatch = useSelector(state => state.idToProcess)
-
-
-
-    const alertManager = () => {
-        setalert(!alert)
-    }
-
-    useEffect(() => {
-        const handleResize = () => {
-            setScreenWidth(window.innerWidth);
-        };
-
-        window.addEventListener('resize', handleResize);
-
-        // Remove the event listener when the component unmounts
-        return () => {
-            window.removeEventListener('resize', handleResize);
-        };
-    }, []);
-
+    const user = useSelector(state => state.auth.user)
     const [auditData, setAuditData] = useState(null);
     const [answers, setAnswers] = useState([]);
     const formatDate = (date) => {
-
         const newDate = new Date(date);
         const formatDate = newDate.toLocaleDateString('en-GB', {
             day: '2-digit',
@@ -58,28 +39,24 @@ function ViewReport() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readReportById/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
-            console.log(response.data.data);
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readReportById/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             setReportData(response.data.data)
+            setDataToSend(response.data.data)
             setAuditData(response.data.data.ConductAudit)
             setAnswers(response.data.data.ConductAudit.Answers);
             dispatch(setLoading(false))
-
             if (response.data.data == undefined) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
                     text: 'Report is not Created for this Audit yet!',
                     confirmButtonText: 'OK.'
-
                 }).then((result) => {
                     if (result.isConfirmed) {
                         dispatch(updateTabData({ ...tabData, Tab: 'Non-Conformity Report' }))
-
                     }
                 })
             }
-
         }).catch(err => {
             dispatch(setLoading(false));
             Swal.fire({
@@ -88,20 +65,96 @@ function ViewReport() {
                 text: 'Something went wrong, Try Again!'
             })
         })
-
-
     }, [])
 
+    const downloadPDF = async () => {
+        var element = document.getElementById('printable');
+        var opt = {
+            margin: [1.3, 0, 0, 0],
+            filename: `${user.Department.DepartmentName}-doc.pdf`,
+            enableLinks: false,
+            pagebreak: { mode: 'avoid-all' },
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 4 },
+            jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+        };
 
+        html2pdf().from(element).set(opt).toPdf().get('pdf').then(async function (pdf) {
+            pdf.insertPage(1);
+
+            var totalPages = pdf.internal.getNumberOfPages();
+            //print current pdf width & height to console
+            console.log("getHeight:" + pdf.internal.pageSize.getHeight());
+            console.log("getWidth:" + pdf.internal.pageSize.getWidth());
+            for (var i = 1; i <= totalPages; i++) {
+                pdf.setPage(i);
+                pdf.setFillColor(0, 0, 0);
+                if (i === 1) {
+                    try {
+                        console.log(user.Company.CompanyLogo);
+                        const response = await fetch(user.Company.CompanyLogo);
+                        const blob = await response.blob();
+                        const imageBitmap = await createImageBitmap(blob);
+                        // create a canvas element and draw the image bitmap on it
+                        const canvas = document.createElement('canvas');
+                        canvas.width = imageBitmap.width;
+                        canvas.height = imageBitmap.height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(imageBitmap, 0, 0);
+                        // get the data URL of the canvas
+                        const dataURL = canvas.toDataURL('image/jpeg');
+                        // pass the data URL to the pdf.addImage method
+                        pdf.addImage(dataURL, 'JPEG', (pdf.internal.pageSize.getWidth() / 2) - 1.5, 2.5, 3, 3);
+                        pdf.setFontSize(25);
+                        pdf.text(`${user.Company.CompanyName}`, (pdf.internal.pageSize.getWidth() / 2) - 1.5, (pdf.internal.pageSize.getHeight() / 2));
+                        pdf.text(`${user.Company.Address}`, (pdf.internal.pageSize.getWidth() / 2) - 1.5, (pdf.internal.pageSize.getHeight() / 2) + 0.5);
+                        pdf.setFontSize(15);
+                        pdf.setLineWidth(0.1); // Example line width
+                        pdf.line(0.1, (pdf.internal.pageSize.getHeight() / 2) + 1, pdf.internal.pageSize.getWidth() - 0.2, (pdf.internal.pageSize.getHeight() / 2) + 1)
+                        pdf.text("Document Id", 1, (pdf.internal.pageSize.getHeight() / 2) + 1.5);
+                        pdf.text(`${dataToSend.DocumentId}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 1.5);
+                        pdf.text("Created By", 1, (pdf.internal.pageSize.getHeight() / 2) + 1.8);
+                        pdf.text(`${dataToSend.CreatedBy}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 1.8);
+                        pdf.text("Creation Date", 1, (pdf.internal.pageSize.getHeight() / 2) + 2.1);
+                        pdf.text(`${formatDate(dataToSend.CreationDate)}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 2.1);
+                        pdf.text("Revision Number", 1, (pdf.internal.pageSize.getHeight() / 2) + 2.4);
+                        pdf.text(`${dataToSend.RevisionNo}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 2.4);
+                        if (dataToSend.Status == 'Approved') {
+
+                            pdf.text("Approved By", 1, (pdf.internal.pageSize.getHeight() / 2) + 2.7);
+                            pdf.text(`${dataToSend.ApprovedBy}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 2.7);
+                            pdf.text("Approval Date", 1, (pdf.internal.pageSize.getHeight() / 2) + 3.0);
+                            pdf.text(`${formatDate(dataToSend.ApprovalDate)}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 3.0);
+                        }
+                        if (dataToSend.ReviewedBy) {
+
+                            pdf.text("Reviewed By", 1, (pdf.internal.pageSize.getHeight() / 2) + 3.3);
+                            pdf.text(`${dataToSend.ReviewedBy}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 3.3);
+                            pdf.text("Reviewed Date", 1, (pdf.internal.pageSize.getHeight() / 2) + 3.6);
+                            pdf.text(`${formatDate(dataToSend.ReviewDate)}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 3.6);
+                        }
+                    } catch (error) {
+                        console.log(error);
+                    }
+                } else {
+                    pdf.setFontSize(15)
+                    pdf.text('Powered By Feat Technology', (pdf.internal.pageSize.getWidth() / 2) - 1.3, 0.5);
+                    pdf.setFontSize(10);
+                    pdf.text(`${user.Company.CompanyName}`, pdf.internal.pageSize.getWidth() - 2, 0.3);
+                    pdf.text('Non Conformance Report', pdf.internal.pageSize.getWidth() - 2, 0.5);
+                    pdf.text(`${dataToSend.DocumentId}`, pdf.internal.pageSize.getWidth() - 2, 0.7);
+                    pdf.text(`Revision No :${dataToSend.RevisionNo}`, pdf.internal.pageSize.getWidth() - 2, 0.9);
+                    pdf.text(`Creation : ${formatDate(dataToSend.CreationDate)}`, pdf.internal.pageSize.getWidth() - 2, 1.1);
+                }
+            }
+        }).save();
+    };
 
     return (
         <>
             <div className={`${style.parent} mx-auto`}>
-
-
                 <div className={`${style.subparent} mx-2 mx-sm-4 mt-5 mx-lg-5`}>
                     <div className='mx-lg-5 px-4 mx-md-4 mx-2  mb-1 '>
-
                         <BsArrowLeftCircle onClick={(e) => {
                             dispatch(updateTabData({ ...tabData, Tab: 'Non-Conformity Report' }))
                         }} className='fs-3 text-danger mx-1' role='button' />
@@ -116,10 +169,8 @@ function ViewReport() {
                             Non Conformance Report
                         </div>
                     </div>
-                    <form className='bg-white' encType='multipart/form-data' onSubmit={(event) => {
+                    <form id='printable' className='bg-white' encType='multipart/form-data' onSubmit={(event) => {
                         event.preventDefault();
-                        // alertManager();
-
                     }}>
                         {answers?.map((answer, index) => {
                             return (
@@ -167,10 +218,8 @@ function ViewReport() {
                                             )}
                                             {answer.question.ComplianceType === 'Safe/AtRisk' && (
                                                 <div className='d-flex flex-row flex-wrap'>
-
                                                     <input checked={answers[index].SafeAtRiskAnswer === 'Safe'} type="radio" class="btn-check" name={answer.question._id} id={`Safe-${index}`} autocomplete="off" />
                                                     <label class="btn btn-outline-success m-2" for={`Safe-${index}`}>Safe</label>
-
                                                     <input checked={answers[index].SafeAtRiskAnswer === 'At Risk'} type="radio" class="btn-check" name={answer.question._id} id={`At Risk-${index}`} autocomplete="off" />
                                                     <label class="btn btn-outline-danger m-2" for={`At Risk-${index}`}>At Risk</label>
                                                     <input checked={answers[index].SafeAtRiskAnswer === 'N/A'} type="radio" class="btn-check" name={answer.question._id} id={`N/A-${index}`} autocomplete="off" />
@@ -180,10 +229,8 @@ function ViewReport() {
 
                                             {answer.question.ComplianceType === 'Pass/Fail' && (
                                                 <div className='d-flex flex-row flex-wrap'>
-
                                                     <input checked={answers[index].PassFailAnswer === 'Pass'} type="radio" class="btn-check" name={answer.question._id} id={`Pass-${index}`} autocomplete="off" />
                                                     <label class="btn btn-outline-success m-2" for={`Pass-${index}`}>Pass</label>
-
                                                     <input checked={answers[index].PassFailAnswer === 'Fail'} type="radio" class="btn-check" name={answer.question._id} id={`Fail-${index}`} autocomplete="off" />
                                                     <label class="btn btn-outline-danger m-2" for={`Fail-${index}`}>Fail</label>
                                                     <input checked={answers[index].PassFailAnswer === 'N/A'} type="radio" class="btn-check" name={answer.question._id} id={`N/A-${index}`} autocomplete="off" />
@@ -272,6 +319,9 @@ function ViewReport() {
                             )
                         })}
                     </form>
+                    <div className={`${style.btn} px-lg-4 px-2 d-flex justify-content-center`}>
+                        <button onClick={downloadPDF} type='button' >Download</button>
+                    </div>
                 </div>
             </div>
             {
@@ -282,12 +332,7 @@ function ViewReport() {
                             <div className={style.alertbtns}>
                                 <button onClick={() => {
                                     setShowBox(false)
-
                                 }} className={style.btn1}>Ok.</button>
-
-
-
-
                             </div>
                         </div>
                     </div> : null

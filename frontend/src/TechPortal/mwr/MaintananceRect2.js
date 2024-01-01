@@ -2,12 +2,10 @@ import style from './MaintananceRect2.module.css'
 import { useEffect, useState } from 'react'
 import axios from "axios";
 import { BsArrowLeftCircle } from 'react-icons/bs';
-import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { setLoading } from '../../redux/slices/loading';
 import Swal from 'sweetalert2';
-
 
 function MaintananceRect2() {
     const [alert, setalert] = useState(false);
@@ -17,16 +15,11 @@ function MaintananceRect2() {
     }
     const [machine, setMachine] = useState();
     const [maintenances, setMaintenances] = useState(null);
-
-    const userToken = Cookies.get('userToken');
+    const user = useSelector(state => state.auth.user);
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
     const dateType = useSelector(state => state.appData.dateType);
     const idToWatch = useSelector(state => state.idToProcess);
-
-    const user = useSelector(state => state.auth.user);
-
-
 
     const handleDownloadImage = async (imageURL) => {
         try {
@@ -37,7 +30,7 @@ function MaintananceRect2() {
                     params: {
                         url: imageURL,
                     },
-                    responseType: 'blob', headers: { Authorization: `Bearer ${userToken}` } // Specify the response type as 'blob' to handle binary data
+                    responseType: 'blob', headers: { Authorization: `${user._id}` } // Specify the response type as 'blob' to handle binary data
                 });
 
 
@@ -80,7 +73,7 @@ function MaintananceRect2() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readMachinery/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readMachinery/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
             setMachine(res.data.data)
             if (maintenances) {
                 dispatch(setLoading(false))
@@ -93,7 +86,7 @@ function MaintananceRect2() {
                 text: 'Something went wrong, Try Again!'
             })
         });
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/getMaintenanceByMachineId/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/getMaintenanceByMachineId/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
             const allMaintenances = res.data.data;
             setMaintenances(allMaintenances.filter((maintenance) => maintenance.dateType === dateType));
             if (machine) {
@@ -214,9 +207,9 @@ function MaintananceRect2() {
                         }
                     </table>
                 </div>
-                <div className={style.btnparent}>
+                {/* <div className={style.btnparent}>
                     <button className={style.download}>Download</button>
-                </div>
+                </div> */}
             </div>
 
             {

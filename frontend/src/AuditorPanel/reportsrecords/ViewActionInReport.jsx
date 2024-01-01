@@ -13,44 +13,19 @@ import { setLoading } from '../../redux/slices/loading';
 function ViewActionInReport() {
 
     const [showBox, setShowBox] = useState(false);
-    const [screenWidth, setScreenWidth] = useState(window.innerWidth);
     const [actionData, setActionData] = useState(null);
-    const [alert, setalert] = useState(false);
     const [dataToShow, setDataToShow] = useState(null);
-
+    const user = useSelector(state => state.auth?.user);
     const userToken = Cookies.get('userToken');
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
     const idToWatch = useSelector(state => state.idToProcess);
-
-    
-
-    const alertManager = () => {
-        setalert(!alert)
-    }
-
-    useEffect(() => {
-        const handleResize = () => {
-            setScreenWidth(window.innerWidth);
-        };
-
-        window.addEventListener('resize', handleResize);
-
-        // Remove the event listener when the component unmounts
-        return () => {
-            window.removeEventListener('resize', handleResize);
-        };
-    }, []);
-
     const [correctiveAnswers, setCorrectiveAnswers] = useState([]);
 
-
-
     useEffect(() => {
-        console.log(idToWatch);
+        
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readCorrectiveActionById/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
-            console.log(response.data.data);
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readCorrectiveActionById/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             setActionData(response.data.data)
             setCorrectiveAnswers(response.data.data.Answers);
             dispatch(setLoading(false))
@@ -60,7 +35,6 @@ function ViewActionInReport() {
                     title: 'Oops...',
                     text: 'Report is not Created for this Audit yet!',
                     confirmButtonText: 'OK.'
-
                 }).then((result) => {
                     if (result.isConfirmed) {
                         dispatch(updateTabData({...tabData, Tab : 'Corrective Action Plan'}))
@@ -77,26 +51,15 @@ function ViewActionInReport() {
                 text : 'Something went wrong, Try Again!'
             })
         })
-
-
     }, [])
-
-
-
-
-
-
 
 
 
     return (
         <>
             <div className={`${style.parent} mx-auto`}>
-
-
                 <div className={`${style.subparent} mx-2 mx-sm-4 mt-5 mx-lg-5`}>
                     <div className='mx-lg-5 px-4 mx-md-4 mx-2  mb-1 '>
-
                         <BsArrowLeftCircle onClick={(e) => {
                             dispatch(updateTabData({ ...tabData, Tab: 'Non-Conformity Report' }))
                         }} className='fs-3 text-danger mx-1' role='button' />
@@ -113,12 +76,7 @@ function ViewActionInReport() {
                     </div>
                     <form className='bg-white' encType='multipart/form-data' onSubmit={(event) => {
                         event.preventDefault();
-
                     }}>
-
-
-
-
                         {correctiveAnswers?.map((correctiveAnswer, index) => {
                             return (
                                 <div style={{

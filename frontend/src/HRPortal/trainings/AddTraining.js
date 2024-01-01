@@ -6,7 +6,6 @@ import { useRef, useState } from 'react'
 import axios from "axios";
 import Swal from 'sweetalert2'
 import { BsArrowLeftCircle } from 'react-icons/bs'
-import Cookies from 'js-cookie'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateTabData } from '../../redux/slices/tabSlice'
 import { setLoading } from '../../redux/slices/loading'
@@ -18,11 +17,9 @@ function AddTraining() {
     const alertManager = () => {
         setalert(!alert)
     }
-    const userToken = Cookies.get('userToken');
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
-    
-
+    const user = useSelector(state => state.auth.user);
     const documentRef = useRef(null);
     const [selectedDocument, setSelectedDocument] = useState(null);
 
@@ -41,7 +38,7 @@ function AddTraining() {
     const makeRequest = () => {
         if (trainingData) {
             dispatch(setLoading(true))
-            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addTraining`, trainingData, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addTraining`, trainingData, { headers: { Authorization: `${user._id}` } }).then(() => {
                 dispatch(setLoading(false))
                 setTrainingData(null);
                 Swal.fire({

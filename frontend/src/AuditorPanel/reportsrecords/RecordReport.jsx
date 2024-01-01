@@ -13,49 +13,26 @@ import { setLoading } from '../../redux/slices/loading';
 function RecordReport() {
 
     const [showBox, setShowBox] = useState(false);
-    const [screenWidth, setScreenWidth] = useState(window.innerWidth);
     const [auditData, setAuditData] = useState(null);
     const [alert, setalert] = useState(false);
     const [dataToShow, setDataToShow] = useState(null);
-    const [selectedDate, setSelectedDate] = useState(null);
-    // Create an array of refs for file inputs
     const [selectedAnswers, setSelectedAnswers] = useState([]);
-
+    const user = useSelector(state => state.auth?.user);
     const userToken = Cookies.get('userToken');
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
     const idToWatch = useSelector(state => state.idToProcess);
     const [answers, setAnswers] = useState([]);
 
-    useEffect(() => {
-        console.log(selectedAnswers);
-    }, [selectedAnswers])
-
     const alertManager = () => {
         setalert(!alert)
     }
 
-    useEffect(() => {
-        const handleResize = () => {
-            setScreenWidth(window.innerWidth);
-        };
-
-        window.addEventListener('resize', handleResize);
-
-        // Remove the event listener when the component unmounts
-        return () => {
-            window.removeEventListener('resize', handleResize);
-        };
-    }, []);
-
 
     const makeRequest = () => {
-
         if(selectedAnswers.length > 0){
-
             dispatch(setLoading(true))
-            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addReport`, { ConductAudit: idToWatch, SelectedAnswers: selectedAnswers }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
-                console.log("request made !");
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addReport`, { ConductAudit: idToWatch, SelectedAnswers: selectedAnswers }, { headers: { Authorization: `${user._id}` } }).then(() => {
                 dispatch(setLoading(false))
                 Swal.fire({
                     title: 'Success',
@@ -68,7 +45,6 @@ function RecordReport() {
                         dispatch(updateTabData({ ...tabData, Tab: 'Non-Conformity Report' }))
                     }
                 })
-                
             }).catch(err => {
                 dispatch(setLoading(false));
                 Swal.fire({
@@ -90,8 +66,7 @@ function RecordReport() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-conduct-audit-by-auditId/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
-            console.log(response.data.data);
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-conduct-audit-by-auditId/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             setAuditData(response.data.data)
             setAnswers(response.data.data.Answers);
             dispatch(setLoading(false))
@@ -103,19 +78,14 @@ function RecordReport() {
                 text: 'Something went wrong, Try Again!'
             })
         })
-
-
     }, [])
 
 
     return (
         <>
             <div className={`${style.parent} mx-auto`}>
-
-
                 <div className={`${style.subparent} mx-2 mx-sm-4 mt-5 mx-lg-5`}>
                     <div className='mx-lg-5 px-4 mx-md-4 mx-2  mb-1 '>
-
                         <BsArrowLeftCircle onClick={(e) => {
                             dispatch(updateTabData({ ...tabData, Tab: 'Non-Conformity Report' }))
                         }} className='fs-3 text-danger mx-1' role='button' />
@@ -134,7 +104,6 @@ function RecordReport() {
                         event.preventDefault();
                         alertManager();
                     }}>
-
                         {answers?.map((answer, index) => {
                             return (
                                 <div style={{
@@ -302,17 +271,6 @@ function RecordReport() {
                                 </div>
                             )
                         })}
-
-
-
-
-                        {/* <div className='p-3 mx-lg-5 mx-3 px-3 bg-light px-lg-5 '>
-
-                            <p className='my-1 fw-bold'>Select Date (For Corrective Action)</p>
-                            <input onChange={(e) => {
-                                setSelectedDate(e.target.value)
-                            }} className='w-25 p-2' type='date' required />
-                        </div> */}
                         <div className={style.btn}>
                             <button type='submit'>Submit</button>
                         </div>

@@ -1,15 +1,11 @@
 
 import style from './ViewProcessDetails.module.css'
 import Search from '../../assets/images/employees/Search.svg'
-
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import axios from "axios";
 import { BsArrowLeftCircle } from 'react-icons/bs';
-import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
-import { changeId } from '../../redux/slices/idToProcessSlice';
 import { setLoading } from '../../redux/slices/loading';
 import Swal from 'sweetalert2';
 
@@ -22,16 +18,13 @@ function ViewSubProcessDetails() {
     const [startIndex, setStartIndex] = useState(0);
     const [endIndex, setEndIndex] = useState(8);
     const [processListData, setProcessListData] = useState(null);
-
-    const userToken = Cookies.get('userToken');
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
     const idToWatch = useSelector(state => state.idToProcess);
-
+    const user = useSelector(state => state.auth.user);
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-process-detail/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
-            console.log(response.data);
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-process-detail/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             setProcessListData(response.data.data)
             setProcesses(response.data.data?.subProcesses.slice(startIndex, endIndex));
             dispatch(setLoading(false))

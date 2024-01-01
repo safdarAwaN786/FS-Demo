@@ -5,13 +5,10 @@ import add from '../../assets/images/employees/Application Add.svg'
 import { useEffect, useState } from 'react'
 import axios from "axios";
 import Swal from 'sweetalert2';
-import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { changeId } from '../../redux/slices/idToProcessSlice';
 import { setLoading } from '../../redux/slices/loading';
-
-
 
 function DecisionTree() {
 
@@ -28,16 +25,13 @@ function DecisionTree() {
     const [treeData, setTreeData] = useState(null);
     const [idForAction, setIdForAction] = useState(null);
     const [reason, setReason] = useState(null);
-
-
-    const userToken = Cookies.get('userToken');
+    const user = useSelector(state => state.auth?.user);
     const dispatch = useDispatch();
     const tabData = useSelector(state => state.tab);
 
-
     const refreshData = () => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-decision-trees`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-decision-trees`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             setAllDataArr(response.data.data)
             setDecisionTreesList(response.data.data.slice(startIndex, endIndex));
             dispatch(setLoading(false))
@@ -51,12 +45,9 @@ function DecisionTree() {
         })
     }
 
-
-
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-decision-trees`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
-            console.log(response.data);
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-decision-trees`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             setAllDataArr(response.data.data)
             setDecisionTreesList(response.data.data.slice(startIndex, endIndex));
             dispatch(setLoading(false))
@@ -76,29 +67,21 @@ function DecisionTree() {
         setEndIndex(endIndex + 8);
     }
     const [showQuestions, setShowQuestions] = useState(false)
-
     const backPage = () => {
         setStartIndex(startIndex - 8);
         setEndIndex(endIndex - 8);
-
-
     }
 
     useEffect(() => {
-
         setDecisionTreesList(allDataArr?.slice(startIndex, endIndex))
     }, [startIndex, endIndex])
 
 
     const search = (event) => {
         if (event.target.value !== "") {
-            console.log(event.target.value);
-
             const searchedList = allDataArr.filter((obj) =>
-
                 obj.DocumentId.includes(event.target.value)
             )
-            console.log(searchedList);
             setDecisionTreesList(searchedList);
         } else {
             setDecisionTreesList(allDataArr?.slice(startIndex, endIndex))
@@ -143,13 +126,11 @@ function DecisionTree() {
                                 <td>Creation Date</td>
                                 <td>Process Name</td>
                                 {tabData?.Edit && (
-
                                     <td>Action</td>
                                 )}
                                 <td>Decision Tree</td>
                                 <td>Reason</td>
                                 {tabData?.Approval && (
-
                                     <td></td>
                                 )}
                                 <td></td>
@@ -157,7 +138,6 @@ function DecisionTree() {
                                 <td>Approved By</td>
                                 <td>Approval Date</td>
                                 <td>Status</td>
-
                             </tr>
                             {
                                 decisionTreesList?.map((tree, i) => {
@@ -301,7 +281,7 @@ function DecisionTree() {
                                 e.preventDefault();
                                 setReject(false);
                                 dispatch(setLoading(true))
-                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/disapprove-decision-tree`, { id: idForAction, Reason: reason }).then(() => {
+                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/disapprove-decision-tree`, { id: idForAction, Reason: reason },  { headers: { Authorization: `${user._id}` } }).then(() => {
                                     dispatch(setLoading(false))
                                     Swal.fire({
                                         title: 'Success',
@@ -309,8 +289,6 @@ function DecisionTree() {
                                         icon: 'success',
                                         confirmButtonText: 'Go!',
                                     })
-
-
                                     refreshData();
                                 }).catch(err => {
                                     dispatch(setLoading(false));
@@ -349,7 +327,7 @@ function DecisionTree() {
                                 <button onClick={() => {
                                     setApprove(false)
                                     dispatch(setLoading(true))
-                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/approve-decision-tree`, { id: idForAction }).then(() => {
+                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/approve-decision-tree`, { id: idForAction },  { headers: { Authorization: `${user._id}` } }).then(() => {
                                         dispatch(setLoading(false))
                                         Swal.fire({
                                             title: 'Success',

@@ -19,14 +19,14 @@ function TrainingsRef() {
     const [startIndex, setStartIndex] = useState(0);
     const [endIndex, setEndIndex] = useState(8);
     const [allDataArr, setAllDataArr] = useState(null);
-
+    const user = useSelector(state => state.auth.user);
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
     const userToken = Cookies.get('userToken');
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readTraining`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readTraining`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             dispatch(setLoading(false))
             setAllDataArr(response.data.data)
             setTrainingsList(response.data.data.slice(startIndex, endIndex));
@@ -50,12 +50,9 @@ function TrainingsRef() {
     const backPage = () => {
         setStartIndex(startIndex - 8);
         setEndIndex(endIndex - 8);
-
-
     }
 
     useEffect(() => {
-
         setTrainingsList(allDataArr?.slice(startIndex, endIndex))
     }, [startIndex, endIndex])
 
@@ -75,8 +72,6 @@ function TrainingsRef() {
         }
     }
 
-    const user = useSelector(state => state.auth.user)
-
 
     const handleDownloadImage = async (imageURL) => {
         try {
@@ -87,7 +82,7 @@ function TrainingsRef() {
                     params: {
                         url: imageURL,
                     },
-                    responseType: 'blob', headers: { Authorization: `Bearer ${userToken}` } // Specify the response type as 'blob' to handle binary data
+                    responseType: 'blob', headers: { Authorization: `${user._id}` } // Specify the response type as 'blob' to handle binary data
                 });
 
 

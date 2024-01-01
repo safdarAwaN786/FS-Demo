@@ -4,7 +4,6 @@ import axios from "axios";
 import arrow from '../../assets/images/addEmployee/arrow.svg'
 import Swal from 'sweetalert2'
 import { BsArrowLeftCircle } from 'react-icons/bs';
-import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { setLoading } from '../../redux/slices/loading';
@@ -21,25 +20,18 @@ function GenerateMWR() {
     }
     const [discipline, setDiscipline] = useState([]);
     const [formValues, setFormValues] = useState({});
-
-    const userToken = Cookies.get('userToken');
+    const user = useSelector(state => state.auth.user);
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
-
-
-
 
     const updateFormFiles = (e) => {
         setFormValues({ ...formValues, [e.target.name]: e.target.files[0] })
     }
 
-
-
     const [machineries, setMachineries] = useState(null);
-
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readAllMachinery`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readAllMachinery`, { headers: { Authorization: `${user._id}` } }).then((res) => {
             setMachineries(res.data.data);
             dispatch(setLoading(false))
         }).catch(err => {
@@ -67,19 +59,11 @@ function GenerateMWR() {
                 setDiscipline(updatedDiscipline);
             }
         }
-        console.log(discipline);
     }
-
-    useEffect(() => {
-        console.log(formValues);
-    }, [formValues])
 
     const updateFormValues = (e) => {
         setFormValues({ ...formValues, [e.target.name]: e.target.value })
     }
-
-
-
 
 
     const handleImageClick = () => {
@@ -121,7 +105,7 @@ function GenerateMWR() {
     const makeRequest = () => {
         const formData = convertStateToFormData(formValues);
         dispatch(setLoading(true))
-        axios.post(`${process.env.REACT_APP_BACKEND_URL}/createWorkRequest`, formData, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.post(`${process.env.REACT_APP_BACKEND_URL}/createWorkRequest`, formData, { headers: { Authorization: `${user._id}` } }).then((res) => {
             dispatch(setLoading(false))
             Swal.fire({
                 title: 'Success',

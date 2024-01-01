@@ -1,17 +1,14 @@
 import style from './Auditors.module.css'
 import Search from '../../assets/images/employees/Search.svg'
 import add from '../../assets/images/employees/Application Add.svg'
-import { useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import axios from "axios";
 import profile from '../../assets/images/addEmployee/prof.svg'
-import Cookies from 'js-cookie'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateTabData } from '../../redux/slices/tabSlice'
 import { changeId } from '../../redux/slices/idToProcessSlice'
 import { setLoading } from '../../redux/slices/loading'
 import Swal from 'sweetalert2'
-
 
 function Auditors() {
 
@@ -22,39 +19,26 @@ function Auditors() {
     const [endIndex, setEndIndex] = useState(8);
     const [allDataArr, setAllDataArr] = useState(null);
     const [sendEmail, setSendEmail] = useState(false);
-
-    const userToken = Cookies.get('userToken');
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
-
-
     const user = useSelector(state => state.auth.user);
-
     const handleDownloadImage = async (imageURL) => {
        try {
            if (imageURL) {
-
                dispatch(setLoading(true))
                const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/download-image`, {
                    params: {
                        url: imageURL,
                    },
-                   responseType: 'blob', headers: { Authorization: `Bearer ${userToken}` } // Specify the response type as 'blob' to handle binary data
+                   responseType: 'blob', headers: { Authorization: `${user._id}` } // Specify the response type as 'blob' to handle binary data
                });
-
-
                let blob;
-
                blob = new Blob([response.data]);
-               // }
-
                // Create a temporary anchor element
                const link = document.createElement('a');
                link.href = window.URL.createObjectURL(blob);
-
                // Set the download attribute and suggested filename for the downloaded image
                link.download = `${user.Department.DepartmentName}-FSMS${imageURL.substring(imageURL.lastIndexOf('.'))}`;
-
                // Append the anchor element to the document body and click it to trigger the download
                document.body.appendChild(link);
                dispatch(setLoading(false))
@@ -76,13 +60,10 @@ function Auditors() {
                text: 'Something went wrong, Try Again!'
            })
        }
-
    };
-
-
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readAuditor`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readAuditor`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             setAllDataArr(response.data.data);
             setAuditorsList(response.data.data.slice(startIndex, endIndex));
             dispatch(setLoading(false))
@@ -96,22 +77,17 @@ function Auditors() {
         })
     }, [])
 
-
     const nextPage = () => {
         setStartIndex(startIndex + 8);
         setEndIndex(endIndex + 8);
-
     }
 
     const backPage = () => {
         setStartIndex(startIndex - 8);
         setEndIndex(endIndex - 8);
-
-
     }
 
     useEffect(() => {
-
         setAuditorsList(allDataArr?.slice(startIndex, endIndex))
     }, [startIndex, endIndex])
 
@@ -124,15 +100,8 @@ function Auditors() {
             setAuditorsList(allDataArr?.slice(startIndex, endIndex))
         }
     }
-
-
-
-
-
-    const navigate = useNavigate()
     return (
         <>
-
             <div className={style.subparent}>
                 <div className={style.searchbar}>
                     <div className={style.sec1}>
@@ -140,7 +109,6 @@ function Auditors() {
                         <input onChange={search} type="text" placeholder='Search Auditor by name, id' />
                     </div>
                     {tabData?.Creation && (
-
                         <div onClick={() => {
                             dispatch(updateTabData({...tabData, Tab : 'addAuditors'}))
                         }} className={style.sec2} >
@@ -150,13 +118,11 @@ function Auditors() {
                     )}
                 </div>
                 <div className={style.tableParent2}>
-
                     {!auditorsList || auditorsList?.length === 0 ? (
                         <div className='w-100 d-flex align-items-center justify-content-center'>
                             <p className='text-center'>No any Records Available here.</p>
                         </div>
                     ) : (
-
                         <table className={style.table}>
                             <tr className={style.headers}>
                                 <td>Auditor Code</td>
@@ -165,7 +131,6 @@ function Auditors() {
                                 <td>Age</td>
                                 <td>Phone No</td>
                                 <td>Email Address</td>
-                                {/* <td>Password</td> */}
                                 <td>Experience</td>
                                 <td>Skills</td>
                                 <td>Education</td>
@@ -174,8 +139,6 @@ function Auditors() {
                                 <td>Approved Auditor</td>
                                 <td>Role</td>
                                 <td>Action</td>
-
-
                             </tr>
                             {
                                 auditorsList?.map((auditor, i) => {
@@ -200,13 +163,11 @@ function Auditors() {
                                                 }} onError={(e) => {
                                                     e.target.style.display = 'none'; // Hide the img tag on error
                                                 }} src={auditor.AuditorImage || profile} alt={profile} />
-
                                             </div>{auditor.Name}</td>
                                             <td>{auditor.Designation}</td>
                                             <td>{auditor.Age}</td>
                                             <td>{auditor.PhoneNumber}</td>
                                             <td>{auditor.Email}</td>
-                                            {/* <td>{auditor.Password}</td> */}
                                             <td>{auditor.Experience}</td>
                                             <td>{auditor.Skills}</td>
                                             <td>{auditor.Education}</td>
@@ -235,11 +196,8 @@ function Auditors() {
                                                     width: '130px'
                                                 }} className={`px-2 py-1 btn btn-outline-danger`}>Assign Tabs</button>
                                             </td>
-
-
                                         </tr>
                                     )
-
                                 })
                             }
                         </table>
@@ -247,13 +205,11 @@ function Auditors() {
                 </div>
                 <div className={style.Btns}>
                     {startIndex > 0 && (
-
                         <button onClick={backPage}>
                             {'<< '}Back
                         </button>
                     )}
                     {allDataArr?.length > endIndex && (
-
                         <button onClick={nextPage}>
                             next{'>> '}
                         </button>
@@ -262,19 +218,13 @@ function Auditors() {
             </div>
             {
                 showBox && (
-
                     <div class={style.alertparent}>
                         <div class={style.alert}>
-
                             <p class={style.msg}>{popUpData}</p>
-
                             <div className={style.alertbtns}>
-
                                 <button onClick={() => {
                                     setShowBox(false);
-
                                 }} className={style.btn2}>OK</button>
-
                             </div>
                         </div>
                     </div>
@@ -285,16 +235,13 @@ function Auditors() {
                     <div class={style.alertparent}>
                         <div class={style.alert}>
                             <form onSubmit={(e) => {
-
                             }}>
                                 <span className='d-flex email flex-row'>
                                     <p><b>To : </b></p><p className='ms-4 bg-light px-3' style={{
                                         borderRadius: '30px'
                                     }}>owner@gmail.com</p>
-
                                 </span>
                                 <input type='text' placeholder='Subject' />
-
                                 <textarea name="Reason" id="" cols="30" rows="10" placeholder='Comment here' required />
                                 <div className={`${style.alertbtns} mt-3 d-flex justify-content-center `}>
                                     <button type='submit' className={style.btn1}>Send</button>
@@ -307,8 +254,6 @@ function Auditors() {
                     </div>
                 )
             }
-
-
         </>
     )
 }

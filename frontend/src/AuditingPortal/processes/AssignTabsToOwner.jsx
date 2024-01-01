@@ -5,7 +5,6 @@ import axios from "axios";
 import Swal from 'sweetalert2'
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
-import Cookies from 'js-cookie';
 import { setLoading } from '../../redux/slices/loading';
 
 function AssignTabsToOwner() {
@@ -69,31 +68,18 @@ function AssignTabsToOwner() {
     const tabsList6 = [
     ]
 
-
-
-
-
     useEffect(() => {
         setSelectedTabsArr([...tabsArr1, ...tabsArr2, ...tabsArr3, ...tabsArr4, ...tabsArr5, ...tabsArr6]);
     }, [tabsArr1, tabsArr2, tabsArr3, tabsArr4, tabsArr5, tabsArr6])
 
-
     useEffect(() => {
         setDataToSend({  Tabs: selectedTabsArr })
-
     }, [selectedTabsArr])
 
-
-    useEffect(() => {
-        console.log(dataToSend);
-    }, [dataToSend])
-
     const makeRequest = () => {
-        const userToken = Cookies.get('userToken');
-
         if (dataToSend.Tabs.length > 0) {
             dispatch(setLoading(true))
-            axios.patch(`${process.env.REACT_APP_BACKEND_URL}/assign-tabs/${idToWatch}`, dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+            axios.patch(`${process.env.REACT_APP_BACKEND_URL}/assign-tabs/${idToWatch}`, dataToSend, { headers: { Authorization: `${user._id}` } }).then(() => {
                 console.log("request made !");
                 setDataToSend(null);
                 dispatch(setLoading(false))

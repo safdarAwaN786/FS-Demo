@@ -11,7 +11,6 @@ import { useEffect, useRef, useState } from 'react'
 import axios from 'axios'
 import Swal from 'sweetalert2'
 import { BsArrowLeftCircle } from 'react-icons/bs'
-import Cookies from 'js-cookie'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateTabData } from '../../redux/slices/tabSlice'
 import { setLoading } from '../../redux/slices/loading'
@@ -29,7 +28,7 @@ function AddEmployee() {
     const [CNIC, setCNIC] = useState(null);
     const [password, setPassword] = useState(null);
     const [validationMessage, setValidationMessage] = useState(null);
-
+    const user = useSelector(state => state.auth.user);
     function CheckPassword(submittedPassword) {
         if (submittedPassword?.length < 8) {
             setValidationMessage('Password must be at least 8 characters long.');
@@ -87,16 +86,14 @@ function AddEmployee() {
         setalert(false)
         documentRef.current.click(); // Trigger the click event on the file input
     };
-    const userToken = Cookies.get('userToken');
     const dispatch = useDispatch();
     const tabData = useSelector(state => state.tab);
     const [departmentsToShow, setDepartmentsToShow] = useState(null);
 
-    const user = useSelector(state => state.auth?.user);
 
     useEffect(() => {
         dispatch(setLoading(true));
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
             dispatch(setLoading(false))
             setDepartmentsToShow(res.data.data);
         }).catch(err => {
@@ -112,18 +109,15 @@ function AddEmployee() {
     const [dataError, setDataError] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
     const [selectedDocument, setSelectedDocument] = useState(null);
-
     const [employeesList, setEmployeesList] = useState(null);
     const [email, setEmail] = useState(null);
     const [error, setError] = useState(false);
 
 
-
-
     const makeRequest = () => {
         if (employeeData && !error) {
             dispatch(setLoading(true))
-            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addEmployee`, employeeData, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addEmployee`, employeeData, { headers: { Authorization: `${user._id}` } }).then((response) => {
                 dispatch(setLoading(false))
                 if (response.status === 201) {
                     Swal.fire({
@@ -293,7 +287,7 @@ function AddEmployee() {
                             </div>
                             <div className={style.sec2}>
                                 <div>
-                                    <select name='Department' style={{ width: "100%" }} required>
+                                    <select className='form-select  form-select-lg' name='Department' style={{ width: "100%" }} required>
                                         <option value="" selected disabled>Choose Department*</option>
                                         {departmentsToShow?.map((depObj) => {
                                             return (
@@ -301,12 +295,7 @@ function AddEmployee() {
                                             )
                                         })}
                                     </select>
-                                    {/* <div className={style.indicator}>
-                                            <img src={man} alt="" />
-                                            <div>
-                                                <img src={arrow} alt="" />
-                                            </div>
-                                        </div> */}
+                                    
                                 </div>
                                 <div>
                                     <input onChange={(e) => {

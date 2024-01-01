@@ -1,13 +1,10 @@
 import style from './AddProductDetails.module.css'
 import { useEffect, useRef, useState } from 'react'
 import axios from "axios";
-import { useNavigate } from 'react-router-dom'
 import Swal from 'sweetalert2'
-import { FaMinus } from 'react-icons/fa'
 import { BsArrowLeftCircle } from 'react-icons/bs';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
-import Cookies from 'js-cookie';
 import { setLoading } from '../../redux/slices/loading';
 
 function ViewProductDetails() {
@@ -16,13 +13,11 @@ function ViewProductDetails() {
     const [product, setProduct] = useState({});
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
-    const [departmentsToShow, SetDepartmentsToShow] = useState(null);
-    const userToken = Cookies.get('userToken');
     const user = useSelector(state => state.auth?.user);
     const idToWatch = useSelector(state => state.idToProcess);
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-product/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-product/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
             setDataToSend(res.data.data);
             setProduct(res.data.data.ProductDetails);
             dispatch(setLoading(false))
@@ -36,8 +31,6 @@ function ViewProductDetails() {
         })
     }, [])
 
-  
-
     const alertManager = () => {
         setalert(!alert)
     }
@@ -46,65 +39,39 @@ function ViewProductDetails() {
         setDataToSend({ ...dataToSend, ProductDetails: product });
     }, [product])
 
-    useEffect(() => {
-        console.log(dataToSend);
-    }, [dataToSend])
-
-
     const makeRequest = () => {
-
-        
-        axios.post(`${process.env.REACT_APP_BACKEND_URL}/create-product`, dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
-            console.log("request made !");
+        axios.post(`${process.env.REACT_APP_BACKEND_URL}/create-product`, dataToSend, { headers: { Authorization: `${user._id}` } }).then(() => {
             setDataToSend(null);
-
-
             Swal.fire({
                 title: 'Success',
                 text: 'Submitted Successfully',
                 icon: 'success',
                 confirmButtonText: 'Go!',
-
             }).then((result) => {
                 if (result.isConfirmed) {
                     dispatch(updateTabData({ ...tabData, Tab: 'Describe Product' }))
-
                 }
             })
-
         }).catch((error) => {
-
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
                 text: 'Try filling data again',
                 confirmButtonText: 'OK.'
-
             })
         })
-
     }
-
-
-
-
-
-
     return (
         <>
             <div className={`${style.parent} mx-auto`}>
-
-
                 <div className={`${style.subparent} mx-2 mx-sm-4 mt-5 mx-lg-5`}>
                     <div className='d-flex flex-row bg-white px-lg-5 mx-lg-5 mx-3 px-2 py-2'>
                         <BsArrowLeftCircle
                             role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
                                 {
                                     dispatch(updateTabData({ ...tabData, Tab: 'Describe Product' }))
-
                                 }
                             }} />
-
                     </div>
                     <div className={`${style.headers} d-flex justify-content-start ps-3 align-items-center `}>
                         <div className={style.spans}>
@@ -118,11 +85,9 @@ function ViewProductDetails() {
                     </div>
                     <form encType='multipart/form-data' onSubmit={(event) => {
                         event.preventDefault();
-
                         alertManager();
                     }}>
                         <div className={`${style.myBox} bg-light pb-3`}>
-
                             <div className={style.formDivider}>
                                 <div className={style.sec1}>
                                     <div className={style.inputParent}>
@@ -130,18 +95,9 @@ function ViewProductDetails() {
                                             <p>Document Type</p>
                                         </div>
                                         <div className='border border-dark-subtle'>
-                                            <select value={dataToSend?.DocumentType} name='DocumentType'  style={{ width: "100%" }} required >
-                                                <option value={dataToSend?.DocumentType} selected disabled>{dataToSend?.DocumentType}</option>
-                                                {/* <option value="Manuals">Manuals</option>
-                                                <option value="Procedures">Procedures</option>
-                                                <option value="SOPs">SOPs</option>
-                                                <option value="Forms">Forms</option> */}
-
-                                            </select>
-
+                                        <input value={dataToSend?.DocumentType} className='w-100' type="text" readOnly />
                                         </div>
                                     </div>
-
                                 </div>
                                 <div className={style.sec2}>
                                     <div className={style.inputParent}>
@@ -149,22 +105,13 @@ function ViewProductDetails() {
                                             <p>Department</p>
                                         </div>
                                         <div className='border border-dark-subtle'>
-                                            <select value={dataToSend?.Department.DepartmentName}  name='Department' style={{ width: "100%" }} required>
-                                                <option value={dataToSend?.Department.DepartmentName} selected disabled>{dataToSend?.Department.DepartmentName}</option>
-                                                {/* {departmentsToShow?.map((depObj) => {
-                                                    return (
-                                                        <option value={depObj._id}>{depObj.DepartmentName}</option>
-                                                    )
-                                                })} */}
-                                            </select>
+                                        <input value={dataToSend?.Department.DepartmentName} className='w-100' type="text" readOnly />
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
                             <div className='bg-white   m-lg-5 m-2 p-3 '>
                                 <div className='row'>
-
                                     <div className='col-lg-6 col-md-12 p-2'>
                                         <input name='Name'  value={product.Name} type='text' className='p-3 bg-light  my-3 w-100 border-0' placeholder='Name' required readOnly/>
                                         <input name='RawMaterial'  value={product.RawMaterial} type='text' className='p-3 bg-light  my-3 w-100 border-0' placeholder='Raw Material' required readOnly/>
@@ -186,7 +133,6 @@ function ViewProductDetails() {
                                 </div>
                             </div>
                         </div>
-
                     </form>
                 </div>
             </div>
@@ -199,18 +145,12 @@ function ViewProductDetails() {
                                 <button onClick={() => {
                                     alertManager();
                                     makeRequest();
-
-                                }
-                                } className={style.btn1}>Submit</button>
-
-
+                                }} className={style.btn1}>Submit</button>
                                 <button onClick={alertManager} className={style.btn2}>Cencel</button>
-
                             </div>
                         </div>
                     </div> : null
             }
-
         </>
     )
 }

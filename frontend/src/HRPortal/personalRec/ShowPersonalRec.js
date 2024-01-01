@@ -2,7 +2,6 @@ import style from './ShowPersonalRec.module.css'
 import { useEffect, useState } from 'react'
 import axios from "axios"
 import { BsArrowLeftCircle } from 'react-icons/bs';
-import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { changeId } from '../../redux/slices/idToProcessSlice';
@@ -11,14 +10,13 @@ import Swal from 'sweetalert2';
 
 function ShowPersonalRec() {
     const [reqPersonData, setReqPersonData] = useState(null);
-    const userToken = Cookies.get('userToken');
     const dispatch = useDispatch();
     const tabData = useSelector(state => state.tab);
     const idToWatch = useSelector(state => state.idToProcess);
-
+    const user = useSelector(state => state.auth.user);
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readPersonalRecuisition`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readPersonalRecuisition`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             const reqPersonsList = response.data.data;
             setReqPersonData(reqPersonsList.find((person) => person._id === idToWatch))
             dispatch(setLoading(false))

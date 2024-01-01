@@ -9,12 +9,10 @@ import cnic from '../../assets/images/employeeProfile/UserCard.svg'
 import { useEffect, useState } from 'react'
 import { BsArrowLeftCircle } from 'react-icons/bs'
 import axios from 'axios'
-import Cookies from 'js-cookie'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateTabData } from '../../redux/slices/tabSlice'
 import { setLoading } from '../../redux/slices/loading'
 import Swal from 'sweetalert2'
-
 
 function ProcessInfo() {
     const [alert, setalert] = useState(false)
@@ -23,8 +21,7 @@ function ProcessInfo() {
     }
     const [planData, setPlanData] = useState(null);
     const [popUpData, setPopUpData] = useState(null);
-    
-    const userToken = Cookies.get('userToken');
+    const user = useSelector(state => state.auth.user);
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
     const idToWatch = useSelector(state => state.idToProcess);
@@ -32,7 +29,7 @@ function ProcessInfo() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readMonthlyAuditPlanById/${planId}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readMonthlyAuditPlanById/${planId}`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             console.log(response.data.data);
             setPlanData(response.data.data);
             dispatch(setLoading(false))
@@ -49,8 +46,6 @@ function ProcessInfo() {
     
     return (
         <>
-
-
             <div className={style.subparent}>
                 <div className='d-flex flex-row px-4'>
                     <BsArrowLeftCircle role='button' className='fs-4 mt-1 text-danger' onClick={(e)=>{{
@@ -78,8 +73,6 @@ function ProcessInfo() {
                                     <p className={style.card1para2}>{planData?.Year}</p>
                                 </div>
                             </div>
-
-
                             <div>
                                 <img src={calender} alt="" />
                                 <div>
@@ -87,16 +80,11 @@ function ProcessInfo() {
                                     {planData?.AuditResultStatus == 'Conducted' ?
                                         (
                                             <p className={style.card1para2}>{planData?.ActualDate}</p>
-
-
-
                                         ) : (
                                             <p className={`${style.card1para2} text-primary`}>Pending</p>
-
                                         )}
                                 </div>
                             </div>
-
                             <div>
                                 <img src={star} alt="" />
                                 <div>
@@ -111,7 +99,6 @@ function ProcessInfo() {
                                     <p className={style.card1para2}>{planData?.Date}</p>
                                 </div>
                             </div>
-
                             <div>
                                 <img src={copy} alt="" />
                                 <div>
@@ -126,12 +113,8 @@ function ProcessInfo() {
                                     <p className={style.card1para2}>{planData?.TeamAuditor?.Name}</p>
                                 </div>
                             </div>
-
-
-
                         </div>
                         <div className={style.sec2} >
-
                             <div>
                                 <img src={cnic} alt="" />
                                 <div>
@@ -172,9 +155,6 @@ function ProcessInfo() {
                                     }} className={style.redbtntxt}>View</p>
                                 </div>
                             </div>
-
-
-
                             <div>
                                 <img src={office} alt="" />
                                 <div>
@@ -191,14 +171,8 @@ function ProcessInfo() {
                             </div>
                         </div>
                     </div>
-
                 </div>
-
-
-
-
             </div>
-
             {
                 alert ?
                     <div class={style.alertparent}>

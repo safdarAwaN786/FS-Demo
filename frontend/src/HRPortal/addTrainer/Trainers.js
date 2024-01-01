@@ -3,8 +3,7 @@ import Search from '../../assets/images/employees/Search.svg'
 import add from '../../assets/images/employees/Application Add.svg'
 import { useEffect, useState } from 'react'
 import axios from "axios";
-import profile from '../../assets/images/addEmployee/prof.svg'
-import Cookies from 'js-cookie'
+import profile from '../../assets/images/addEmployee/prof.svg';
 import { useDispatch, useSelector } from 'react-redux'
 import { updateTabData } from '../../redux/slices/tabSlice'
 import { changeId } from '../../redux/slices/idToProcessSlice';
@@ -19,7 +18,6 @@ function Trainers() {
     const [startIndex, setStartIndex] = useState(0);
     const [endIndex, setEndIndex] = useState(8);
     const [allDataArr, setAllDataArr] = useState(null);
-    const userToken = Cookies.get('userToken');
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
     const user = useSelector(state => state.auth.user);
@@ -33,7 +31,7 @@ function Trainers() {
                     params: {
                         url: imageURL,
                     },
-                    responseType: 'blob', headers: { Authorization: `Bearer ${userToken}` } // Specify the response type as 'blob' to handle binary data
+                    responseType: 'blob', headers: { Authorization: `${user._id}` } // Specify the response type as 'blob' to handle binary data
                 });
 
 
@@ -74,7 +72,7 @@ function Trainers() {
     };
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readTrainer`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readTrainer`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             dispatch(setLoading(false))
             setAllDataArr(response.data.data);
             setTrainersList(response.data.data.slice(startIndex, endIndex));

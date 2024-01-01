@@ -4,13 +4,10 @@ import add from '../../assets/images/employees/Application Add.svg'
 import { useEffect, useState } from 'react'
 import axios from "axios";
 import Swal from 'sweetalert2'
-import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { changeId } from '../../redux/slices/idToProcessSlice';
 import { setLoading } from '../../redux/slices/loading';
-
-
 
 function ConductHACCP() {
 
@@ -27,14 +24,13 @@ function ConductHACCP() {
     const [approve, setApprove] = useState(false);
     const [idForAction, setIdForAction] = useState(null);
     const [reason, setReason] = useState(null);
-
-    const userToken = Cookies.get('userToken');
+    const user = useSelector(state => state.auth?.user);
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch()
 
     const refreshData = () => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-conduct-haccp`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-conduct-haccp`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             setAllDataArr(response.data.data)
             setConductHACCPsList(response.data.data.slice(startIndex, endIndex));
             dispatch(setLoading(false));
@@ -50,7 +46,7 @@ function ConductHACCP() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-conduct-haccp`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-conduct-haccp`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             setAllDataArr(response.data.data)
             setConductHACCPsList(response.data.data.slice(startIndex, endIndex));
             dispatch(setLoading(false))
@@ -82,11 +78,9 @@ function ConductHACCP() {
 
     const search = (event) => {
         if (event.target.value !== "") {
-            console.log(event.target.value);
             const searchedList = allDataArr.filter((obj) =>
                 obj.DocumentId.includes(event.target.value)
             )
-            console.log(searchedList);
             setConductHACCPsList(searchedList);
         } else {
             setConductHACCPsList(allDataArr?.slice(startIndex, endIndex))
@@ -300,7 +294,7 @@ function ConductHACCP() {
                                 <button onClick={() => {
                                     setApprove(false)
                                     dispatch(setLoading(true))
-                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/approve-conduct-haccp`, { id: idForAction }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/approve-conduct-haccp`, { id: idForAction }, { headers: { Authorization: `${user._id}` } }).then(() => {
                                         dispatch(setLoading(false))
                                         Swal.fire({
                                             title: 'Success',
@@ -318,12 +312,9 @@ function ConductHACCP() {
                                         })
                                     })
                                 }} className={style.btn1}>Submit</button>
-
-
                                 <button onClick={() => {
                                     setApprove(false);
                                 }} className={style.btn2}>Cancel</button>
-
                             </div>
                         </div>
                     </div> : null
@@ -426,7 +417,7 @@ function ConductHACCP() {
                                 e.preventDefault();
                                 setReject(false);
                                 dispatch(setLoading(true))
-                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/disapprove-conduct-haccp`, { id: idForAction, Reason: reason }, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/disapprove-conduct-haccp`, { id: idForAction, Reason: reason }, { headers: { Authorization: `${user._id}` } }).then(() => {
                                     dispatch(setLoading(false))
                                     Swal.fire({
                                         title: 'Success',
@@ -434,8 +425,6 @@ function ConductHACCP() {
                                         icon: 'success',
                                         confirmButtonText: 'Go!',
                                     })
-
-
                                     refreshData();
                                 }).catch(err => {
                                     dispatch(setLoading(false));
@@ -449,8 +438,6 @@ function ConductHACCP() {
                                 <textarea onChange={(e) => {
                                     setReason(e.target.value);
                                 }} name="Reason" id="" cols="30" rows="10" placeholder='Comment here' required />
-
-
                                 <div className={`$ mt-3 d-flex justify-content-end `}>
                                     <button type='submit' className='btn btn-danger px-3 py-2 m-3'>Disapprove</button>
                                     <a onClick={() => {
@@ -462,8 +449,6 @@ function ConductHACCP() {
                     </div>
                 )
             }
-
-
         </>
     )
 }

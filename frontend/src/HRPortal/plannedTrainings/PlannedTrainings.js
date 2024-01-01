@@ -2,26 +2,23 @@ import style from './Trainings.module.css'
 import Search from '../../assets/images/employees/Search.svg'
 import { useEffect, useState } from 'react'
 import axios from "axios";
-import Cookies from 'js-cookie'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateTabData } from '../../redux/slices/tabSlice'
 import { changeId } from '../../redux/slices/idToProcessSlice'
 import { setLoading } from '../../redux/slices/loading';
 import Swal from 'sweetalert2';
 
-
 function PlannedTrainings() {
     const [plannedTrainings, setPlannedTrainings] = useState(null);
     const [startIndex, setStartIndex] = useState(0);
     const [endIndex, setEndIndex] = useState(8);
     const [allDataArr, setAllDataArr] = useState(null);
-    const userToken = Cookies.get('userToken');
     const dispatch = useDispatch();
     const tabData = useSelector(state => state.tab);
-
+    const user = useSelector(state => state.auth.user);
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readMonthlyPlan`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readMonthlyPlan`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             const allTrainings = response.data.data;
             setAllDataArr(allTrainings.filter((training) => training.Assigned !== true));
             setPlannedTrainings(allTrainings.filter((training) => training.Assigned !== true).slice(startIndex, endIndex));
@@ -42,7 +39,6 @@ function PlannedTrainings() {
     const nextPage = () => {
         setStartIndex(startIndex + 8);
         setEndIndex(endIndex + 8);
-
     }
 
     const backPage = () => {
@@ -57,9 +53,7 @@ function PlannedTrainings() {
 
     const search = (event) => {
         if (event.target.value !== "") {
-            console.log(event.target.value);
             const searchedList = allDataArr?.filter((obj) => obj.Training[0].TrainingName.includes(event.target.value))
-            console.log(searchedList);
             setPlannedTrainings(searchedList);
         } else {
             setPlannedTrainings(allDataArr?.slice(startIndex, endIndex))

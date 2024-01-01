@@ -3,26 +3,22 @@ import { useEffect, useState } from 'react'
 import axios from 'axios'
 import Swal from 'sweetalert2'
 import { BsArrowLeftCircle } from 'react-icons/bs'
-import Cookies from 'js-cookie'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateTabData } from '../../redux/slices/tabSlice'
 import { setLoading } from '../../redux/slices/loading'
 
 function Input() {
 
-
     const [dataToSend, setDataToSend] = useState(null)
     const months = ["January", "Febraury", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
     const [year, setYear] = useState(null);
     const [month, setMonth] = useState(null);
     const [trainings, setTrainings] = useState(null);
-    const userToken = Cookies.get('userToken');
     const dispatch = useDispatch();
     const tabData = useSelector(state => state.tab);
-
     const [startIndex, setStartIndex] = useState(0);
     const [endIndex, setEndIndex] = useState(8);
-
+    const user = useSelector(state => state.auth.user);
     var yearlyPlanData = {
         Year: year,
         Month: [
@@ -37,32 +33,22 @@ function Input() {
             }
         ]
     }
-
-
     const [showBox, setShowBox] = useState(false)
     const [popUpData, setPopUpData] = useState(null);
-
     const [alert, setalert] = useState(false)
     const alertManager = () => {
         setalert(!alert)
     }
     var trainingsArr;
-
     const handleCheckbox = (event, TrainingId) => {
         const weekNumber = event.target.value;
-
-
         const trainingsArray = yearlyPlanData.Month[0].Trainings;
-
         const existingTrainingIndex = trainingsArray.findIndex(obj => obj.Training === TrainingId);
-
-
         if (existingTrainingIndex !== -1) {
             // obj found..
             const weekExist = trainingsArray[existingTrainingIndex].WeekNumbers.includes(weekNumber);
             if (weekExist) {
                 const weekNumIndex = trainingsArray[existingTrainingIndex].WeekNumbers.indexOf(weekNumber);
-
                 if (weekNumIndex !== -1) {
                     trainingsArray[existingTrainingIndex].WeekNumbers.splice(weekNumIndex, 1);
                 }
@@ -74,14 +60,8 @@ function Input() {
                 Training: TrainingId,
                 WeekNumbers: [weekNumber]
             })
-
         }
-
         trainingsArr = yearlyPlanData.Month[0].Trainings;
-        console.log(trainingsArr);
-
-
-
         for (let index = 0; index < trainingsArr.length; index++) {
             if (trainingsArr[index].WeekNumbers.length === 0) {
                 console.log("length zero");
@@ -89,12 +69,9 @@ function Input() {
                 console.log(emptyTrainingIndex);
                 yearlyPlanData.Month[0].Trainings.splice(emptyTrainingIndex, 1);
             }
-
         }
     }
-
     const [allDataArr, setAllDataArr] = useState(null);
-
     useEffect(()=>{
         if(trainings?.lenght === 0){
             dispatch(setLoading(false))
@@ -105,10 +82,9 @@ function Input() {
             })
         }
     }, [trainings])
-
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readTraining`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readTraining`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             setAllDataArr(response.data.data)
             setTrainings(response.data.data.slice(startIndex, endIndex));
             dispatch(setLoading(false))
@@ -120,34 +96,26 @@ function Input() {
                 text : 'Something went wrong, Try Again!'
             })
         })
-
     }, [])
-
 
     const nextPage = () => {
         setStartIndex(startIndex + 8);
         setEndIndex(endIndex + 8);
-
     }
 
     const backPage = () => {
         setStartIndex(startIndex - 8);
         setEndIndex(endIndex - 8);
-
-
     }
 
     useEffect(() => {
-
         setTrainings(allDataArr?.slice(startIndex, endIndex))
     }, [startIndex, endIndex])
-
-
 
     const makeRequest = () => {
         if (dataToSend.Year !== '' && dataToSend.Month[0].MonthName !== '' && dataToSend.Month[0].Trainings.lenght !== 0) {
             dispatch(setLoading(true))
-            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addYearlyPlan`, dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addYearlyPlan`, dataToSend, { headers: { Authorization: `${user._id}` } }).then(() => {
                 dispatch(setLoading(false))
                 setDataToSend(null);
                 Swal.fire({
@@ -155,7 +123,6 @@ function Input() {
                     text: 'Submitted Successfully',
                     icon: 'success',
                     confirmButtonText: 'Go!',
-
                 }).then((result) => {
                     if (result.isConfirmed) {
                         dispatch(updateTabData({ ...tabData, Tab: 'Create Yearly Training Plan' }))
@@ -178,9 +145,6 @@ function Input() {
             })
         }
     }
-
-
-
 
     return (
         <>
@@ -210,24 +174,17 @@ function Input() {
                     <div className={`${style.searchbar} mt-1 `}>
                         <div className={style.sec1}>
 
-                            <select onChange={(event) => {
-                                console.log(event.target.value)
+                            <select className='form-select  form-select-lg' onChange={(event) => {
                                 setYear(event.target.value);
-
                             }} style={{ width: "200px" }} name='Year' required>
-
                                 <option value="" disabled selected>Select Year</option>
                                 <option value="2023">2023</option>
                                 <option value="2024">2024</option>
                                 <option value="2025">2025</option>
-
-
                             </select>
 
-                            <select onChange={(event) => {
-
+                            <select className='form-select  form-select-lg' onChange={(event) => {
                                 setMonth(event.target.value);
-
                             }} style={{ width: "200px" }} name='MonthName' required>
                                 <option value="" disabled selected>Select Month</option>
                                 {months.map((month) => {
@@ -235,14 +192,10 @@ function Input() {
                                         <option value={month}>{month}</option>
                                     )
                                 })}
-
-
                             </select>
 
                         </div>
-
                     </div>
-
                     <div className={style.tableParent2}>
                         <table className={style.table}>
                             <tr className={style.headers}>
@@ -281,42 +234,27 @@ function Input() {
                                             </td>
                                         </tr>
                                     )
-
                                 })
                             }
                         </table>
                     </div>
-
-
-
-
-
-
                     <div className={style.btn}>
                         <button type='submit' >Submit</button>
                     </div>
-
-
-
                 </form>
                 <div className={style.Btns}>
                     {startIndex > 0 && (
-
                         <button onClick={backPage}>
                             {'<< '}Back
                         </button>
                     )}
                     {allDataArr?.length > endIndex && (
-
                         <button onClick={nextPage}>
                             next{'>> '}
                         </button>
                     )}
                 </div>
-
             </div>
-
-
             {
                 alert ?
                     <div class={style.alertparent}>
@@ -326,13 +264,8 @@ function Input() {
                                 <button onClick={() => {
                                     alertManager();
                                     makeRequest();
-
-                                }
-                                } className={style.btn1}>Submit</button>
-
-
+                                }} className={style.btn1}>Submit</button>
                                 <button onClick={alertManager} className={style.btn2}>Cencel</button>
-
                             </div>
                         </div>
                     </div> : null
@@ -346,12 +279,7 @@ function Input() {
                                 <button onClick={() => {
                                     setShowBox(false)
                                     setPopUpData(null);
-
-                                }
-                                } className={style.btn1}>Ok.</button>
-
-
-
+                                }} className={style.btn1}>Ok.</button>
                             </div>
                         </div>
                     </div> : null

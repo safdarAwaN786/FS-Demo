@@ -1,6 +1,7 @@
 const express = require('express');
 const ChangeRequest = require('../../models/Admin/ChangeRequestModel')
-const Document = require('../../models/Admin/ListOfDocumentsModel')
+const Document = require('../../models/Admin/ListOfDocumentsModel');
+const UploadDocuments = require('../../models/Admin/UploadDocumentsModel')
 const router = new express.Router();
 const authMiddleware = require('../../middleware/auth');
 
@@ -20,7 +21,7 @@ router.post('/addChangeRequest', async (req, res) => {
     const changeRequest = new ChangeRequest({
       ...req.body,
       CreatedBy: createdBy,
-      User : req.user._id
+      User: req.user._id
     });
 
     // Check if the referenced Document(s) have a status of "Rejected"
@@ -45,7 +46,7 @@ router.post('/addChangeRequest', async (req, res) => {
 });
 
 // * GET All ChangeRequest Data From MongooDB Database
-router.get('/readChangeRequest',  async (req, res) => {
+router.get('/readChangeRequest', async (req, res) => {
 
   try {
 
@@ -62,7 +63,7 @@ router.get('/readChangeRequest',  async (req, res) => {
 });
 
 // * GET ChangeRequest Data By ID From MongooDB Database
-router.get('/readChangeRequestById/:requestId',  async (req, res) => {
+router.get('/readChangeRequestById/:requestId', async (req, res) => {
 
   try {
 
@@ -81,7 +82,7 @@ router.get('/readChangeRequestById/:requestId',  async (req, res) => {
 });
 
 // * Review ChangeRequest
-router.patch('/review-ChangeRequest',  async (req, res) => {
+router.patch('/review-ChangeRequest', async (req, res) => {
   try {
 
     const reviewBy = req.user.Name;
@@ -116,7 +117,7 @@ router.patch('/review-ChangeRequest',  async (req, res) => {
 });
 
 // * Reject ChangeRequest
-router.patch('/reject-ChangeRequest',  async (req, res) => {
+router.patch('/reject-ChangeRequest', async (req, res) => {
   try {
 
     const rejectBy = req.user.Name;
@@ -152,7 +153,7 @@ router.patch('/reject-ChangeRequest',  async (req, res) => {
 });
 
 // * Approve ChangeRequest
-router.patch('/approve-ChangeRequest',  async (req, res) => {
+router.patch('/approve-ChangeRequest', async (req, res) => {
   try {
 
     const approveBy = req.user.Name;
@@ -175,6 +176,27 @@ router.patch('/approve-ChangeRequest',  async (req, res) => {
     if (document.Status == 'Rejected') {
       return res.status(404).json({ error: 'You cannot approve this document' })
     }
+    var realDoc;
+    if (document.documentModel === 'Document') {
+      realDoc = await Document.findById(document.Document);
+    } else {
+      realDoc = await UploadDocuments.findById(document.Document)
+    }
+
+    realDoc.Status = 'Pending';
+    realDoc.ApprovalDate = null;
+    realDoc.DisapprovalDate = null;
+    realDoc.ReviewDate = null;
+    realDoc.ReviewedBy = null;
+    realDoc.RejectedBy = null;
+    realDoc.ApprovedBy = null;
+    realDoc.DisapprovedBy = null;
+    if (document.documentModel === 'Document') {
+      await Document.findByIdAndUpdate(realDoc._id, realDoc);
+    } else {
+      await UploadDocuments.findByIdAndUpdate(realDoc._id, realDoc)
+    }
+
 
     document.ApprovalDate = new Date(),
       document.Status = 'Approved';
@@ -186,12 +208,13 @@ router.patch('/approve-ChangeRequest',  async (req, res) => {
 
     res.status(200).send({ status: true, message: 'Document approved successfully', data: document });
   } catch (error) {
+    console.log(error);
     res.status(500).send({ status: false, message: 'Failed to update document approve', error: error.message });
   }
 });
 
 // * Diapprove ChangeRequest
-router.patch('/disapprove-ChangeRequest',  async (req, res) => {
+router.patch('/disapprove-ChangeRequest', async (req, res) => {
   try {
 
     const disapproveBy = req.user.Name;

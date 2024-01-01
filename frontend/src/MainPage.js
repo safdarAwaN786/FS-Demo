@@ -911,7 +911,7 @@ function MainPage() {
 
                 </div>
                 <div className={`${style.myFooter} d-flex justify-content-center bg-light`}>
-                    <span className='text-center'>Powered by FEAT Technologies</span>
+                    <span className='text-center'>Powered by FEAT Technology</span>
                 </div>
             </>
 

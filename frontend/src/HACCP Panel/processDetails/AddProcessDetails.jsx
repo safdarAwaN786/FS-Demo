@@ -4,7 +4,6 @@ import axios from "axios";
 import Swal from 'sweetalert2'
 import { FaMinus } from 'react-icons/fa'
 import { BsArrowLeftCircle } from 'react-icons/bs';
-import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { setLoading } from '../../redux/slices/loading';
@@ -13,7 +12,6 @@ function AddProcessDetails() {
     const [dataToSend, setDataToSend] = useState(null);
     const [alert, setalert] = useState(false);
     const [processes, setProcesses] = useState([]);
-    const userToken = Cookies.get('userToken');
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
     const [departmentsToShow, SetDepartmentsToShow] = useState(null);
@@ -21,7 +19,7 @@ function AddProcessDetails() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
             SetDepartmentsToShow(res.data.data);
             dispatch(setLoading(false))
         }).catch(err => {
@@ -61,12 +59,6 @@ function AddProcessDetails() {
         setDataToSend({ ...dataToSend, ProcessDetails: processes });
     }, [processes])
 
-    useEffect(() => {
-        console.log(dataToSend);
-    }, [dataToSend])
-
-
-
     const alertManager = () => {
         setalert(!alert)
     }
@@ -77,10 +69,8 @@ function AddProcessDetails() {
     const makeRequest = () => {
         if (dataToSend.ProcessDetails.length !== 0) {
             dispatch(setLoading(true))
-            axios.post(`${process.env.REACT_APP_BACKEND_URL}/create-process`, dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
-                console.log("request made !");
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/create-process`, dataToSend, { headers: { Authorization: `${user._id}` } }).then(() => {
                 setDataToSend(null);
-
                 dispatch(setLoading(false))
                 Swal.fire({
                     title: 'Success',
@@ -157,7 +147,7 @@ function AddProcessDetails() {
                                             <p>Document Type</p>
                                         </div>
                                         <div className='border border-dark-subtle'>
-                                            <select onChange={(e) => {
+                                            <select className='form-select  form-select-lg' onChange={(e) => {
                                                 setDataToSend({ ...dataToSend, [e.target.name]: e.target.value })
                                             }} value={dataToSend?.DocumentType} name='DocumentType' style={{ width: "100%" }} required >
                                                 <option value="" selected disabled>Choose Type</option>
@@ -196,7 +186,7 @@ function AddProcessDetails() {
 
                                         </div>
                                         <div className='border border-dark-subtle'>
-                                            <select value={dataToSend?.Department} onChange={(e) => {
+                                            <select className='form-select  form-select-lg' value={dataToSend?.Department} onChange={(e) => {
                                                 setDataToSend({ ...dataToSend, [e.target.name]: e.target.value })
                                             }} name='Department' style={{ width: "100%" }} required>
                                                 <option value="" selected disabled>Choose Department</option>
@@ -297,7 +287,7 @@ function AddProcessDetails() {
                                     <p></p>
                                 </div>
                                 <div className='border w-50 border-dark-subtle'>
-                                    <select className='w-100' name='Department'  >
+                                    <select className='w-100 form-select  form-select-lg' name='Department'  >
                                         <option value="" selected >Added Processes</option>
 
                                         {processes?.map((process) => {

@@ -1,35 +1,26 @@
 import style from './UploadDocument.module.css'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import axios from "axios";
-import { useNavigate } from 'react-router-dom'
 import Swal from 'sweetalert2'
 import { BsArrowLeftCircle } from 'react-icons/bs';
-import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { setLoading } from '../../redux/slices/loading';
 
-
 function UploadDocument() {
 
-    const [planData, setPlanData] = useState(null);
     const [alert, setalert] = useState(false);
     const [dataToSend, setDataToSend] = useState(null);
     const alertManager = () => {
         setalert(!alert)
     }
-
-
-    const userToken = Cookies.get('userToken');
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
-
     const [departmentsToShow, SetDepartmentsToShow] = useState(null);
     const user = useSelector(state => state.auth?.user);
-
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
             SetDepartmentsToShow(res.data.data);
             dispatch(setLoading(false))
         }).catch(err => {
@@ -45,8 +36,7 @@ function UploadDocument() {
     const makeRequest = () => {
         if (dataToSend) {
             dispatch(setLoading(true))
-            axios.post(`${process.env.REACT_APP_BACKEND_URL}/uploadDocument`, dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
-                console.log("request made !");
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/uploadDocument`, dataToSend, { headers: { Authorization: `${user._id}` } }).then(() => {
                 setDataToSend(null);
                 dispatch(setLoading(false))
                 Swal.fire({
@@ -54,13 +44,11 @@ function UploadDocument() {
                     text: 'Submitted Successfully',
                     icon: 'success',
                     confirmButtonText: 'Go!',
-
                 }).then((result) => {
                     if (result.isConfirmed) {
                         dispatch(updateTabData({ ...tabData, Tab: 'Upload Document Manually' }))
                     }
                 })
-
             }).catch(err => {
                 dispatch(setLoading(false));
                 Swal.fire({
@@ -82,8 +70,6 @@ function UploadDocument() {
     return (
         <>
             <div className={`${style.parent} mx-auto`}>
-
-
                 <div className={`${style.subparent} mx-2 mx-sm-4 mt-5 mx-lg-5`}>
                     <div className='d-flex flex-row bg-white px-lg-5 mx-lg-5 mx-3 px-2 py-2'>
                         <BsArrowLeftCircle role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
@@ -91,7 +77,6 @@ function UploadDocument() {
                                 dispatch(updateTabData({ ...tabData, Tab: 'Upload Document Manually' }))
                             }
                         }} />
-
                     </div>
                     <div className={`${style.headers} d-flex justify-content-start ps-3 align-items-center `}>
                         <div className={style.spans}>
@@ -110,11 +95,8 @@ function UploadDocument() {
                         // Append the data to the FormData object
                         setDataToSend(formData);
                         alertManager();
-
-
                     }}>
                         <div className={style.myBox}>
-
                             <div className={style.formDivider}>
                                 <div className={style.sec1}>
                                     <div className={style.inputParent}>
@@ -123,67 +105,45 @@ function UploadDocument() {
                                         </div>
                                         <div>
                                             <input className='text-dark' name='DocumentName' type="text" placeholder='' required />
-
                                         </div>
                                     </div>
-
                                     <div className={style.inputParent}>
                                         <div className={style.para}>
                                             <p>Department</p>
-
                                         </div>
                                         <div>
-                                            <select name='Department' style={{ width: "100%" }} required>
+                                            <select className='form-select  form-select-lg' name='Department' style={{ width: "100%" }} required>
                                                 <option value="" selected disabled>Choose Department</option>
-
                                                 {departmentsToShow?.map((depObj) => {
                                                     return (
                                                         <option value={depObj._id}>{depObj.DepartmentName}</option>
                                                     )
                                                 })}
-
                                             </select>
-
-
                                         </div>
                                     </div>
-
-
                                 </div>
                                 <div className={style.sec2}>
-                                    
                                     <div className={style.inputParent}>
                                         <div className={style.para}>
                                             <p>Document Type</p>
-
                                         </div>
                                         <div>
-                                            <select name='DocumentType' style={{ width: "100%" }} required>
+                                            <select className='form-select  form-select-lg' name='DocumentType' style={{ width: "100%" }} required>
                                                 <option value="" selected disabled>Choose Type</option>
-
                                                 <option value="Manuals">Manuals</option>
                                                 <option value="Procedures">Procedures</option>
-                                                <option value="SOPS">SOPS</option>
+                                                <option value="SOPs">SOPs</option>
                                                 <option value="Forms">Forms</option>
                                             </select>
                                         </div>
                                     </div>
-
                                 </div>
                             </div>
-
                         </div>
-
-
                         <div className={`${style.btn} d-flex flex-wrap `}>
-
-
-
                             <input type='file' accept='.pdf' name='file' className='btn btn-outline-danger px-3 py-2 m-2' required />
-
-
                             <button type='submit' >Submit</button>
-
                         </div>
                     </form>
                 </div>
@@ -197,18 +157,12 @@ function UploadDocument() {
                                 <button onClick={() => {
                                     alertManager();
                                     makeRequest();
-
-                                }
-                                } className={style.btn1}>Submit</button>
-
-
-                                <button onClick={alertManager} className={style.btn2}>Cencel</button>
-
+                                }} className={style.btn1}>Submit</button>
+                                <button onClick={alertManager} className={style.btn2}>Cancel</button>
                             </div>
                         </div>
                     </div> : null
             }
-
         </>
     )
 }

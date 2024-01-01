@@ -1,13 +1,11 @@
 import style from './Devices.module.css'
 import search from '../../assets/images/employees/Search.svg'
 import add from '../../assets/images/employees/Application Add.svg'
-import { useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { FiFilter } from 'react-icons/fi';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
-import Cookies from 'js-cookie'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateTabData } from '../../redux/slices/tabSlice'
 import { changeCallibrationType, changeDateType } from '../../redux/slices/appSlice'
@@ -22,15 +20,13 @@ function Devices() {
     const [endIndex, setEndIndex] = useState(8);
     const [allDataArr, setAllDataArr] = useState(null);
     const [callibrations, setCallibrations] = useState(null);
-
-    const userToken = Cookies.get('userToken');
+    const user = useSelector(state => state.auth.user);
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
 
-
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readAllEquipment`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readAllEquipment`, { headers: { Authorization: `${user._id}` } }).then((res) => {
             setAllDataArr(res.data.data);
             setDevices(res.data.data.slice(startIndex, endIndex));
             if (callibrations) {
@@ -44,11 +40,9 @@ function Devices() {
                 text: 'Something went wrong, Try Again!'
             })
         })
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readAllCalibration`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readAllCalibration`, { headers: { Authorization: `${user._id}` } }).then((res) => {
             setCallibrations(res.data.data);
-
             dispatch(setLoading(false))
-
         }).catch(err => {
             dispatch(setLoading(false));
             Swal.fire({
@@ -63,18 +57,11 @@ function Devices() {
     const year = today.getFullYear();
     const month = (today.getMonth() + 1).toString().padStart(2, '0');
     const day = today.getDate().toString().padStart(2, '0');
-
     const formattedDate = `${year}-${month}-${day}`;
-    console.log(formattedDate);
-
-    useEffect(() => {
-        console.log(selected)
-    }, [selected])
 
     const nextPage = () => {
         setStartIndex(startIndex + 8);
         setEndIndex(endIndex + 8);
-
     }
 
     const backPage = () => {
@@ -82,19 +69,14 @@ function Devices() {
         setEndIndex(endIndex - 8);
     }
     useEffect(() => {
-
         setDevices(allDataArr?.slice(startIndex, endIndex))
     }, [startIndex, endIndex])
 
     const searchFunction = (event) => {
         if (event.target.value !== "") {
-            console.log(event.target.value);
-
             const searchedList = allDataArr.filter((obj) =>
-
                 obj.equipmentName.includes(event.target.value) || obj.equipmentCode.includes(event.target.value)
             )
-            console.log(searchedList);
             setDevices(searchedList);
         } else {
             setDevices(allDataArr?.slice(startIndex, endIndex))
@@ -102,17 +84,10 @@ function Devices() {
     }
 
     const [popUpData, setPopUpData] = useState(null)
-    const navigate = useNavigate()
-
-
-    const [deviceObj, setDeviceObj] = useState(null);
     const [alert, setalert] = useState(false)
     const alertManager = () => {
         setalert(!alert)
     }
-
-
-
 
     return (
         <>

@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from 'react'
 import axios from "axios";
 import Swal from 'sweetalert2'
 import { BsArrowLeftCircle } from 'react-icons/bs';
-import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { setLoading } from '../../redux/slices/loading';
@@ -16,7 +15,6 @@ function UpdateFoodSafetyPlan() {
     const [alert, setalert] = useState(false);
     const [treesToShow, setTreesToShow] = useState(null);
     const [selectedDecisionTree, setSelectedDecisionTree] = useState(null);
-    const userToken = Cookies.get('userToken');
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
     const [departmentsToShow, SetDepartmentsToShow] = useState(null);
@@ -24,7 +22,7 @@ function UpdateFoodSafetyPlan() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
             SetDepartmentsToShow(res.data.data);
         }).catch(err => {
             dispatch(setLoading(false));
@@ -56,7 +54,7 @@ function UpdateFoodSafetyPlan() {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-food-safety/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-food-safety/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
             setDataToSend(res.data.data);
             if(treesToShow && departmentsToShow){
                 dispatch(setLoading(false))
@@ -72,9 +70,8 @@ function UpdateFoodSafetyPlan() {
     }, [])
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get("/get-all-decision-trees", { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get("/get-all-decision-trees", { headers: { Authorization: `${user._id}` } }).then((response) => {
             setTreesToShow(response.data.data);
-            console.log(response.data.data);
         }).catch(err => {
             dispatch(setLoading(false));
             Swal.fire({
@@ -103,11 +100,8 @@ function UpdateFoodSafetyPlan() {
     const makeRequest = () => {
         if (dataToSend.Plans?.length > 0) {
 
-            axios.patch(`${process.env.REACT_APP_BACKEND_URL}/update-food-safety/${idToWatch}`, dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
-                console.log("request made !");
+            axios.patch(`${process.env.REACT_APP_BACKEND_URL}/update-food-safety/${idToWatch}`, dataToSend, { headers: { Authorization: `${user._id}` } }).then(() => {
                 setDataToSend(null);
-
-
                 Swal.fire({
                     title: 'Success',
                     text: 'Submitted Successfully',
@@ -182,7 +176,7 @@ function UpdateFoodSafetyPlan() {
                                         <div style={{
                                             border: '1px solid silver'
                                         }}>
-                                            <select onChange={(e) => {
+                                            <select className='form-select  form-select-lg' onChange={(e) => {
                                                 setDataToSend({ ...dataToSend, [e.target.name]: e.target.value });
                                             }}
                                                 value={dataToSend?.DocumentType} name='DocumentType' style={{ width: "100%" }} required >
@@ -207,7 +201,7 @@ function UpdateFoodSafetyPlan() {
                                         <div style={{
                                             border: '1px solid silver'
                                         }}>
-                                            <select value={dataToSend?.Department.DepartmentName} onChange={(e) => {
+                                            <select className='form-select  form-select-lg' value={dataToSend?.Department.DepartmentName} onChange={(e) => {
                                                 setDataToSend({ ...dataToSend, [e.target.name]: e.target.value });
                                             }} name='Department' style={{ width: "100%" }} required>
                                                 <option value="" disabled>Choose Department</option>
@@ -227,7 +221,7 @@ function UpdateFoodSafetyPlan() {
                                             <div style={{
                                                 border: '1px solid silver'
                                             }}>
-                                                <select value={selectedDecisionTree?.ConductHaccp.Name} name='Process' onChange={(e) => {
+                                                <select  className='form-select  form-select-lg' value={selectedDecisionTree?.ConductHaccp.Name} name='Process' onChange={(e) => {
                                                     const decisionTreeObj = JSON.parse(e.target.value);
                                                     setSelectedDecisionTree(decisionTreeObj);
                                                     setDataToSend({ ...dataToSend, DecisionTree: decisionTreeObj._id });
@@ -467,21 +461,11 @@ function UpdateFoodSafetyPlan() {
                                                     }} name='VerificationRef' rows={3} placeholder='Verification record refrence' className='my-4 p-2 bg-light w-100 mx-2 border-0' required />
                                                 </div>
                                             </div>
-
-
                                         </div>
-
-
-
                                     </>
                                 )
                             })}
-
-
-
                         </div>
-
-
                         <div className={style.btn}>
                             <button type='submit' >Submit</button>
                         </div>

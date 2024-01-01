@@ -11,37 +11,23 @@ import { changeId } from '../../redux/slices/idToProcessSlice';
 import { setLoading } from '../../redux/slices/loading';
 import Swal from 'sweetalert2';
 
-
-
-
-
 function HACCPTeamMembers() {
-
-
     const [showBox, setShowBox] = useState(false);
-
-
     const [dataToShow, setDataToShow] = useState(null);
-
-
-
     const [startIndex, setStartIndex] = useState(0);
     const [endIndex, setEndIndex] = useState(8);
     const dispatch = useDispatch();
     const tabData = useSelector(state => state.tab);
     const idToWatch = useSelector(state => state.idToProcess);
-    console.log(tabData);
-
     const [teamData, setTeamData] = useState(null);
     const [membersList, setMembersList] = useState(null);
     const [selectedUser, setSelectedUser] = useState(null);
     const userToken = Cookies.get('userToken');
-
+    const user = useSelector(state => state.auth.user);
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-haccp-team/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-haccp-team/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             setTeamData(response.data.data)
-            console.log(response.data.data);
             setMembersList(response.data.data?.TeamMembers.slice(startIndex, endIndex));
             dispatch(setLoading(false))
         }).catch(err => {
@@ -106,7 +92,6 @@ function HACCPTeamMembers() {
             setMembersList(teamData?.TeamMembers.slice(startIndex, endIndex))
         }
     }
-    const user = useSelector(state => state.auth.user);
     
     const handleDownloadImage = async (imageURL) => {
         try {
@@ -117,7 +102,7 @@ function HACCPTeamMembers() {
                     params: {
                         url: imageURL,
                     },
-                    responseType: 'blob', headers: { Authorization: `Bearer ${userToken}` } // Specify the response type as 'blob' to handle binary data
+                    responseType: 'blob', headers: { Authorization: `${user._id}` } // Specify the response type as 'blob' to handle binary data
                 });
 
 
@@ -226,27 +211,10 @@ function HACCPTeamMembers() {
                                             <td>{formatDate(member.TrainingDate)}</td>
                                             <td>{member.Email}</td>
                                             <td>{member.UserName}</td>
-                                            {/* <td> {selectedUser === i ? (
-                                                member.Password // Show the password if selectedUser matches the current user index
-                                            ) : (
-                                                '********' // Show asterisks by default
-                                            )}
-                                                {selectedUser === i ? (
-                                                    <AiFillEyeInvisible style={{
-                                                        cursor: 'pointer'
-                                                    }} className='fs-4' onClick={() => togglePasswordVisibility(i)} />
-                                                ) : (
-
-                                                    <AiFillEye style={{
-                                                        cursor: 'pointer'
-                                                    }} className='fs-4' onClick={() => togglePasswordVisibility(i)} />
-                                                )}
-                                            </td> */}
                                             <td>
                                                 <p onClick={() => {
                                                     dispatch(updateTabData({ ...tabData, Tab: 'assignTabsToMember' }));
                                                     dispatch(changeId(member._id));
-
                                                 }} className='btn btn-outline-success p-1 m-2'>Assign Tabs</p>
                                             </td>
                                             <td><button onClick={() => {

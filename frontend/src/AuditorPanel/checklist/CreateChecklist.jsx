@@ -1,12 +1,9 @@
 import style from './CreateChecklist.module.css'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import axios from "axios";
-import { useNavigate } from 'react-router-dom'
 import Swal from 'sweetalert2'
-import JoditEditor from 'jodit-react';
 import { FaMinus } from 'react-icons/fa'
 import { BsArrowLeftCircle } from 'react-icons/bs';
-import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import Select from 'react-select';
@@ -15,31 +12,15 @@ import { setLoading } from '../../redux/slices/loading';
 function CreateChecklist() {
 
     const [alert, setalert] = useState(false);
-    const [clauses, setClauses] = useState([]);
     const [dataToSend, setDataToSend] = useState({});
     const [screenWidth, setScreenWidth] = useState(window.innerWidth);
-    // Initialize an array to store the content and styles of each editor
-    const [editorData, setEditorData] = useState([]);
-
-    const userToken = Cookies.get('userToken');
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
-
+    const user = useSelector(state => state.auth.user);
 
     const updateDataToSend = (event) => {
         setDataToSend({ ...dataToSend, [event.target.name]: event.target.value })
     }
-    // Function to handle changes in each editor
-    const handleEditorChange = (index, content) => {
-        // Create a copy of the editorData array
-        const updatedEditorData = [...editorData];
-
-        // Update the content for the specific editor
-        updatedEditorData[index] = content;
-
-        // Update the state with the new editor data
-        setEditorData(updatedEditorData);
-    };
 
     useEffect(() => {
         const handleResize = () => {
@@ -59,11 +40,10 @@ function CreateChecklist() {
     }
 
     const [departmentsToShow, SetDepartmentsToShow] = useState(null);
-    const user = useSelector(state => state.auth?.user);
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
             SetDepartmentsToShow(res.data.data);
             dispatch(setLoading(false))
         }).catch(err => {
@@ -84,7 +64,6 @@ function CreateChecklist() {
         const updatedQuestions = [...questions];
         updatedQuestions.push({ questionText: '' });
         setQuestions(updatedQuestions);
-
     };
     const clearLastQuestion = () => {
         if (questions.length > 0) {
@@ -106,31 +85,24 @@ function CreateChecklist() {
         },
     ]
 
-    useEffect(() => {
-        console.log(dataToSend);
-    }, [dataToSend])
     const makeRequest = () => {
         if (dataToSend) {
             dispatch(setLoading(true))
-            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addChecklist`, dataToSend, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addChecklist`, dataToSend, { headers: { Authorization: `${user._id}` } }).then(() => {
                 console.log("request made !");
                 setDataToSend(null);
                 dispatch(setLoading(false))
                 setQuestions([])
-
-
                 Swal.fire({
                     title: 'Success',
                     text: 'Submitted Successfully',
                     icon: 'success',
                     confirmButtonText: 'Go!',
-
                 }).then((result) => {
                     if (result.isConfirmed) {
                         dispatch(updateTabData({ ...tabData, Tab: 'Internal Audit Check List' }))
                     }
                 })
-
             }).catch(err => {
                 dispatch(setLoading(false));
                 Swal.fire({
@@ -152,8 +124,6 @@ function CreateChecklist() {
     return (
         <>
             <div className={`${style.parent} mx-auto`}>
-
-
                 <div className={`${style.subparent} mx-2 mx-sm-4 mt-5 mx-lg-5`}>
                     <div className='d-flex flex-row bg-white px-lg-5 mx-lg-5 mx-3 px-2 py-2'>
                         <BsArrowLeftCircle
@@ -162,7 +132,6 @@ function CreateChecklist() {
                                     dispatch(updateTabData({ ...tabData, Tab: 'Internal Audit Check List' }))
                                 }
                             }} />
-
                     </div>
                     <div className={`${style.headers} d-flex justify-content-start ps-3 align-items-center `}>
                         <div className={style.spans}>
@@ -178,7 +147,6 @@ function CreateChecklist() {
                         event.preventDefault();
                         if (dataToSend.ChecklistQuestions.length > 0) {
                             alertManager();
-
                         } else {
                             Swal.fire({
                                 icon: 'error',
@@ -196,7 +164,7 @@ function CreateChecklist() {
                                             <p>Document Type</p>
                                         </div>
                                         <div className='border border-dark-subtle'>
-                                            <select onChange={updateDataToSend} name='DocumentType' style={{ width: "100%" }} required >
+                                            <select className='form-select  form-select-lg' onChange={updateDataToSend} name='DocumentType' style={{ width: "100%" }} required >
                                                 <option value="" selected disabled>Choose Type</option>
                                                 <option value="Manuals">Manuals</option>
                                                 <option value="Procedures">Procedures</option>
@@ -213,24 +181,19 @@ function CreateChecklist() {
                                             <p>Department</p>
                                         </div>
                                         <div className='border border-dark-subtle'>
-                                            <select onChange={updateDataToSend} name='Department' style={{ width: "100%" }} required >
+                                            <select className='form-select  form-select-lg' onChange={updateDataToSend} name='Department' style={{ width: "100%" }} required >
                                                 <option value="" selected disabled>Choose Department</option>
                                                 {departmentsToShow?.map((depObj) => {
                                                     return (
                                                         <option value={depObj._id}>{depObj.DepartmentName}</option>
                                                     )
                                                 })}
-
                                             </select>
-
                                         </div>
                                     </div>
-
                                 </div>
-
                             </div>
                             <div className={`${style.formDivider} flex-column justify-content-center`}>
-
                                 {questions.map((question, index) => {
                                     return (
                                         <div style={{
@@ -248,7 +211,6 @@ function CreateChecklist() {
                                                     }} style={{
                                                         borderRadius: '0px'
                                                     }} name='questionText' placeholder='Untitled Question' className='border-0  border-secondary bg-light mt-2 mb-3 w-100 p-3' required />
-
                                                 </div>
                                                 <div style={{
                                                     width: '100%'
@@ -256,7 +218,6 @@ function CreateChecklist() {
                                                     <div style={{
                                                         width: '80%'
                                                     }}>
-
                                                         <Select menuPosition="fixed" onChange={(selectedOption) => {
                                                             const updatedQuestions = [...questions]
                                                             updatedQuestions[index].ComplianceType = selectedOption.value;
@@ -293,11 +254,6 @@ function CreateChecklist() {
                                 </div>
                             </div>
                         </div>
-
-
-
-
-
                         <div className={style.btn}>
                             <button>Submit</button>
                         </div>
@@ -315,7 +271,6 @@ function CreateChecklist() {
                                     makeRequest();
                                 }} className={style.btn1}>Submit</button>
                                 <button onClick={alertManager} className={style.btn2}>Cencel</button>
-
                             </div>
                         </div>
                     </div> : null

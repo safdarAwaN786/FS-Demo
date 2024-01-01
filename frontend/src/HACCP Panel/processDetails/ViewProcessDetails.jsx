@@ -1,17 +1,13 @@
 import style from './ViewProcessDetails.module.css'
 import Search from '../../assets/images/employees/Search.svg'
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import axios from "axios";
 import { BsArrowLeftCircle } from 'react-icons/bs';
-import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { changeId } from '../../redux/slices/idToProcessSlice';
 import { setLoading } from '../../redux/slices/loading';
 import Swal from 'sweetalert2';
-
-
 
 function ViewProcessDetails() {
     const [processes, setProcesses] = useState(null);
@@ -20,15 +16,14 @@ function ViewProcessDetails() {
     const [startIndex, setStartIndex] = useState(0);
     const [endIndex, setEndIndex] = useState(8);
     const [processListData, setProcessListData] = useState(null);
-
-    const userToken = Cookies.get('userToken');
+    const user = useSelector(state => state.auth.user);
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
     const idToWatch = useSelector(state => state.idToProcess);
 
     useEffect(() => {
         dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-process/${idToWatch}`, { headers: { Authorization: `Bearer ${userToken}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-process/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             console.log(response.data);
             setProcessListData(response.data.data)
             setProcesses(response.data.data?.ProcessDetails.slice(startIndex, endIndex));
@@ -47,18 +42,14 @@ function ViewProcessDetails() {
     const nextPage = () => {
         setStartIndex(startIndex + 8);
         setEndIndex(endIndex + 8);
-
     }
 
     const backPage = () => {
         setStartIndex(startIndex - 8);
         setEndIndex(endIndex - 8);
-
-
     }
 
     useEffect(() => {
-
         setProcesses(processListData?.ProcessDetails.slice(startIndex, endIndex))
     }, [startIndex, endIndex])
 

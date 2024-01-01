@@ -1,14 +1,12 @@
 import style from './PersonalRec.module.css'
-import { useEffect, useState } from 'react'
 import axios from "axios";
 import Swal from 'sweetalert2'
 import { BsArrowLeftCircle } from 'react-icons/bs';
-import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { updatePersonFormData } from '../../redux/slices/appSlice';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { setLoading } from '../../redux/slices/loading';
-
+import { useState } from 'react';
 
 function PersonalRec() {
 
@@ -16,17 +14,14 @@ function PersonalRec() {
     const alertManager = () => {
         setalert(!alert)
     }
-    const userToken = Cookies.get('userToken');
     const dispatch = useDispatch();
     const tabData = useSelector(state => state.tab);
     const personFormData = useSelector(state => state.appData.personFormData);
-    useEffect(() => {
-        console.log(personFormData);
-    }, [personFormData])
+    const user = useSelector(state => state.auth.user);
     const makeRequest = () => {
         if (personFormData) {
             dispatch(setLoading(true))
-            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addPersonalRecuisition`, personFormData, { headers: { Authorization: `Bearer ${userToken}` } }).then(() => {
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addPersonalRecuisition`, personFormData, { headers: { Authorization: `${user._id}` } }).then(() => {
                 dispatch(setLoading(false))
                 dispatch(updatePersonFormData(null));
                 Swal.fire({
