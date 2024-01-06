@@ -3,16 +3,11 @@ const ChangeRequest = require('../../models/Admin/ChangeRequestModel')
 const Document = require('../../models/Admin/ListOfDocumentsModel');
 const UploadDocuments = require('../../models/Admin/UploadDocumentsModel')
 const router = new express.Router();
-const authMiddleware = require('../../middleware/auth');
-
+const authMiddleware = require('../../middleware/auth')
 router.use(authMiddleware);
-
 
 // * POST  ChangeRequest Data From MongooDB Database
 router.post('/addChangeRequest', async (req, res) => {
-
-  console.log(req.body);
-
   try {
 
     const createdBy = req.user.Name;

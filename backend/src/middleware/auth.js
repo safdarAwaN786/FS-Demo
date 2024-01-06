@@ -9,7 +9,6 @@ const authMiddleware = async (req, res, next) => {
     if (req.path === '/user/login') {
       return next();
     } else if (req.path === '/get-user') {
-      console.log('in token');
       const token = req.header('Authorization');
       if (!token) {
         return res.status(401).json({ error: 'No token, authorization denied' });
@@ -44,24 +43,15 @@ const authMiddleware = async (req, res, next) => {
     }
   } catch (error) {
     console.error('Token verification error:', error);
-
     if (error.name === 'JsonWebTokenError') {
       return res.status(401).json({ error: 'Invalid token' });
     }
-
     if (error.name === 'TokenExpiredError') {
       return res.status(401).json({ error: 'Token expired' });
     }
-
     // Handle other errors
     res.status(401).json({ error: 'Token is not valid' });
   }
 };
 
 module.exports = authMiddleware;
-
-
-
-
-
-

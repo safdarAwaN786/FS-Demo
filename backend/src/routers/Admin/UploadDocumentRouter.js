@@ -6,7 +6,7 @@ const cloudinary = require('cloudinary').v2;
 const multer = require('multer');
 const authMiddleware = require('../../middleware/auth');
 const { rgb, PDFDocument, StandardFonts } = require('pdf-lib');
-router.use(authMiddleware);
+// router.use(authMiddleware);
 const axios = require('axios')
 
 // * Cloudinary Setup 
@@ -164,8 +164,8 @@ router.get('/readAllDocuments', async (req, res) => {
     try {
         const documents = await uploadDocument.find().populate('Department User');
         console.log(documents);
-        // const documentsToSend = documents.filter(Obj => Obj.User.Department.equals(req.user.Department));
-        res.status(200).send({ status: true, message: "The following are Documents!", data: documents });
+        const documentsToSend = documents.filter(Obj => Obj.User.Department.equals(req.user.Department));
+        res.status(200).send({ status: true, message: "The following are Documents!", data: documentsToSend });
         console.log('READ Documents Successfully!')
     } catch (e) {
         res.status(500).json({ message: e.message });
