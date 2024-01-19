@@ -28,7 +28,7 @@
     "mongodb": "^5.7.0",
     "mongoose": "^6.6.1",
     "multer": "^1.4.5-lts.1",
-    "nodemailer": "^6.9.7",
+    "nodemailer": "^6.9.8",
     "nodemailer-smtp-transport": "^2.7.4",
     "nodemon": "^2.0.20",
     "pdf-lib": "^1.17.1",

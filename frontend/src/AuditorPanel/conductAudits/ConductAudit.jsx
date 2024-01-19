@@ -6,7 +6,7 @@ import axios from "axios";
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { changeId } from '../../redux/slices/idToProcessSlice';
-import { setLoading } from '../../redux/slices/loading';
+import { setSmallLoading } from '../../redux/slices/loading';
 import Swal from 'sweetalert2';
 
 function ConductAudits() {
@@ -22,14 +22,14 @@ function ConductAudits() {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/getChecklists`, { headers: { Authorization: `${user._id}` } }).then((response) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/getChecklists`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
             const approvedChecklists = response.data.data.filter((obj) => obj.Status === 'Approved')
             setAllDataArr(approvedChecklists)
             setChecklists(approvedChecklists.slice(startIndex, endIndex));
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon : 'error',
                 title : 'OOps..',
@@ -50,7 +50,6 @@ function ConductAudits() {
     }
 
     useEffect(() => {
-
         setChecklists(allDataArr?.slice(startIndex, endIndex))
     }, [startIndex, endIndex])
 
@@ -74,15 +73,11 @@ function ConductAudits() {
 
     return (
         <>
-
-            <div className={style.subparent}>
-
                 <div className={style.searchbar}>
                     <div className={style.sec1}>
                         <img src={Search} alt="" />
                         <input onChange={search} type="text" placeholder='Search document by name' />
                     </div>
-
                 </div>
                 <div className={style.tableParent}>
                     {!checklists || checklists?.length === 0 ? (
@@ -148,7 +143,6 @@ function ConductAudits() {
                         </button>
                     )}
                 </div>
-            </div>
             {
                 showBox && (
                     <div class={style.alertparent}>

@@ -8,7 +8,7 @@ import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { changeId } from '../../redux/slices/idToProcessSlice';
-import { setLoading } from '../../redux/slices/loading';
+import { setSmallLoading } from '../../redux/slices/loading';
 import Swal from 'sweetalert2';
 
 function HACCPTeamMembers() {
@@ -25,13 +25,13 @@ function HACCPTeamMembers() {
     const userToken = Cookies.get('userToken');
     const user = useSelector(state => state.auth.user);
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-haccp-team/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((response) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-haccp-team/${idToWatch}`).then((response) => {
             setTeamData(response.data.data)
             setMembersList(response.data.data?.TeamMembers.slice(startIndex, endIndex));
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon : 'error',
                 title : 'OOps..',
@@ -97,12 +97,12 @@ function HACCPTeamMembers() {
         try {
             if (imageURL) {
 
-                dispatch(setLoading(true))
+                dispatch(setSmallLoading(true))
                 const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/download-image`, {
                     params: {
                         url: imageURL,
                     },
-                    responseType: 'blob', headers: { Authorization: `${user._id}` } // Specify the response type as 'blob' to handle binary data
+                    responseType: 'blob' // Specify the response type as 'blob' to handle binary data
                 });
 
 
@@ -120,7 +120,7 @@ function HACCPTeamMembers() {
 
                 // Append the anchor element to the document body and click it to trigger the download
                 document.body.appendChild(link);
-                dispatch(setLoading(false))
+                dispatch(setSmallLoading(false))
                 link.click();
                 // Clean up by removing the temporary anchor element
                 document.body.removeChild(link);
@@ -132,7 +132,7 @@ function HACCPTeamMembers() {
                 })
             }
         } catch (error) {
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
             Swal.fire({
                 icon: 'error',
                 title: 'OOps..',
@@ -144,12 +144,11 @@ function HACCPTeamMembers() {
     return (
         <>
 
-            <div className={style.subparent}>
                 <div className='d-flex flex-row bg-white px-lg-5  px-2 py-2'>
                     <BsArrowLeftCircle
                         role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
                             {
-                                dispatch({ ...tabData, Tab: 'HACCP Team Management' })
+                                dispatch(updateTabData({ ...tabData, Tab: 'HACCP Team Management' }))
 
                             }
                         }} />
@@ -247,7 +246,6 @@ function HACCPTeamMembers() {
                         </button>
                     )}
                 </div>
-            </div>
 
             {
                 showBox && (

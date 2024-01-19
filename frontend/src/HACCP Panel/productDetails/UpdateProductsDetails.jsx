@@ -5,7 +5,7 @@ import Swal from 'sweetalert2'
 import { BsArrowLeftCircle } from 'react-icons/bs';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
-import { setLoading } from '../../redux/slices/loading';
+import { setSmallLoading } from '../../redux/slices/loading';
 
 function UpdateProductDetails() {
 
@@ -18,14 +18,14 @@ function UpdateProductDetails() {
     const user = useSelector(state => state.auth?.user);
 
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`).then((res) => {
             SetDepartmentsToShow(res.data.data);
             if (product) {
-                dispatch(setLoading(false))
+                dispatch(setSmallLoading(false))
             }
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon: 'error',
                 title: 'OOps..',
@@ -36,16 +36,16 @@ function UpdateProductDetails() {
 
     const idToWatch = useSelector(state => state.idToProcess);
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-product/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-product/${idToWatch}`).then((res) => {
             console.log(res.data);
             setDataToSend(res.data.data);
             setProduct(res.data.data.ProductDetails);
             if (departmentsToShow) {
-                dispatch(setLoading(false))
+                dispatch(setSmallLoading(false))
             }
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon: 'error',
                 title: 'OOps..',
@@ -64,11 +64,11 @@ function UpdateProductDetails() {
         setDataToSend({ ...dataToSend, ProductDetails: product });
     }, [product])
     const makeRequest = () => {
-        dispatch(setLoading(true))
-        axios.patch(`${process.env.REACT_APP_BACKEND_URL}/update-product/${idToWatch}`, dataToSend, { headers: { Authorization: `${user._id}` } }).then(() => {
+        dispatch(setSmallLoading(true))
+        axios.patch(`${process.env.REACT_APP_BACKEND_URL}/update-product/${idToWatch}`, {...dataToSend, updatedBy : user.Name}).then(() => {
             console.log("request made !");
             setDataToSend(null);
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
             Swal.fire({
                 title: 'Success',
                 text: 'Submitted Successfully',
@@ -80,7 +80,7 @@ function UpdateProductDetails() {
                 }
             })
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon: 'error',
                 title: 'OOps..',

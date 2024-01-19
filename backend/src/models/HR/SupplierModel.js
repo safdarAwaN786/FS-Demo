@@ -10,9 +10,9 @@ const supplierSchema = new mongoose.Schema({
         unique: true,
     },
 
-    User : {
+    UserDepartment : {
         type : Schema.Types.ObjectId,
-        ref : 'User'
+        ref : 'Department'
     },
     Name: {
         type: String,

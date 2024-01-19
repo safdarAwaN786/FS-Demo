@@ -8,9 +8,9 @@ const monthlyTrainingPlanSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
-  User: {
+  UserDepartment: {
     type: Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'Department',
   },
   ActualDate: {
     type: Date,

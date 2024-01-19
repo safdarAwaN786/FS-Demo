@@ -6,7 +6,7 @@ import Swal from 'sweetalert2'
 import { BsArrowLeftCircle } from 'react-icons/bs';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
-import { setLoading } from '../../redux/slices/loading';
+import { setSmallLoading } from '../../redux/slices/loading';
 
 
 function UpdateConductHACCP() {
@@ -25,14 +25,14 @@ function UpdateConductHACCP() {
     const user = useSelector(state => state.auth?.user);
 
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`).then((res) => {
             SetDepartmentsToShow(res.data.data);
             if(processesToShow && teamsToShow){
-                dispatch(setLoading(false))
+                dispatch(setSmallLoading(false))
             }
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon : 'error',
                 title : 'OOps..',
@@ -42,14 +42,14 @@ function UpdateConductHACCP() {
     }, [])
 
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-haccp-teams`, { headers: { Authorization: `${user._id}` } }).then((response) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-haccp-teams`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
             setTeamsToShow(response.data.data);
             if(processesToShow, departmentsToShow){
-                dispatch(setLoading(false))
+                dispatch(setSmallLoading(false))
             }
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon : 'error',
                 title : 'OOps..',
@@ -57,13 +57,13 @@ function UpdateConductHACCP() {
             })
         })
 
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-processes`, { headers: { Authorization: `${user._id}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-processes`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
             setProcessesToShow(response.data.data);
             if(teamsToShow && departmentsToShow){
-                dispatch(setLoading(false))
+                dispatch(setSmallLoading(false))
             }
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon : 'error',
                 title : 'OOps..',
@@ -75,14 +75,14 @@ function UpdateConductHACCP() {
     const idToWatch = useSelector(state => state.idToProcess);
     useEffect(()=>{
         if(teamsToShow?.length === 0){
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
             Swal.fire({
                 icon : 'warning',
                 title : 'OOps..',
                 text : 'No, Any team available!'
             })
         } else if(processesToShow?.length === 0){
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
             Swal.fire({
                 icon : 'warning',
                 title : 'OOps..',
@@ -92,14 +92,14 @@ function UpdateConductHACCP() {
     }, [teamsToShow, processesToShow])
 
     useEffect(()=>{
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-conduct-haccp/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((res)=>{
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-conduct-haccp/${idToWatch}`).then((res)=>{
             setDataToSend(res.data.data);
             if(processesToShow && departmentsToShow && processesToShow){
-                dispatch(setLoading)
+                dispatch(setSmallLoading)
             }
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon : 'error',
                 title : 'OOps..',
@@ -143,7 +143,7 @@ function UpdateConductHACCP() {
 
     const makeRequest = () => {
         if (dataToSend) {
-            axios.put(`${process.env.REACT_APP_BACKEND_URL}/update-conduct-haccp/${idToWatch}`, dataToSend, { headers: { Authorization: `${user._id}` } }).then(() => {
+            axios.put(`${process.env.REACT_APP_BACKEND_URL}/update-conduct-haccp/${idToWatch}`, {...dataToSend, updatedBy : user.Name}).then(() => {
                 setDataToSend(null);
                 Swal.fire({
                     title: 'Success',

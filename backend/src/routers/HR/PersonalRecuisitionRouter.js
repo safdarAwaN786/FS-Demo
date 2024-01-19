@@ -3,18 +3,18 @@ const PersonalRecuisition = require('../../models/HR/PersonalRecuisitionModel');
 const authMiddleware = require('../../middleware/auth');
 const router = new express.Router();
 
-router.use(authMiddleware);
+// router.use(authMiddleware);
 
 // * Post PersonalRecuisition Data Into MongooDB Database
 router.post('/addPersonalRecuisition', async (req, res) => {
   console.log(req.body);
   try {
 
-    const requestBy = req.user.Name
+    const requestBy = req.body.addedBy
     const personalRecuisition = new PersonalRecuisition({
       ...req.body,
       RequestBy: requestBy,
-      User: req.user._id,
+      UserDepartment: req.header('Authorization'),
       RequestDate: new Date()
     });
 
@@ -34,11 +34,10 @@ router.post('/addPersonalRecuisition', async (req, res) => {
 // * GET All Personal Recuisition Data From MongooDB Database
 router.get('/readPersonalRecuisition', async (req, res) => {
   try {
-    const personalRecuisition = await PersonalRecuisition.find().populate('User');
-    
-    const personalRecuisitionToSend = personalRecuisition.filter(Obj => Obj.User.Department.equals(req.user.Department));
+    const personalRecuisition = await PersonalRecuisition.find({UserDepartment : req.header('Authorization')}).populate('UserDepartment');
+   
 
-    res.status(201).send({ status: true, message: "The following are Required Person!", data: personalRecuisitionToSend, });
+    res.status(201).send({ status: true, message: "The following are Required Person!", data: personalRecuisition, });
     console.log(new Date().toLocaleString() + ' ' + 'GET Required Person Successfully!')
 
   } catch (e) {
@@ -50,7 +49,7 @@ router.get('/readPersonalRecuisition', async (req, res) => {
 router.patch('/updatePersonStatus', async (req, res) => {
   try {
 
-    const user = req.user.Name
+    const user = req.body.updatedBy
     const reqPerson = await PersonalRecuisition.findById(req.body.personId)
 
     if (req.body.status === "Approved") {

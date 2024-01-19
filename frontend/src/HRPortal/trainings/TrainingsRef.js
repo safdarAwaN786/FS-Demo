@@ -7,7 +7,7 @@ import axios from "axios";
 import { useDispatch, useSelector } from 'react-redux'
 import Cookies from 'js-cookie'
 import { updateTabData } from '../../redux/slices/tabSlice'
-import { setLoading } from '../../redux/slices/loading'
+import { setSmallLoading } from '../../redux/slices/loading'
 import Swal from 'sweetalert2'
 
 
@@ -25,13 +25,13 @@ function TrainingsRef() {
     const userToken = Cookies.get('userToken');
 
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readTraining`, { headers: { Authorization: `${user._id}` } }).then((response) => {
-            dispatch(setLoading(false))
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readTraining`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
+            dispatch(setSmallLoading(false))
             setAllDataArr(response.data.data)
             setTrainingsList(response.data.data.slice(startIndex, endIndex));
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon: 'error',
                 title: 'OOps..',
@@ -77,12 +77,12 @@ function TrainingsRef() {
         try {
             if (imageURL) {
 
-                dispatch(setLoading(true))
+                dispatch(setSmallLoading(true))
                 const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/download-image`, {
                     params: {
                         url: imageURL,
                     },
-                    responseType: 'blob', headers: { Authorization: `${user._id}` } // Specify the response type as 'blob' to handle binary data
+                    responseType: 'blob' // Specify the response type as 'blob' to handle binary data
                 });
 
 
@@ -100,7 +100,7 @@ function TrainingsRef() {
 
                 // Append the anchor element to the document body and click it to trigger the download
                 document.body.appendChild(link);
-                dispatch(setLoading(false))
+                dispatch(setSmallLoading(false))
                 link.click();
                 // Clean up by removing the temporary anchor element
                 document.body.removeChild(link);
@@ -112,7 +112,7 @@ function TrainingsRef() {
                 })
             }
         } catch (error) {
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
             Swal.fire({
                 icon: 'error',
                 title: 'OOps..',
@@ -126,7 +126,6 @@ function TrainingsRef() {
     return (
         <>
 
-            <div className={style.subparent}>
 
                 <div className={style.searchbar}>
                     <div className={style.sec1}>
@@ -217,7 +216,6 @@ function TrainingsRef() {
                         </button>
                     )}
                 </div>
-            </div>
 
             {
                 showBox && (

@@ -6,9 +6,10 @@ require('dotenv').config()
 const cloudinary = require('cloudinary').v2;
 const multer = require('multer');
 const { rgb, degrees, PDFDocument, StandardFonts } = require('pdf-lib');
-const authMiddleware = require('../../middleware/auth');
-const axios = require('axios')
-router.use(authMiddleware);
+// const authMiddleware = require('../../middleware/auth');
+const axios = require('axios');
+const user = require('../../models/AccountCreation/UserModel');
+// router.use(authMiddleware);
 
 cloudinary.config({
   cloud_name: process.env.cloud_name,
@@ -75,7 +76,16 @@ const addFirstPage = async (page, logoImage, Company, user) => {
   const uploadDateTextWidth = (helveticaFont.widthOfTextAtSize(uploadDateText, 20));
   page.drawText(uploadDateText, { x: centerTextX - uploadDateTextWidth / 2, y: height - 590, color: rgb(0, 0, 0), size: 20 });
 };
+const formatDate = (date) => {
 
+  const newDate = new Date(date);
+  const formatDate = newDate.toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+  });
+  return formatDate;
+}
 
 function generateEvidenceDocArray() {
   const array = [];
@@ -87,11 +97,11 @@ function generateEvidenceDocArray() {
 
 // * POST ConductAudit Data Into MongoDB Database
 router.post('/addConductAudit', upload.fields(generateEvidenceDocArray()), async (req, res) => {
-  console.log(req.files);
-  console.log(req.body);
-  try {
 
-    const auditBy = req.user.Name;
+  try {
+    const requestUser = await user.findById(req.header('Authorization')).populate('Company Department')
+
+    const auditBy = requestUser.Name;
     const answers = JSON.parse(req.body.Answers);
 
     const filesObj = req.files;
@@ -102,7 +112,7 @@ router.post('/addConductAudit', upload.fields(generateEvidenceDocArray()), async
         const fileData = filesObj[key][0];
         const index = fileData.fieldname.split('-')[1];
 
-        const response = await axios.get(req.user.Company.CompanyLogo, { responseType: 'arraybuffer' });
+        const response = await axios.get(requestUser.Company.CompanyLogo, { responseType: 'arraybuffer' });
         const pdfDoc = await PDFDocument.load(fileData.buffer);
         const logoImage = Buffer.from(response.data);
         const logoImageDataUrl = `data:image/jpeg;base64,${logoImage.toString('base64')}`;
@@ -115,7 +125,7 @@ router.post('/addConductAudit', upload.fields(generateEvidenceDocArray()), async
           pdfLogoImage = await pdfDoc.embedPng(logoImage);
         }
         const firstPage = pdfDoc.insertPage(0);
-        addFirstPage(firstPage, pdfLogoImage, req.user.Company, req.user);
+        addFirstPage(firstPage, pdfLogoImage, requestUser.Company, requestUser);
         const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
         pdfDoc.getPages().slice(1).forEach(async (page) => {
           page.translateContent(0, -30);
@@ -126,7 +136,7 @@ router.post('/addConductAudit', upload.fields(generateEvidenceDocArray()), async
           const centerWatermarkX = width / 2 - watermarkTextWidth / 2;
           const centerWatermarkY = height - 18;
           page.drawText(watermarkText, { x: centerWatermarkX, y: centerWatermarkY, size: watermarkFontSize, color: rgb(0, 0, 0) });
-          const companyText = `${req.user.Company.CompanyName}`;
+          const companyText = `${requestUser.Company.CompanyName}`;
           const companyTextFontSize = 10;
           const companyTextWidth = (helveticaFont.widthOfTextAtSize(companyText, companyTextFontSize));
           const centerCompanyTextX = width - companyTextWidth - 20;
@@ -160,7 +170,7 @@ router.post('/addConductAudit', upload.fields(generateEvidenceDocArray()), async
       AuditBy: auditBy,
       AuditDate: new Date(),
       Answers: answersIds,
-      User: req.user._id
+      UserDepartment: requestUser.Department._id
     });
 
     await conductAudit.save();
@@ -178,7 +188,7 @@ router.post('/addConductAudit', upload.fields(generateEvidenceDocArray()), async
 // * GET All ConductAudit Data From MongoDB Database
 router.get('/readConductAudits', async (req, res) => {
   try {
-    const conductAudits = await ConductAudits.find().populate({
+    const conductAudits = await ConductAudits.find({ UserDepartment: req.header('Authorization') }).populate({
       path: 'Checklist',
       model: 'Checklist',
       populate: {
@@ -193,15 +203,13 @@ router.get('/readConductAudits', async (req, res) => {
         model: 'ChecklistQuestion'
       }
     }).populate({
-      path: 'User',
-      populate: {
-        path: 'Department',
-        model: 'Department'
-      }
-    });
-    const conductAuditsToSend = conductAudits.filter(Obj => Obj.User.Department.equals(req.user.Department))
+      path: 'UserDepartment',
 
-    res.status(200).send({ status: true, message: "The following are ConductAudits!", data: conductAuditsToSend });
+      model: 'Department'
+    });
+   
+
+    res.status(200).send({ status: true, message: "The following are ConductAudits!", data: conductAudits });
     console.log(new Date().toLocaleString() + ' ' + 'READ ConductAudits Successfully!')
 
   } catch (e) {
@@ -214,8 +222,7 @@ router.get('/readConductAudits', async (req, res) => {
 router.get('/get-conduct-audits-by-ChecklistId/:ChecklistId', async (req, res) => {
   try {
     const checklistId = req.params.ChecklistId;
-
-    const conductAudits = await ConductAudits.find({ Checklist: checklistId }).populate({
+    const conductAudits = await ConductAudits.find({ Checklist: checklistId, UserDepartment: req.header('Authorization') }).populate({
       path: 'Checklist',
       model: 'Checklist',
       populate: {
@@ -229,22 +236,13 @@ router.get('/get-conduct-audits-by-ChecklistId/:ChecklistId', async (req, res) =
         path: 'question',
         model: 'ChecklistQuestion'
       }
-    }).populate({
-      path: 'User',
-      populate: {
-        path: 'Department',
-        model: 'Department'
-      }
-    });
+    }).populate('UserDepartment');
 
     if (!conductAudits) {
       console.log(new Date().toLocaleString() + ' ' + 'Conduct audits not found for the form');
       return res.status(404).json({ error: 'Conduct audits not found' });
     }
-
-    const conductAuditsToSend = conductAudits.filter(Obj => Obj.User.Department.equals(req.user.Department))
-
-    res.status(200).send({ status: true, message: "The following are ConductAudits!", data: conductAuditsToSend });
+    res.status(200).send({ status: true, message: "The following are ConductAudits!", data: conductAudits });
     console.log(new Date().toLocaleString() + ' ' + 'Conduct Audit Responses Retrieved Successfully');
   } catch (error) {
     console.error(error);
@@ -254,7 +252,6 @@ router.get('/get-conduct-audits-by-ChecklistId/:ChecklistId', async (req, res) =
 router.get('/get-conduct-audit-by-auditId/:auditId', async (req, res) => {
   try {
     const auditId = req.params.auditId;
-
     const conductAudit = await ConductAudits.findById(auditId).populate({
       path: 'Checklist',
       model: 'Checklist',
@@ -269,13 +266,7 @@ router.get('/get-conduct-audit-by-auditId/:auditId', async (req, res) => {
         path: 'question',
         model: 'ChecklistQuestion'
       }
-    }).populate({
-      path: 'User',
-      populate: {
-        path: 'Department',
-        model: 'Department'
-      }
-    });
+    }).populate('UserDepartment');
 
     if (!conductAudit) {
       console.log(new Date().toLocaleString() + ' ' + 'Conduct audits not found for the form');

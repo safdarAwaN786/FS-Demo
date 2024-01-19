@@ -153,6 +153,7 @@ import ActionsList from './AuditorPanel/correctiveAction/ActionsList'
 import ReportsList from './AuditorPanel/reportsrecords/ReportsList'
 import ReportActionsList from './AuditorPanel/reportsrecords/ReportActionsList'
 import ViewActionInReport from './AuditorPanel/reportsrecords/ViewActionInReport'
+import { setSmallLoading } from './redux/slices/loading'
 
 
 
@@ -162,7 +163,7 @@ import ViewActionInReport from './AuditorPanel/reportsrecords/ViewActionInReport
 
 function MainPage() {
     const [offcanvas, setOffcanvas] = useState(false)
-    const [isOpen, setIsOpen] = useState(false)
+    const [isOpen, setIsOpen] = useState(true)
     const [redTab, setRedTab] = useState(null);
     const dispatch = useDispatch()
     const Tab = useSelector(state => state.tab?.Tab)
@@ -170,7 +171,7 @@ function MainPage() {
     const loggedIn = useSelector(state => state.auth.loggedIn)
     const user = useSelector(state => state.auth.user)
     const navigate = useNavigate();
-
+    const smallLoading = useSelector(state => state.smallLoading);
     const loading = useSelector(state => state.loading);
 
 
@@ -188,7 +189,7 @@ function MainPage() {
             setIsOpen(true);
         }
     };
-
+    console.log(smallLoading);
 
     return (
         <>
@@ -199,7 +200,7 @@ function MainPage() {
                             color="#eb5757"
                             cssOverride={{}}
                             height={35}
-                            loading
+                            // loading
                             margin={2}
                             radius={5}
                             width={8}
@@ -213,7 +214,7 @@ function MainPage() {
                         <img className={`${style.logoImg}`} src={user?.Company?.CompanyLogo} alt="logo" />
                         <span className='fs-5 text-secondary fw-bold'>{user?.Company?.CompanyName}</span>
                     </div>
-                    <div>
+                    <div className='d-sm-none d-md-block'>
                         <span className='fs-4 fw-bold text-secondary mt-1'>Food Safety Management System Software</span>
                     </div>
                     <div className='d-flex flex-row align-items-center'>
@@ -227,7 +228,7 @@ function MainPage() {
                 </div>
                 <div className={style.parent}>
                     <div className={style.sidebar}>
-                    {/* This is the sidebar for smaller screen */}
+                        {/* This is the sidebar for smaller screen */}
                         <div className={offcanvas ? `${style.sidebarParentoffcanvas}  ${style.mkvisiable}` : `${style.sidebarParentoffcanvas}`}>
                             <div className={`${style.offcanvas} ${style.block}`}>
                                 <div className={style.parent}>
@@ -270,35 +271,24 @@ function MainPage() {
                                                     <img className={isOpen ? style.rotate : style.notrotate} src={arrow} alt="" />
                                                 </div>
                                             </div>
-
                                         </div>
 
                                         {isOpen ? <div className={style.optsParent}>
                                             <ul className={style.opts}>
-
                                                 {user?.Tabs.map((tabObj) => {
                                                     return (
                                                         <li className={redTab === tabObj.Tab ? style.checkedli : null} onClick={() => {
-
                                                             dispatch(updateTabData(tabObj))
-
-
                                                             setRedTab(tabObj.Tab)
-
                                                             setOffcanvas(!offcanvas)
                                                         }}>
-
                                                             {tabObj.Tab}</li>
                                                     )
                                                 })}
 
-
-
                                             </ul>
                                         </div> : null}
-
                                     </div>
-
                                 </div>
                             </div>
                         </div>
@@ -343,571 +333,590 @@ function MainPage() {
                                                     <img className={isOpen ? style.rotate : style.notrotate} src={arrow} alt="" />
                                                 </div>
                                             </div>
-
                                         </div>
-
                                         {isOpen ? <div className={style.optsParent}>
                                             <ul style={{
                                                 height: '70vh',
                                                 overflowY: 'scroll',
                                                 paddingBottom: '10px'
                                             }} className={style.opts}>
-
                                                 {user?.Tabs.map((tabObj) => {
                                                     return (
                                                         <li className={redTab === tabObj.Tab ? style.checkedli : null} onClick={() => {
                                                             dispatch(updateTabData(tabObj))
-
-
-                                                            setRedTab(tabObj.Tab)
-
+                                                            setRedTab(tabObj.Tab);
+                                                            dispatch(setSmallLoading(false))
                                                         }}>
-
                                                             {tabObj.Tab}</li>
                                                     )
                                                 })}
-
-
-
-
                                             </ul>
                                         </div> : null}
-
                                     </div>
                                 </div>
                             </div>
                         </div>
-
                     </div>
+                    <div className={style.subparent}>
+
+
+                        {smallLoading && (
+                            <>
+                                <div className=' bg-white' style={{
+                                    position : 'absolute',
+                                    width : '100%',
+                                    height : '100%',
+                                    zIndex: '5',
+                                }}>
+                                <div style={{
+                                    position : 'fixed',
+                                    top : '50%',
+                                    left : '54%'
+                                }}>
+
+                                    <ScaleLoader
+                                        color="#eb5757"
+                                        cssOverride={{}}
+                                        height={35}
+                                        // loading
+                                        margin={2}
+                                        radius={5}
+                                        width={8}
+                                    />
+                                </div>
+                                </div>
+                            </>
+                        )}
+                        <>
+                            {Tab === 'HACCP Team Management' && (
+                                <HACCPteams />
+                            )}
+                            {Tab === 'addSupplier' && (
+                                <AddSupplier />
+                            )}
+                            {Tab === 'Approved Supplier List' && (
+                                <Suppliers />
+                            )}
+                            {Tab === 'Employee Registration' && (
+
+                                <Employees />
+                            )}
+                            {Tab === 'addEmployee' && (
+
+                                <AddEmployee />
+                            )}
+                            {Tab === 'viewEmployeeProfile' && (
+
+                                <EmployeeProfile />
+                            )}
+                            {Tab === 'trainedEmployees' && (
+
+                                <TrainedEmployees />
+                            )}
+                            {Tab === 'trainedEmployeesForTrainer' && (
+
+                                <TrainedEmployeesForTrainer />
+                            )}
+                            {Tab === 'Conduct Trainings' && (
+
+                                <Trainings />
+                            )}
+                            {Tab === 'assignedTrainingInfo' && (
+
+                                <InfoForAssigned />
+                            )}
+                            {Tab === 'plannedTrainingInfo' && (
+
+                                <InfoForPlanned />
+                            )}
+                            {Tab === 'Add Trainings' && (
+
+                                <TrainingsRef />
+                            )}
+                            {Tab === 'addTraining' && (
+
+                                <AddTraining />
+                            )}
+                            {Tab === 'Training Record' && (
+
+                                <PlannedTrainings />
+                            )}
+                            {Tab === 'assignTraining' && (
+
+                                <AssignTrainings />
+                            )}
+                            {Tab === 'Add Trainers' && (
+
+                                <Trainers />
+                            )}
+                            {Tab === 'addTrainer' && (
+
+                                <AddTrainer />
+                            )}
+                            {Tab === 'Employee Requisition' && (
+
+                                <Main />
+                            )}
+                            {Tab === 'addPersonalRec' && (
 
+                                <AddPerson />
+                            )}
+                            {Tab === 'showPersonalRec' && (
 
-                    {Tab === 'HACCP Team Management' && (
-                        <HACCPteams />
-                    )}
-                    {Tab === 'addSupplier' && (
-                        <AddSupplier />
-                    )}
-                    {Tab === 'Approved Supplier List' && (
-                        <Suppliers />
-                    )}
-                    {Tab === 'Employee Registration' && (
+                                <ShowAddPerson />
+                            )}
+                            {Tab === 'showPersonalRec2' && (
 
-                        <Employees />
-                    )}
-                    {Tab === 'addEmployee' && (
+                                <ShowPersonalRec />
+                            )}
+                            {Tab === 'addPersonalRec2' && (
 
-                        <AddEmployee />
-                    )}
-                    {Tab === 'viewEmployeeProfile' && (
+                                <PersonalRec />
+                            )}
+                            {Tab === 'Create Yearly Training Plan' && (
 
-                        <EmployeeProfile />
-                    )}
-                    {Tab === 'trainedEmployees' && (
+                                <YearlyPlan />
+                            )}
 
-                        <TrainedEmployees />
-                    )}
-                    {Tab === 'trainedEmployeesForTrainer' && (
+                            {Tab === 'showPlanMonths' && (
+
+                                <Monthly />
+                            )}
+                            {Tab === 'showPlanWeeks' && (
+
+                                <Checked />
+                            )}
+                            {Tab === 'addYearlyPlanHR' && (
+
+                                <Input />
+                            )}
+                            {Tab === 'Craete Monthly Training Plan' && (
+
+                                <AddPlan />
+                            )}
+
+                            {Tab === 'Master List of Machinery' && (
 
-                        <TrainedEmployeesForTrainer />
-                    )}
-                    {Tab === 'Conduct Trainings' && (
+                                <Machines />
+                            )}
+                            {Tab === 'addMachine' && (
 
-                        <Trainings />
-                    )}
-                    {Tab === 'assignedTrainingInfo' && (
+                                <AddMachine />
+                            )}
+                            {Tab === 'startMaintenance' && (
 
-                        <InfoForAssigned />
-                    )}
-                    {Tab === 'plannedTrainingInfo' && (
+                                <Formtype />
+                            )}
+                            {Tab === 'viewCallibration' && (
 
-                        <InfoForPlanned />
-                    )}
-                    {Tab === 'Add Trainings' && (
+                                <CallibrationRect />
+                            )}
+                            {Tab === 'startCallibration' && (
 
-                        <TrainingsRef />
-                    )}
-                    {Tab === 'addTraining' && (
+                                <CallibrationRect2 />
+                            )}
+                            {Tab === 'internalExternal' && (
 
-                        <AddTraining />
-                    )}
-                    {Tab === 'Training Record' && (
+                                <InternalExernal />
+                            )}
+                            {Tab === 'viewMaintenance' && (
 
-                        <PlannedTrainings />
-                    )}
-                    {Tab === 'assignTraining' && (
+                                <MaintananceRect2 />
+                            )}
+                            {Tab === 'viewCorrectiveMaintenance' && (
 
-                        <AssignTrainings />
-                    )}
-                    {Tab === 'Add Trainers' && (
+                                <MaintananceRect />
+                            )}
+                            {Tab === 'viewCorrectiveMaintenanceForMWR' && (
 
-                        <Trainers />
-                    )}
-                    {Tab === 'addTrainer' && (
+                                <MaintananceRectForMWR />
+                            )}
+                            {Tab === 'Master List of Monitoring and Measuring Devices' && (
 
-                        <AddTrainer />
-                    )}
-                    {Tab === 'Employee Requisition' && (
+                                <Devices />
+                            )}
+                            {Tab === 'addDevice' && (
 
-                        <Main />
-                    )}
-                    {Tab === 'addPersonalRec' && (
+                                <AddDevices />
+                            )}
+                            {Tab === 'Generate MWR Corrective' && (
 
-                        <AddPerson />
-                    )}
-                    {Tab === 'showPersonalRec' && (
+                                <TechMWR />
+                            )}
+                            {Tab === 'generateMWR' && (
 
-                        <ShowAddPerson />
-                    )}
-                    {Tab === 'showPersonalRec2' && (
+                                <GenerateMWR />
+                            )}
+                            {Tab === 'MWRDetails' && (
 
-                        <ShowPersonalRec />
-                    )}
-                    {Tab === 'addPersonalRec2' && (
+                                <GenerateMWR2 />
+                            )}
+                            {Tab === 'Pending Tasks' && (
 
-                        <PersonalRec />
-                    )}
-                    {Tab === 'Create Yearly Training Plan' && (
+                                <PendingTasks />
+                            )}
+                            {Tab === 'viewTrainingInfo' && (
 
-                        <YearlyPlan />
-                    )}
-
-                    {Tab === 'showPlanMonths' && (
-
-                        <Monthly />
-                    )}
-                    {Tab === 'showPlanWeeks' && (
-
-                        <Checked />
-                    )}
-                    {Tab === 'addYearlyPlanHR' && (
-
-                        <Input />
-                    )}
-                    {Tab === 'Craete Monthly Training Plan' && (
-
-                        <AddPlan />
-                    )}
-
-                    {Tab === 'Master List of Machinery' && (
-
-                        <Machines />
-                    )}
-                    {Tab === 'addMachine' && (
-
-                        <AddMachine />
-                    )}
-                    {Tab === 'startMaintenance' && (
-
-                        <Formtype />
-                    )}
-                    {Tab === 'viewCallibration' && (
-
-                        <CallibrationRect />
-                    )}
-                    {Tab === 'startCallibration' && (
-
-                        <CallibrationRect2 />
-                    )}
-                    {Tab === 'internalExternal' && (
-
-                        <InternalExernal />
-                    )}
-                    {Tab === 'viewMaintenance' && (
-
-                        <MaintananceRect2 />
-                    )}
-                    {Tab === 'viewCorrectiveMaintenance' && (
-
-                        <MaintananceRect />
-                    )}
-                    {Tab === 'viewCorrectiveMaintenanceForMWR' && (
-
-                        <MaintananceRectForMWR />
-                    )}
-                    {Tab === 'Master List of Monitoring and Measuring Devices' && (
-
-                        <Devices />
-                    )}
-                    {Tab === 'addDevice' && (
-
-                        <AddDevices />
-                    )}
-                    {Tab === 'Generate MWR Corrective' && (
-
-                        <TechMWR />
-                    )}
-                    {Tab === 'generateMWR' && (
-
-                        <GenerateMWR />
-                    )}
-                    {Tab === 'MWRDetails' && (
-
-                        <GenerateMWR2 />
-                    )}
-                    {Tab === 'Pending Tasks' && (
-
-                        <PendingTasks />
-                    )}
-                    {Tab === 'viewTrainingInfo' && (
-
-                        <Info />
-                    )}
-                    {Tab === 'conductTraining' && (
-
-                        <MainForTrainerPortal />
-                    )}
-                    {Tab === 'Completed Tasks' && (
-
-                        <CompletedTasks />
-                    )}
-
-                    {Tab === 'Generate Food Safety Plan' && (
-                        <FoodSafetyPlan />
-                    )}
-                    {Tab === 'updateFoodSafetyPlan' && (
-                        <UpdateFoodSafetyPlan />
-                    )}
-                    {Tab === 'viewFoodSafetyPlan' && (
-                        <ViewFoodSafetyPlan />
-                    )}
-                    {Tab === 'foodSafetyPlanMembers' && (
-                        <FoodSafetyPlanMembers />
-                    )}
-                    {Tab === 'addFoodSafetyPlan' && (
-
-                        <AddFoodSafetyPlan />
-                    )}
-                    {Tab === 'addDecisionTree' && (
-
-                        <AddDecisionTree />
-                    )}
-                    {Tab === 'viewDecisionTree' && (
-
-                        <ViewDecisionTree />
-                    )}
-
-                    {Tab === 'Identify CCP/OPRP' && (
+                                <Info />
+                            )}
+                            {Tab === 'conductTraining' && (
 
-                        <DecisionTree />
-                    )}
-                    {Tab === 'updateDecisionTree' && (
+                                <MainForTrainerPortal />
+                            )}
+                            {Tab === 'Completed Tasks' && (
 
-                        <UpdateDecisionTree />
-                    )}
-                    {Tab === 'decisionTreeMembers' && (
+                                <CompletedTasks />
+                            )}
 
-                        <DecisionTreeMembers />
-                    )}
-                    {Tab === 'Describe Product' && (
+                            {Tab === 'Generate Food Safety Plan' && (
+                                <FoodSafetyPlan />
+                            )}
+                            {Tab === 'updateFoodSafetyPlan' && (
+                                <UpdateFoodSafetyPlan />
+                            )}
+                            {Tab === 'viewFoodSafetyPlan' && (
+                                <ViewFoodSafetyPlan />
+                            )}
+                            {Tab === 'foodSafetyPlanMembers' && (
+                                <FoodSafetyPlanMembers />
+                            )}
+                            {Tab === 'addFoodSafetyPlan' && (
 
-                        <ProductDetails />
-                    )}
-                    {Tab === 'Construct Flow Diagram' && (
+                                <AddFoodSafetyPlan />
+                            )}
+                            {Tab === 'addDecisionTree' && (
 
-                        <ProcessDetails />
-                    )}
-                    {Tab === 'viewProductDetails' && (
+                                <AddDecisionTree />
+                            )}
+                            {Tab === 'viewDecisionTree' && (
 
-                        <ViewProductDetails />
-                    )}
-                    {Tab === 'viewProcessDetails' && (
+                                <ViewDecisionTree />
+                            )}
 
-                        <ViewProcessDetails />
-                    )}
-                    {Tab === 'addHACCPTeam' && (
+                            {Tab === 'Identify CCP/OPRP' && (
 
-                        <AddHACCPTeam />
-                    )}
-                    {Tab === 'updateHACCPTeam' && (
+                                <DecisionTree />
+                            )}
+                            {Tab === 'updateDecisionTree' && (
 
-                        <UpdateHACCPTeam />
-                    )}
-                    {Tab === 'updateProductsDetail' && (
+                                <UpdateDecisionTree />
+                            )}
+                            {Tab === 'decisionTreeMembers' && (
 
-                        <UpdateProductsDetails />
-                    )}
-                    {Tab === 'updateProcessDetails' && (
+                                <DecisionTreeMembers />
+                            )}
+                            {Tab === 'Describe Product' && (
 
-                        <UpdateProcessDetails />
-                    )}
-                    {Tab === 'addProductDetails' && (
+                                <ProductDetails />
+                            )}
+                            {Tab === 'Construct Flow Diagram' && (
 
-                        <AddProductDetails />
-                    )}
-                    {Tab === 'addProcessDetails' && (
+                                <ProcessDetails />
+                            )}
+                            {Tab === 'viewProductDetails' && (
 
-                        <AddProcessDetails />
-                    )}
-                    {Tab === 'HACCPTeamMembers' && (
+                                <ViewProductDetails />
+                            )}
+                            {Tab === 'viewProcessDetails' && (
 
-                        <HACCPTeamMembers />
-                    )}
-                    {Tab === 'Internal Auditor Management' && (
+                                <ViewProcessDetails />
+                            )}
+                            {Tab === 'addHACCPTeam' && (
 
-                        <Auditors />
-                    )}
-                    {Tab === 'addAuditors' && (
+                                <AddHACCPTeam />
+                            )}
+                            {Tab === 'updateHACCPTeam' && (
 
-                        <AddAuditor />
-                    )}
-                    {Tab === 'Audit Plan (Monthly)' && (
+                                <UpdateHACCPTeam />
+                            )}
+                            {Tab === 'updateProductsDetail' && (
 
-                        <AddPlanAuditing />
-                    )}
-                    {Tab === 'Define Process' && (
+                                <UpdateProductsDetails />
+                            )}
+                            {Tab === 'updateProcessDetails' && (
 
-                        <Processes />
-                    )}
-                    {Tab === 'addProcess' && (
+                                <UpdateProcessDetails />
+                            )}
+                            {Tab === 'addProductDetails' && (
 
-                        <AddProcess />
-                    )}
-                    {!Tab && (
-
-                        <Wellcome />
-                    )}
-                    {Tab === 'Audit Program (Yearly Plan)' && (
-
-                        <YearlyPlanAuditing />
-                    )}
-                    {Tab === 'auditingYearlyPlanChecked' && (
-
-                        <AuditingChecked />
-                    )}
-                    {Tab === 'addAuditingYearlyPlan' && (
-
-                        <AddAuditingYearlyPlan />
-                    )}
-                    {Tab === 'Process Records' && (
-
-                        <ProcessRecords />
-                    )}
-                    {Tab === 'processInfo' && (
-
-                        <ProcessInfo />
-                    )}
-
-                    {Tab === 'Master List of Documents' && (
-
-                        <DocumentsList />
-                    )}
-                    {Tab === 'createDocument' && (
-
-                        <CreateDocument />
-                    )}
-                    {Tab === 'viewDocument' && (
-
-                        <ViewDocument />
-                    )}
-                    {Tab === 'editDocument' && (
-
-                        <EditDocument />
-                    )}
-                    {Tab === 'Master List of Records/Forms' && (
-
-                        <FormsList />
-                    )}
-                    {Tab === 'createForm' && (
-
-                        <CreateForm />
-                    )}
-                    {Tab === 'viewForm' && (
-
-                        <ViewForm />
-                    )}
-                    {Tab === 'editForm' && (
-
-                        <EditForm />
-                    )}
-                    {Tab === 'Record Keeping' && (
-
-                        <FormRecords />
-                    )}
-                    {Tab === 'fillForm' && (
-
-                        <FillForm />
-                    )}
-                    {Tab === 'Conduct Risk Assessment' && (
-
-                        <ConductHACCP />
-                    )}
-
-                    {Tab === 'conductHACCPTeamMembers' && (
-
-                        <ConductHACCPTeamMembers />
-                    )}
-                    {Tab === 'addHACCPRiskAssessment' && (
-
-                        <AddHACCPRiskAssessment />
-                    )}
-                    {Tab === 'updateConductHACCP' && (
-
-                        <UpdateConductHACCP />
-                    )}
-                    {Tab === 'viewResultsHistory' && (
-
-                        <ResultsHistory />
-                    )}
-                    {Tab === 'Document Change Creation' && (
-
-                        <ChangeRequests />
-                    )}
-
-                    {Tab === 'addRequest' && (
-                        <AddChangeRequest />
-                    )}
-                    {Tab === 'viewChangeRequest' && (
-                        <ViewChangeRequest />
-                    )}
-                    {Tab === 'Upload Document Manually' && (
-                        <UploadedDocuments />
-                    )}
-                    {Tab === 'uploadDocument' && (
-                        <UploadDocument />
-                    )}
-
-                    {Tab === 'documentHistory' && (
-                        <DocumentHistory />
-                    )}
-                    {Tab === 'dashboard' && (
-                        <Dashboard />
-                    )}
-                    {Tab === 'Internal Audit Check List' && (
-                        <Checklist />
-                    )}
-                    {Tab === 'viewChecklist' && (
-                        <ViewChecklist />
-                    )}
-                    {Tab === 'editChecklist' && (
-                        <EditChecklist />
-                    )}
-                    {Tab === 'createChecklist' && (
-                        <CreateCecklist />
-                    )}
-                    {Tab === 'Conduct Audit' && (
-                        <ConductAudits />
-                    )}
-                    {Tab === 'auditConduction' && (
-                        <AuditConduction />
-                    )}
-                    {Tab === 'viewAuditAnswers' && (
-                        <ViewAudit />
-                    )}
-                    {Tab === 'Non-Conformity Report' && (
-                        <ReportsRecords />
-                    )}
-                    {Tab === 'recordReport' && (
-                        <RecordReport />
-                    )}
-                    {Tab === 'viewReport' && (
-                        <ViewReport />
-                    )}
-                    {Tab === 'Corrective Action Plan' && (
-                        <CorrectiveActions />
-                    )}
-                    {Tab === 'actionOnCorrective' && (
-                        <ActionOnCorrective />
-                    )}
-                    {Tab === 'viewCorrectiveAction' && (
-                        <ViewCorrectiveAction />
-                    )}
-                    {Tab === 'Management Review Team' && (
-                        <Participants />
-                    )}
-                    {Tab === 'addParticipant' && (
-                        <AddParticipant />
-                    )}
-                    {Tab === 'notifications' && (
-                        <Notifications />
-                    )}
-
-                    {Tab === 'Management Review Plan' && (
-                        <Notifications />
-                    )}
-                    {Tab === 'sendNotification' && (
-                        <SendNotification />
-                    )}
-                    {Tab === 'Minutes of Meeting' && (
-                        <MRMs />
-                    )}
-                    {Tab === 'sendMRM' && (
-                        <SendMRM />
-                    )}
-                    {Tab === 'Companies' && (
-                        <Companies />
-                    )}
-                    {Tab === 'addCompany' && (
-                        <AddCompany />
-                    )}
-                    {Tab === 'Departments' && (
-                        <Departments />
-                    )}
-                    {Tab === 'addDepartments' && (
-                        <AddDepartments />
-                    )}
-                    {Tab === 'viewDepartments' && (
-                        <ViewDepartments />
-                    )}
-                    {Tab === 'Users Details' && (
-                        <UsersCompanies />
-                    )}
-                    {Tab === 'addUsers' && (
-                        <AddUsers />
-                    )}
-                    {Tab === 'viewUsersList' && (
-                        <UsersList />
-                    )}
-                    {Tab === 'assignTabs' && (
-                        <AssignTabs />
-                    )}
-                    {Tab === 'User Profile' && (
-                        <HRProfile />
-                    )}
-                    {Tab === 'viewUsersDepartments' && (
-                        <UsersDepartments />
-                    )}
-                    {Tab === 'assignTabsToMember' && (
-                        <AssignTabsToMember />
-                    )}
-                    {Tab === 'assignTabsToTrainer' && (
-                        <AssignTabsToTrainer />
-                    )}
-                    {Tab === 'assignTabsToEmployee' && (
-                        <AssignTabsToEmployee />
-                    )}
-                    {Tab === 'viewMRMDetails' && (
-                        <MRMDetails />
-                    )}
-                    {Tab === 'viewSubProcesses' && (
-                        <ViewSubProcessDetails />
-                    )}
-                    {Tab === 'viewAllHazards' && (
-                        <ConductHACCPHazards />
-                    )}
-                    {Tab === 'assignTabsToOwner' && (
-                        <AssignTabsToOwner />
-                    )}
-                    {Tab === 'assignTabsToInternalAuditor' && (
-                        <AssignTabsToInternalAuditor />
-                    )}
-                    {Tab === 'viewFormAnswers' && (
-                        <ShowFormAnswers />
-                    )}
-                    {Tab === 'viewAuditsHistory' && (
-                        <AuditsHistory />
-                    )}
-                    {Tab === 'viewCorrectiveActionsList' && (
-                        <ActionsList />
-                    )}
-                    {Tab === 'viewCorrectiveActionInReport' && (
-                        <ViewActionInReport />
-                    )}
-                    {Tab === 'viewReportActions' && (
-                        <ReportActionsList />
-                    )}
-                    {Tab === 'viewReportsList' && (
-                        <ReportsList />
-                    )}
+                                <AddProductDetails />
+                            )}
+                            {Tab === 'addProcessDetails' && (
+
+                                <AddProcessDetails />
+                            )}
+                            {Tab === 'HACCPTeamMembers' && (
+
+                                <HACCPTeamMembers />
+                            )}
+                            {Tab === 'Internal Auditor Management' && (
+
+                                <Auditors />
+                            )}
+                            {Tab === 'addAuditors' && (
+
+                                <AddAuditor />
+                            )}
+                            {Tab === 'Audit Plan (Monthly)' && (
+
+                                <AddPlanAuditing />
+                            )}
+                            {Tab === 'Define Process' && (
+
+                                <Processes />
+                            )}
+                            {Tab === 'addProcess' && (
+
+                                <AddProcess />
+                            )}
+                            {!Tab && (
+
+                                <Wellcome />
+                            )}
+                            {Tab === 'Audit Program (Yearly Plan)' && (
+
+                                <YearlyPlanAuditing />
+                            )}
+                            {Tab === 'auditingYearlyPlanChecked' && (
+
+                                <AuditingChecked />
+                            )}
+                            {Tab === 'addAuditingYearlyPlan' && (
+
+                                <AddAuditingYearlyPlan />
+                            )}
+                            {Tab === 'Process Records' && (
+
+                                <ProcessRecords />
+                            )}
+                            {Tab === 'processInfo' && (
+
+                                <ProcessInfo />
+                            )}
+
+                            {Tab === 'Master List of Documents' && (
+
+                                <DocumentsList />
+                            )}
+                            {Tab === 'createDocument' && (
+
+                                <CreateDocument />
+                            )}
+                            {Tab === 'viewDocument' && (
+
+                                <ViewDocument />
+                            )}
+                            {Tab === 'editDocument' && (
+
+                                <EditDocument />
+                            )}
+                            {Tab === 'Master List of Records/Forms' && (
+
+                                <FormsList />
+                            )}
+                            {Tab === 'createForm' && (
+
+                                <CreateForm />
+                            )}
+                            {Tab === 'viewForm' && (
+
+                                <ViewForm />
+                            )}
+                            {Tab === 'editForm' && (
+
+                                <EditForm />
+                            )}
+                            {Tab === 'Record Keeping' && (
+
+                                <FormRecords />
+                            )}
+                            {Tab === 'fillForm' && (
+
+                                <FillForm />
+                            )}
+                            {Tab === 'Conduct Risk Assessment' && (
+
+                                <ConductHACCP />
+                            )}
+
+                            {Tab === 'conductHACCPTeamMembers' && (
+
+                                <ConductHACCPTeamMembers />
+                            )}
+                            {Tab === 'addHACCPRiskAssessment' && (
+
+                                <AddHACCPRiskAssessment />
+                            )}
+                            {Tab === 'updateConductHACCP' && (
+
+                                <UpdateConductHACCP />
+                            )}
+                            {Tab === 'viewResultsHistory' && (
+
+                                <ResultsHistory />
+                            )}
+                            {Tab === 'Document Change Creation' && (
+
+                                <ChangeRequests />
+                            )}
+
+                            {Tab === 'addRequest' && (
+                                <AddChangeRequest />
+                            )}
+                            {Tab === 'viewChangeRequest' && (
+                                <ViewChangeRequest />
+                            )}
+                            {Tab === 'Upload Document Manually' && (
+                                <UploadedDocuments />
+                            )}
+                            {Tab === 'uploadDocument' && (
+                                <UploadDocument />
+                            )}
+
+                            {Tab === 'documentHistory' && (
+                                <DocumentHistory />
+                            )}
+                            {Tab === 'dashboard' && (
+                                <Dashboard />
+                            )}
+                            {Tab === 'Internal Audit Check List' && (
+                                <Checklist />
+                            )}
+                            {Tab === 'viewChecklist' && (
+                                <ViewChecklist />
+                            )}
+                            {Tab === 'editChecklist' && (
+                                <EditChecklist />
+                            )}
+                            {Tab === 'createChecklist' && (
+                                <CreateCecklist />
+                            )}
+                            {Tab === 'Conduct Audit' && (
+                                <ConductAudits />
+                            )}
+                            {Tab === 'auditConduction' && (
+                                <AuditConduction />
+                            )}
+                            {Tab === 'viewAuditAnswers' && (
+                                <ViewAudit />
+                            )}
+                            {Tab === 'Non-Conformity Report' && (
+                                <ReportsRecords />
+                            )}
+                            {Tab === 'recordReport' && (
+                                <RecordReport />
+                            )}
+                            {Tab === 'viewReport' && (
+                                <ViewReport />
+                            )}
+                            {Tab === 'Corrective Action Plan' && (
+                                <CorrectiveActions />
+                            )}
+                            {Tab === 'actionOnCorrective' && (
+                                <ActionOnCorrective />
+                            )}
+                            {Tab === 'viewCorrectiveAction' && (
+                                <ViewCorrectiveAction />
+                            )}
+                            {Tab === 'Management Review Team' && (
+                                <Participants />
+                            )}
+                            {Tab === 'addParticipant' && (
+                                <AddParticipant />
+                            )}
+                            {Tab === 'notifications' && (
+                                <Notifications />
+                            )}
+
+                            {Tab === 'Management Review Plan' && (
+                                <Notifications />
+                            )}
+                            {Tab === 'sendNotification' && (
+                                <SendNotification />
+                            )}
+                            {Tab === 'Minutes of Meeting' && (
+                                <MRMs />
+                            )}
+                            {Tab === 'sendMRM' && (
+                                <SendMRM />
+                            )}
+                            {Tab === 'Companies' && (
+                                <Companies />
+                            )}
+                            {Tab === 'addCompany' && (
+                                <AddCompany />
+                            )}
+                            {Tab === 'Departments' && (
+                                <Departments />
+                            )}
+                            {Tab === 'addDepartments' && (
+                                <AddDepartments />
+                            )}
+                            {Tab === 'viewDepartments' && (
+                                <ViewDepartments />
+                            )}
+                            {Tab === 'Users Details' && (
+                                <UsersCompanies />
+                            )}
+                            {Tab === 'addUsers' && (
+                                <AddUsers />
+                            )}
+                            {Tab === 'viewUsersList' && (
+                                <UsersList />
+                            )}
+                            {Tab === 'assignTabs' && (
+                                <AssignTabs />
+                            )}
+                            {Tab === 'User Profile' && (
+                                <HRProfile />
+                            )}
+                            {Tab === 'viewUsersDepartments' && (
+                                <UsersDepartments />
+                            )}
+                            {Tab === 'assignTabsToMember' && (
+                                <AssignTabsToMember />
+                            )}
+                            {Tab === 'assignTabsToTrainer' && (
+                                <AssignTabsToTrainer />
+                            )}
+                            {Tab === 'assignTabsToEmployee' && (
+                                <AssignTabsToEmployee />
+                            )}
+                            {Tab === 'viewMRMDetails' && (
+                                <MRMDetails />
+                            )}
+                            {Tab === 'viewSubProcesses' && (
+                                <ViewSubProcessDetails />
+                            )}
+                            {Tab === 'viewAllHazards' && (
+                                <ConductHACCPHazards />
+                            )}
+                            {Tab === 'assignTabsToOwner' && (
+                                <AssignTabsToOwner />
+                            )}
+                            {Tab === 'assignTabsToInternalAuditor' && (
+                                <AssignTabsToInternalAuditor />
+                            )}
+                            {Tab === 'viewFormAnswers' && (
+                                <ShowFormAnswers />
+                            )}
+                            {Tab === 'viewAuditsHistory' && (
+                                <AuditsHistory />
+                            )}
+                            {Tab === 'viewCorrectiveActionsList' && (
+                                <ActionsList />
+                            )}
+                            {Tab === 'viewCorrectiveActionInReport' && (
+                                <ViewActionInReport />
+                            )}
+                            {Tab === 'viewReportActions' && (
+                                <ReportActionsList />
+                            )}
+                            {Tab === 'viewReportsList' && (
+                                <ReportsList />
+                            )}
+                        </>
+                    </div>
 
                 </div>
                 <div className={`${style.myFooter} d-flex justify-content-center bg-light`}>

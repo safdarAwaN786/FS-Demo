@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import axios from "axios";
 import Swal from 'sweetalert2'
 import { useDispatch, useSelector } from 'react-redux';
-import { setLoading } from '../../redux/slices/loading';
+import { setSmallLoading } from '../../redux/slices/loading';
 
 function AddPlan() {
 
@@ -20,14 +20,14 @@ function AddPlan() {
     const user = useSelector(state => state.auth.user);
     const dispatch = useDispatch();
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`).then((res) => {
             setDepartmentsToShow(res.data.data);
             if(trainings && yearlyPlans && trainers){
-                dispatch(setLoading(false))
+                dispatch(setSmallLoading(false))
             }
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon : 'error',
                 title : 'OOps..',
@@ -43,21 +43,21 @@ function AddPlan() {
     const array1To31 = Array.from({ length: 31 }, (_, index) => index + 1);
     useEffect(()=>{
         if(trainings?.length === 0 ){
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
             Swal.fire({
                 icon : 'warning',
                 title : 'OOps..',
                 text : 'No Any Training Added!'
             })
         } else if (yearlyPlans?.length === 0){
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
             Swal.fire({
                 icon : 'warning',
                 title : 'OOps..',
                 text : 'No Any Yearly Plan Added!'
             })
         } else if(trainers?.length === 0){
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
             Swal.fire({
                 icon : 'warning',
                 title : 'OOps..',
@@ -85,27 +85,27 @@ function AddPlan() {
     }
 
     useEffect(() => {
-        dispatch(setLoading(true));
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readTraining`, { headers: { Authorization: `${user._id}` } }).then((response) => {
+        dispatch(setSmallLoading(true));
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readTraining`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
             setTrainings(response.data.data);
             if(departmentsToShow && yearlyPlans && trainers){
-                dispatch(setLoading(false))
+                dispatch(setSmallLoading(false))
             }
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon : 'error',
                 title : 'OOps..',
                 text : 'Something went wrong, Try Again!'
             })
         });
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readYearlyPlan`, { headers: { Authorization: `${user._id}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readYearlyPlan`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
             setYearlyPlans(response.data.data);
             if(departmentsToShow && trainings && trainers){
-                dispatch(setLoading(false))
+                dispatch(setSmallLoading(false))
             }
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon : 'error',
                 title : 'OOps..',
@@ -113,13 +113,13 @@ function AddPlan() {
             })
         })
 
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readTrainer`, { headers: { Authorization: `${user._id}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readTrainer`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
             setTrainers(response.data.data);
             if(departmentsToShow && yearlyPlans && trainings){
-                dispatch(setLoading(false))
+                dispatch(setSmallLoading(false))
             }
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon : 'error',
                 title : 'OOps..',
@@ -131,9 +131,9 @@ function AddPlan() {
 
     const makeRequest = () => {
         if (planData) {
-            dispatch(setLoading(true));
-            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addMonthlyPlan`, planData, { headers: { Authorization: `${user._id}` } }).then(() => {
-                dispatch(setLoading(false));
+            dispatch(setSmallLoading(true));
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addMonthlyPlan`, {...planData, createdBy : user.Name}, { headers: { Authorization: `${user.Department._id}` } }).then(() => {
+                dispatch(setSmallLoading(false));
                 setPlanData(null);
                 setDataToSend(null);
                 Swal.fire({
@@ -145,7 +145,7 @@ function AddPlan() {
                 })
 
             }).catch(err => {
-                dispatch(setLoading(false));
+                dispatch(setSmallLoading(false));
                 Swal.fire({
                     icon : 'error',
                     title : 'OOps..',
@@ -165,10 +165,6 @@ function AddPlan() {
 
     return (
         <>
-
-
-
-            <div className={style.subparent}>
                 <div className={style.headers}>
                     <div className={style.spans}>
                         <span></span>
@@ -376,7 +372,6 @@ function AddPlan() {
                         <button type='submit' >Submit</button>
                     </div>
                 </form>
-            </div>
 
             {
                 alert ?

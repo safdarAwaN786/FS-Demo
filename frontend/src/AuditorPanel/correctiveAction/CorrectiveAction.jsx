@@ -6,7 +6,7 @@ import axios from "axios";
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { changeId } from '../../redux/slices/idToProcessSlice';
-import { setLoading } from '../../redux/slices/loading';
+import { setSmallLoading } from '../../redux/slices/loading';
 import Swal from 'sweetalert2';
 
 function CorrectiveActions() {
@@ -24,13 +24,13 @@ function CorrectiveActions() {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readReports`, { headers: { Authorization: `${user._id}` } }).then((response) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readReports`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
             setAllDataArr(response.data.data)
             setReportsList(response.data.data.slice(startIndex, endIndex));
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon : 'error',
                 title : 'OOps..',
@@ -73,7 +73,6 @@ function CorrectiveActions() {
     return (
         <>
 
-            <div className={style.subparent}>
 
                 <div className={style.searchbar}>
                     <div className={style.sec1}>
@@ -152,7 +151,6 @@ function CorrectiveActions() {
                         </button>
                     )}
                 </div>
-            </div>
 
             {
                 showBox && (

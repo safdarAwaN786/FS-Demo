@@ -4,10 +4,11 @@ const router = new express.Router();
 require('dotenv').config()
 const cloudinary = require('cloudinary').v2;
 const multer = require('multer');
-const authMiddleware = require('../../middleware/auth');
+// const authMiddleware = require('../../middleware/auth');
 const { rgb, PDFDocument, StandardFonts } = require('pdf-lib');
 // router.use(authMiddleware);
-const axios = require('axios')
+const axios = require('axios');
+const user = require('../../models/AccountCreation/UserModel');
 
 // * Cloudinary Setup 
 cloudinary.config({
@@ -87,12 +88,13 @@ const uploadToCloudinary = (buffer) => {
 
 // * Upload a New Document
 router.post('/uploadDocument', upload.single('file'), async (req, res) => {
-    console.log(req.body);
-    console.log(req.file);
+    
     try {
-        const createdBy = req.user.Name;
+    const requestUser = await user.findById(req.header('Authorization')).populate('Company Department')
+
+        const createdBy = requestUser.Name;
         const { Department, DocumentType, DocumentName } = req.body;
-        const response = await axios.get(req.user.Company.CompanyLogo, { responseType: 'arraybuffer' });
+        const response = await axios.get(requestUser.Company.CompanyLogo, { responseType: 'arraybuffer' });
         const pdfDoc = await PDFDocument.load(req.file.buffer);
         const logoImage = Buffer.from(response.data);
         const logoImageDataUrl = `data:image/jpeg;base64,${logoImage.toString('base64')}`;
@@ -105,7 +107,7 @@ router.post('/uploadDocument', upload.single('file'), async (req, res) => {
             pdfLogoImage = await pdfDoc.embedPng(logoImage);
         }
         const firstPage = pdfDoc.insertPage(0);
-        addFirstPage(firstPage, pdfLogoImage, req.user.Company, req.user);
+        addFirstPage(firstPage, pdfLogoImage, requestUser.Company, requestUser);
         const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
         pdfDoc.getPages().slice(1).forEach(async (page) => {
             page.translateContent(0, -30);
@@ -116,7 +118,7 @@ router.post('/uploadDocument', upload.single('file'), async (req, res) => {
             const centerWatermarkX = width / 2 - watermarkTextWidth / 2;
             const centerWatermarkY = height - 18;
             page.drawText(watermarkText, { x: centerWatermarkX, y: centerWatermarkY, size: watermarkFontSize, color: rgb(0, 0, 0) });
-            const companyText = `${req.user.Company.CompanyName}`;
+            const companyText = `${requestUser.Company.CompanyName}`;
             const companyTextFontSize = 10;
             const companyTextWidth = (helveticaFont.widthOfTextAtSize(companyText, companyTextFontSize));
             const centerCompanyTextX = width - companyTextWidth - 20;
@@ -136,8 +138,8 @@ router.post('/uploadDocument', upload.single('file'), async (req, res) => {
             DocumentName: DocumentName,
             Department: Department,
             DocumentType: DocumentType,
-            CreatedBy: req.user.Name,
-            User: req.user._id,
+            CreatedBy: requestUser.Name,
+            UserDepartment: requestUser.Department._id,
             UploadedDocuments: [
                 {
                     RevisionNo: 0,
@@ -162,10 +164,9 @@ router.post('/uploadDocument', upload.single('file'), async (req, res) => {
 // * Get All Documents
 router.get('/readAllDocuments', async (req, res) => {
     try {
-        const documents = await uploadDocument.find().populate('Department User');
-        console.log(documents);
-        const documentsToSend = documents.filter(Obj => Obj.User.Department.equals(req.user.Department));
-        res.status(200).send({ status: true, message: "The following are Documents!", data: documentsToSend });
+        const departmentId = req.header('Authorization')
+        const documents = await uploadDocument.find({UserDepartment : departmentId}).populate('Department UserDepartment');
+        res.status(200).send({ status: true, message: "The following are Documents!", data: documents });
         console.log('READ Documents Successfully!')
     } catch (e) {
         res.status(500).json({ message: e.message });
@@ -174,10 +175,9 @@ router.get('/readAllDocuments', async (req, res) => {
 
 // * Get Document By Id
 router.get('/readDocumentById/:documentId', async (req, res) => {
-    console.log('request came');
     try {
         const documentId = req.params.documentId;
-        const document = await uploadDocument.findById(documentId).populate('Department User');
+        const document = await uploadDocument.findById(documentId).populate('Department UserDepartment');
         res.status(200).send({ status: true, message: "The following are Documents!", data: document });
         console.log('READ Documents Successfully!')
     } catch (e) {
@@ -188,8 +188,7 @@ router.get('/readDocumentById/:documentId', async (req, res) => {
 // * Review Uploaded Document
 router.patch('/review-uploaded-document', async (req, res) => {
     try {
-        const reviewBy = req.user.Name;
-        const { documentId } = req.body;
+        const { documentId, reviewBy } = req.body;
         // Find the document by ID
         const document = await uploadDocument.findById(documentId);
         // If document not found
@@ -254,9 +253,7 @@ router.patch('/comment-document/:documentId', async (req, res) => {
 // * Reject Uploaded Document
 router.patch('/reject-uploaded-document', async (req, res) => {
     try {
-
-        const rejectBy = req.user.Name;
-        const { documentId, reason } = req.body;
+        const { documentId, reason, rejectBy } = req.body;
 
         // Find the document by ID
         const document = await uploadDocument.findById(documentId);
@@ -292,8 +289,8 @@ router.patch('/reject-uploaded-document', async (req, res) => {
 router.patch('/approve-uploaded-document', async (req, res) => {
     try {
 
-        const approveBy = req.user.Name;
-        const { documentId } = req.body;
+
+        const { documentId, approveBy } = req.body;
 
         // Find the document by ID
         const document = await uploadDocument.findById(documentId);
@@ -332,8 +329,7 @@ router.patch('/approve-uploaded-document', async (req, res) => {
 router.patch('/disapprove-uploaded-document', async (req, res) => {
     try {
 
-        const disapproveBy = req.user.Name;
-        const { documentId, reason } = req.body;
+        const { documentId, reason, disapproveBy } = req.body;
 
         // Find the document by ID
         const document = await uploadDocument.findById(documentId);
@@ -399,10 +395,10 @@ router.put('/send-document', async (req, res) => {
 // * Replace updated Document
 router.put('/replaceDocument/:documentId', upload.single('file'), async (req, res) => {
     try {
-        const updatedBy = req.user.Name;
+        const updatedBy = req.body.user.Name;
         const { documentId } = req.params;
 
-        const response = await axios.get(req.user.Company.CompanyLogo, { responseType: 'arraybuffer' });
+        const response = await axios.get(req.body.user.Company.CompanyLogo, { responseType: 'arraybuffer' });
         const pdfDoc = await PDFDocument.load(req.file.buffer);
         const logoImage = Buffer.from(response.data);
         const logoImageDataUrl = `data:image/jpeg;base64,${logoImage.toString('base64')}`;
@@ -415,7 +411,7 @@ router.put('/replaceDocument/:documentId', upload.single('file'), async (req, re
             pdfLogoImage = await pdfDoc.embedPng(logoImage);
         }
         const firstPage = pdfDoc.insertPage(0);
-        addFirstPage(firstPage, pdfLogoImage, req.user.Company, req.user);
+        addFirstPage(firstPage, pdfLogoImage, req.body.user.Company, req.body.user);
         const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
         pdfDoc.getPages().slice(1).forEach(async (page) => {
             page.translateContent(0, -30);
@@ -426,7 +422,7 @@ router.put('/replaceDocument/:documentId', upload.single('file'), async (req, re
             const centerWatermarkX = width / 2 - watermarkTextWidth / 2;
             const centerWatermarkY = height - 18;
             page.drawText(watermarkText, { x: centerWatermarkX, y: centerWatermarkY, size: watermarkFontSize, color: rgb(0, 0, 0) });
-            const companyText = `${req.user.Company.CompanyName}`;
+            const companyText = `${req.body.user.Company.CompanyName}`;
             const companyTextFontSize = 10;
             const companyTextWidth = (helveticaFont.widthOfTextAtSize(companyText, companyTextFontSize));
             const centerCompanyTextX = width - companyTextWidth - 20;

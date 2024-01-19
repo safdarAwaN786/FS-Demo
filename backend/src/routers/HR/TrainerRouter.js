@@ -12,7 +12,7 @@ const emailTemplates = require('../../EmailTemplates/userEmail.json');
 const template = emailTemplates.registrationConfirmation;
 const authMiddleware = require('../../middleware/auth');
 const axios = require('axios');
-router.use(authMiddleware);
+// router.use(authMiddleware);
 const { rgb, degrees, PDFDocument, StandardFonts } = require('pdf-lib');
 // * Cloudinary Setup 
 cloudinary.config({
@@ -22,7 +22,16 @@ cloudinary.config({
 });
 
 const upload = multer();
+const formatDate = (date) => {
 
+  const newDate = new Date(date);
+  const formatDate = newDate.toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+  });
+  return formatDate;
+}
 // Function to add the company logo and information to the first page
 const addFirstPage = async (page, logoImage, Company, user) => {
   const { width, height } = page.getSize();
@@ -94,6 +103,7 @@ const transporter = nodemailer.createTransport(smtpTransport({
 router.post("/addTrainer", upload.fields([{ name: 'TrainerImage' }, { name: 'TrainerDocument' }]), async (req, res) => {
   console.log("request made trainer..");
   try {
+    const requestUser = await User.findById(req.header('Authorization')).populate('Company Department')
 
     const userNameExist = await User.findOne({ UserName: req.body.UserName });
 
@@ -115,8 +125,8 @@ router.post("/addTrainer", upload.fields([{ name: 'TrainerImage' }, { name: 'Tra
 
       if (req.files['TrainerDocument']) {
         const documentFile = req.files['TrainerDocument'][0];
-        
-        const response = await axios.get(req.user.Company.CompanyLogo, { responseType: 'arraybuffer' });
+
+        const response = await axios.get(requestUser.Company.CompanyLogo, { responseType: 'arraybuffer' });
         const pdfDoc = await PDFDocument.load(documentFile.buffer);
         const logoImage = Buffer.from(response.data);
         const logoImageDataUrl = `data:image/jpeg;base64,${logoImage.toString('base64')}`;
@@ -129,8 +139,8 @@ router.post("/addTrainer", upload.fields([{ name: 'TrainerImage' }, { name: 'Tra
           pdfLogoImage = await pdfDoc.embedPng(logoImage);
         }
         const firstPage = pdfDoc.insertPage(0);
-        addFirstPage(firstPage, pdfLogoImage, req.user.Company, req.user);
-        const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica); 
+        addFirstPage(firstPage, pdfLogoImage, requestUser.Company, requestUser);
+        const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
         pdfDoc.getPages().slice(1).forEach(async (page) => {
           page.translateContent(0, -30);
           const { width, height } = page.getSize();
@@ -140,7 +150,7 @@ router.post("/addTrainer", upload.fields([{ name: 'TrainerImage' }, { name: 'Tra
           const centerWatermarkX = width / 2 - watermarkTextWidth / 2;
           const centerWatermarkY = height - 18;
           page.drawText(watermarkText, { x: centerWatermarkX, y: centerWatermarkY, size: watermarkFontSize, color: rgb(0, 0, 0) });
-          const companyText = `${req.user.Company.CompanyName}`;
+          const companyText = `${requestUser.Company.CompanyName}`;
           const companyTextFontSize = 10;
           const companyTextWidth = (helveticaFont.widthOfTextAtSize(companyText, companyTextFontSize));
           const centerCompanyTextX = width - companyTextWidth - 20;
@@ -152,7 +162,7 @@ router.post("/addTrainer", upload.fields([{ name: 'TrainerImage' }, { name: 'Tra
           const centerDateTextX = width - dateTextWidth - 20;
           const centerDateTextY = height - 30;
           page.drawText(dateText, { x: centerDateTextX, y: centerDateTextY, size: dateTextFontSize, color: rgb(0, 0, 0) });
-      });
+        });
         // Save the modified PDF
         const modifiedPdfBuffer = await pdfDoc.save();
 
@@ -160,13 +170,13 @@ router.post("/addTrainer", upload.fields([{ name: 'TrainerImage' }, { name: 'Tra
         console.log(documentUrl);
       }
 
-      const createdBy = req.user.Name;
+      const createdBy = requestUser.Name;
       // Create a new employee document with the image and document URLs
       const newUser = new User({
         ...req.body,
-        User: req.user._id,
-        Department: req.user.Department,
-        Company: req.user.Company,
+        UserDepartment: requestUser.Department._id,
+        Department: requestUser.Department._id,
+        Company: requestUser.Company._id,
         isTrainer: true,
         TrainerImage: imageUrl,
         TrainerDocument: documentUrl,
@@ -227,16 +237,16 @@ router.post("/addTrainer", upload.fields([{ name: 'TrainerImage' }, { name: 'Tra
 router.get("/readTrainer", async (req, res) => {
   try {
 
-    const trainer = await User.find({ isTrainer: true }).populate('User')
+    const trainer = await User.find({ isTrainer: true, UserDepartment: req.header('Authorization') }).populate('User')
 
-    const trainersToSend = trainer.filter((Obj) => Obj.User.Department.equals(req.user.Department));
 
-res.status(201).send({ status: true, message: "The Following are the Trainers!", data: trainersToSend });
-    
+
+    res.status(201).send({ status: true, message: "The Following are the Trainers!", data: trainer });
+
 
   } catch (e) {
-  res.status(500).json({ message: e.message });
-}
+    res.status(500).json({ message: e.message });
+  }
 });
 
 // * DELETE Trainer Data By Id From MongooDB Database

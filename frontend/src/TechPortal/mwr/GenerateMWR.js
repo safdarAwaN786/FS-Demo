@@ -6,7 +6,7 @@ import Swal from 'sweetalert2'
 import { BsArrowLeftCircle } from 'react-icons/bs';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
-import { setLoading } from '../../redux/slices/loading';
+import { setSmallLoading } from '../../redux/slices/loading';
 
 function GenerateMWR() {
     const [submitAlert, setSubmitAlert] = useState(false);
@@ -30,12 +30,12 @@ function GenerateMWR() {
 
     const [machineries, setMachineries] = useState(null);
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readAllMachinery`, { headers: { Authorization: `${user._id}` } }).then((res) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readAllMachinery`, { headers: { Authorization: `${user.Department._id}` } }).then((res) => {
             setMachineries(res.data.data);
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon: 'error',
                 title: 'OOps..',
@@ -104,9 +104,9 @@ function GenerateMWR() {
 
     const makeRequest = () => {
         const formData = convertStateToFormData(formValues);
-        dispatch(setLoading(true))
-        axios.post(`${process.env.REACT_APP_BACKEND_URL}/createWorkRequest`, formData, { headers: { Authorization: `${user._id}` } }).then((res) => {
-            dispatch(setLoading(false))
+        dispatch(setSmallLoading(true))
+        axios.post(`${process.env.REACT_APP_BACKEND_URL}/createWorkRequest`, formData, { headers: { Authorization: `${user.Department._id}` } }).then((res) => {
+            dispatch(setSmallLoading(false))
             Swal.fire({
                 title: 'Success',
                 text: 'Submitted Successfully',
@@ -118,7 +118,7 @@ function GenerateMWR() {
                 }
             })
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon: 'error',
                 title: 'OOps..',
@@ -132,7 +132,6 @@ function GenerateMWR() {
     return (
         <>
 
-            <div className={style.subparent}>
                 <div className='d-flex flex-row bg-white px-lg-5 mx-1 px-2 py-2'>
                     <BsArrowLeftCircle
                         role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
@@ -329,7 +328,6 @@ function GenerateMWR() {
                     </div>
 
                 </form>
-            </div>
 
             {
                 alert ?

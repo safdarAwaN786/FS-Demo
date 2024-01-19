@@ -13,7 +13,7 @@ import Swal from 'sweetalert2'
 import { BsArrowLeftCircle } from 'react-icons/bs'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateTabData } from '../../redux/slices/tabSlice'
-import { setLoading } from '../../redux/slices/loading'
+import { setSmallLoading } from '../../redux/slices/loading'
 
 function AddEmployee() {
 
@@ -92,12 +92,12 @@ function AddEmployee() {
 
 
     useEffect(() => {
-        dispatch(setLoading(true));
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
-            dispatch(setLoading(false))
+        dispatch(setSmallLoading(true));
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`).then((res) => {
+            dispatch(setSmallLoading(false))
             setDepartmentsToShow(res.data.data);
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon : 'error',
                 title : 'OOps..',
@@ -116,9 +116,9 @@ function AddEmployee() {
 
     const makeRequest = () => {
         if (employeeData && !error) {
-            dispatch(setLoading(true))
+            dispatch(setSmallLoading(true))
             axios.post(`${process.env.REACT_APP_BACKEND_URL}/addEmployee`, employeeData, { headers: { Authorization: `${user._id}` } }).then((response) => {
-                dispatch(setLoading(false))
+                dispatch(setSmallLoading(false))
                 if (response.status === 201) {
                     Swal.fire({
                         title: 'OOps',
@@ -141,7 +141,7 @@ function AddEmployee() {
                     })
                 }
             }).catch(err => {
-                dispatch(setLoading(false));
+                dispatch(setSmallLoading(false));
                 Swal.fire({
                     icon : 'error',
                     title : 'OOps..',
@@ -186,7 +186,7 @@ function AddEmployee() {
     return (
         <>
 
-            <div className={style.addEmployee}>
+
                 <div className='d-flex flex-row px-lg-5  px-2 mx-1 my-2'>
                     <BsArrowLeftCircle role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
                         {
@@ -353,7 +353,7 @@ function AddEmployee() {
                     </form>
                 </div>
 
-            </div>
+          
 
             {
                 alert ?

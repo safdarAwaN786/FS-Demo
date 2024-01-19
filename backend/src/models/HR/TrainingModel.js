@@ -18,9 +18,9 @@ const trainingSchema = new Schema({
     type: String,
     required: true
   },
-  User: {
+  UserDepartment: {
     type: Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'Department',
   },
 
   EvaluationCriteria: {

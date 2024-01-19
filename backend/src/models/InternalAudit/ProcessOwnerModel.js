@@ -7,9 +7,9 @@ const processOwnerSchema = new Schema({
     ProcessCode: {
         type: String,
     },
-    User: {
+    UserDepartment: {
         type: Schema.Types.ObjectId,
-        ref: 'User'
+        ref: 'Department'
     },
     Department : {
         type : Schema.Types.ObjectId,

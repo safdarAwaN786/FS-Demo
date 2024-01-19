@@ -20,8 +20,8 @@ router.post('/create-food-safety', async (req, res) => {
     const createdFoodSafety = new FoodSafety({
       ...req.body,
       Plans: plansIds,
-      User: req.user._id,
-      CreatedBy: req.user.Name,
+      UserDepartment: req.header('Authorization'),
+      CreatedBy: req.body.createdBy,
       CreationDate: new Date()
     });
 
@@ -42,7 +42,7 @@ router.post('/create-food-safety', async (req, res) => {
 router.get('/get-all-food-safety', async (req, res) => {
   try {
 
-    const foodSafetyDocs = await FoodSafety.find().populate('Department User').populate({
+    const foodSafetyDocs = await FoodSafety.find({UserDepartment : req.header('Authorization')}).populate('Department UserDepartment').populate({
       path: 'DecisionTree',
       model: 'DecisionTree',
       populate: {
@@ -84,10 +84,10 @@ router.get('/get-all-food-safety', async (req, res) => {
       return res.status(404).json({ message: 'FoodSafety documents not found' });
     }
 
-    const safetyPlansToSend = foodSafetyDocs.filter((Obj) => Obj.User.Department.equals(req.user.Department));
+   
 
     console.log('FoodSafety documents retrieved successfully');
-    res.status(200).json({ status: true, data: safetyPlansToSend });
+    res.status(200).json({ status: true, data: foodSafetyDocs });
 
   } catch (error) {
     console.error(error);
@@ -100,7 +100,7 @@ router.get('/get-food-safety/:planId', async (req, res) => {
   try {
 
     const foodSafetyId = req.params.planId;
-    const foodSafety = await FoodSafety.findById(foodSafetyId).populate('Department User').populate({
+    const foodSafety = await FoodSafety.findById(foodSafetyId).populate('Department UserDepartment').populate({
       path: 'DecisionTree',
       model: 'DecisionTree',
       populate: {
@@ -217,7 +217,7 @@ router.patch('/update-food-safety/:planId', async (req, res) => {
     
     const updates = {
       ...req.body,
-      UpdatedBy: req.user.Name,
+      UpdatedBy: req.body.updatedBy,
       Plans : plansIds,
       UpdationDate: new Date(),
       Status: 'Pending'
@@ -249,7 +249,7 @@ router.patch('/approve-food-safety', async (req, res) => {
   try {
 
     const foodSafetyId = req.body.id;
-    const approveBy = req.user.Name
+    const approveBy = req.body.approvedBy
 
     // Find the FoodSafety by ID
     const foodSafety = await FoodSafety.findById(foodSafetyId);
@@ -299,7 +299,7 @@ router.patch('/disapprove-food-safety', async (req, res) => {
 
     const foodSafetyId = req.body.id;
     const Reason = req.body.Reason;
-    const disapproveBy = req.user.Name;
+    const disapproveBy = req.body.disapprovedBy;
 
     // Find the FoodSafety by ID
     const foodSafety = await FoodSafety.findById(foodSafetyId);

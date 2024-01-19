@@ -8,7 +8,7 @@ import { BsArrowLeftCircle } from 'react-icons/bs'
 import Cookies from 'js-cookie'
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice'
-import { setLoading } from '../../redux/slices/loading'
+import { setSmallLoading } from '../../redux/slices/loading'
 
 function AddDevices() {
     const [internal, setInternal] = useState(false)
@@ -447,9 +447,9 @@ function AddDevices() {
                             <div className={style.alertbtns}>
                                 <button onClick={() => {
                                     setSubmitAlert(false)
-                                    dispatch(setLoading(true))
-                                    axios.post('/addEquipment', formValues, { headers: { Authorization: `${user._id}` } }).then((res) => {
-                                        dispatch(setLoading(false))
+                                    dispatch(setSmallLoading(true))
+                                    axios.post('/addEquipment', {...formValues, createdBy : user.Name }, { headers: { Authorization: `${user.Department._id}` } }).then((res) => {
+                                        dispatch(setSmallLoading(false))
                                         Swal.fire({
                                             title: 'Success',
                                             text: 'Submitted Successfully',
@@ -461,7 +461,7 @@ function AddDevices() {
                                             }
                                         })
                                     }).catch(err => {
-                                        dispatch(setLoading(false));
+                                        dispatch(setSmallLoading(false));
                                         Swal.fire({
                                             icon: 'error',
                                             title: 'OOps..',

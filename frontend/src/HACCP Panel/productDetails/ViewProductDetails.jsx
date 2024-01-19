@@ -5,7 +5,7 @@ import Swal from 'sweetalert2'
 import { BsArrowLeftCircle } from 'react-icons/bs';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
-import { setLoading } from '../../redux/slices/loading';
+import { setSmallLoading } from '../../redux/slices/loading';
 
 function ViewProductDetails() {
     const [dataToSend, setDataToSend] = useState(null);
@@ -16,13 +16,13 @@ function ViewProductDetails() {
     const user = useSelector(state => state.auth?.user);
     const idToWatch = useSelector(state => state.idToProcess);
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-product/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-product/${idToWatch}`).then((res) => {
             setDataToSend(res.data.data);
             setProduct(res.data.data.ProductDetails);
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon : 'error',
                 title : 'OOps..',
@@ -39,28 +39,7 @@ function ViewProductDetails() {
         setDataToSend({ ...dataToSend, ProductDetails: product });
     }, [product])
 
-    const makeRequest = () => {
-        axios.post(`${process.env.REACT_APP_BACKEND_URL}/create-product`, dataToSend, { headers: { Authorization: `${user._id}` } }).then(() => {
-            setDataToSend(null);
-            Swal.fire({
-                title: 'Success',
-                text: 'Submitted Successfully',
-                icon: 'success',
-                confirmButtonText: 'Go!',
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    dispatch(updateTabData({ ...tabData, Tab: 'Describe Product' }))
-                }
-            })
-        }).catch((error) => {
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Try filling data again',
-                confirmButtonText: 'OK.'
-            })
-        })
-    }
+    
     return (
         <>
             <div className={`${style.parent} mx-auto`}>
@@ -144,7 +123,7 @@ function ViewProductDetails() {
                             <div className={style.alertbtns}>
                                 <button onClick={() => {
                                     alertManager();
-                                    makeRequest();
+                                    // makeRequest();
                                 }} className={style.btn1}>Submit</button>
                                 <button onClick={alertManager} className={style.btn2}>Cencel</button>
                             </div>

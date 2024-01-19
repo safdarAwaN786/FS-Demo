@@ -3,31 +3,21 @@ const ChangeRequest = require('../../models/Admin/ChangeRequestModel')
 const Document = require('../../models/Admin/ListOfDocumentsModel');
 const UploadDocuments = require('../../models/Admin/UploadDocumentsModel')
 const router = new express.Router();
-const authMiddleware = require('../../middleware/auth')
-router.use(authMiddleware);
+// const authMiddleware = require('../../middleware/auth')
+// router.use(authMiddleware);
 
 // * POST  ChangeRequest Data From MongooDB Database
 router.post('/addChangeRequest', async (req, res) => {
   try {
-
-    const createdBy = req.user.Name;
-
+    const departmentId = req.header('Authorization');
     // The changeRequest data sent in the request body
     const changeRequest = new ChangeRequest({
       ...req.body,
       CreatedBy: createdBy,
-      User: req.user._id
+      UserDepartment : departmentId,
     });
 
-    // Check if the referenced Document(s) have a status of "Rejected"
-    const documentIds = req.body.Document || [];
-    const documents = await Document.find({ _id: { $in: documentIds } });
-
-    for (const document of documents) {
-      if (document.Status === 'Rejected') {
-        return res.status(400).json({ message: "This document is rejected So, it is not available." });
-      }
-    }
+  
 
     await changeRequest.save();
     console.log(new Date().toLocaleString() + ' ' + 'Loading ChangeRequest...');
@@ -36,19 +26,19 @@ router.post('/addChangeRequest', async (req, res) => {
     console.log(new Date().toLocaleString() + ' ' + 'ADD ChangeRequest Successfully!');
 
   } catch (e) {
+    console.log(e);
     res.status(400).json({ message: e.message });
   }
 });
 
 // * GET All ChangeRequest Data From MongooDB Database
 router.get('/readChangeRequest', async (req, res) => {
-
+  console.log('change request');
   try {
+    const departmentId = req.header('Authorization');
+    const changeRequest = await ChangeRequest.find({UserDepartment : departmentId}).populate("Document Department UserDepartment");
 
-    const changeRequest = await ChangeRequest.find().populate("Document Department User");
-    const changeRequestsToSend = changeRequest.filter(Obj => Obj.User.Department.equals(req.user.Department))
-
-    res.status(201).send({ status: true, message: "The following are ChangeRequests!", data: changeRequestsToSend });
+    res.status(201).send({ status: true, message: "The following are ChangeRequests!", data: changeRequest });
     console.log(new Date().toLocaleString() + ' ' + 'READ ChangeRequest Successfully!')
 
   } catch (e) {
@@ -62,12 +52,9 @@ router.get('/readChangeRequestById/:requestId', async (req, res) => {
 
   try {
 
-    const changeRequest = await ChangeRequest.findById(req.params.requestId).populate("Document Department User");
-    console.log(new Date().toLocaleString() + ' ' + 'Loading ChangeRequest...')
+    const changeRequest = await ChangeRequest.findById(req.params.requestId).populate("Document Department UserDepartment");
 
-    const totalCollections = await ChangeRequest.countDocuments()
-
-    res.status(201).send({ status: true, message: "The following are ChangeRequests!", totaldocuments: totalCollections, data: changeRequest });
+    res.status(201).send({ status: true, message: "The following are ChangeRequests!", data: changeRequest });
     console.log(new Date().toLocaleString() + ' ' + 'READ ChangeRequest Successfully!')
 
   } catch (e) {
@@ -80,7 +67,7 @@ router.get('/readChangeRequestById/:requestId', async (req, res) => {
 router.patch('/review-ChangeRequest', async (req, res) => {
   try {
 
-    const reviewBy = req.user.Name;
+    const reviewBy = req.body.reviewBy;
     const { documentId } = req.body;
 
     // Find the document by ID
@@ -115,7 +102,7 @@ router.patch('/review-ChangeRequest', async (req, res) => {
 router.patch('/reject-ChangeRequest', async (req, res) => {
   try {
 
-    const rejectBy = req.user.Name;
+    const rejectBy = req.body.rejectBy;
     const { documentId, reason } = req.body;
 
     // Find the document by ID
@@ -151,7 +138,7 @@ router.patch('/reject-ChangeRequest', async (req, res) => {
 router.patch('/approve-ChangeRequest', async (req, res) => {
   try {
 
-    const approveBy = req.user.Name;
+    const approveBy = req.body.approveBy;
     const { documentId } = req.body;
 
     // Find the document by ID
@@ -212,8 +199,7 @@ router.patch('/approve-ChangeRequest', async (req, res) => {
 router.patch('/disapprove-ChangeRequest', async (req, res) => {
   try {
 
-    const disapproveBy = req.user.Name;
-    const { documentId, reason } = req.body;
+    const { documentId, reason, disapproveBy } = req.body;
 
     // Find the document by ID
     const document = await ChangeRequest.findById(documentId);

@@ -7,7 +7,7 @@ import Swal from 'sweetalert2';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { changeId } from '../../redux/slices/idToProcessSlice';
-import { setLoading } from '../../redux/slices/loading';
+import { setSmallLoading } from '../../redux/slices/loading';
 
 function FormsList() {
 
@@ -25,19 +25,18 @@ function FormsList() {
     const [review, setReview] = useState(false);
     const [allDataArr, setAllDataArr] = useState(null);
     const [formToProcess, setFormToProcess] = useState(null);
-
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
     const [departmentsToShow, SetDepartmentsToShow] = useState(null);
     const user = useSelector(state => state.auth?.user);
 
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`).then((res) => {
             SetDepartmentsToShow(res.data.data);
 
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon: 'error',
                 title: 'OOps..',
@@ -50,19 +49,19 @@ function FormsList() {
     }, [formToProcess])
     useEffect(() => {
         if (formsList && departmentsToShow) {
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
         }
 
     }, [departmentsToShow, formsList])
 
     const refreshData = () => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-forms`, { headers: { Authorization: `${user._id}` } }).then((response) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-forms`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
             setAllDataArr(response.data.forms)
             setFormsList(response.data.forms.slice(startIndex, endIndex));
 
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon: 'error',
                 title: 'OOps..',
@@ -73,14 +72,14 @@ function FormsList() {
 
 
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-forms`, { headers: { Authorization: `${user._id}` } }).then((response) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-forms`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
             console.log(response.data.forms);
             setAllDataArr(response.data.forms)
             setFormsList(response.data.forms.slice(startIndex, endIndex));
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon: 'error',
                 title: 'OOps..',
@@ -122,8 +121,6 @@ function FormsList() {
 
     return (
         <>
-
-            <div className={style.subparent}>
 
                 <div className={style.searchbar}>
                     <div className={style.sec1}>
@@ -351,7 +348,6 @@ function FormsList() {
                         </button>
                     )}
                 </div>
-            </div>
 
             {
                 showBox && (
@@ -380,9 +376,9 @@ function FormsList() {
                             <p class={style.msg}>Do you want to Approve this Form?</p>
                             <div className={style.alertbtns}>
                                 <button onClick={() => {
-                                    dispatch(setLoading(true))
-                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/approveForm`, { id: idForAction }, { headers: { Authorization: `${user._id}` } }).then(() => {
-                                        dispatch(setLoading(false))
+                                    dispatch(setSmallLoading(true))
+                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/approveForm`, { id: idForAction, approvedBy : user.Name }).then(() => {
+                                        dispatch(setSmallLoading(false))
                                         refreshData();
                                         Swal.fire({
                                             title: 'Success',
@@ -392,7 +388,7 @@ function FormsList() {
                                         });
                                         setApprove(false);
                                     }).catch(err => {
-                                        dispatch(setLoading(false));
+                                        dispatch(setSmallLoading(false));
                                         Swal.fire({
                                             icon: 'error',
                                             title: 'OOps..',
@@ -422,9 +418,9 @@ function FormsList() {
                             <div className={style.alertbtns}>
                                 <button onClick={() => {
                                     setReview(false);
-                                    dispatch(setLoading(true))
-                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/reviewForm`, { formId: idForAction }, { headers: { Authorization: `${user._id}` } }).then(() => {
-                                        dispatch(setLoading(false))
+                                    dispatch(setSmallLoading(true))
+                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/reviewForm`, { formId: idForAction, reviewedBy : user.Name }).then(() => {
+                                        dispatch(setSmallLoading(false))
                                         refreshData();
                                         Swal.fire({
                                             title: 'Success',
@@ -433,7 +429,7 @@ function FormsList() {
                                             confirmButtonText: 'Go!',
                                         });
                                     }).catch(err => {
-                                        dispatch(setLoading(false));
+                                        dispatch(setSmallLoading(false));
                                         Swal.fire({
                                             icon: 'error',
                                             title: 'OOps..',
@@ -462,8 +458,8 @@ function FormsList() {
                             <form onSubmit={(e) => {
                                 e.preventDefault();
                                 setDisApprove(false);
-                                dispatch(setLoading(true))
-                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/disapproveForm`, { formId: idForAction, reason: reason }, { headers: { Authorization: `${user._id}` } }).then(() => {
+                                dispatch(setSmallLoading(true))
+                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/disapproveForm`, { formId: idForAction, reason: reason, disapprovedBy : user.Name }).then(() => {
                                     dispatch(false)
                                     Swal.fire({
                                         title: 'Success',
@@ -473,7 +469,7 @@ function FormsList() {
                                     })
                                     refreshData();
                                 }).catch(err => {
-                                    dispatch(setLoading(false));
+                                    dispatch(setSmallLoading(false));
                                     Swal.fire({
                                         icon: 'error',
                                         title: 'OOps..',
@@ -505,9 +501,9 @@ function FormsList() {
                             <form onSubmit={(e) => {
                                 e.preventDefault();
                                 setReject(false);
-                                dispatch(setLoading(true))
-                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/rejectForm`, { formId: idForAction, reason: reason }, { headers: { Authorization: `${user._id}` } }).then(() => {
-                                    dispatch(setLoading(false))
+                                dispatch(setSmallLoading(true))
+                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/rejectForm`, { formId: idForAction, reason: reason, rejectedBy : user.Name }).then(() => {
+                                    dispatch(setSmallLoading(false))
                                     Swal.fire({
                                         title: 'Success',
                                         text: 'Rejected Successfully',
@@ -516,7 +512,7 @@ function FormsList() {
                                     })
                                     refreshData();
                                 }).catch(err => {
-                                    dispatch(setLoading(false));
+                                    dispatch(setSmallLoading(false));
                                     Swal.fire({
                                         icon: 'error',
                                         title: 'OOps..',
@@ -548,9 +544,9 @@ function FormsList() {
                             <form onSubmit={(e) => {
                                 e.preventDefault();
                                 if (formToProcess?.SendToDepartments.length > 0) {
-                                    dispatch(setLoading(true))
-                                    axios.put(`${process.env.REACT_APP_BACKEND_URL}/send-form`, formToProcess, { headers: { Authorization: `${user._id}` } }).then(() => {
-                                        dispatch(setLoading(false))
+                                    dispatch(setSmallLoading(true))
+                                    axios.put(`${process.env.REACT_APP_BACKEND_URL}/send-form`, formToProcess).then(() => {
+                                        dispatch(setSmallLoading(false))
                                         setFormToProcess(null);
                                         setSend(false)
                                         Swal.fire({
@@ -558,11 +554,9 @@ function FormsList() {
                                             text: 'Sended Successfully',
                                             icon: 'success',
                                             confirmButtonText: 'Go!',
-
                                         })
-
                                     }).catch(err => {
-                                        dispatch(setLoading(false));
+                                        dispatch(setSmallLoading(false));
                                         setSend(false)
                                         Swal.fire({
                                             icon: 'error',

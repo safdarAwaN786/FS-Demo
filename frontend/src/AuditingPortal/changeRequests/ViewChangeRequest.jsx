@@ -4,7 +4,7 @@ import axios from "axios";
 import { BsArrowLeftCircle } from 'react-icons/bs';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
-import { setLoading } from '../../redux/slices/loading';
+import { setSmallLoading } from '../../redux/slices/loading';
 import Swal from 'sweetalert2';
 
 function ViewChangeRequest() {
@@ -19,12 +19,12 @@ function ViewChangeRequest() {
     const idToWatch = useSelector(state => state.idToProcess);
     const user = useSelector(state => state.auth.user)
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readChangeRequestById/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((response) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readChangeRequestById/${idToWatch}`).then((response) => {
             setRequestData(response.data.data);
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon : 'error',
                 title : 'OOps..',

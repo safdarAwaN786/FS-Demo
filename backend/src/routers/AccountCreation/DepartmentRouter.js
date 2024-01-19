@@ -2,8 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Department = require('../../models/AccountCreation/DepartmentModel'); // Replace with the actual path to your Department model
 const Company = require('../../models/AccountCreation/CompanyModel');
-const authMiddleware = require('../../middleware/auth');
-router.use(authMiddleware)
+// router.use(authMiddleware)
 // * Create a new Department document
 router.post('/create-department',  async (req, res) => {
   try {
@@ -43,6 +42,11 @@ router.post('/create-department',  async (req, res) => {
 // * Get all Department documents
 router.get('/get-all-departments',  async (req, res) => {
   try {
+    const departmentExist = Department.findById(req.header('Authorization'));
+    if(!departmentExist){
+      return res.status(404).json({ message: `Department document with ID: ${req.header('Authorization')} not found` });
+
+    }
 
     const departments = await Department.find().populate('Company');
 

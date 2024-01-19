@@ -7,7 +7,7 @@ import axios from "axios";
 import profile from '../../assets/images/addEmployee/prof.svg'
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
-import { setLoading } from '../../redux/slices/loading';
+import { setSmallLoading } from '../../redux/slices/loading';
 import Swal from 'sweetalert2';
 
 function Companies() {
@@ -21,14 +21,14 @@ function Companies() {
     const [allDataArr, setAllDataArr] = useState(null);
     const user = useSelector(state => state.auth.user);
     useEffect(() => {
-        dispatch(setLoading(true));
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-companies`, { headers: { Authorization: `${user._id}` } }).then((response) => {
-            dispatch(setLoading(false));
+        dispatch(setSmallLoading(true));
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-companies`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
+            dispatch(setSmallLoading(false));
             setAllDataArr(response.data.data)
             console.log(response.data);
             setCompaniesList(response.data.data.slice(startIndex, endIndex));
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon : 'error',
                 title : 'OOps..',
@@ -68,8 +68,6 @@ function Companies() {
 
     return (
         <>
-
-            <div className={style.subparent}>
 
                 <div className={style.searchbar}>
                     <div className={style.sec1}>
@@ -160,11 +158,6 @@ function Companies() {
                         </button>
                     )}
                 </div>
-            </div>
-
-
-
-
 
             {
                 showBox && (

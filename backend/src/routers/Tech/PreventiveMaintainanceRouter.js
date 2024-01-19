@@ -11,7 +11,7 @@ const upload = multer();
 const authMiddleware = require('../../middleware/auth');
 
 
-router.use(authMiddleware);
+// router.use(authMiddleware);
 
 cloudinary.config({
   cloud_name: process.env.cloud_name,
@@ -133,10 +133,10 @@ router.post('/addPreventiveMaintaince/:MachineId',  upload.fields([{ name: 'Imag
 
     console.log('Creating maintenance record...' + nextDate);
 
-    const submitBy = req.user.Name;
+    const submitBy = req.body.submitBy;
     const maintainanceRecord = new Maintainance({
       Machinery: machineId,
-      User : req.user._id,
+      UserDepartment : req.header('Authorization'),
       lastMaintainanceDate: new Date(),
       nextMaintainanceDate: nextDate,
       maintenanceType,
@@ -173,16 +173,11 @@ router.get('/getAllMaintenanceRecords',  async (req, res) => {
   try {
 
     console.log('Received request to fetch all maintenance records.');
-    const allMaintenanceRecords = await Maintainance.find().populate('Machinery').populate('User');
+    const allMaintenanceRecords = await Maintainance.find({UserDepartment : req.header('Authorization')}).populate('Machinery').populate('UserDepartment');
 
-    const maintenanceRecordsToSend = allMaintenanceRecords.filter((Obj)=>{
-      if(Obj.User.Department.equals(req.user.Department)){
-        console.log('got Equal');
-        return Obj
-      }
-    });
+
     
-    res.status(200).json({ message: 'Fetched all maintenance records successfully', data: maintenanceRecordsToSend });
+    res.status(200).json({ message: 'Fetched all maintenance records successfully', data: allMaintenanceRecords });
 
   } catch (error) {
     console.error('Failed to fetch maintenance records: ', error.message);
@@ -197,7 +192,7 @@ router.get('/getMaintenanceByMachineId/:MachineId',  async (req, res) => {
     const machineId = req.params.MachineId;
     console.log(`Received request to fetch maintenance records for Machine ID: ${machineId}`);
 
-    const maintenanceRecords = await Maintainance.find({ Machinery: machineId }).populate('Machinery');
+    const maintenanceRecords = await Maintainance.find({ Machinery: machineId, UserDepartment : req.header('Authorization') }).populate('Machinery');
     if (maintenanceRecords.length === 0) {
       console.log('No maintenance records found for the given Machine ID.');
       return res.status(404).json({ message: 'No maintenance records found for the given Machine ID' });

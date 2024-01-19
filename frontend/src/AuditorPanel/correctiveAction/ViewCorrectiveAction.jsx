@@ -7,7 +7,7 @@ import { BsArrowLeftCircle } from 'react-icons/bs';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import Slider from 'rc-slider';
-import { setLoading } from '../../redux/slices/loading';
+import { setSmallLoading } from '../../redux/slices/loading';
 import html2pdf from 'html2pdf.js';
 
 const formatDate = (date) => {
@@ -123,12 +123,12 @@ function ViewCorrectiveAction() {
         try {
             if (imageURL) {
 
-                dispatch(setLoading(true))
+                dispatch(setSmallLoading(true))
                 const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/download-image`, {
                     params: {
                         url: imageURL,
                     },
-                    responseType: 'blob', headers: { Authorization: `${user._id}` } // Specify the response type as 'blob' to handle binary data
+                    responseType: 'blob' // Specify the response type as 'blob' to handle binary data
                 });
 
 
@@ -146,7 +146,7 @@ function ViewCorrectiveAction() {
 
                 // Append the anchor element to the document body and click it to trigger the download
                 document.body.appendChild(link);
-                dispatch(setLoading(false))
+                dispatch(setSmallLoading(false))
                 link.click();
                 // Clean up by removing the temporary anchor element
                 document.body.removeChild(link);
@@ -158,7 +158,7 @@ function ViewCorrectiveAction() {
                 })
             }
         } catch (error) {
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
             Swal.fire({
                 icon: 'error',
                 title: 'OOps..',
@@ -170,12 +170,12 @@ function ViewCorrectiveAction() {
 
 
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readCorrectiveActionById/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((response) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readCorrectiveActionById/${idToWatch}`).then((response) => {
             setActionData(response.data.data)
             setDataToSend(response.data.data)
             setCorrectiveAnswers(response.data.data.Answers);
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
             if (response.data.data == undefined) {
                 Swal.fire({
                     icon: 'error',
@@ -192,7 +192,7 @@ function ViewCorrectiveAction() {
             }
 
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon: 'error',
                 title: 'OOps..',

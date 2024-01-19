@@ -7,7 +7,7 @@ import JoditEditor from 'jodit-react';
 import { BsArrowLeftCircle } from 'react-icons/bs';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
-import { setLoading } from '../../redux/slices/loading';
+import { setSmallLoading } from '../../redux/slices/loading';
 
 function EditDocument() {
     const [documentData, setDocumentData] = useState(null);
@@ -20,12 +20,12 @@ function EditDocument() {
     const idToWatch = useSelector(state => state.idToProcess)
     const user = useSelector(state => state.auth.user);
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-documentById/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((response) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-documentById/${idToWatch}`).then((response) => {
             setDocumentData(response.data.data);
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon : 'error',
                 title : 'OOps..',
@@ -36,11 +36,11 @@ function EditDocument() {
 
     const makeRequest = () => {
         if (documentData.EditorData) {
-            dispatch(setLoading(true))
-            axios.put(`${process.env.REACT_APP_BACKEND_URL}/updateDocument`, documentData, { headers: { Authorization: `${user._id}` } }).then(() => {
+            dispatch(setSmallLoading(true))
+            axios.put(`${process.env.REACT_APP_BACKEND_URL}/updateDocument`, {...documentData, updatedBy : user.Name}).then(() => {
                 console.log("request made !");
                 setDocumentData(null);
-                dispatch(setLoading(false))
+                dispatch(setSmallLoading(false))
                 Swal.fire({
                     title: 'Success',
                     text: 'Submitted Successfully',
@@ -53,7 +53,7 @@ function EditDocument() {
                 })
 
             }).catch(err => {
-                dispatch(setLoading(false));
+                dispatch(setSmallLoading(false));
                 Swal.fire({
                     icon : 'error',
                     title : 'OOps..',

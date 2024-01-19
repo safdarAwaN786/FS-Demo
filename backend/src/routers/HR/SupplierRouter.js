@@ -11,12 +11,12 @@ const Supplier = require('../../models/HR/SupplierModel'); // Replace with the a
 router.post('/create-supplier',  async (req, res) => {
     try {
         const supplierData = req.body; // The Supplier data sent in the request body
-        const createdBy = req.user.Name;
+        const createdBy = req.body.createdBy;
         const createdSupplier = new Supplier({
             ...supplierData,
             CreatedBy: createdBy,
             CreationDate: new Date(),
-            User : req.user._id
+            UserDepartment : req.header('Authorization')
         });
 
         await createdSupplier.save();
@@ -34,13 +34,13 @@ router.post('/create-supplier',  async (req, res) => {
 // * Get all Supplier documents
 router.get('/get-all-suppliers',  async (req, res) => {
     try {
-        const suppliers = await Supplier.find().populate('User');
+        const suppliers = await Supplier.find({UserDepartment : req.header('Authorization')}).populate('UserDepartment');
         if (!suppliers) {
             console.log('Supplier documents not found');
             return res.status(404).json({ message: 'Supplier documents not found' });
         }
-        const suppliersToSend = suppliers.filter(Obj => Obj.User.Department.equals(req.user.Department));
-        res.status(200).json({ status: true, data: suppliersToSend });
+       
+        res.status(200).json({ status: true, data: suppliers });
 
     } catch (error) {
         console.error(error);
@@ -107,7 +107,7 @@ router.delete('/delete-all-suppliers',  async (req, res) => {
 // * Approve Supplier From MongoDB Database
 router.patch('/approve-supplier',  async (req, res) => {
     try {
-        const approvedBy = req.user.Name;
+        const approvedBy = req.body.approvedBy;
         const supplierId = req.body.id;
 
         // Find the supplier by ID
@@ -144,7 +144,7 @@ router.patch('/approve-supplier',  async (req, res) => {
 // * Disapprove Supplier From MongoDB Database
 router.patch('/disapprove-supplier',  async (req, res) => {
     try {
-        const disapprovedBy = req.user.Name;
+        const disapprovedBy = req.disapprovedBy;
         const supplierId = req.body.id;
         const Reason = req.body.Reason;
 

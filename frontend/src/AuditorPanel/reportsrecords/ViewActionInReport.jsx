@@ -8,7 +8,7 @@ import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import Slider from 'rc-slider';
-import { setLoading } from '../../redux/slices/loading';
+import { setSmallLoading } from '../../redux/slices/loading';
 
 function ViewActionInReport() {
 
@@ -24,11 +24,11 @@ function ViewActionInReport() {
 
     useEffect(() => {
         
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readCorrectiveActionById/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((response) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readCorrectiveActionById/${idToWatch}`).then((response) => {
             setActionData(response.data.data)
             setCorrectiveAnswers(response.data.data.Answers);
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
             if (response.data.data == undefined) {
                 Swal.fire({
                     icon: 'error',
@@ -44,7 +44,7 @@ function ViewActionInReport() {
             }
 
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon : 'error',
                 title : 'OOps..',

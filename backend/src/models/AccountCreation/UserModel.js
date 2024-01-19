@@ -37,9 +37,9 @@ const UserSchema = new mongoose.Schema({
         type: Schema.Types.ObjectId,
         ref: 'Company',
     },
-    User: {
+    UserDepartment: {
         type: Schema.Types.ObjectId,
-        ref: 'User',
+        ref: 'Department',
     },
 
     Assigned: {

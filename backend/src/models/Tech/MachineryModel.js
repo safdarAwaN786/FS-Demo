@@ -8,9 +8,9 @@ const machinarySchema = new mongoose.Schema({
     type: String,
     unique: true,
   },
-  User: {
+  UserDepartment: {
     type: Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'Department',
   },
 
   machineName: {

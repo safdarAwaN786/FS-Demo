@@ -10,7 +10,7 @@ const template = emailTemplates.newNotification;
 const authMiddleware = require('../../middleware/auth');
 const Participants = require('../../models/ManagementRev/ParticipantsModel');
 
-router.use(authMiddleware);
+// router.use(authMiddleware);
 
 const transporter = nodemailer.createTransport(smtpTransport({
   host: process.env.host,
@@ -75,7 +75,7 @@ router.post('/create-notification', async (req, res) => {
         const notificationToSave = new Notification({
           ...notificationToCreate,
           Agendas: agendaIds,
-          User: req.user._id
+          UserDepartment: req.header('Autorization')
         })
         notificationToSave.save().then(() => {
           console.log('Saved' + notificationToCreate);
@@ -94,7 +94,7 @@ router.post('/create-notification', async (req, res) => {
 router.get('/get-all-notifications', async (req, res) => {
   try {
 
-    const notifications = await Notification.find().populate('Agendas')
+    const notifications = await Notification.find({UserDepartment : req.header('Authorization')}).populate('Agendas')
       .populate('Participants').populate('User').select('-__v').sort({ createdAt: -1 });
 
     if (!notifications) {
@@ -102,16 +102,8 @@ router.get('/get-all-notifications', async (req, res) => {
       return res.status(404).json({ message: 'Notification documents not found' });
     }
 
-    const notificationsToSend = notifications.filter((Obj) => {
-      if (Obj.User.Department.equals(req.user.Department)) {
-        console.log('got Equal');
-        return Obj
-      }
-    });
-
-
     console.log('Notification documents retrieved successfully');
-    res.status(200).json({ status: true, data: notificationsToSend });
+    res.status(200).json({ status: true, data: notifications });
 
   } catch (error) {
     console.error(error);

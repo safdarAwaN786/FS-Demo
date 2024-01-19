@@ -7,7 +7,7 @@ import Swal from 'sweetalert2'
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { changeId } from '../../redux/slices/idToProcessSlice';
-import { setLoading } from '../../redux/slices/loading';
+import { setSmallLoading } from '../../redux/slices/loading';
 
 function ConductHACCP() {
 
@@ -29,13 +29,13 @@ function ConductHACCP() {
     const dispatch = useDispatch()
 
     const refreshData = () => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-conduct-haccp`, { headers: { Authorization: `${user._id}` } }).then((response) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-conduct-haccp`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
             setAllDataArr(response.data.data)
             setConductHACCPsList(response.data.data.slice(startIndex, endIndex));
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon: 'error',
                 title: 'OOps..',
@@ -45,13 +45,13 @@ function ConductHACCP() {
     }
 
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-conduct-haccp`, { headers: { Authorization: `${user._id}` } }).then((response) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-conduct-haccp`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
             setAllDataArr(response.data.data)
             setConductHACCPsList(response.data.data.slice(startIndex, endIndex));
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon: 'error',
                 title: 'OOps..',
@@ -91,7 +91,6 @@ function ConductHACCP() {
 
     return (
         <>
-            <div className={style.subparent}>
                 <div className={style.searchbar}>
                     <div className={style.sec1}>
                         <img src={Search} alt="" />
@@ -263,7 +262,6 @@ function ConductHACCP() {
                         </button>
                     )}
                 </div>
-            </div>
 
             {
                 showBox && (
@@ -293,9 +291,9 @@ function ConductHACCP() {
                             <div className={style.alertbtns}>
                                 <button onClick={() => {
                                     setApprove(false)
-                                    dispatch(setLoading(true))
+                                    dispatch(setSmallLoading(true))
                                     axios.patch(`${process.env.REACT_APP_BACKEND_URL}/approve-conduct-haccp`, { id: idForAction }, { headers: { Authorization: `${user._id}` } }).then(() => {
-                                        dispatch(setLoading(false))
+                                        dispatch(setSmallLoading(false))
                                         Swal.fire({
                                             title: 'Success',
                                             text: 'Approved Successfully',
@@ -304,7 +302,7 @@ function ConductHACCP() {
                                         })
                                         refreshData();
                                     }).catch(err => {
-                                        dispatch(setLoading(false));
+                                        dispatch(setSmallLoading(false));
                                         Swal.fire({
                                             icon: 'error',
                                             title: 'OOps..',
@@ -416,9 +414,9 @@ function ConductHACCP() {
                             <form onSubmit={(e) => {
                                 e.preventDefault();
                                 setReject(false);
-                                dispatch(setLoading(true))
+                                dispatch(setSmallLoading(true))
                                 axios.patch(`${process.env.REACT_APP_BACKEND_URL}/disapprove-conduct-haccp`, { id: idForAction, Reason: reason }, { headers: { Authorization: `${user._id}` } }).then(() => {
-                                    dispatch(setLoading(false))
+                                    dispatch(setSmallLoading(false))
                                     Swal.fire({
                                         title: 'Success',
                                         text: 'DisApproved Successfully',
@@ -427,7 +425,7 @@ function ConductHACCP() {
                                     })
                                     refreshData();
                                 }).catch(err => {
-                                    dispatch(setLoading(false));
+                                    dispatch(setSmallLoading(false));
                                     Swal.fire({
                                         icon: 'error',
                                         title: 'OOps..',

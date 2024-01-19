@@ -5,7 +5,7 @@ import Swal from 'sweetalert2'
 import { BsArrowLeftCircle } from 'react-icons/bs';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
-import { setLoading } from '../../redux/slices/loading';
+import { setSmallLoading } from '../../redux/slices/loading';
 
 
 function AddHACCPRiskAssessment() {
@@ -24,12 +24,12 @@ function AddHACCPRiskAssessment() {
     const user = useSelector(state => state.auth?.user);
 
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`).then((res) => {
             SetDepartmentsToShow(res.data.data);
 
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon: 'error',
                 title: 'OOps..',
@@ -39,31 +39,31 @@ function AddHACCPRiskAssessment() {
     }, [])
     useEffect(() => {
         if (teamsToShow?.length === 0) {
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
             Swal.fire({
                 icon: 'warning',
                 title: 'OOps..',
                 text: 'No, Any team available!'
             })
         } else if (processesToShow?.length === 0) {
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
             Swal.fire({
                 icon: 'warning',
                 title: 'OOps..',
                 text: 'No, Any Product flow diagram available!'
             })
         } else if (teamsToShow && processesToShow && departmentsToShow) {
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
 
         }
     }, [teamsToShow, processesToShow, departmentsToShow])
 
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-haccp-teams`, { headers: { Authorization: `${user._id}` } }).then((response) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-haccp-teams`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
             setTeamsToShow(response.data.data);
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon: 'error',
                 title: 'OOps..',
@@ -71,10 +71,10 @@ function AddHACCPRiskAssessment() {
             })
         })
 
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-processes`, { headers: { Authorization: `${user._id}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-processes`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
             setProcessesToShow(response.data.data);
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon: 'error',
                 title: 'OOps..',
@@ -118,11 +118,11 @@ function AddHACCPRiskAssessment() {
 
     const makeRequest = () => {
         if (dataToSend) {
-            dispatch(setLoading(true))
-            axios.post(`${process.env.REACT_APP_BACKEND_URL}/create-conduct-haccp`, dataToSend, { headers: { Authorization: `${user._id}` } }).then(() => {
+            dispatch(setSmallLoading(true))
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/create-conduct-haccp`, {...dataToSend, createdBy : user.Name}, { headers: { Authorization: `${user.Department._id}` } }).then(() => {
                 console.log("request made !");
                 setDataToSend(null);
-                dispatch(setLoading(false))
+                dispatch(setSmallLoading(false))
                 Swal.fire({
                     title: 'Success',
                     text: 'Submitted Successfully',
@@ -136,7 +136,7 @@ function AddHACCPRiskAssessment() {
                 })
 
             }).catch(err => {
-                dispatch(setLoading(false));
+                dispatch(setSmallLoading(false));
                 Swal.fire({
                     icon: 'error',
                     title: 'OOps..',

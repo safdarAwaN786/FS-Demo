@@ -7,7 +7,7 @@ import profile from '../../assets/images/addEmployee/prof.svg'
 import { useDispatch, useSelector } from 'react-redux';
 import { changeId } from '../../redux/slices/idToProcessSlice';
 import { updateTabData } from '../../redux/slices/tabSlice';
-import { setLoading } from '../../redux/slices/loading';
+import { setSmallLoading } from '../../redux/slices/loading';
 import Swal from 'sweetalert2';
 
 function UsersCompanies() {
@@ -22,8 +22,8 @@ function UsersCompanies() {
     const [allDataArr, setAllDataArr] = useState(null);
     const user = useSelector(state => state.auth.user);
     useEffect(() => {
-        dispatch(setLoading(true));
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-users`, { headers: { Authorization: `${user._id}` } }).then((response) => {
+        dispatch(setSmallLoading(true));
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-users`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
             // Create a Set to keep track of unique property values
             const uniqueCompanyObjects = new Set();
             // Use reduce to build the new array with distinct property values
@@ -37,11 +37,11 @@ function UsersCompanies() {
                 }
                 return acc;
             }, []);
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             setAllDataArr(UniqueCompanyUsers)
             setUsersList(UniqueCompanyUsers.slice(startIndex, endIndex));
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon : 'error',
                 title : 'OOps..',
@@ -84,8 +84,6 @@ function UsersCompanies() {
 
     return (
         <>
-
-            <div className={style.subparent}>
 
                 <div className={style.searchbar}>
                     <div className={style.sec1}>
@@ -183,11 +181,7 @@ function UsersCompanies() {
                         </button>
                     )}
                 </div>
-            </div>
-
-
-
-
+          
 
             {
                 showBox && (

@@ -3,9 +3,9 @@ const Checklists = require('../../models/Auditor/ChecklistModel').Checklists;
 const { ChecklistQuestionModel } = require('../../models/Auditor/ChecklistModel');
 const router = express.Router();
 
-const authMiddleware = require('../../middleware/auth');
+// const authMiddleware = require('../../middleware/auth');
 
-router.use(authMiddleware);
+// router.use(authMiddleware);
 
 
 // * POST a new checklist
@@ -13,7 +13,7 @@ router.post('/addChecklist', async (req, res) => {
     console.log('Received POST request to add a checklist:', req.body);
     try {
 
-        const createdBy = req.user.Name;
+        const createdBy = req.body.createdBy;
 
         const createdQuestions = await ChecklistQuestionModel.create(req.body.ChecklistQuestions);
         const questionsArr = Object.values(createdQuestions);
@@ -27,7 +27,7 @@ router.post('/addChecklist', async (req, res) => {
             CreatedBy: createdBy,
             CreationDate: new Date(),
             ChecklistQuestions: questionsIds,
-            User: req.user._id
+            UserDepartment: req.header('Authorization')
         });
 
         await checklist.save();
@@ -46,13 +46,13 @@ router.post('/addChecklist', async (req, res) => {
 router.get('/getChecklists', async (req, res) => {
     try {
 
-        const checklists = await Checklists.find().populate('Department User').populate({
+        const checklists = await Checklists.find({UserDepartment : req.header('Authorization')}).populate('Department UserDepartment').populate({
             path: 'ChecklistQuestions',
             model: 'ChecklistQuestion'
         });
 
-        const checklistsToSend = checklists.filter(Obj => Obj.User.Department.equals(req.user.Department))
-        res.status(200).send({ status: true, message: 'The following are Checklists!', data: checklistsToSend });
+       
+        res.status(200).send({ status: true, message: 'The following are Checklists!', data: checklists });
         console.log(new Date().toLocaleString() + ' ' + 'GET Checklists Successfully!');
 
     } catch (e) {
@@ -65,7 +65,7 @@ router.get('/getChecklists', async (req, res) => {
 router.get('/getChecklistById/:checklistId', async (req, res) => {
     try {
 
-        const checklists = await Checklists.findById(req.params.checklistId).populate('Department User').populate({
+        const checklists = await Checklists.findById(req.params.checklistId).populate('Department UserDepartment').populate({
             path: 'ChecklistQuestions',
             model: 'ChecklistQuestion'
         });
@@ -120,7 +120,7 @@ router.delete('/deleteAllChecklist', async (req, res) => {
 
 // * PATCH update a checklist by ID
 router.put('/updateChecklist', async (req, res) => {
-    console.log(new Date().toLocaleString() + ' ' + 'Received PATCH request to update a checklist by ID:', req.body._id);
+    
     try {
 
         const currentChecklist = await Checklists.findById(req.body._id);
@@ -175,7 +175,7 @@ router.put('/updateChecklist', async (req, res) => {
 router.patch('/approveChecklist', async (req, res) => {
     try {
 
-        const approvedBy = req.user.Name;
+        const approvedBy = req.body.approvedBy;
         const ChecklistId = req.body.id;
 
         // Find the checklist by ID
@@ -221,7 +221,7 @@ router.patch('/disapproveChecklist', async (req, res) => {
     console.log(req.body);
     try {
 
-        const disapprovedBy = req.user.Name;
+        const disapprovedBy = req.body.disapprovedBy;
         const ChecklistId = req.body.id;
         const Reason = req.body.Reason;
 

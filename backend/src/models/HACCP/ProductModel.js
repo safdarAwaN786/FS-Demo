@@ -11,15 +11,18 @@ const ProductSchema = new mongoose.Schema({
         type: String,
         unique: true,
     },
+    User : {
+        type : Object,
+    },
 
     Department: {
         type: Schema.Types.ObjectId,
         ref: 'Department',
         required: true
     },
-    User: {
+    UserDepartment: {
         type: Schema.Types.ObjectId,
-        ref: 'User',
+        ref: 'Department',
         required: true
     },
 
@@ -154,24 +157,14 @@ const ProductSchema = new mongoose.Schema({
 
 ProductSchema.pre('save', async function (next) {
     try {
-        const department = await Department.findById(this.Department);
+        const department = await Department.findById(this.Department).populate('Company');
 
         if (!department) {
             throw new Error('Department not found');
         }
 
-        console.log(this.User);
-        const user = await User.findById(this.User); // Assuming you attach the user object to the request before calling this middleware
-        // console.log(user);
-        if (!user) {
-            throw new Error('User not found');
-        }
-        console.log(user);
-        const company = await Company.findById(user.Company);
-        if (!company) {
-            throw new Error('Company not found');
-        }
-
+        
+        
         const documentTypeNumber = { 'Manuals': 1, 'Procedures': 2, 'SOPs': 3, 'Forms': 4 }[this.DocumentType];
         if (!documentTypeNumber) {
             throw new Error('Invalid Document Type');
@@ -193,7 +186,7 @@ ProductSchema.pre('save', async function (next) {
 
 
 
-        this.DocumentId = `${company.ShortName}/${department.ShortName}/${documentTypeNumber}/${nextNumericPart.toString().padStart(3, '0')}`;
+        this.DocumentId = `${department.Company.ShortName}/${department.ShortName}/${documentTypeNumber}/${nextNumericPart.toString().padStart(3, '0')}`;
         console.log('Generated DocumentId:', this.DocumentId);
         next();
     } catch (error) {

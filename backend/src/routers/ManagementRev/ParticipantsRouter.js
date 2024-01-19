@@ -3,7 +3,7 @@ const router = express.Router();
 const Participants = require('../../models/ManagementRev/ParticipantsModel');
 const authMiddleware = require('../../middleware/auth');
 
-router.use(authMiddleware);
+// router.use(authMiddleware);
 
 // * Create a new Participants document
 router.post('/create-participants', async (req, res) => {
@@ -11,7 +11,7 @@ router.post('/create-participants', async (req, res) => {
 
     const createdParticipants = new Participants({
       ...req.body,
-      User : req.user._id
+      UserDepartment : req.header('Authorization')
     });
 
     await createdParticipants.save();
@@ -30,21 +30,16 @@ router.post('/create-participants', async (req, res) => {
 router.get('/get-all-participants', async (req, res) => {
   try {
 
-    const participantsDocs = await Participants.find().populate('User')
+    const participantsDocs = await Participants.find({UserDepartment : req.header('Authorization')}).populate('User')
     if (!participantsDocs) {
       console.log('Participants documents not found');
       return res.status(404).json({ message: 'Participants documents not found' });
     }
 
-    const participantsToSend = participantsDocs.filter((Obj)=>{
-      if(Obj.User.Department.equals(req.user.Department)){
-        console.log('got Equal');
-        return Obj
-      }
-    });
+
 
     console.log('Participants documents retrieved successfully');
-    res.status(200).json({ status: true, data: participantsToSend });
+    res.status(200).json({ status: true, data: participantsDocs });
 
   } catch (error) {
     console.error(error);

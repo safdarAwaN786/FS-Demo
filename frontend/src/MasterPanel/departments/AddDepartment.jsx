@@ -7,7 +7,7 @@ import { FaMinus } from 'react-icons/fa'
 import { BsArrowLeftCircle } from 'react-icons/bs';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
-import { setLoading } from '../../redux/slices/loading';
+import { setSmallLoading } from '../../redux/slices/loading';
 
 function AddDepartments() {
 
@@ -17,12 +17,12 @@ function AddDepartments() {
     const [companies, setCompanies] = useState(null);
     const user = useSelector(state => state.auth.user);
     useEffect(() => {
-        dispatch(setLoading(true));
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-companies`, { headers: { Authorization: `${user._id}` } }).then((res) => {
+        dispatch(setSmallLoading(true));
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-companies`, { headers: { Authorization: `${user.Department._id}` } }).then((res) => {
             setCompanies(res.data.data);
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon : 'error',
                 title : 'OOps..',
@@ -62,9 +62,9 @@ function AddDepartments() {
 
     const makeRequest = () => {
         if (dataToSend.Departments.length !== 0) {
-            dispatch(setLoading(true));
-            axios.post(`${process.env.REACT_APP_BACKEND_URL}/create-department`, dataToSend, { headers: { Authorization: `${user._id}` } }).then(() => {
-                dispatch(setLoading(false));
+            dispatch(setSmallLoading(true));
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/create-department`, dataToSend, { headers: { Authorization: `${user.Department._id}` } }).then(() => {
+                dispatch(setSmallLoading(false));
                 setDataToSend(null);
                 Swal.fire({
                     title: 'Success',
@@ -77,7 +77,7 @@ function AddDepartments() {
                     }
                 })
             }).catch(err => {
-                dispatch(setLoading(false));
+                dispatch(setSmallLoading(false));
                 Swal.fire({
                     icon : 'error',
                     title : 'OOps..',

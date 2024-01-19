@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { updateTabData } from '../../redux/slices/tabSlice'
 import { changeCallibrationType, changeDateType } from '../../redux/slices/appSlice'
 import { changeId } from '../../redux/slices/idToProcessSlice'
-import { setLoading } from '../../redux/slices/loading'
+import { setSmallLoading } from '../../redux/slices/loading'
 import Swal from 'sweetalert2'
 
 function Devices() {
@@ -25,26 +25,26 @@ function Devices() {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readAllEquipment`, { headers: { Authorization: `${user._id}` } }).then((res) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readAllEquipment`, { headers: { Authorization: `${user.Department._id}` } }).then((res) => {
             setAllDataArr(res.data.data);
             setDevices(res.data.data.slice(startIndex, endIndex));
             if (callibrations) {
-                dispatch(setLoading(false))
+                dispatch(setSmallLoading(false))
             }
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon: 'error',
                 title: 'OOps..',
                 text: 'Something went wrong, Try Again!'
             })
         })
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readAllCalibration`, { headers: { Authorization: `${user._id}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readAllCalibration`, { headers: { Authorization: `${user.Department._id}` } }).then((res) => {
             setCallibrations(res.data.data);
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon: 'error',
                 title: 'OOps..',
@@ -91,9 +91,6 @@ function Devices() {
 
     return (
         <>
-
-
-            <div className={style.subparent}>
 
                 <div className={`${style.searchbar} `}>
                     <div className={style.sec1}>
@@ -398,8 +395,6 @@ function Devices() {
                         </button>
                     )}
                 </div>
-
-            </div>
 
             {
                 alert ?

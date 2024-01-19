@@ -4,7 +4,7 @@ const DecisionTree = require('../../models/HACCP/DecisionTreeModel').DecisionTre
 const { DecisionModel } = require('../../models/HACCP/DecisionTreeModel');
 const authMiddleware = require('../../middleware/auth');
 
-router.use(authMiddleware);
+// router.use(authMiddleware);
 
 // * Create a new DecisionTree document
 router.post('/create-decision-tree', async (req, res) => {
@@ -21,9 +21,9 @@ router.post('/create-decision-tree', async (req, res) => {
     const createdDecisionTree = new DecisionTree({
       ...req.body,
       Decisions: decisionIds,
-      CreatedBy: req.user.Name,
+      CreatedBy: req.body.createdBy,
       CreationDate: new Date(),
-      User: req.user._id
+      UserDepartment: req.header('Authorization')
     });
 
     await createdDecisionTree.save().then(() => {
@@ -42,7 +42,7 @@ router.post('/create-decision-tree', async (req, res) => {
 router.get('/get-all-decision-trees', async (req, res) => {
   try {
 
-    const decisionTrees = await DecisionTree.find().populate("Department User").populate({
+    const decisionTrees = await DecisionTree.find({UserDepartment : req.header('Authorization')}).populate("Department UserDepartment").populate({
       path: 'ConductHaccp',
       model: 'ConductHaccp',
       populate: [
@@ -75,9 +75,9 @@ router.get('/get-all-decision-trees', async (req, res) => {
       return res.status(404).json({ message: 'DecisionTree documents not found' });
     }
 
-    const treesToSend = decisionTrees.filter((Obj) => Obj.User.Department.equals(req.user.Department));
+   
     console.log('DecisionTree documents retrieved successfully');
-    res.status(200).json({ status: true, data: treesToSend });
+    res.status(200).json({ status: true, data: decisionTrees });
 
   } catch (error) {
     console.error(error);
@@ -90,7 +90,7 @@ router.get('/get-decision-tree/:treeId', async (req, res) => {
   try {
 
     const decisionTreeId = req.params.treeId;
-    const decisionTree = await DecisionTree.findById(decisionTreeId).populate("Department User").populate({
+    const decisionTree = await DecisionTree.findById(decisionTreeId).populate("Department UserDepartment").populate({
       path: 'ConductHaccp',
       model: 'ConductHaccp',
       populate: [
@@ -223,7 +223,7 @@ router.patch('/update-decision-tree/:treeId', async (req, res) => {
 // * Approve DecisionTree From MongoDB Database
 router.patch('/approve-decision-tree', async (req, res) => {
   try {
-    const approvedBy = req.user.Name;
+    const approvedBy = req.body.approvedBy;
     const decisionTreeId = req.body.id;
 
     // Find the DecisionTree by ID
@@ -271,7 +271,7 @@ router.patch('/approve-decision-tree', async (req, res) => {
 router.patch('/disapprove-decision-tree', async (req, res) => {
   try {
 
-    const disapproveBy = req.user.Name
+    const disapproveBy = req.body.disapprovedBy
     const decisionTreeId = req.body.id;
     const Reason = req.body.Reason;
 

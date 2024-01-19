@@ -7,7 +7,7 @@ import Swal from 'sweetalert2'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateTabData } from '../../redux/slices/tabSlice'
 import { changeId } from '../../redux/slices/idToProcessSlice'
-import { setLoading } from '../../redux/slices/loading'
+import { setSmallLoading } from '../../redux/slices/loading'
 
 
 function Main() {
@@ -20,13 +20,13 @@ function Main() {
     const user = useSelector(state => state.auth.user);
 
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readPersonalRecuisition`, { headers: { Authorization: `${user._id}` } }).then((response) => {
-            dispatch(setLoading(false))
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readPersonalRecuisition`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
+            dispatch(setSmallLoading(false))
             setAllDataArr(response.data.data);
             setPersonReqList(response.data.data.slice(startIndex, endIndex));
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon: 'error',
                 title: 'OOps..',
@@ -36,12 +36,12 @@ function Main() {
     }, [])
 
     const statusUpdated = () => {
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readPersonalRecuisition`, { headers: { Authorization: `${user._id}` } }).then((response) => {
-            dispatch(setLoading(false))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readPersonalRecuisition`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
+            dispatch(setSmallLoading(false))
             setAllDataArr(response.data.data);
             setPersonReqList(response.data.data.slice(startIndex, endIndex));
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon: 'error',
                 title: 'OOps..',
@@ -103,7 +103,7 @@ function Main() {
     return (
         <>
 
-            <div className={style.subparent}>
+
 
                 <div className={style.searchbar}>
                     <div className={style.sec1}>
@@ -223,15 +223,15 @@ function Main() {
                         </button>
                     )}
                 </div>
-            </div>
+    
 
             {
                 alert ?
                     <div class={style.alertparent}>
                         <div class={style.alert}>
                             <form onSubmit={() => {
-                                dispatch(setLoading(true))
-                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/updatePersonStatus`, dataToSend, { headers: { Authorization: `${user._id}` } }).then(() => {
+                                dispatch(setSmallLoading(true))
+                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/updatePersonStatus`, {...dataToSend, updatedBy : user.Name}).then(() => {
                                     statusUpdated();
                                     Swal.fire({
                                         title: 'Success',
@@ -241,7 +241,7 @@ function Main() {
                                     })
 
                                 }).catch(err => {
-                                    dispatch(setLoading(false));
+                                    dispatch(setSmallLoading(false));
                                     Swal.fire({
                                         icon: 'error',
                                         title: 'OOps..',
@@ -270,8 +270,8 @@ function Main() {
                             <p>Are you sure to submit ?</p>
                             <div className={style.alertbtns}>
                                 <button onClick={() => {
-                                    dispatch(setLoading(true))
-                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/updatePersonStatus`, dataToSend, { headers: { Authorization: `${user._id}` } }).then(() => {
+                                    dispatch(setSmallLoading(true))
+                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/updatePersonStatus`, {...dataToSend, updatedBy : user.Name}).then(() => {
                                         statusUpdated()
                                         Swal.fire({
                                             title: 'Success',
@@ -280,7 +280,7 @@ function Main() {
                                             confirmButtonText: 'Go!',
                                         })
                                     }).catch(err => {
-                                        dispatch(setLoading(false));
+                                        dispatch(setSmallLoading(false));
                                         Swal.fire({
                                             icon: 'error',
                                             title: 'OOps..',

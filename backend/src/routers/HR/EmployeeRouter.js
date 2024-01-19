@@ -13,7 +13,7 @@ const smtpTransport = require('nodemailer-smtp-transport');
 const axios = require('axios')
 const { rgb, degrees, PDFDocument, StandardFonts } = require('pdf-lib');
 
-router.use(authMiddleware);
+// router.use(authMiddleware);
 
 // * Cloudinary Setup 
 cloudinary.config({
@@ -91,89 +91,103 @@ const uploadToCloudinary = (buffer) => {
     console.log('error inside uploadation' + error);
   }
 };
+const formatDate = (date) => {
 
+  const newDate = new Date(date);
+  const formatDate = newDate.toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+  });
+  return formatDate;
+}
 // * POST Employee Data Into MongooDB Database
 router.post('/addEmployee', upload.fields([{ name: 'Image' }, { name: 'CV' }]), async (req, res) => {
-
   try {
     console.log(req.body);
+    const requestUser = await User.findById(req.header('Authorization')).populate('Company Department')
     const userNameExist = await User.findOne({ UserName: req.body.UserName });
+    console.log(requestUser);
     if (userNameExist) {
       console.log('Exists already');
       res.status(201).json({ status: false, message: 'UserName already exists!' });
     } else {
-      // Get the file buffers of the uploaded image and document
-      var imageUrl;
-      if (req.files['Image']) {
-        imageFile = req.files['Image'][0];
-        // Upload the image  to Cloudinary and obtain the URL
-        imageUrl = await uploadToCloudinary(imageFile.buffer).then((result) => {
-          return (result.secure_url)
-        }).catch((err) => {
-          console.log(err);
-        });
-      }
+      if (req.files) {
 
-      var CVFile;
-      var CVUrl;
-      if (req.files['CV']) {
-        CVFile = req.files['CV'][0];
-        const response = await axios.get(req.user.Company.CompanyLogo, { responseType: 'arraybuffer' });
-        const pdfDoc = await PDFDocument.load(CVFile.buffer);
-        const logoImage = Buffer.from(response.data);
-        const logoImageDataUrl = `data:image/jpeg;base64,${logoImage.toString('base64')}`;
-        const isJpg = logoImageDataUrl.includes('data:image/jpeg') || logoImageDataUrl.includes('data:image/jpg');
-        const isPng = logoImageDataUrl.includes('data:image/png');
-        let pdfLogoImage;
-        if (isJpg) {
-          pdfLogoImage = await pdfDoc.embedJpg(logoImage);
-        } else if (isPng) {
-          pdfLogoImage = await pdfDoc.embedPng(logoImage);
+
+        // Get the file buffers of the uploaded image and document
+        var imageUrl;
+        if (req.files['Image']) {
+          imageFile = req.files['Image'][0];
+          // Upload the image  to Cloudinary and obtain the URL
+          imageUrl = await uploadToCloudinary(imageFile.buffer).then((result) => {
+            return (result.secure_url)
+          }).catch((err) => {
+            console.log(err);
+          });
         }
-        const firstPage = pdfDoc.insertPage(0);
-        addFirstPage(firstPage, pdfLogoImage, req.user.Company, req.user);
-        const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica); 
-        pdfDoc.getPages().slice(1).forEach(async (page) => {
-          page.translateContent(0, -30);
-          const { width, height } = page.getSize();
-          const watermarkText = 'Powered By Feat Technology';
-          const watermarkFontSize = 15;
-          const watermarkTextWidth = (helveticaFont.widthOfTextAtSize(watermarkText, watermarkFontSize));
-          const centerWatermarkX = width / 2 - watermarkTextWidth / 2;
-          const centerWatermarkY = height - 18;
-          page.drawText(watermarkText, { x: centerWatermarkX, y: centerWatermarkY, size: watermarkFontSize, color: rgb(0, 0, 0) });
-          const companyText = `${req.user.Company.CompanyName}`;
-          const companyTextFontSize = 10;
-          const companyTextWidth = (helveticaFont.widthOfTextAtSize(companyText, companyTextFontSize));
-          const centerCompanyTextX = width - companyTextWidth - 20;
-          const centerCompanyTextY = height - 16;
-          page.drawText(companyText, { x: centerCompanyTextX, y: centerCompanyTextY, size: companyTextFontSize, color: rgb(0, 0, 0) });
-          const dateText = `Upload Date : ${formatDate(new Date())}`;
-          const dateTextFontSize = 10;
-          const dateTextWidth = (helveticaFont.widthOfTextAtSize(dateText, dateTextFontSize));
-          const centerDateTextX = width - dateTextWidth - 20;
-          const centerDateTextY = height - 30;
-          page.drawText(dateText, { x: centerDateTextX, y: centerDateTextY, size: dateTextFontSize, color: rgb(0, 0, 0) });
-      });
-        // Save the modified PDF
-        const modifiedPdfBuffer = await pdfDoc.save();
 
-        // Upload the document  to Cloudinary and obtain the URLs
-        CVUrl = await uploadToCloudinary(modifiedPdfBuffer).then((result) => {
-          return (result.secure_url)
-        }).catch((err) => {
-          console.log(err);
-        })
+        var CVFile;
+        var CVUrl;
+        if (req.files['CV']) {
+          CVFile = req.files['CV'][0];
+          const response = await axios.get(requestUser.Company.CompanyLogo, { responseType: 'arraybuffer' });
+          const pdfDoc = await PDFDocument.load(CVFile.buffer);
+          const logoImage = Buffer.from(response.data);
+          const logoImageDataUrl = `data:image/jpeg;base64,${logoImage.toString('base64')}`;
+          const isJpg = logoImageDataUrl.includes('data:image/jpeg') || logoImageDataUrl.includes('data:image/jpg');
+          const isPng = logoImageDataUrl.includes('data:image/png');
+          let pdfLogoImage;
+          if (isJpg) {
+            pdfLogoImage = await pdfDoc.embedJpg(logoImage);
+          } else if (isPng) {
+            pdfLogoImage = await pdfDoc.embedPng(logoImage);
+          }
+          const firstPage = pdfDoc.insertPage(0);
+          addFirstPage(firstPage, pdfLogoImage, requestUser.Company, requestUser);
+          const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
+          pdfDoc.getPages().slice(1).forEach(async (page) => {
+            page.translateContent(0, -30);
+            const { width, height } = page.getSize();
+            const watermarkText = 'Powered By Feat Technology';
+            const watermarkFontSize = 15;
+            const watermarkTextWidth = (helveticaFont.widthOfTextAtSize(watermarkText, watermarkFontSize));
+            const centerWatermarkX = width / 2 - watermarkTextWidth / 2;
+            const centerWatermarkY = height - 18;
+            page.drawText(watermarkText, { x: centerWatermarkX, y: centerWatermarkY, size: watermarkFontSize, color: rgb(0, 0, 0) });
+            const companyText = `${requestUser.Company.CompanyName}`;
+            const companyTextFontSize = 10;
+            const companyTextWidth = (helveticaFont.widthOfTextAtSize(companyText, companyTextFontSize));
+            const centerCompanyTextX = width - companyTextWidth - 20;
+            const centerCompanyTextY = height - 16;
+            page.drawText(companyText, { x: centerCompanyTextX, y: centerCompanyTextY, size: companyTextFontSize, color: rgb(0, 0, 0) });
+            const dateText = `Upload Date : ${formatDate(new Date())}`;
+            const dateTextFontSize = 10;
+            const dateTextWidth = (helveticaFont.widthOfTextAtSize(dateText, dateTextFontSize));
+            const centerDateTextX = width - dateTextWidth - 20;
+            const centerDateTextY = height - 30;
+            page.drawText(dateText, { x: centerDateTextX, y: centerDateTextY, size: dateTextFontSize, color: rgb(0, 0, 0) });
+          });
+          // Save the modified PDF
+          const modifiedPdfBuffer = await pdfDoc.save();
+
+          // Upload the document  to Cloudinary and obtain the URLs
+          CVUrl = await uploadToCloudinary(modifiedPdfBuffer).then((result) => {
+            return (result.secure_url)
+          }).catch((err) => {
+            console.log(err);
+          })
+        }
       }
 
-      const createdBy = req.user.Name;
+      const createdBy = requestUser?.Name;
       // Create a new employee document with the image and document URLs
       const newUser = new User({
         ...req.body,
-        User: req.user._id,
+        UserDepartment: requestUser.Department._id,
         DepartmentText: req.body.Department,
-        Department: req.user.Department,
-        Company: req.user.Company,
+        Department: requestUser.Department,
+        Company: requestUser.Company,
         isEmployee: true,
         EmployeeImage: imageUrl,
         EmployeeCV: CVUrl,
@@ -186,7 +200,7 @@ router.post('/addEmployee', upload.fields([{ name: 'Image' }, { name: 'CV' }]), 
       const emailBody = template.body.replace('{{name}}', newUser.Name)
         .replace('{{username}}', newUser.UserName)
         .replace('{{password}}', req.body.Password);
-
+    
       const mailOptions = {
         from: process.env.email, // Sender email address
         to: newUser.Email, // Recipient's email address
@@ -224,17 +238,10 @@ router.post('/addEmployee', upload.fields([{ name: 'Image' }, { name: 'CV' }]), 
 router.get('/readEmployee', async (req, res) => {
   try {
 
-    const employee = await User.find({ isEmployee: true }).populate('Department').populate('User')
-
-    const employeesToSend = employee.filter((Obj) => {
-      if (Obj.User.Department.equals(req.user.Department)) {
-        console.log('got Equal');
-        return Obj
-      }
-    });
+    const employee = await User.find({ isEmployee: true, UserDepartment: req.header('Authorization') }).populate('Department').populate('UserDepartment')
 
 
-    res.status(201).send({ status: true, message: "The Following Are Employees!", data: employeesToSend, });
+    res.status(201).send({ status: true, message: "The Following Are Employees!", data: employee, });
 
 
   } catch (e) {

@@ -13,9 +13,10 @@ const UserModel = require('../../models/AccountCreation/UserModel');
 const template = emailTemplates.registrationConfirmation;
 require('dotenv').config()
 const { rgb, degrees, PDFDocument, StandardFonts } = require('pdf-lib');
-const axios = require('axios')
+const axios = require('axios');
+const user = require('../../models/AccountCreation/UserModel');
 
-router.use(authMiddleWare); // Perform authentication checks using the attached user information
+// router.use(authMiddleWare); // Perform authentication checks using the attached user information
 
 cloudinary.config({
   cloud_name: process.env.cloud_name,
@@ -83,7 +84,16 @@ const uploadToCloudinary = (buffer) => {
     console.log('error inside uploadation' + error);
   }
 };
+const formatDate = (date) => {
 
+  const newDate = new Date(date);
+  const formatDate = newDate.toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+  });
+  return formatDate;
+}
 function generateMembersDocArray() {
   const array = [];
   for (let i = 0; i <= 100; i++) {
@@ -145,6 +155,8 @@ router.post('/send-email-to-member', async (req, res) => {
 router.post('/create-haccp-team', upload.fields(generateMembersDocArray()), async (req, res) => {
   console.log(req.files);
   try {
+    const requestUser = await user.findById(req.header('Authorization')).populate('Company Department')
+
     // The HACCP Team data sent in the request body
     const teamData = JSON.parse(req.body.Data);
     if (!Array.isArray(teamData.TeamMembers)) {
@@ -159,7 +171,7 @@ router.post('/create-haccp-team', upload.fields(generateMembersDocArray()), asyn
         const fileData = filesObj[key][0];
         const index = fileData.fieldname.split('-')[1];
 
-        const response = await axios.get(req.user.Company.CompanyLogo, { responseType: 'arraybuffer' });
+        const response = await axios.get(requestUser.Company.CompanyLogo, { responseType: 'arraybuffer' });
         const pdfDoc = await PDFDocument.load(fileData.buffer);
         const logoImage = Buffer.from(response.data);
         const logoImageDataUrl = `data:image/jpeg;base64,${logoImage.toString('base64')}`;
@@ -172,7 +184,7 @@ router.post('/create-haccp-team', upload.fields(generateMembersDocArray()), asyn
           pdfLogoImage = await pdfDoc.embedPng(logoImage);
         }
         const firstPage = pdfDoc.insertPage(0);
-        addFirstPage(firstPage, pdfLogoImage, req.user.Company, req.user);
+        addFirstPage(firstPage, pdfLogoImage, requestUser.Company, requestUser);
         const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
         pdfDoc.getPages().slice(1).forEach(async (page) => {
           page.translateContent(0, -30);
@@ -183,7 +195,7 @@ router.post('/create-haccp-team', upload.fields(generateMembersDocArray()), asyn
           const centerWatermarkX = width / 2 - watermarkTextWidth / 2;
           const centerWatermarkY = height - 18;
           page.drawText(watermarkText, { x: centerWatermarkX, y: centerWatermarkY, size: watermarkFontSize, color: rgb(0, 0, 0) });
-          const companyText = `${req.user.Company.CompanyName}`;
+          const companyText = `${requestUser.Company.CompanyName}`;
           const companyTextFontSize = 10;
           const companyTextWidth = (helveticaFont.widthOfTextAtSize(companyText, companyTextFontSize));
           const centerCompanyTextX = width - companyTextWidth - 20;
@@ -216,7 +228,7 @@ router.post('/create-haccp-team', upload.fields(generateMembersDocArray()), asyn
         try {
 
           console.log(member);
-          const addedUser = new UserModel({ ...member, Company: req.user.Company, Department: req.user.Department, DepartmentText: member.Department, Email: member.Email, Password: CryptoJS.AES.encrypt(member.Password, process.env.PASS_CODE).toString(), });
+          const addedUser = new UserModel({ ...member, Company: requestUser.Company._id, Department: requestUser.Department._id, DepartmentText: member.Department, Email: member.Email, Password: CryptoJS.AES.encrypt(member.Password, process.env.PASS_CODE).toString(), });
           const emailBody = template.body
             .replace('{{name}}', member.Name)
             .replace('{{username}}', member.UserName)
@@ -250,10 +262,10 @@ router.post('/create-haccp-team', upload.fields(generateMembersDocArray()), asyn
     console.log(membersIds);
     teamData.TeamMembers = membersIds;
 
-    const createdBy = req.user.Name
+    const createdBy = requestUser.Name
     const createdTeam = new HaccpTeam({
       ...teamData,
-      User: req.user._id,
+      UserDepartment: requestUser.Department._id,
       CreatedBy: createdBy,
       CreationDate: new Date()
     });
@@ -273,22 +285,22 @@ router.post('/create-haccp-team', upload.fields(generateMembersDocArray()), asyn
 router.get('/get-all-haccp-teams', async (req, res) => {
   try {
 
-    const teams = await HaccpTeam.find().populate('Department').populate({
-      path: 'User',
-      model: 'User'
+    const teams = await HaccpTeam.find({UserDepartment : req.header('Authorization')}).populate('Department').populate({
+      path: 'UserDepartment',
+      model: 'Department'
     }).populate({
       path: 'TeamMembers',
       model: 'User'
     });
 
-    const teamsToSend = teams.filter((teamObj) => teamObj.User?.Department.equals(req.user.Department));
+    
     if (!teams) {
       console.log('HACCP Team documents not found');
       return res.status(404).json({ message: 'HACCP Team documents not found' });
     }
 
     console.log('HACCP Team documents retrieved successfully');
-    res.status(200).json({ status: true, data: teamsToSend });
+    res.status(200).json({ status: true, data: teams });
 
   } catch (error) {
     console.error(error);
@@ -301,7 +313,7 @@ router.get('/get-haccp-team/:teamId', async (req, res) => {
   try {
 
     const teamId = req.params.teamId;
-    const team = await HaccpTeam.findById(teamId).populate('User').populate('Department').populate({
+    const team = await HaccpTeam.findById(teamId).populate('UserDepartment').populate('Department').populate({
       path: 'TeamMembers',
       model: 'User'
     });
@@ -375,7 +387,7 @@ router.patch('/update-haccp-team/:teamId', upload.fields(generateMembersDocArray
         const index = fileData.fieldname.split('-')[1];
 
         try {
-          const response = await axios.get(req.user.Company.CompanyLogo, { responseType: 'arraybuffer' });
+          const response = await axios.get(req.body.user.Company.CompanyLogo, { responseType: 'arraybuffer' });
           const pdfDoc = await PDFDocument.load(fileData.buffer);
           const logoImage = Buffer.from(response.data);
           const logoImageDataUrl = `data:image/jpeg;base64,${logoImage.toString('base64')}`;
@@ -388,7 +400,7 @@ router.patch('/update-haccp-team/:teamId', upload.fields(generateMembersDocArray
             pdfLogoImage = await pdfDoc.embedPng(logoImage);
           }
           const firstPage = pdfDoc.insertPage(0);
-          addFirstPage(firstPage, pdfLogoImage, req.user.Company, req.user);
+          addFirstPage(firstPage, pdfLogoImage, req.body.user.Company, req.body.user);
           const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
           pdfDoc.getPages().slice(1).forEach(async (page) => {
             page.translateContent(0, -30);
@@ -399,7 +411,7 @@ router.patch('/update-haccp-team/:teamId', upload.fields(generateMembersDocArray
             const centerWatermarkX = width / 2 - watermarkTextWidth / 2;
             const centerWatermarkY = height - 18;
             page.drawText(watermarkText, { x: centerWatermarkX, y: centerWatermarkY, size: watermarkFontSize, color: rgb(0, 0, 0) });
-            const companyText = `${req.user.Company.CompanyName}`;
+            const companyText = `${req.body.user.Company.CompanyName}`;
             const companyTextFontSize = 10;
             const companyTextWidth = (helveticaFont.widthOfTextAtSize(companyText, companyTextFontSize));
             const centerCompanyTextX = width - companyTextWidth - 20;
@@ -514,7 +526,7 @@ router.patch('/update-haccp-team/:teamId', upload.fields(generateMembersDocArray
 router.patch('/approveHaccpTeam', async (req, res) => {
   try {
 
-    const approvedBy = req.user.Name
+    const approvedBy = req.body.approvedBy
     const HaccpTeamId = req.body.id;
 
     // Find the HaccpTeam by ID
@@ -556,7 +568,7 @@ router.patch('/approveHaccpTeam', async (req, res) => {
 router.patch('/disapproveHaccpTeam', async (req, res) => {
   try {
 
-    const disapproveBy = req.user.Name
+    const disapproveBy = req.body.disapprovedBy
     const HaccpTeamId = req.body.id;
     const Reason = req.body.Reason;
 

@@ -7,7 +7,7 @@ import Swal from 'sweetalert2'
 import { updateTabData } from '../../redux/slices/tabSlice'
 import { changeId } from '../../redux/slices/idToProcessSlice'
 import { useDispatch, useSelector } from 'react-redux'
-import { setLoading } from '../../redux/slices/loading'
+import { setSmallLoading } from '../../redux/slices/loading'
 
 function ChangeRequests() {
 
@@ -28,13 +28,12 @@ function ChangeRequests() {
     const user = useSelector(state => state.auth.user)
 
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readChangeRequest`, { headers: { Authorization: `${user._id}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readChangeRequest`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
             setAllDataArr(response.data.data);
             setRequestsList(response.data.data.slice(startIndex, endIndex));
-            dispatch(setLoading(false))
+            console.log('data fetched..');
         }).catch(err => {
-            dispatch(setLoading(false));
+            console.log(err);
             Swal.fire({
                 icon: 'error',
                 title: 'OOps..',
@@ -42,15 +41,23 @@ function ChangeRequests() {
             })
         })
     }, [])
+    useEffect(() => {
+        console.log(requestsList);
+        if (requestsList) {
+            console.log('making false');
+            dispatch(setSmallLoading(false))
+        } else {
+            console.log('making true');
+            dispatch(setSmallLoading(true))
+        }
+    }, [requestsList])
 
     const refreshData = () => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readChangeRequest`, { headers: { Authorization: `${user._id}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readChangeRequest`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
             setAllDataArr(response.data.data)
             setRequestsList(response.data.data.slice(startIndex, endIndex));
-            dispatch(setLoading(false))
+            console.log('data fetched');
         }).catch(err => {
-            dispatch(setLoading(false));
             Swal.fire({
                 icon: 'error',
                 title: 'OOps..',
@@ -83,150 +90,148 @@ function ChangeRequests() {
 
     return (
         <>
-            <div className={style.subparent}>
-                <div className={style.searchbar}>
-                    <div className={style.sec1}>
-                        <img src={Search} alt="" />
-                        <input onChange={search} type="text" placeholder='Search request by name' />
+            <div className={style.searchbar}>
+                <div className={style.sec1}>
+                    <img src={Search} alt="" />
+                    <input onChange={search} type="text" placeholder='Search request by name' />
+                </div>
+                {tabData?.Creation && (
+                    <div className={style.sec2} onClick={() => {
+                        dispatch(updateTabData({ ...tabData, Tab: 'addRequest' }))
+                    }}>
+                        <img src={add} alt="" />
+                        <p>Add  Request</p>
                     </div>
-                    {tabData?.Creation && (
-                        <div className={style.sec2} onClick={() => {
-                            dispatch(updateTabData({ ...tabData, Tab: 'addRequest' }))
-                        }}>
-                            <img src={add} alt="" />
-                            <p>Add  Request</p>
-                        </div>
-                    )}
-                </div>
-                <div className={style.tableParent}>
-                    {!requestsList || requestsList?.length === 0 ? (
-                        <div className='w-100 d-flex align-items-center justify-content-center'>
-                            <p className='text-center'>No any Records Available here.</p>
-                        </div>
-                    ) : (
-                        <table className={style.table}>
-                            <tr className={style.headers}>
-                                <td>Change Request ID</td>
-                                <td>Document Title</td>
-                                <td>Department</td>
-                                <td>Creation Date</td>
-                                <td>Created By</td>
-                                <td>Status</td>
-                                <td>Action</td>
-                                <td>Reason</td>
-                                {tabData?.Approval && (
-                                    <td></td>
-                                )}
-                                {tabData?.Review && (
-                                    <td></td>
-                                )}
-                            </tr>
-                            {
-                                requestsList?.map((request, i) => {
-                                    return (
-                                        <tr className={style.tablebody} key={i}>
-                                            <td ><p style={{
-                                                backgroundColor: "#f0f5f0",
-                                                padding: "2px 5px",
-                                                borderRadius: "10px",
-                                                fontFamily: "Inter",
-                                                fontSize: "12px",
-                                                fontStyle: "normal",
-                                                fontWeight: "400",
-                                                lineHeight: "20px",
-                                            }}>{request.ChangeRequestId}</p></td>
-                                            <td className={style.simpleContent}>{request.Document.DocumentTitle || request.Document.DocumentName}</td>
-                                            <td>{request.Department.DepartmentName}</td>
-                                            <td>{request.CreationDate?.slice(0, 10).split('-')[2]}/{request.CreationDate?.slice(0, 10).split('-')[1]}/{request.CreationDate?.slice(0, 10).split('-')[0]}</td>
-                                            <td>{request.CreatedBy || '---'}</td>
-                                            <td><div className={`text-center ${request.Status === 'Approved' && style.greenStatus} ${request.Status === 'Disapproved' && style.redStatus} ${request.Status === 'Rejected' && style.redStatus} ${request.Status === 'Pending' && style.yellowStatus} ${request.Status === 'Reviewed' && style.blueStatus} `}><p>{request.Status}</p></div></td>
+                )}
+            </div>
+            <div className={style.tableParent}>
+                {!requestsList || requestsList?.length === 0 ? (
+                    <div className='w-100 d-flex align-items-center justify-content-center'>
+                        <p className='text-center'>No any Records Available here.</p>
+                    </div>
+                ) : (
+                    <table className={style.table}>
+                        <tr className={style.headers}>
+                            <td>Change Request ID</td>
+                            <td>Document Title</td>
+                            <td>Department</td>
+                            <td>Creation Date</td>
+                            <td>Created By</td>
+                            <td>Status</td>
+                            <td>Action</td>
+                            <td>Reason</td>
+                            {tabData?.Approval && (
+                                <td></td>
+                            )}
+                            {tabData?.Review && (
+                                <td></td>
+                            )}
+                        </tr>
+                        {
+                            requestsList?.map((request, i) => {
+                                return (
+                                    <tr className={style.tablebody} key={i}>
+                                        <td ><p style={{
+                                            backgroundColor: "#f0f5f0",
+                                            padding: "2px 5px",
+                                            borderRadius: "10px",
+                                            fontFamily: "Inter",
+                                            fontSize: "12px",
+                                            fontStyle: "normal",
+                                            fontWeight: "400",
+                                            lineHeight: "20px",
+                                        }}>{request.ChangeRequestId}</p></td>
+                                        <td className={style.simpleContent}>{request.Document.DocumentTitle || request.Document.DocumentName}</td>
+                                        <td>{request.Department.DepartmentName}</td>
+                                        <td>{request.CreationDate?.slice(0, 10).split('-')[2]}/{request.CreationDate?.slice(0, 10).split('-')[1]}/{request.CreationDate?.slice(0, 10).split('-')[0]}</td>
+                                        <td>{request.CreatedBy || '---'}</td>
+                                        <td><div className={`text-center ${request.Status === 'Approved' && style.greenStatus} ${request.Status === 'Disapproved' && style.redStatus} ${request.Status === 'Rejected' && style.redStatus} ${request.Status === 'Pending' && style.yellowStatus} ${request.Status === 'Reviewed' && style.blueStatus} `}><p>{request.Status}</p></div></td>
+                                        <td>
+                                            <p onClick={() => {
+                                                dispatch(updateTabData({ ...tabData, Tab: 'viewChangeRequest' }))
+                                                dispatch(changeId(request._id))
+                                            }} className={style.click}>View</p>
+                                        </td>
+                                        <td>
+                                            <p onClick={() => {
+                                                if (request.Status === 'Disapproved' || request.Status === 'Rejected') {
+                                                    setDataToShow(request.Reason)
+                                                } else {
+                                                    setDataToShow('Process is nor DisApproved neither Rejected.')
+                                                }
+                                                setShowBox(true);
+                                            }} className={style.redclick}>View</p>
+                                        </td>
+                                        {tabData?.Approval && (
                                             <td>
                                                 <p onClick={() => {
-                                                    dispatch(updateTabData({ ...tabData, Tab: 'viewChangeRequest' }))
-                                                    dispatch(changeId(request._id))
-                                                }} className={style.click}>View</p>
-                                            </td>
-                                            <td>
-                                                <p onClick={() => {
-                                                    if (request.Status === 'Disapproved' || request.Status === 'Rejected') {
-                                                        setDataToShow(request.Reason)
+                                                    if (request.Status === 'Approved' || request.Status === 'Rejected') {
+                                                        setDataToShow('Document is already Approved or Rejected!');
+                                                        setShowBox(true)
                                                     } else {
-                                                        setDataToShow('Process is nor DisApproved neither Rejected.')
+                                                        setApprove(true);
+                                                        setIdForAction(request._id)
                                                     }
-                                                    setShowBox(true);
-                                                }} className={style.redclick}>View</p>
+                                                }} style={{
+                                                    height: '28px'
+                                                }} className={`btn btn-outline-primary pt-0 px-1`}>Approve</p>
+                                                <p onClick={() => {
+                                                    if (request.Status === 'Approved' || request.Status === 'Disapproved' || request.Status === 'Rejected') {
+                                                        setDataToShow(`Document is already ${request.Status}!`);
+                                                        setShowBox(true);
+                                                    } else {
+                                                        setDisApprove(true);
+                                                        setIdForAction(request._id);
+                                                    }
+                                                }} style={{
+                                                    height: '28px'
+                                                }} className={`btn btn-outline-danger pt-0 px-1`}>Disaprrove</p>
                                             </td>
-                                            {tabData?.Approval && (
-                                                <td>
-                                                    <p onClick={() => {
-                                                        if (request.Status === 'Approved' || request.Status === 'Rejected') {
-                                                            setDataToShow('Document is already Approved or Rejected!');
-                                                            setShowBox(true)
-                                                        } else {
-                                                            setApprove(true);
-                                                            setIdForAction(request._id)
-                                                        }
-                                                    }} style={{
-                                                        height: '28px'
-                                                    }} className={`btn btn-outline-primary pt-0 px-1`}>Approve</p>
-                                                    <p onClick={() => {
-                                                        if (request.Status === 'Approved' || request.Status === 'Disapproved' || request.Status === 'Rejected') {
-                                                            setDataToShow(`Document is already ${request.Status}!`);
-                                                            setShowBox(true);
-                                                        } else {
-                                                            setDisApprove(true);
-                                                            setIdForAction(request._id);
-                                                        }
-                                                    }} style={{
-                                                        height: '28px'
-                                                    }} className={`btn btn-outline-danger pt-0 px-1`}>Disaprrove</p>
-                                                </td>
-                                            )}
-                                            {tabData?.Review && (
-                                                <td className='ms-4' >
-                                                    <p onClick={() => {
-                                                        if (request.Status === 'Reviewed') {
-                                                            setDataToShow('Document is already Reviewed!');
-                                                            setShowBox(true);
-                                                        } else {
-                                                            setReview(true);
-                                                            setIdForAction(request._id)
-                                                        }
-                                                    }} style={{
-                                                        height: '28px'
-                                                    }} className={`btn btn-outline-danger pt-0 px-1`}>Review</p>
-                                                    <p onClick={() => {
-                                                        if (document.Status === 'Rejected' || document.Status === 'Reviewed') {
-                                                            setDataToShow('Document is already Rejected or Reviewed');
-                                                            setShowBox(true);
-                                                        } else {
-                                                            setReject(true);
-                                                            setIdForAction(request._id)
-                                                        }
-                                                    }} style={{
-                                                        height: '28px'
-                                                    }} className={`btn btn-outline-primary pt-0 px-1`}>Reject</p>
-                                                </td>
-                                            )}
-                                        </tr>
-                                    )
-                                })
-                            }
-                        </table>
-                    )}
-                </div>
-                <div className={style.Btns}>
-                    {startIndex > 0 && (
-                        <button onClick={backPage}>
-                            {'<< '}Back
-                        </button>
-                    )}
-                    {allDataArr?.length > endIndex && (
-                        <button onClick={nextPage}>
-                            next{'>> '}
-                        </button>
-                    )}
-                </div>
+                                        )}
+                                        {tabData?.Review && (
+                                            <td className='ms-4' >
+                                                <p onClick={() => {
+                                                    if (request.Status === 'Reviewed') {
+                                                        setDataToShow('Document is already Reviewed!');
+                                                        setShowBox(true);
+                                                    } else {
+                                                        setReview(true);
+                                                        setIdForAction(request._id)
+                                                    }
+                                                }} style={{
+                                                    height: '28px'
+                                                }} className={`btn btn-outline-danger pt-0 px-1`}>Review</p>
+                                                <p onClick={() => {
+                                                    if (document.Status === 'Rejected' || document.Status === 'Reviewed') {
+                                                        setDataToShow('Document is already Rejected or Reviewed');
+                                                        setShowBox(true);
+                                                    } else {
+                                                        setReject(true);
+                                                        setIdForAction(request._id)
+                                                    }
+                                                }} style={{
+                                                    height: '28px'
+                                                }} className={`btn btn-outline-primary pt-0 px-1`}>Reject</p>
+                                            </td>
+                                        )}
+                                    </tr>
+                                )
+                            })
+                        }
+                    </table>
+                )}
+            </div>
+            <div className={style.Btns}>
+                {startIndex > 0 && (
+                    <button onClick={backPage}>
+                        {'<< '}Back
+                    </button>
+                )}
+                {allDataArr?.length > endIndex && (
+                    <button onClick={nextPage}>
+                        next{'>> '}
+                    </button>
+                )}
             </div>
             {
                 showBox && (
@@ -249,9 +254,9 @@ function ChangeRequests() {
                             <p class={style.msg}>Do you want to Approve this Document?</p>
                             <div className={style.alertbtns}>
                                 <button onClick={() => {
-                                    dispatch(setLoading(true))
-                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/approve-ChangeRequest`, { documentId: idForAction }, { headers: { Authorization: `${user._id}` } }).then(() => {
-                                        dispatch(setLoading(false))
+                                    dispatch(setSmallLoading(true))
+                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/approve-ChangeRequest`, { documentId: idForAction, approveBy : user.Name }).then(() => {
+                                        dispatch(setSmallLoading(false))
                                         refreshData();
                                         Swal.fire({
                                             title: 'Success',
@@ -260,7 +265,7 @@ function ChangeRequests() {
                                             confirmButtonText: 'Go!',
                                         });
                                     }).catch(err => {
-                                        dispatch(setLoading(false));
+                                        dispatch(setSmallLoading(false));
                                         Swal.fire({
                                             icon: 'error',
                                             title: 'OOps..',
@@ -284,9 +289,9 @@ function ChangeRequests() {
                             <div className={style.alertbtns}>
                                 <button onClick={() => {
                                     setReview(false);
-                                    dispatch(setLoading(false))
-                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/review-ChangeRequest`, { documentId: idForAction }, { headers: { Authorization: `${user._id}` } }).then(() => {
-                                        dispatch(setLoading(false))
+                                    dispatch(setSmallLoading(false))
+                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/review-ChangeRequest`, { documentId: idForAction, reviewBy : user.Name }).then(() => {
+                                        dispatch(setSmallLoading(false))
                                         refreshData();
                                         Swal.fire({
                                             title: 'Success',
@@ -295,7 +300,7 @@ function ChangeRequests() {
                                             confirmButtonText: 'Go!',
                                         });
                                     }).catch(err => {
-                                        dispatch(setLoading(false));
+                                        dispatch(setSmallLoading(false));
                                         Swal.fire({
                                             icon: 'error',
                                             title: 'OOps..',
@@ -318,9 +323,9 @@ function ChangeRequests() {
                             <form onSubmit={(e) => {
                                 e.preventDefault();
                                 setDisApprove(false);
-                                dispatch(setLoading(true))
-                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/disapprove-ChangeRequest`, { documentId: idForAction, reason: reason }, { headers: { Authorization: `${user._id}` } }).then(() => {
-                                    dispatch(setLoading(false))
+                                dispatch(setSmallLoading(true))
+                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/disapprove-ChangeRequest`, { documentId: idForAction, reason: reason, disapproveBy : user.Name }).then(() => {
+                                    dispatch(setSmallLoading(false))
                                     Swal.fire({
                                         title: 'Success',
                                         text: 'DisApproved Successfully',
@@ -329,7 +334,7 @@ function ChangeRequests() {
                                     })
                                     refreshData();
                                 }).catch(err => {
-                                    dispatch(setLoading(false));
+                                    dispatch(setSmallLoading(false));
                                     Swal.fire({
                                         icon: 'error',
                                         title: 'OOps..',
@@ -358,9 +363,9 @@ function ChangeRequests() {
                             <form onSubmit={(e) => {
                                 e.preventDefault();
                                 setReject(false);
-                                dispatch(setLoading(true))
-                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/reject-ChangeRequest`, { documentId: idForAction, reason: reason }, { headers: { Authorization: `${user._id}` } }).then(() => {
-                                    dispatch(setLoading(false))
+                                dispatch(setSmallLoading(true))
+                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/reject-ChangeRequest`, { documentId: idForAction, reason: reason, rejectBy : user.Name }).then(() => {
+                                    dispatch(setSmallLoading(false))
                                     Swal.fire({
                                         title: 'Success',
                                         text: 'Rejected Successfully',
@@ -369,7 +374,7 @@ function ChangeRequests() {
                                     })
                                     refreshData();
                                 }).catch(err => {
-                                    dispatch(setLoading(false));
+                                    dispatch(setSmallLoading(false));
                                     Swal.fire({
                                         icon: 'error',
                                         title: 'OOps..',

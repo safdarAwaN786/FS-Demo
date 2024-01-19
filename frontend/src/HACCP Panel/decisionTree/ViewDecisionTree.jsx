@@ -5,7 +5,7 @@ import Swal from 'sweetalert2'
 import { BsArrowLeftCircle } from 'react-icons/bs';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
-import { setLoading } from '../../redux/slices/loading';
+import { setSmallLoading } from '../../redux/slices/loading';
 import html2pdf from 'html2pdf.js';
 
 const formatDate = (date) => {
@@ -114,12 +114,12 @@ function ViewDecisionTree() {
     }
     const idToWatch = useSelector(state => state.idToProcess);
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-decision-tree/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-decision-tree/${idToWatch}`).then((res) => {
             setDataToSend(res.data.data);
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon: 'error',
                 title: 'OOps..',
@@ -132,8 +132,6 @@ function ViewDecisionTree() {
     return (
         <>
             <div className={`${style.parent} mx-auto`}>
-
-
                 <div className={`${style.subparent} mx-2 mx-sm-4 mt-5 mx-lg-5`}>
                     <div className='d-flex flex-row bg-white px-lg-5 mx-lg-5 mx-3 px-2 py-2'>
                         <BsArrowLeftCircle
@@ -142,7 +140,6 @@ function ViewDecisionTree() {
                                     dispatch(updateTabData({ ...tabData, Tab: 'Identify CCP/OPRP' }))
                                 }
                             }} />
-
                     </div>
                     <div className={`${style.headers} d-flex justify-content-start ps-3 align-items-center `}>
                         <div className={style.spans}>

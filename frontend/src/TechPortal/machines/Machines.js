@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { updateTabData } from '../../redux/slices/tabSlice'
 import { changeId } from '../../redux/slices/idToProcessSlice'
 import { changeDateType } from '../../redux/slices/appSlice'
-import { setLoading } from '../../redux/slices/loading'
+import { setSmallLoading } from '../../redux/slices/loading'
 import Swal from 'sweetalert2'
 
 
@@ -23,28 +23,28 @@ function Machines() {
 
 
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/getAllMaintenanceRecords`, { headers: { Authorization: `${user._id}` } }).then((res) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/getAllMaintenanceRecords`, { headers: { Authorization: `${user.Department._id}` } }).then((res) => {
             setMaintenances(res.data.data);
             if(machinaries){
-                dispatch(setLoading(false))
+                dispatch(setSmallLoading(false))
             }
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon : 'error',
                 title : 'OOps..',
                 text : 'Something went wrong, Try Again!'
             })
         })
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readAllMachinery`, { headers: { Authorization: `${user._id}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readAllMachinery`, { headers: { Authorization: `${user.Department._id}` } }).then((res) => {
             setAllDataArr(res.data.data);
             setMachineries(res.data.data.slice(startIndex, endIndex));
             
-                dispatch(setLoading(false))
+                dispatch(setSmallLoading(false))
             
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon : 'error',
                 title : 'OOps..',
@@ -103,9 +103,6 @@ function Machines() {
 
     return (
         <>
-
-            <div className={style.subparent}>
-
                 <div className={style.searchbar}>
                     <div className={style.sec1}>
                         <img src={search} alt="" />
@@ -375,7 +372,6 @@ function Machines() {
                         </button>
                     )}
                 </div>
-            </div>
 
             {
                 alert ?

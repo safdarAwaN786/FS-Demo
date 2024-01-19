@@ -9,9 +9,9 @@ const MRMSchema = new mongoose.Schema({
         ref: 'Notification',
         required: true
     },
-    User: {
+    UserDepartment: {
         type: Schema.Types.ObjectId,
-        ref: 'User',
+        ref: 'Department',
     },
 
     // Agenda details for the MRM

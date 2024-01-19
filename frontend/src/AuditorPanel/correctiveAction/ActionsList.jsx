@@ -6,7 +6,7 @@ import { BsArrowLeftCircle } from 'react-icons/bs'
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { changeId } from '../../redux/slices/idToProcessSlice';
-import { setLoading } from '../../redux/slices/loading';
+import { setSmallLoading } from '../../redux/slices/loading';
 
 function ActionsList() {
 
@@ -31,10 +31,10 @@ function ActionsList() {
         return formatDate;
     }
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readCorrectiveActionByReportId/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((response) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readCorrectiveActionByReportId/${idToWatch}`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
             setActions(response.data.data);
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
             if (response.data.data == undefined) {
                 Swal.fire({
                     icon: 'error',
@@ -49,7 +49,7 @@ function ActionsList() {
             }
 
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon : 'error',
                 title : 'OOps..',
@@ -64,7 +64,6 @@ function ActionsList() {
 
     return (
         <>
-            <div className={style.subparent}>
                 <div className='mx-lg-5 px-2 mx-md-4 mx-2 mt-5 mb-1 '>
                     <BsArrowLeftCircle onClick={(e) => {
                         dispatch(updateTabData({ ...tabData, Tab: 'Corrective Action Plan' }))
@@ -113,7 +112,7 @@ function ActionsList() {
                         }
                     </table>
                 </div>
-            </div>
+
 
             {
                 alert ?

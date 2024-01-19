@@ -7,7 +7,7 @@ import Swal from 'sweetalert2'
 import { BsArrowLeftCircle } from 'react-icons/bs'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateTabData } from '../../redux/slices/tabSlice'
-import { setLoading } from '../../redux/slices/loading'
+import { setSmallLoading } from '../../redux/slices/loading'
 
 function AssignTrainings() {
 
@@ -26,17 +26,17 @@ function AssignTrainings() {
     const idToWatch = useSelector(state => state.idToProcess);
     const user = useSelector(state => state.auth.user);
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readMonthlyPlan`, { headers: { Authorization: `${user._id}` } }).then((response) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readMonthlyPlan`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
             const plannedTrainingsList = response.data.data;
             setPlannedTraining(plannedTrainingsList.find((training) => training._id === idToWatch))
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
-                icon : 'error',
-                title : 'OOps..',
-                text : 'Something went wrong, Try Again!'
+                icon: 'error',
+                title: 'OOps..',
+                text: 'Something went wrong, Try Again!'
             })
         })
     }, [])
@@ -49,18 +49,18 @@ function AssignTrainings() {
 
     useEffect(() => {
         if (plannedTraining !== null) {
-            dispatch(setLoading(true))
-            axios.get(`${process.env.REACT_APP_BACKEND_URL}/readEmployee`, { headers: { Authorization: `${user._id}` } }).then((response) => {
+            dispatch(setSmallLoading(true))
+            axios.get(`${process.env.REACT_APP_BACKEND_URL}/readEmployee`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
                 const allEmployees = response.data.data;
-                dispatch(setLoading(false))
+                dispatch(setSmallLoading(false))
                 setAllDataArr(allEmployees);
                 setEmployeesToShow(allEmployees?.slice(startIndex, endIndex));
             }).catch(err => {
-                dispatch(setLoading(false));
+                dispatch(setSmallLoading(false));
                 Swal.fire({
-                    icon : 'error',
-                    title : 'OOps..',
-                    text : 'Something went wrong, Try Again!'
+                    icon: 'error',
+                    title: 'OOps..',
+                    text: 'Something went wrong, Try Again!'
                 })
             })
 
@@ -105,9 +105,9 @@ function AssignTrainings() {
 
     const makeRequest = () => {
         if (dataToSend) {
-            dispatch(setLoading(true))
-            axios.patch(`${process.env.REACT_APP_BACKEND_URL}/assignEmployee`, dataToSend, { headers: { Authorization: `${user._id}` } }).then((res) => {
-                dispatch(setLoading(false))
+            dispatch(setSmallLoading(true))
+            axios.patch(`${process.env.REACT_APP_BACKEND_URL}/assignEmployee`, dataToSend).then((res) => {
+                dispatch(setSmallLoading(false))
                 setDataToSend(null);
                 Swal.fire({
                     title: 'Success',
@@ -117,15 +117,15 @@ function AssignTrainings() {
 
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        dispatch(updateTabData({...tabData, Tab : 'Training Record'}));
+                        dispatch(updateTabData({ ...tabData, Tab: 'Training Record' }));
                     }
                 })
             }).catch(err => {
-                dispatch(setLoading(false));
+                dispatch(setSmallLoading(false));
                 Swal.fire({
-                    icon : 'error',
-                    title : 'OOps..',
-                    text : 'Something went wrong, Try Again!'
+                    icon: 'error',
+                    title: 'OOps..',
+                    text: 'Something went wrong, Try Again!'
                 })
             })
         } else {
@@ -142,102 +142,101 @@ function AssignTrainings() {
     return (
         <>
 
-            <div className={style.subparent}>
-                <div className='d-flex flex-row mt-5 px-lg-5 px-3'>
-                    <BsArrowLeftCircle role='button' className='fs-4 mt-1 text-danger' onClick={(e) => {
-                        {
-                            dispatch(updateTabData({...tabData, Tab : 'Training Record'}))
-                        }
-                    }} />
-                    
+
+            <div className='d-flex flex-row mt-5 px-lg-5 px-3'>
+                <BsArrowLeftCircle role='button' className='fs-4 mt-1 text-danger' onClick={(e) => {
+                    {
+                        dispatch(updateTabData({ ...tabData, Tab: 'Training Record' }))
+                    }
+                }} />
+
+            </div>
+            <div className={style.searchbar}>
+                <div className={style.sec1}>
+                    <img src={search} alt="" />
+                    <input type="text" placeholder='Search Training by name' />
                 </div>
-                <div className={style.searchbar}>
-                    <div className={style.sec1}>
-                        <img src={search} alt="" />
-                        <input type="text" placeholder='Search Training by name' />
+                {reqIds.employeeIds?.length !== 0 && (
+
+                    <div onClick={() => {
+                        setDataToSend(reqIds);
+                        alertManager();
+                    }} className={style.sec2}>
+                        <p>Assign Training</p>
                     </div>
-                    {reqIds.employeeIds?.length !== 0 && (
+                )}
+            </div>
+            <div className={style.tableParent2}>
+                {!employeesToShow || employeesToShow?.length === 0 ? (
+                    <div className='w-100 d-flex align-items-center justify-content-center'>
+                        <p className='text-center'>No any Records Available here.</p>
+                    </div>
+                ) : (
+                    <table className={style.table}>
+                        <tr className={style.headers}>
+                            <td></td>
+                            <td>Employee Code</td>
+                            <td>Name</td>
+                            <td>CNIC</td>
+                            <td>Phone Number</td>
+                            <td>Email</td>
+                        </tr>
+                        {
+                            employeesToShow?.map((employee, i) => {
+                                return (
+                                    <tr className={style.tablebody} key={i}>
+                                        <td><input type="checkbox" onChange={() => {
+                                            updateReqIds(employee._id)
+                                        }} /></td>
+                                        <td className={style.textStyle1}>
+                                            <p>{employee.UserId}</p>
+                                        </td>
+                                        <td className={style.textStyle2}>
 
-                        <div onClick={() => {
-                            setDataToSend(reqIds);
-                            alertManager();
-                        }} className={style.sec2}>
-                            <p>Assign Training</p>
-                        </div>
-                    )}
-                </div>
-                <div className={style.tableParent2}>
-                    {!employeesToShow || employeesToShow?.length === 0 ? (
-                        <div className='w-100 d-flex align-items-center justify-content-center'>
-                            <p className='text-center'>No any Records Available here.</p>
-                        </div>
-                    ) : (
-                        <table className={style.table}>
-                            <tr className={style.headers}>
-                                <td></td>
-                                <td>Employee Code</td>
-                                <td>Name</td>
-                                <td>CNIC</td>
-                                <td>Phone Number</td>
-                                <td>Email</td>
-                            </tr>
-                            {
-                                employeesToShow?.map((employee, i) => {
-                                    return (
-                                        <tr className={style.tablebody} key={i}>
-                                            <td><input type="checkbox" onChange={() => {
-                                                updateReqIds(employee._id)
-                                            }} /></td>
-                                            <td className={style.textStyle1}>
-                                                <p>{employee.UserId}</p>
-                                            </td>
-                                            <td className={style.textStyle2}>
+                                            <div style={{
+                                                width: "40px",
+                                                height: "40px",
+                                                borderRadius: "50%",
+                                                overflow: "hidden",
+                                                backgroundImage: `url(${profile})`,
+                                                backgroundSize: 'cover',
+                                                backgroundPosition: 'center',
+                                            }}>
+                                                <img style={{
+                                                    width: "100%",
+                                                    height: "100%",
+                                                    objectFit: "cover"
+                                                }} src={employee.EmployeeImage || profile} onError={(e) => {
+                                                    e.target.style.display = 'none'
+                                                }} alt="" />
 
-                                                <div style={{
-                                                    width: "40px",
-                                                    height: "40px",
-                                                    borderRadius: "50%",
-                                                    overflow: "hidden",
-                                                    backgroundImage: `url(${profile})`,
-                                                    backgroundSize: 'cover',
-                                                    backgroundPosition: 'center',
-                                                }}>
-                                                    <img style={{
-                                                        width: "100%",
-                                                        height: "100%",
-                                                        objectFit: "cover"
-                                                    }} src={employee.EmployeeImage || profile} onError={(e) => {
-                                                        e.target.style.display = 'none'
-                                                    }} alt="" />
+                                            </div>
 
-                                                </div>
+                                            {employee.Name}</td>
+                                        <td className={style.textStyle2}>{employee.CNIC}</td>
+                                        <td className={style.textStyle2}>{employee.PhoneNumber}</td>
+                                        <td className={style.textStyle3}>{employee.Email}</td>
+                                    </tr>
+                                )
 
-                                                {employee.Name}</td>
-                                            <td className={style.textStyle2}>{employee.CNIC}</td>
-                                            <td className={style.textStyle2}>{employee.PhoneNumber}</td>
-                                            <td className={style.textStyle3}>{employee.Email}</td>
-                                        </tr>
-                                    )
+                            })
+                        }
+                    </table>
+                )}
+            </div>
+            <div className={style.Btns}>
+                {startIndex > 0 && (
 
-                                })
-                            }
-                        </table>
-                    )}
-                </div>
-                <div className={style.Btns}>
-                    {startIndex > 0 && (
+                    <button onClick={backPage}>
+                        {'<< '}Back
+                    </button>
+                )}
+                {allDataArr?.length > endIndex && (
 
-                        <button onClick={backPage}>
-                            {'<< '}Back
-                        </button>
-                    )}
-                    {allDataArr?.length > endIndex && (
-
-                        <button onClick={nextPage}>
-                            next{'>> '}
-                        </button>
-                    )}
-                </div>
+                    <button onClick={nextPage}>
+                        next{'>> '}
+                    </button>
+                )}
             </div>
 
             {

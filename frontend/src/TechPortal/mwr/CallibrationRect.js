@@ -4,7 +4,7 @@ import axios from "axios";
 import { BsArrowLeftCircle } from 'react-icons/bs';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
-import { setLoading } from '../../redux/slices/loading';
+import { setSmallLoading } from '../../redux/slices/loading';
 import Swal from 'sweetalert2';
 
 function CallibrationRect() {
@@ -23,30 +23,30 @@ function CallibrationRect() {
     const dateType = useSelector(state => state.appData.dateType);
 
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readCalibrationByEquipmentId/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readCalibrationByEquipmentId/${idToWatch}`, { headers: { Authorization: `${user.Department._id}` } }).then((res) => {
             if (res.data.data) {
                 const dataArr = res.data.data;
                 setCallibrationsToShow(dataArr.filter((data) => data.dateType === dateType && data.callibrationType === callibrationType))
             }
             if(equipmentToShow){
-                dispatch(setLoading(false))
+                dispatch(setSmallLoading(false))
             }
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon : 'error',
                 title : 'OOps..',
                 text : 'Something went wrong, Try Again!'
             })
         })
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readEquipment/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readEquipment/${idToWatch}`).then((res) => {
             setEquipmentToShow(res.data.data);
             if(callibrationsToShow){
-                dispatch(setLoading(false))
+                dispatch(setSmallLoading(false))
             }
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon : 'error',
                 title : 'OOps..',
@@ -58,7 +58,7 @@ function CallibrationRect() {
 
     useEffect(()=>{
         if(callibrationsToShow?.length === 0){
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
             Swal.fire({
                 icon : 'warning',
                 title : 'OOps..',
@@ -70,8 +70,6 @@ function CallibrationRect() {
 
     return (
         <>
-
-            <div className={style.subparent}>
                 <div className='d-flex flex-row bg-white px-lg-5 mx-1 px-2 py-2'>
                     <BsArrowLeftCircle role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
                         {
@@ -165,7 +163,6 @@ function CallibrationRect() {
                         dispatch(updateTabData({...tabData, Tab : 'internalExternal'}))
                     }}>Next</button>
                 </div>
-            </div>
 
             {
                 alert ?

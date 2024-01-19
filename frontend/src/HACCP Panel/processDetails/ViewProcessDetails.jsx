@@ -6,7 +6,7 @@ import { BsArrowLeftCircle } from 'react-icons/bs';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { changeId } from '../../redux/slices/idToProcessSlice';
-import { setLoading } from '../../redux/slices/loading';
+import { setSmallLoading } from '../../redux/slices/loading';
 import Swal from 'sweetalert2';
 
 function ViewProcessDetails() {
@@ -22,14 +22,14 @@ function ViewProcessDetails() {
     const idToWatch = useSelector(state => state.idToProcess);
 
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-process/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((response) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-process/${idToWatch}`).then((response) => {
             console.log(response.data);
             setProcessListData(response.data.data)
             setProcesses(response.data.data?.ProcessDetails.slice(startIndex, endIndex));
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon : 'error',
                 title : 'OOps..',
@@ -74,7 +74,6 @@ function ViewProcessDetails() {
     return (
         <>
 
-            <div className={style.subparent}>
                 <div className='d-flex flex-row bg-white px-lg-5  px-2 py-2'>
                     <BsArrowLeftCircle
                         role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
@@ -153,7 +152,6 @@ function ViewProcessDetails() {
                         </button>
                     )}
                 </div>
-            </div>
 
             {
                 showBox && (

@@ -5,7 +5,7 @@ import Swal from 'sweetalert2'
 import { BsArrowLeftCircle } from 'react-icons/bs';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
-import { setLoading } from '../../redux/slices/loading';
+import { setSmallLoading } from '../../redux/slices/loading';
 
 function AddDecisionTree() {
 
@@ -22,11 +22,11 @@ function AddDecisionTree() {
     }
 
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-conduct-haccp`, { headers: { Authorization: `${user._id}` } }).then((response) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-conduct-haccp`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
             setAllConductHaccps(response.data.data);
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon: 'error',
                 title: 'OOps..',
@@ -36,11 +36,11 @@ function AddDecisionTree() {
     }, [])
     const [departmentsToShow, SetDepartmentsToShow] = useState(null);
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`).then((res) => {
             SetDepartmentsToShow(res.data.data);
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             console.log(err);
             Swal.fire({
                 icon: 'error',
@@ -51,7 +51,7 @@ function AddDecisionTree() {
     }, [])
     useEffect(() => {
         if (departmentsToShow && allConductHaccps) {
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
         }
     }, [departmentsToShow, allConductHaccps])
 
@@ -70,11 +70,11 @@ function AddDecisionTree() {
 
     const makeRequest = () => {
         if (dataToSend.Decisions.length > 0) {
-            dispatch(setLoading(true))
-            axios.post(`${process.env.REACT_APP_BACKEND_URL}/create-decision-tree`, dataToSend, { headers: { Authorization: `${user._id}` } }).then(() => {
+            dispatch(setSmallLoading(true))
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/create-decision-tree`, {...dataToSend, createdBy : user.Name}, { headers: { Authorization: `${user.Department._id}` } }).then(() => {
                 console.log("request made !");
                 setDataToSend(null);
-                dispatch(setLoading(false))
+                dispatch(setSmallLoading(false))
                 Swal.fire({
                     title: 'Success',
                     text: 'Submitted Successfully',
@@ -86,7 +86,7 @@ function AddDecisionTree() {
                     }
                 })
             }).catch(err => {
-                dispatch(setLoading(false));
+                dispatch(setSmallLoading(false));
                 Swal.fire({
                     icon: 'error',
                     title: 'OOps..',

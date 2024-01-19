@@ -8,7 +8,7 @@ import Swal from 'sweetalert2';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { changeId } from '../../redux/slices/idToProcessSlice';
-import { setLoading } from '../../redux/slices/loading';
+import { setSmallLoading } from '../../redux/slices/loading';
 
 function DecisionTree() {
 
@@ -30,13 +30,13 @@ function DecisionTree() {
     const tabData = useSelector(state => state.tab);
 
     const refreshData = () => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-decision-trees`, { headers: { Authorization: `${user._id}` } }).then((response) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-decision-trees`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
             setAllDataArr(response.data.data)
             setDecisionTreesList(response.data.data.slice(startIndex, endIndex));
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon: 'error',
                 title: 'OOps..',
@@ -46,13 +46,13 @@ function DecisionTree() {
     }
 
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-decision-trees`, { headers: { Authorization: `${user._id}` } }).then((response) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-decision-trees`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
             setAllDataArr(response.data.data)
             setDecisionTreesList(response.data.data.slice(startIndex, endIndex));
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon: 'error',
                 title: 'OOps..',
@@ -92,7 +92,6 @@ function DecisionTree() {
 
     return (
         <>
-            <div className={style.subparent}>
 
                 <div className={style.searchbar}>
                     <div className={style.sec1}>
@@ -250,7 +249,6 @@ function DecisionTree() {
                         </button>
                     )}
                 </div>
-            </div>
 
             {
                 showBox && (
@@ -280,9 +278,9 @@ function DecisionTree() {
                             <form onSubmit={(e) => {
                                 e.preventDefault();
                                 setReject(false);
-                                dispatch(setLoading(true))
-                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/disapprove-decision-tree`, { id: idForAction, Reason: reason },  { headers: { Authorization: `${user._id}` } }).then(() => {
-                                    dispatch(setLoading(false))
+                                dispatch(setSmallLoading(true))
+                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/disapprove-decision-tree`, { id: idForAction, Reason: reason, disapprovedBy : user.Name }).then(() => {
+                                    dispatch(setSmallLoading(false))
                                     Swal.fire({
                                         title: 'Success',
                                         text: 'DisApproved Successfully',
@@ -291,7 +289,7 @@ function DecisionTree() {
                                     })
                                     refreshData();
                                 }).catch(err => {
-                                    dispatch(setLoading(false));
+                                    dispatch(setSmallLoading(false));
                                     Swal.fire({
                                         icon: 'error',
                                         title: 'OOps..',
@@ -326,9 +324,9 @@ function DecisionTree() {
                             <div className={style.alertbtns}>
                                 <button onClick={() => {
                                     setApprove(false)
-                                    dispatch(setLoading(true))
-                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/approve-decision-tree`, { id: idForAction },  { headers: { Authorization: `${user._id}` } }).then(() => {
-                                        dispatch(setLoading(false))
+                                    dispatch(setSmallLoading(true))
+                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/approve-decision-tree`, { id: idForAction, approvedBy : user.Name }).then(() => {
+                                        dispatch(setSmallLoading(false))
                                         Swal.fire({
                                             title: 'Success',
                                             text: 'Approved Successfully',
@@ -337,7 +335,7 @@ function DecisionTree() {
                                         })
                                         refreshData();
                                     }).catch(err => {
-                                        dispatch(setLoading(false));
+                                        dispatch(setSmallLoading(false));
                                         Swal.fire({
                                             icon: 'error',
                                             title: 'OOps..',

@@ -10,7 +10,7 @@ const multer = require('multer');
 const authMiddleware = require('../../middleware/auth');
 
 
-router.use(authMiddleware);
+// router.use(authMiddleware);
 // * Cloudinary Setup 
 cloudinary.config({
   cloud_name: process.env.cloud_name,
@@ -91,10 +91,10 @@ router.post('/addMonthlyPlan', async (req, res) => {
     }
     console.log('pre saving');
 
-    const createdBy = req.user.Name;
+    const createdBy = req.body.createdBy;
     const monthlyPlan = new MonthlyPlan({
       ...req.body,
-      User: req.user._id,
+      UserDepartment: req.header('Authorization'),
       CreatedBy: createdBy,
       CreationDate: new Date()
     });
@@ -114,17 +114,12 @@ router.post('/addMonthlyPlan', async (req, res) => {
 router.get('/readMonthlyPlan', async (req, res) => {
   try {
 
-    const monthlyPlan = await MonthlyPlan.find().populate("Training Trainer Employee YearlyTrainingPlan User");
+    const monthlyPlan = await MonthlyPlan.find({UserDepartment : req.header('Authorization')}).populate("Training Trainer Employee YearlyTrainingPlan User");
 
-    const monthlyPlansToSend = monthlyPlan.filter((Obj) => {
-      if (Obj.User.Department.equals(req.user.Department)) {
-        console.log('got Equal');
-        return Obj
-      }
-    });
+   
 
 
-    res.status(201).send({ status: true, message: "The Following are Monthlyplans!", data: monthlyPlansToSend, });
+    res.status(201).send({ status: true, message: "The Following are Monthlyplans!", data: monthlyPlan });
     console.log(new Date().toLocaleString() + ' ' + 'GET MonthlyPlans Successfully!')
 
   } catch (e) {
@@ -137,7 +132,6 @@ router.get('/readMonthlyPlan', async (req, res) => {
 router.patch('/assignEmployee', async (req, res) => {
   const employeeIds = req.body.employeeIds;
   const monthlyId = req.body.monthlyId;
-  const assignedBy = req.user.Name;
   console.log('request to assign employees to plan');
   try {
     const monthlyPlan = await MonthlyPlan.findOne({ _id: monthlyId });

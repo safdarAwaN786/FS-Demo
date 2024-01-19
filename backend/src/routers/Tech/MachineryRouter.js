@@ -4,7 +4,7 @@ const router = new express.Router();
 require('dotenv').config()
 const authMiddleware = require('../../middleware/auth');
 
-router.use(authMiddleware);
+// router.use(authMiddleware);
 
 // * POST Machinery Data Into MongooDB Database
 router.post('/addMachinery',  async (req, res) => {
@@ -12,11 +12,11 @@ router.post('/addMachinery',  async (req, res) => {
     console.log(req.body);
     const { machineName, machinaryLocation, maintenanceFrequency } = req.body;
 
-    const createdBy = req.user.Name
+    const createdBy = req.body.createdBy
     // Create a new machinery object
     const machinery = new Machinery({
       machineName,
-      User : req.user._id,
+      UserDepartment : req.header('Authorization'),
       machinaryLocation,
       maintenanceFrequency,
       CreatedBy: createdBy,
@@ -38,16 +38,10 @@ router.post('/addMachinery',  async (req, res) => {
 router.get('/readAllMachinery',  async (req, res) => {
   try {
 
-    const equipment = await Machinery.find().populate('User');
+    const equipment = await Machinery.find({UserDepartment : req.header('Authorization')}).populate('User');
     
-    const equipmentsToSend = equipment.filter((Obj)=>{
-      if(Obj.User.Department.equals(req.user.Department)){
-        console.log('got Equal');
-        return Obj
-      }
-    });
-    
-    res.status(201).send({ status: true, message: "The following are Machinery!", data: equipmentsToSend });
+
+    res.status(201).send({ status: true, message: "The following are Machinery!", data: equipment });
 
   } catch (error) {
     console.error('Failed to fetch equipment:', error.message);

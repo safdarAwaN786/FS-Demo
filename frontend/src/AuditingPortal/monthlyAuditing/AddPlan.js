@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import axios from "axios";
 import Swal from 'sweetalert2'
 import { useDispatch, useSelector } from 'react-redux';
-import { setLoading } from '../../redux/slices/loading';
+import { setSmallLoading } from '../../redux/slices/loading';
 
 function AddPlanAuditing() {
 
@@ -30,14 +30,14 @@ function AddPlanAuditing() {
     const user = useSelector(state => state.auth.user);
 
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`).then((res) => {
             SetDepartmentsToShow(res.data.data);
             if (yearlyPlans) {
-                dispatch(setLoading(false))
+                dispatch(setSmallLoading(false))
             }
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon: 'error',
                 title: 'OOps..',
@@ -64,15 +64,15 @@ function AddPlanAuditing() {
     }
 
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readYearlyAuditPlan`, { headers: { Authorization: `${user._id}` } }).then((response) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readYearlyAuditPlan`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
             console.log(response.data);
             setYearlyPlans(response.data.data);
             if (departmentsToShow) {
-                dispatch(setLoading(false))
+                dispatch(setSmallLoading(false))
             }
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon: 'error',
                 title: 'OOps..',
@@ -80,7 +80,7 @@ function AddPlanAuditing() {
             })
         })
 
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readAuditor`, { headers: { Authorization: `${user._id}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readAuditor`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
             console.log(response.data);
             const auditors = response.data.data;
             setLeadAuditors(auditors.filter((obj) => obj.Role === 'Lead Auditor'))
@@ -90,7 +90,7 @@ function AddPlanAuditing() {
 
     useEffect(() => {
         if (yearlyPlans?.length === 0) {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon: 'warning',
                 title: 'OOps..',
@@ -102,12 +102,12 @@ function AddPlanAuditing() {
 
     const makeRequest = () => {
         if (planData) {
-            dispatch(setLoading(true))
-            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addMonthlyAuditingPlan`, planData, { headers: { Authorization: `${user._id}` } }).then(() => {
+            dispatch(setSmallLoading(true))
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addMonthlyAuditingPlan`, {...planData, createdBy : user.Name}, { headers: { Authorization: `${user.Department._id}` } }).then(() => {
                 console.log("request made !");
                 setPlanData(null);
                 setDataToSend(null)
-                dispatch(setLoading(false))
+                dispatch(setSmallLoading(false))
                 Swal.fire({
                     title: 'Success',
                     text: 'Submitted Successfully',
@@ -116,7 +116,7 @@ function AddPlanAuditing() {
                 })
 
             }).catch(err => {
-                dispatch(setLoading(false));
+                dispatch(setSmallLoading(false));
                 Swal.fire({
                     icon: 'error',
                     title: 'OOps..',

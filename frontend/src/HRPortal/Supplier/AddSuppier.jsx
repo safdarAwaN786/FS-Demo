@@ -5,7 +5,7 @@ import Swal from 'sweetalert2'
 import { BsArrowLeftCircle } from 'react-icons/bs';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice'
-import { setLoading } from '../../redux/slices/loading';
+import { setSmallLoading } from '../../redux/slices/loading';
 
 function AddSupplier() {
     const [dataToSend, setDataToSend] = useState(null);
@@ -20,9 +20,9 @@ function AddSupplier() {
     const makeRequest = () => {
 
         if (dataToSend) {
-            dispatch(setLoading(true))
-            axios.post(`${process.env.REACT_APP_BACKEND_URL}/create-supplier`, dataToSend, { headers: { Authorization: `${user._id}` } }).then(() => {
-                dispatch(setLoading(false))
+            dispatch(setSmallLoading(true))
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/create-supplier`, {...dataToSend, createdBy : user.Name}, { headers: { Authorization: `${user.Department._id}` } }).then(() => {
+                dispatch(setSmallLoading(false))
                 setDataToSend(null);
                 Swal.fire({
                     title: 'Success',
@@ -36,7 +36,7 @@ function AddSupplier() {
                 })
 
             }).catch(err => {
-                dispatch(setLoading(false));
+                dispatch(setSmallLoading(false));
                 Swal.fire({
                     icon: 'error',
                     title: 'OOps..',

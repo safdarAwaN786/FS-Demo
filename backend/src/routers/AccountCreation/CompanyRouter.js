@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Company = require('../../models/AccountCreation/CompanyModel'); // Replace with the actual path to your Company model
+const Department = require('../../models/AccountCreation/DepartmentModel'); // Replace with the actual path to your Company model
 require('dotenv').config()
 const cloudinary = require('cloudinary').v2;
 const multer = require('multer');
@@ -15,7 +16,7 @@ cloudinary.config({
 
 const upload = multer();
 
-router.use(authMiddleware);
+// router.use(authMiddleware);
 
 // * Upload Documents To Cloudinary
 const uploadToCloudinary = (buffer) => {
@@ -63,6 +64,11 @@ router.post('/create-company',upload.single('CompanyLogo'), async (req, res) => 
 // * Get all Company documents
 router.get('/get-all-companies',  async (req, res) => {
     try {
+      const departmentExist = Department.findById(req.header('Authorization'));
+      if(!departmentExist){
+        return res.status(404).json({ message: `Department document with ID: ${req.header('Authorization')} not found` });
+
+      }
       const companies = await Company.find();
       
       if (!companies) {

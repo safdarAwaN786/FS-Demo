@@ -6,7 +6,7 @@ import { FaMinus } from 'react-icons/fa'
 import { BsArrowLeftCircle } from 'react-icons/bs';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
-import { setLoading } from '../../redux/slices/loading';
+import { setSmallLoading } from '../../redux/slices/loading';
 
 function UpdateProcessDetails() {
     const [dataToSend, setDataToSend] = useState(null);
@@ -19,14 +19,14 @@ function UpdateProcessDetails() {
     const idToWatch = useSelector(state => state.idToProcess);
 
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`).then((res) => {
             SetDepartmentsToShow(res.data.data);
             if(processes){
-                dispatch(setLoading(false))
+                dispatch(setSmallLoading(false))
             }
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon : 'error',
                 title : 'OOps..',
@@ -36,15 +36,15 @@ function UpdateProcessDetails() {
     }, [])
 
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-process/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-process/${idToWatch}`).then((res) => {
             setDataToSend(res.data.data);
             setProcesses(res.data.data?.ProcessDetails);
             if(departmentsToShow){
-                dispatch(setLoading(false))
+                dispatch(setSmallLoading(false))
             }
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon : 'error',
                 title : 'OOps..',
@@ -95,12 +95,12 @@ function UpdateProcessDetails() {
 
     const makeRequest = () => {
         if (dataToSend.ProcessDetails.length !== 0) {
-            dispatch(setLoading(true))
-            axios.patch(`${process.env.REACT_APP_BACKEND_URL}/update-process/${idToWatch}`, dataToSend, { headers: { Authorization: `${user._id}` } }).then(() => {
+            dispatch(setSmallLoading(true))
+            axios.patch(`${process.env.REACT_APP_BACKEND_URL}/update-process/${idToWatch}`, {...dataToSend, updatedBy : user.Name}).then(() => {
                 console.log("request made !");
                 setDataToSend(null);
 
-                dispatch(setLoading(false))
+                dispatch(setSmallLoading(false))
                 Swal.fire({
                     title: 'Success',
                     text: 'Submitted Successfully',
@@ -113,7 +113,7 @@ function UpdateProcessDetails() {
                 })
 
             }).catch(err => {
-                dispatch(setLoading(false));
+                dispatch(setSmallLoading(false));
                 Swal.fire({
                     icon : 'error',
                     title : 'OOps..',

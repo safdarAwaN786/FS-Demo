@@ -16,7 +16,9 @@ function AddPerson() {
 
     return (
 
-        <div className={style.subparent}>
+     <>
+
+     
             <form onSubmit={(event) => {
                 event.preventDefault();
                 dispatch(updateTabData({ ...tabData, Tab: 'addPersonalRec2' }))
@@ -228,8 +230,8 @@ function AddPerson() {
                     <button type='submit'  >Next Page</button>
                 </div>
             </form>
-
-        </div>
+        </>
+        
 
     )
 }

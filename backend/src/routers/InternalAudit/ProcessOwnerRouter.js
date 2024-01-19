@@ -67,15 +67,14 @@ router.post('/addProcess', async (req, res) => {
             console.log('Exists already');
             res.status(201).json({ status: false, message: 'UserName already exists!' });
         } else {
-            const createdBy = req.user.Name;
             const newUser = new User({
                 ...req.body.ProcessOwner,
-                User: req.user._id,
-                Department: req.user.Department,
-                Company: req.user.Company,
+                UserDepartment: req.body.user.Department._id,
+                Department: req.body.user.Department._id,
+                Company: req.body.user.Company._id,
                 isProcessOwner: req.body.processOwner?.deputyOwner ? false : true,
                 isDeputyOwner : req.body.processOwner?.deputyOwner ? true : false,
-                CreatedBy: createdBy,
+                CreatedBy: req.body.user.Name,
                 CreationDate: new Date(),
                 Password: CryptoJS.AES.encrypt(req.body.ProcessOwner.Password, process.env.PASS_CODE).toString(),
 
@@ -105,9 +104,9 @@ router.post('/addProcess', async (req, res) => {
                         const processOwner = new ProcessOwner({
                             ...req.body,
                             ProcessOwner: newUser._id,
-                            CreatedBy: createdBy,
+                            CreatedBy: req.body.user.Name,
                             CreationDate: new Date(),
-                            User: req.user._id
+                            UserDepartment: req.body.user.Department._id
                         });
 
                         await processOwner.save().then(() => {
@@ -136,11 +135,11 @@ router.get('/readProcess', async (req, res) => {
     console.log("request made for process")
     try {
 
-        const processOwner = await ProcessOwner.find({isProcessOwner : true}).populate('Department User ProcessOwner');
+        const processOwner = await ProcessOwner.find({isProcessOwner : true, UserDepartment : req.header('Authorization')}).populate('Department User ProcessOwner');
 
-        const processOwnersToSend = processOwner.filter((Obj) => Obj.User.Department.equals(req.user.Department));
+        
 
-        res.status(201).send({ status: true, message: "The Following are ProcessOwner!", data: processOwnersToSend });
+        res.status(201).send({ status: true, message: "The Following are ProcessOwner!", data: processOwner });
         console.log(new Date().toLocaleString() + ' ' + 'READ ProcessOwner Successfully!')
 
     } catch (e) {

@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { updateTabData } from '../../redux/slices/tabSlice'
 import { changeId } from '../../redux/slices/idToProcessSlice'
 import { changeMonthName } from '../../redux/slices/appSlice'
-import { setLoading } from '../../redux/slices/loading'
+import { setSmallLoading } from '../../redux/slices/loading'
 import Swal from 'sweetalert2'
 
 function Monthly() {   
@@ -17,13 +17,13 @@ function Monthly() {
     const idToWatch = useSelector(state => state.idToProcess);
     const user = useSelector(state => state.auth.user);
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readYearlyPlan`, { headers: { Authorization: `${user._id}` } }).then((response) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readYearlyPlan`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
             const yearlyPlansList = response.data.data;
             setPlanToShow(yearlyPlansList.find((plan) => plan._id === idToWatch))
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon : 'error',
                 title : 'OOps..',
@@ -35,8 +35,7 @@ function Monthly() {
 
 
     return (
-
-        <div className={style.subparent}>
+<>
             <div className='d-flex flex-row px-lg-5  px-2 my-2'>
                 <BsArrowLeftCircle role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
                     {
@@ -78,7 +77,7 @@ function Monthly() {
             </div>
 
 
-        </div>
+        </>
 
     )
 }

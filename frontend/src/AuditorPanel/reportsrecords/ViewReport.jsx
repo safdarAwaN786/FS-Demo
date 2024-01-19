@@ -8,7 +8,7 @@ import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import Slider from 'rc-slider';
-import { setLoading } from '../../redux/slices/loading';
+import { setSmallLoading } from '../../redux/slices/loading';
 import html2pdf from 'html2pdf.js';
 
 
@@ -38,13 +38,13 @@ function ViewReport() {
 
 
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readReportById/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((response) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readReportById/${idToWatch}`).then((response) => {
             setReportData(response.data.data)
             setDataToSend(response.data.data)
             setAuditData(response.data.data.ConductAudit)
             setAnswers(response.data.data.ConductAudit.Answers);
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
             if (response.data.data == undefined) {
                 Swal.fire({
                     icon: 'error',
@@ -58,7 +58,7 @@ function ViewReport() {
                 })
             }
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon: 'error',
                 title: 'OOps..',

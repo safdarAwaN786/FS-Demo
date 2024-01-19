@@ -11,9 +11,9 @@ const personalRecuisionSchema = new mongoose.Schema({
     default : 'Pending'
   },
 
-  User: {
+  UserDepartment: {
     type: Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'Department',
   },
   Reason : {
     type : String,
@@ -159,117 +159,3 @@ const personalRecuisionSchema = new mongoose.Schema({
 const PersonalRecuision = new mongoose.model('PersonalRecuision', personalRecuisionSchema)
 module.exports = PersonalRecuision
 
-
-
-
-
-
-
-
-
-
-
-// Virtual Get data to check which user create the  note
-// personalRecuisionSchema.virtual('notes', {
-//   ref : 'Note',
-//   localField : '_id', 
-//   foreignField : 'owner'
-// })
-
-
-// // Get UseFull Information of User
-// userSchema.methods.toJSON = function () {
-//   const user = this
-//   const userObject = user.toObject()
-//   delete userObject.password
-//   delete userObject.confirmPassword
-//   delete userObject.tokens
-//   return userObject  
-// }
-
-// // Authentication Schema
-// userSchema.methods.generateAuthToken = async function () {
-//   const user = this;
-//   const token = jwt.sign({ _id: user._id.toString() }, 'thisisthesecret');
-//   user.tokens = user.tokens.concat({ token })
-//   await user.save()
-//   return token
-// };
-
-// // Login Schema
-// userSchema.statics.findByCredentials = async (email, password) => {
-//   const user = await User.findOne({ email });
-//   if (!user) {
-//     throw new Error("Unable to Login");
-//   }
-//   const isMatch = await bcrypt.compare(password, user.password);
-//   if (!isMatch) {
-//     throw new Error("Unable to Login");
-//   }
-//   return user;
-// };
-
-// // Hash the plain text password before saving
-// userSchema.pre("save", async function (next) {
-//   const user = this;
-//   if (user.isModified("password")) {
-//     user.password = await bcrypt.hash(user.password, 8);
-//   }
-//   next();
-// });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  // user.tokens = user.tokens.concat({ token })
-  // await user.save()
-
-
-
-// Hiding Private Data Schema
-// notesSchema.methods.getPublicData = async function () {
-//   const user = this
-//   const userObject = user.toObject()
-//   delete userObject.password
-//   delete userObject.tokens
-//   return userObject;
-// } 
-
-
-
-
-
-
-
-
- 
-        // validate(value) {
-        //     if (!validator.isAlpha(value)) {
-        //       throw new Error("Please Enter Only Notes!");
-        //     }
-        //   },
-
-        // Get UseFull Information of User
-// userSchema.methods.getPublicProfile = function () {
-//   const user = this
-//   const userObject = user.toObject()
-//   delete userObject.password
-//   delete userObject.confirmPassword
-//   delete userObject.tokens
-//   return userObject  
-// }
-
-
-// : user.getPublicProfile() // used in userRouter 

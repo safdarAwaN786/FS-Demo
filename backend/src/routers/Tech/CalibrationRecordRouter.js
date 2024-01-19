@@ -8,7 +8,7 @@ const multer = require('multer');
 const upload = multer();
 const authMiddleware = require('../../middleware/auth');
 const { rgb, degrees, PDFDocument, StandardFonts } = require('pdf-lib');
-router.use(authMiddleware);
+// router.use(authMiddleware);
 const axios = require('axios')
 
 cloudinary.config({
@@ -16,7 +16,16 @@ cloudinary.config({
   api_key: process.env.api_key,
   api_secret: process.env.api_secret
 });
+const formatDate = (date) => {
 
+  const newDate = new Date(date);
+  const formatDate = newDate.toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+  });
+  return formatDate;
+}
 // Function to add the company logo and information to the first page
 const addFirstPage = async (page, logoImage, Company, user) => {
   const { width, height } = page.getSize();
@@ -81,7 +90,7 @@ router.post('/addCalibration/:EquipmentId', upload.fields([{ name: 'Image' }, { 
   try {
 
     const EquipmentId = req.params.EquipmentId;
-    const caliberateBy = req.user.Name
+    const caliberateBy = req.body.user.Name
 
     if (!EquipmentId) {
       return res.status(404).json({ error: 'Please Provide Machine ID' });
@@ -115,7 +124,7 @@ router.post('/addCalibration/:EquipmentId', upload.fields([{ name: 'Image' }, { 
     if (req.files['Certificate']) {
       const fileBuffers = req.files['Certificate'][0].buffer;
 
-      const response = await axios.get(req.user.Company.CompanyLogo, { responseType: 'arraybuffer' });
+      const response = await axios.get(req.body.user.Company.CompanyLogo, { responseType: 'arraybuffer' });
       const pdfDoc = await PDFDocument.load(fileBuffers);
       const logoImage = Buffer.from(response.data);
       const logoImageDataUrl = `data:image/jpeg;base64,${logoImage.toString('base64')}`;
@@ -128,7 +137,7 @@ router.post('/addCalibration/:EquipmentId', upload.fields([{ name: 'Image' }, { 
         pdfLogoImage = await pdfDoc.embedPng(logoImage);
       }
       const firstPage = pdfDoc.insertPage(0);
-      addFirstPage(firstPage, pdfLogoImage, req.user.Company, req.user);
+      addFirstPage(firstPage, pdfLogoImage, req.body.user.Company, req.body.user);
       const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
       pdfDoc.getPages().slice(1).forEach(async (page) => {
         page.translateContent(0, -30);
@@ -139,7 +148,7 @@ router.post('/addCalibration/:EquipmentId', upload.fields([{ name: 'Image' }, { 
         const centerWatermarkX = width / 2 - watermarkTextWidth / 2;
         const centerWatermarkY = height - 18;
         page.drawText(watermarkText, { x: centerWatermarkX, y: centerWatermarkY, size: watermarkFontSize, color: rgb(0, 0, 0) });
-        const companyText = `${req.user.Company.CompanyName}`;
+        const companyText = `${req.body.user.Company.CompanyName}`;
         const companyTextFontSize = 10;
         const companyTextWidth = (helveticaFont.widthOfTextAtSize(companyText, companyTextFontSize));
         const centerCompanyTextX = width - companyTextWidth - 20;
@@ -165,7 +174,7 @@ router.post('/addCalibration/:EquipmentId', upload.fields([{ name: 'Image' }, { 
     if (req.files['exCertificate']) {
       const fileBuffers = req.files['exCertificate'][0].buffer;
 
-      const response = await axios.get(req.user.Company.CompanyLogo, { responseType: 'arraybuffer' });
+      const response = await axios.get(req.body.user.Company.CompanyLogo, { responseType: 'arraybuffer' });
       const pdfDoc = await PDFDocument.load(fileBuffers);
       const logoImage = Buffer.from(response.data);
       const logoImageDataUrl = `data:image/jpeg;base64,${logoImage.toString('base64')}`;
@@ -178,7 +187,7 @@ router.post('/addCalibration/:EquipmentId', upload.fields([{ name: 'Image' }, { 
         pdfLogoImage = await pdfDoc.embedPng(logoImage);
       }
       const firstPage = pdfDoc.insertPage(0);
-      addFirstPage(firstPage, pdfLogoImage, req.user.Company, req.user);
+      addFirstPage(firstPage, pdfLogoImage, req.body.user.Company, req.body.user);
       const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
       pdfDoc.getPages().slice(1).forEach(async (page) => {
         page.translateContent(0, -30);
@@ -189,7 +198,7 @@ router.post('/addCalibration/:EquipmentId', upload.fields([{ name: 'Image' }, { 
         const centerWatermarkX = width / 2 - watermarkTextWidth / 2;
         const centerWatermarkY = height - 18;
         page.drawText(watermarkText, { x: centerWatermarkX, y: centerWatermarkY, size: watermarkFontSize, color: rgb(0, 0, 0) });
-        const companyText = `${req.user.Company.CompanyName}`;
+        const companyText = `${req.body.user.Company.CompanyName}`;
         const companyTextFontSize = 10;
         const companyTextWidth = (helveticaFont.widthOfTextAtSize(companyText, companyTextFontSize));
         const centerCompanyTextX = width - companyTextWidth - 20;
@@ -215,7 +224,7 @@ router.post('/addCalibration/:EquipmentId', upload.fields([{ name: 'Image' }, { 
     if (req.files['masterCertificate']) {
       const fileBuffers = req.files['exCertificate'][0].buffer;
 
-      const response = await axios.get(req.user.Company.CompanyLogo, { responseType: 'arraybuffer' });
+      const response = await axios.get(req.body.user.Company.CompanyLogo, { responseType: 'arraybuffer' });
       const pdfDoc = await PDFDocument.load(fileBuffers);
       const logoImage = Buffer.from(response.data);
       const logoImageDataUrl = `data:image/jpeg;base64,${logoImage.toString('base64')}`;
@@ -228,7 +237,7 @@ router.post('/addCalibration/:EquipmentId', upload.fields([{ name: 'Image' }, { 
         pdfLogoImage = await pdfDoc.embedPng(logoImage);
       }
       const firstPage = pdfDoc.insertPage(0);
-      addFirstPage(firstPage, pdfLogoImage, req.user.Company, req.user);
+      addFirstPage(firstPage, pdfLogoImage, req.body.user.Company, req.body.user);
       const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
       pdfDoc.getPages().slice(1).forEach(async (page) => {
         page.translateContent(0, -30);
@@ -239,7 +248,7 @@ router.post('/addCalibration/:EquipmentId', upload.fields([{ name: 'Image' }, { 
         const centerWatermarkX = width / 2 - watermarkTextWidth / 2;
         const centerWatermarkY = height - 18;
         page.drawText(watermarkText, { x: centerWatermarkX, y: centerWatermarkY, size: watermarkFontSize, color: rgb(0, 0, 0) });
-        const companyText = `${req.user.Company.CompanyName}`;
+        const companyText = `${req.body.user.Company.CompanyName}`;
         const companyTextFontSize = 10;
         const companyTextWidth = (helveticaFont.widthOfTextAtSize(companyText, companyTextFontSize));
         const centerCompanyTextX = width - companyTextWidth - 20;
@@ -268,7 +277,7 @@ router.post('/addCalibration/:EquipmentId', upload.fields([{ name: 'Image' }, { 
       lastCallibrationDate: new Date(Date.parse(req.body.lastDate.replace(/^"(.*)"$/, '$1'))),
       nextCallibrationDate: new Date(Date.parse(req.body.nextDate.replace(/^"(.*)"$/, '$1'))),
       CaliberateBy: caliberateBy,
-      User: req.user._id,
+      UserDepartment: req.header('Authorization'),
       CaliberatDate: new Date(),
       dateType: req.body.dateType,
       callibrationType: req.body.callibrationType,
@@ -313,7 +322,7 @@ router.post('/addCalibration/:EquipmentId', upload.fields([{ name: 'Image' }, { 
 router.get('/readAllCalibration', async (req, res) => {
   try {
 
-    const callibration = await Calibration.find().populate('Equipment').populate('User');
+    const callibration = await Calibration.find({UserDepartment : req.header('Authorization')}).populate('Equipment').populate('User');
 
     const callibrationsToSend = callibration.filter((Obj) => {
       if (Obj.User.Department.equals(req.user.Department)) {
@@ -338,7 +347,7 @@ router.get('/readCalibrationByEquipmentId/:equipmentId', async (req, res) => {
       return res.status(404).json({ error: 'Please Provide Machine ID' });
     }
 
-    const calibration = await Calibration.find({ equipment: equipmentId }).populate('Equipment');
+    const calibration = await Calibration.find({ equipment: equipmentId, UserDepartment : req.header('Authorization') }).populate('Equipment');
     if (!calibration) {
       return res.status(404).json({ error: 'calibration not found' });
     }

@@ -7,7 +7,7 @@ import Swal from 'sweetalert2'
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { changeId } from '../../redux/slices/idToProcessSlice';
-import { setLoading } from '../../redux/slices/loading';
+import { setSmallLoading } from '../../redux/slices/loading';
 
 
 function Checklist() {
@@ -30,13 +30,13 @@ function Checklist() {
     const dispatch = useDispatch();
 
     const statusChange = () => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/getChecklists`, { headers: { Authorization: `${user._id}` } }).then((response) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/getChecklists`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
             setAllDataArr(response.data.data)
             setChecklists(response.data.data.slice(startIndex, endIndex));
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon: 'error',
                 title: 'OOps..',
@@ -45,15 +45,14 @@ function Checklist() {
         })
     }
 
-
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/getChecklists`, { headers: { Authorization: `${user._id}` } }).then((response) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/getChecklists`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
             setAllDataArr(response.data.data)
             setChecklists(response.data.data.slice(startIndex, endIndex));
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon: 'error',
                 title: 'OOps..',
@@ -66,18 +65,14 @@ function Checklist() {
     const nextPage = () => {
         setStartIndex(startIndex + 8);
         setEndIndex(endIndex + 8);
-
     }
 
     const backPage = () => {
         setStartIndex(startIndex - 8);
         setEndIndex(endIndex - 8);
-
-
     }
 
     useEffect(() => {
-
         setChecklists(allDataArr?.slice(startIndex, endIndex))
     }, [startIndex, endIndex])
 
@@ -99,9 +94,7 @@ function Checklist() {
 
 
     return (
-        <>
-
-            <div className={style.subparent}>
+        <>   
 
                 <div className={style.searchbar}>
                     <div className={style.sec1}>
@@ -264,7 +257,6 @@ function Checklist() {
                         </button>
                     )}
                 </div>
-            </div>
 
             {
                 showBox && (
@@ -294,9 +286,9 @@ function Checklist() {
                             <p class={style.msg}>Do you want to Approve this Checklist?</p>
                             <div className={style.alertbtns}>
                                 <button onClick={() => {
-                                    dispatch(setLoading(true))
-                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/approveChecklist`, { id: checklistIdForAction }, { headers: { Authorization: `${user._id}` }}).then(() => {
-                                        dispatch(setLoading(false))
+                                    dispatch(setSmallLoading(true))
+                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/approveChecklist`, { id: checklistIdForAction, approvedBy : user.Name }).then(() => {
+                                        dispatch(setSmallLoading(false))
                                         statusChange();
                                         Swal.fire({
                                             title: 'Success',
@@ -306,7 +298,7 @@ function Checklist() {
                                         });
                                         setApprove(false);
                                     }).catch(err => {
-                                        dispatch(setLoading(false));
+                                        dispatch(setSmallLoading(false));
                                         Swal.fire({
                                             icon: 'error',
                                             title: 'OOps..',
@@ -332,9 +324,9 @@ function Checklist() {
                             <p class={style.msg}>Do you want to Disapprove this Checklist?</p>
                             <div className={style.alertbtns}>
                                 <button onClick={() => {
-                                    dispatch(setLoading(true))
-                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/disapproveChecklist`, { id: checklistIdForAction, Reason: Reason }, { headers: { Authorization: `${user._id}` } }).then(() => {
-                                        dispatch(setLoading(false))
+                                    dispatch(setSmallLoading(true))
+                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/disapproveChecklist`, { id: checklistIdForAction, Reason: Reason, disapprovedBy : user.Name }).then(() => {
+                                        dispatch(setSmallLoading(false))
                                         statusChange();
                                         Swal.fire({
                                             title: 'Success',
@@ -344,7 +336,7 @@ function Checklist() {
                                         });
                                         setDisapprove(false);
                                     }).catch(err => {
-                                        dispatch(setLoading(false));
+                                        dispatch(setSmallLoading(false));
                                         Swal.fire({
                                             icon: 'error',
                                             title: 'OOps..',

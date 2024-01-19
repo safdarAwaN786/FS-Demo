@@ -5,7 +5,7 @@ import Swal from 'sweetalert2'
 import { BsArrowLeftCircle } from 'react-icons/bs';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
-import { setLoading } from '../../redux/slices/loading';
+import { setSmallLoading } from '../../redux/slices/loading';
 
 function AddChangeRequest() {
 
@@ -23,17 +23,17 @@ function AddChangeRequest() {
     const dispatch = useDispatch();
     var docsArr = []
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readAllDocuments`, { headers: { Authorization: `${user._id}` } }).then((response) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readAllDocuments`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
             console.log(response.data);
             docsArr = response.data.data
-            axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-documents`, { headers: { Authorization: `${user._id}` } }).then((response2) => {
+            axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-documents`, { headers: { Authorization: `${user.Department._id}` } }).then((response2) => {
                 console.log(response2.data);
                 docsArr = [...docsArr, ...response2.data.data]
                 setDocuments(docsArr);
-                    dispatch(setLoading(false))
+                    dispatch(setSmallLoading(false))
             }).catch(err => {
-                dispatch(setLoading(false));
+                dispatch(setSmallLoading(false));
                 Swal.fire({
                     icon: 'error',
                     title: 'OOps..',
@@ -41,7 +41,7 @@ function AddChangeRequest() {
                 })
             })
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon: 'error',
                 title: 'OOps..',
@@ -52,14 +52,14 @@ function AddChangeRequest() {
 
     const [departmentsToShow, SetDepartmentsToShow] = useState(null);
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`).then((res) => {
             SetDepartmentsToShow(res.data.data);
             if (documents) {
-                dispatch(setLoading(false))
+                dispatch(setSmallLoading(false))
             }
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon: 'error',
                 title: 'OOps..',
@@ -69,11 +69,11 @@ function AddChangeRequest() {
     }, [])
     const makeRequest = () => {
         if (dataToSend) {
-            dispatch(setLoading(true))
-            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addChangeRequest`, dataToSend, { headers: { Authorization: `${user._id}` } }).then(() => {
+            dispatch(setSmallLoading(true))
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addChangeRequest`, {...dataToSend, CreatedBy : user.Name}, { headers: { Authorization: `${user.Department._id}` } }).then(() => {
                 console.log("request made !");
                 setDataToSend(null);
-                dispatch(setLoading(false))
+                dispatch(setSmallLoading(false))
                 Swal.fire({
                     title: 'Success',
                     text: 'Submitted Successfully',
@@ -85,7 +85,7 @@ function AddChangeRequest() {
                     }
                 })
             }).catch(err => {
-                dispatch(setLoading(false));
+                dispatch(setSmallLoading(false));
                 Swal.fire({
                     icon: 'error',
                     title: 'OOps..',

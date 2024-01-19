@@ -6,7 +6,7 @@ const authMiddleware = require('../../middleware/auth');
 
 
 
-router.use(authMiddleware)
+// router.use(authMiddleware)
 // * POST Equipment Data Into MongooDB Database
 router.post('/addEquipment',  async (req, res) => {
 
@@ -28,14 +28,14 @@ router.post('/addEquipment',  async (req, res) => {
 
   try {
 
-    const createdBy = req.user.Name;
+    const createdBy = req.body.createdBy;
     // Create a new Equipment object
     const equipment = new Equipment({
       equipmentName,
       equipmentLocation,
       Range,
       callibration,
-      User : req.user._id,
+      UserDepartment : req.header('Authorization'),
       CreatedBy: createdBy,
       CreationDate: new Date()
     });
@@ -59,16 +59,11 @@ router.post('/addEquipment',  async (req, res) => {
 router.get('/readAllEquipment',  async (req, res) => {
   try {
 
-    const equipment = await Equipment.find().populate('User');
+    const equipment = await Equipment.find({UserDepartment : req.header('Authorization')}).populate('UserDepartment');
     
-    const equipmentsToSend = equipment.filter((Obj)=>{
-      if(Obj.User.Department.equals(req.user.Department)){
-        console.log('got Equal');
-        return Obj
-      }
-    });
 
-    res.status(200).json({ status: true, message: 'Successfully retrieved all equipment!',  data: equipmentsToSend });
+
+    res.status(200).json({ status: true, message: 'Successfully retrieved all equipment!',  data: equipment });
 
   } catch (error) {
     console.error('Failed to fetch equipment:', error);

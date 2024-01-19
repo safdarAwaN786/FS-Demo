@@ -5,7 +5,7 @@ import Swal from 'sweetalert2'
 import { BsArrowLeftCircle } from 'react-icons/bs'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateTabData } from '../../redux/slices/tabSlice'
-import { setLoading } from '../../redux/slices/loading'
+import { setSmallLoading } from '../../redux/slices/loading'
 
 function Input() {
 
@@ -74,7 +74,7 @@ function Input() {
     const [allDataArr, setAllDataArr] = useState(null);
     useEffect(()=>{
         if(trainings?.lenght === 0){
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
             Swal.fire({
                 icon : 'warning',
                 title : 'OOps..',
@@ -83,13 +83,13 @@ function Input() {
         }
     }, [trainings])
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readTraining`, { headers: { Authorization: `${user._id}` } }).then((response) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readTraining`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
             setAllDataArr(response.data.data)
             setTrainings(response.data.data.slice(startIndex, endIndex));
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon : 'error',
                 title : 'OOps..',
@@ -114,9 +114,9 @@ function Input() {
 
     const makeRequest = () => {
         if (dataToSend.Year !== '' && dataToSend.Month[0].MonthName !== '' && dataToSend.Month[0].Trainings.lenght !== 0) {
-            dispatch(setLoading(true))
-            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addYearlyPlan`, dataToSend, { headers: { Authorization: `${user._id}` } }).then(() => {
-                dispatch(setLoading(false))
+            dispatch(setSmallLoading(true))
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addYearlyPlan`, {...dataToSend, createdBy : user.Name}, { headers: { Authorization: `${user.Department._id}` } }).then(() => {
+                dispatch(setSmallLoading(false))
                 setDataToSend(null);
                 Swal.fire({
                     title: 'Success',
@@ -129,7 +129,7 @@ function Input() {
                     }
                 })
             }).catch(err => {
-                dispatch(setLoading(false));
+                dispatch(setSmallLoading(false));
                 Swal.fire({
                     icon : 'error',
                     title : 'OOps..',
@@ -148,8 +148,6 @@ function Input() {
 
     return (
         <>
-
-            <div className={style.subparent}>
                 <form onSubmit={(event) => {
                     event.preventDefault();
                     console.log(yearlyPlanData)
@@ -254,7 +252,6 @@ function Input() {
                         </button>
                     )}
                 </div>
-            </div>
             {
                 alert ?
                     <div class={style.alertparent}>

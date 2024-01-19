@@ -8,7 +8,7 @@ import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import Slider from 'rc-slider';
-import { setLoading } from '../../redux/slices/loading';
+import { setSmallLoading } from '../../redux/slices/loading';
 
 function RecordReport() {
 
@@ -31,9 +31,9 @@ function RecordReport() {
 
     const makeRequest = () => {
         if(selectedAnswers.length > 0){
-            dispatch(setLoading(true))
-            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addReport`, { ConductAudit: idToWatch, SelectedAnswers: selectedAnswers }, { headers: { Authorization: `${user._id}` } }).then(() => {
-                dispatch(setLoading(false))
+            dispatch(setSmallLoading(true))
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addReport`, { ConductAudit: idToWatch, SelectedAnswers: selectedAnswers, reportBy : user.Name }, { headers: { Authorization: `${user.Department._id}` } }).then(() => {
+                dispatch(setSmallLoading(false))
                 Swal.fire({
                     title: 'Success',
                     text: 'Submitted Successfully',
@@ -46,7 +46,7 @@ function RecordReport() {
                     }
                 })
             }).catch(err => {
-                dispatch(setLoading(false));
+                dispatch(setSmallLoading(false));
                 Swal.fire({
                     icon: 'error',
                     title: 'OOps..',
@@ -65,13 +65,13 @@ function RecordReport() {
 
 
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-conduct-audit-by-auditId/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((response) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-conduct-audit-by-auditId/${idToWatch}`).then((response) => {
             setAuditData(response.data.data)
             setAnswers(response.data.data.Answers);
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon: 'error',
                 title: 'OOps..',

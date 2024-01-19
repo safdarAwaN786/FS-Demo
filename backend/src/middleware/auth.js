@@ -30,15 +30,16 @@ const authMiddleware = async (req, res, next) => {
 
     } else {
       // Get the user Id from the request headers
-      const userId = req.header('Authorization');
-      console.log(userId);
-      const user = await User.findById(userId).populate('Company');
-      if (!user) {
-        return res.status(404).json({ error: 'User not found' });
-      }
-      // Set the user in the request object for further use
-      req.user = user;
+      // const userId = req.header('Authorization');
+      // console.log(userId);
+      // const user = await User.findById(userId).populate('Company');
+      // if (!user) {
+      //   return res.status(404).json({ error: 'User not found' });
+      // }
+      // // Set the user in the request object for further use
+      // req.user = user;
       // Call the next middleware
+      console.log('auth run for : ' + req.path);
       next();
     }
   } catch (error) {

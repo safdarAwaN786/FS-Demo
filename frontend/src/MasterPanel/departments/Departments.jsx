@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { changeId } from '../../redux/slices/idToProcessSlice';
 import Cookies from 'js-cookie';
-import { setLoading } from '../../redux/slices/loading';
+import { setSmallLoading } from '../../redux/slices/loading';
 import Swal from 'sweetalert2';
 
 function Departments() {
@@ -25,8 +25,8 @@ function Departments() {
     const user = useSelector(state => state.auth.user);
 
     useEffect(() => {
-        dispatch(setLoading(true));
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-departments`, { headers: { Authorization: `${user._id}` } }).then((response) => {
+        dispatch(setSmallLoading(true));
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-departments`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
             // Create a Set to keep track of unique property values
             const uniqueCompanyObjects = new Set();
             // Use reduce to build the new array with distinct property values
@@ -40,11 +40,11 @@ function Departments() {
                 }
                 return acc;
             }, []);
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             setAllDataArr(UniqueCompanyDepartments)
             setDepCompaniesList(UniqueCompanyDepartments.slice(startIndex, endIndex));
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon : 'error',
                 title : 'OOps..',
@@ -84,7 +84,6 @@ function Departments() {
 
     return (
         <>
-            <div className={style.subparent}>
                 <div className={style.searchbar}>
                     <div className={style.sec1}>
                         <img src={Search} alt="" />
@@ -176,11 +175,6 @@ function Departments() {
                         </button>
                     )}
                 </div>
-            </div>
-
-
-
-
 
             {
                 showBox && (

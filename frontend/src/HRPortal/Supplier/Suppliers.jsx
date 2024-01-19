@@ -6,7 +6,7 @@ import axios from 'axios'
 import Swal from 'sweetalert2'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateTabData } from '../../redux/slices/tabSlice'
-import { setLoading } from '../../redux/slices/loading'
+import { setSmallLoading } from '../../redux/slices/loading'
 
 
 export default function Suppliers() {
@@ -20,14 +20,14 @@ export default function Suppliers() {
     const tabData = useSelector(state => state.tab);
 
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-suppliers`, { headers: { Authorization: `${user._id}` } }).then((response) => {
-            dispatch(setLoading(false))
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-suppliers`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
+            dispatch(setSmallLoading(false))
             setAllDataArr(response.data.data);
             console.log(response.data);
             setSuppliers(response.data.data.slice(startIndex, endIndex));
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon: 'error',
                 title: 'OOps..',
@@ -37,13 +37,13 @@ export default function Suppliers() {
     }, [])
 
     const statusUpdated = () => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-suppliers`, { headers: { Authorization: `${user._id}` } }).then((response) => {
-            dispatch(setLoading(false))
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-suppliers`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
+            dispatch(setSmallLoading(false))
             setAllDataArr(response.data.data);
             setSuppliers(response.data.data.slice(startIndex, endIndex));
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon: 'error',
                 title: 'OOps..',
@@ -106,148 +106,145 @@ export default function Suppliers() {
 
     return (
         <>
-
-            <div className={style.subparent}>
-                <div className={style.searchbar}>
-                    <div className={style.sec1}>
-                        <img src={Search} alt="" />
-                        <input onChange={search} type="text" placeholder='Search by Name or Code ' />
-                    </div>
-                    {tabData?.Creation && (
-
-                        <div className='d-flex'>
-                            <div onClick={() => {
-                                dispatch(updateTabData({ ...tabData, Tab: 'addSupplier' }));
-                            }} className={style.sec2}>
-                                <img src={add} alt="" />
-                                <p>Add New</p>
-                            </div>
-                        </div>
-                    )}
+            <div className={style.searchbar}>
+                <div className={style.sec1}>
+                    <img src={Search} alt="" />
+                    <input onChange={search} type="text" placeholder='Search by Name or Code ' />
                 </div>
-                <div className={style.tableParent}>
+                {tabData?.Creation && (
 
-                    {!suppliers || suppliers?.length === 0 ? (
-                        <div className='w-100 d-flex align-items-center justify-content-center'>
-                            <p className='text-center'>No any Records Available here.</p>
+                    <div className='d-flex'>
+                        <div onClick={() => {
+                            dispatch(updateTabData({ ...tabData, Tab: 'addSupplier' }));
+                        }} className={style.sec2}>
+                            <img src={add} alt="" />
+                            <p>Add New</p>
                         </div>
-                    ) : (
-                        <table className={style.table}>
-                            <tr className={style.headers}>
-                                <td>Supplier Code</td>
-                                <td>Name</td>
-                                <td>Phone #</td>
-                                <td>Phone 2 #</td>
-                                <td>Contact Person</td>
-                                <td>Address</td>
-                                <td>Due Date</td>
-                                <td>Risk Category</td>
-                                <td>Current Approval Date</td>
-                                <td>Next Approval Date</td>
-                                <td>Created By</td>
-                                <td>Creation Date</td>
-                                <td>Service Offered</td>
-                                {tabData?.Approval && (
-                                    <td>Action</td>
-                                )}
-                                <td></td>
-                                <td>Status</td>
-                                <td>Reason</td>
-                                <td>Approved By</td>
-                                <td>Approval Date</td>
-                            </tr>
-                            {
-                                suppliers?.map((supplier, i) => {
-                                    return (
-                                        <tr className={style.tablebody} key={i}>
-                                            <td className={style.textStyle2}>{supplier.SupplierCode}</td>
-                                            <td className={style.textStyle3}>{supplier.Name}</td>
-                                            <td className={style.textStyle3}>{supplier.PhoneNumber}</td>
-                                            <td className={style.textStyle3}>{supplier.PhoneNumber2}</td>
-                                            <td className={style.textStyle3}>{supplier.ContactPerson}</td>
-                                            <td className={style.textStyle3}>{supplier.Address}</td>
-                                            <td className={style.textStyle3}>{supplier.DueDate}</td>
-                                            <td className={style.textStyle3}>{supplier.RiskCategory}</td>
-                                            <td>{formatDate(supplier.CurrentApprovalDate)}</td>
-                                            <td>{formatDate(supplier.NextApprovalDate)}</td>
+                    </div>
+                )}
+            </div>
+            <div className={style.tableParent}>
 
-                                            <td className={style.textStyle3}>{supplier.CreatedBy}</td>
-                                            <td>{formatDate(supplier.CreationDate)}</td>
-                                            <td ><button onClick={() => {
-                                                setPopUpData(supplier.ProductServiceOffered);
-                                                setShowBox(true);
-                                            }} className={style.viewBtn}>View</button>
-                                            </td>
-                                            {tabData?.Approval && (
-                                                <td>
-                                                    <button onClick={() => {
+                {!suppliers || suppliers?.length === 0 ? (
+                    <div className='w-100 d-flex align-items-center justify-content-center'>
+                        <p className='text-center'>No any Records Available here.</p>
+                    </div>
+                ) : (
+                    <table className={style.table}>
+                        <tr className={style.headers}>
+                            <td>Supplier Code</td>
+                            <td>Name</td>
+                            <td>Phone #</td>
+                            <td>Phone 2 #</td>
+                            <td>Contact Person</td>
+                            <td>Address</td>
+                            <td>Due Date</td>
+                            <td>Risk Category</td>
+                            <td>Current Approval Date</td>
+                            <td>Next Approval Date</td>
+                            <td>Created By</td>
+                            <td>Creation Date</td>
+                            <td>Service Offered</td>
+                            {tabData?.Approval && (
+                                <td>Action</td>
+                            )}
+                            <td></td>
+                            <td>Status</td>
+                            <td>Reason</td>
+                            <td>Approved By</td>
+                            <td>Approval Date</td>
+                        </tr>
+                        {
+                            suppliers?.map((supplier, i) => {
+                                return (
+                                    <tr className={style.tablebody} key={i}>
+                                        <td className={style.textStyle2}>{supplier.SupplierCode}</td>
+                                        <td className={style.textStyle3}>{supplier.Name}</td>
+                                        <td className={style.textStyle3}>{supplier.PhoneNumber}</td>
+                                        <td className={style.textStyle3}>{supplier.PhoneNumber2}</td>
+                                        <td className={style.textStyle3}>{supplier.ContactPerson}</td>
+                                        <td className={style.textStyle3}>{supplier.Address}</td>
+                                        <td className={style.textStyle3}>{supplier.DueDate}</td>
+                                        <td className={style.textStyle3}>{supplier.RiskCategory}</td>
+                                        <td>{formatDate(supplier.CurrentApprovalDate)}</td>
+                                        <td>{formatDate(supplier.NextApprovalDate)}</td>
+
+                                        <td className={style.textStyle3}>{supplier.CreatedBy}</td>
+                                        <td>{formatDate(supplier.CreationDate)}</td>
+                                        <td ><button onClick={() => {
+                                            setPopUpData(supplier.ProductServiceOffered);
+                                            setShowBox(true);
+                                        }} className={style.viewBtn}>View</button>
+                                        </td>
+                                        {tabData?.Approval && (
+                                            <td>
+                                                <button onClick={() => {
+                                                    setDataToSend({
+                                                        id: supplier._id,
+                                                    });
+                                                    alertManager2();
+                                                }} className={style.viewBtn2}>Approve</button>
+                                                <button onClick={() => {
+                                                    if (supplier.Status === 'Approved') {
+                                                        setPopUpData('Sorry! Supplier is already Approved!')
+                                                        setShowBox(true)
+                                                    } else {
                                                         setDataToSend({
                                                             id: supplier._id,
                                                         });
-                                                        alertManager2();
-                                                    }} className={style.viewBtn2}>Approve</button>
-                                                    <button onClick={() => {
-                                                        if (supplier.Status === 'Approved') {
-                                                            setPopUpData('Sorry! Supplier is already Approved!')
-                                                            setShowBox(true)
-                                                        } else {
-                                                            setDataToSend({
-                                                                id: supplier._id,
-                                                            });
-                                                            setalert(!alert)
+                                                        setalert(!alert)
 
-                                                        }
+                                                    }
 
 
-                                                    }} className={style.orangebtn}>Disapprove</button>
+                                                }} className={style.orangebtn}>Disapprove</button>
 
 
 
-                                                </td>
-                                            )}
-                                            <td className={style.textStyle3}></td>
-                                            <td><div className={` text-center ${supplier.Status === 'Pending' && (style.yellowStatus)} ${supplier.Status === 'Approved' && (style.greenStatus)} ${supplier.Status === 'Disapproved' && (style.redStatus)}`}><p>{supplier.Status}</p></div></td>
-                                            <td ><button onClick={() => {
-                                                if (supplier.Status === "Approved") {
-                                                    setPopUpData("This Application is Approved.");
-                                                } else if (supplier.Status === "Disapproved") {
-                                                    setPopUpData(supplier.Reason);
-                                                } else {
-                                                    setPopUpData("Application is pending still.")
-                                                }
-                                                setShowBox(true);
-                                            }} className={style.viewBtn}>View</button>
                                             </td>
-                                            <td>{supplier.ApprovedBy || '--'}</td>
-                                            {supplier.ApprovalDate ? (
-                                                <td>{supplier.ApprovalDate?.slice(0, 10).split('-')[2]}/{supplier.ApprovalDate?.slice(0, 10).split('-')[1]}/{supplier.ApprovalDate?.slice(0, 10).split('-')[0]}</td>
-                                            ) : (
-                                                <td>- -</td>
-                                            )}
+                                        )}
+                                        <td className={style.textStyle3}></td>
+                                        <td><div className={` text-center ${supplier.Status === 'Pending' && (style.yellowStatus)} ${supplier.Status === 'Approved' && (style.greenStatus)} ${supplier.Status === 'Disapproved' && (style.redStatus)}`}><p>{supplier.Status}</p></div></td>
+                                        <td ><button onClick={() => {
+                                            if (supplier.Status === "Approved") {
+                                                setPopUpData("This Application is Approved.");
+                                            } else if (supplier.Status === "Disapproved") {
+                                                setPopUpData(supplier.Reason);
+                                            } else {
+                                                setPopUpData("Application is pending still.")
+                                            }
+                                            setShowBox(true);
+                                        }} className={style.viewBtn}>View</button>
+                                        </td>
+                                        <td>{supplier.ApprovedBy || '--'}</td>
+                                        {supplier.ApprovalDate ? (
+                                            <td>{supplier.ApprovalDate?.slice(0, 10).split('-')[2]}/{supplier.ApprovalDate?.slice(0, 10).split('-')[1]}/{supplier.ApprovalDate?.slice(0, 10).split('-')[0]}</td>
+                                        ) : (
+                                            <td>- -</td>
+                                        )}
 
-                                        </tr>
-                                    )
+                                    </tr>
+                                )
 
-                                })
-                            }
+                            })
+                        }
 
-                        </table>
-                    )}
-                </div>
-                <div className={style.Btns}>
-                    {startIndex > 0 && (
+                    </table>
+                )}
+            </div>
+            <div className={style.Btns}>
+                {startIndex > 0 && (
 
-                        <button onClick={backPage}>
-                            {'<< '}Back
-                        </button>
-                    )}
-                    {allDataArr?.length > endIndex && (
+                    <button onClick={backPage}>
+                        {'<< '}Back
+                    </button>
+                )}
+                {allDataArr?.length > endIndex && (
 
-                        <button onClick={nextPage}>
-                            next{'>> '}
-                        </button>
-                    )}
-                </div>
+                    <button onClick={nextPage}>
+                        next{'>> '}
+                    </button>
+                )}
             </div>
 
             {
@@ -256,9 +253,9 @@ export default function Suppliers() {
                         <div class={style.alert}>
                             <form onSubmit={(e) => {
                                 e.preventDefault();
-                                dispatch(setLoading(true))
-                                axios.patch(`/disapprove-supplier`, dataToSend, { headers: { Authorization: `${user._id}` } }).then(() => {
-                                    dispatch(setLoading(false))
+                                dispatch(setSmallLoading(true))
+                                axios.patch(`/disapprove-supplier`, {...dataToSend, disapprovedBy : user.Name}).then(() => {
+                                    dispatch(setSmallLoading(false))
                                     Swal.fire({
                                         title: 'Success',
                                         text: 'Submitted Successfully',
@@ -270,7 +267,7 @@ export default function Suppliers() {
                                         }
                                     })
                                 }).catch(err => {
-                                    dispatch(setLoading(false));
+                                    dispatch(setSmallLoading(false));
                                     Swal.fire({
                                         icon: 'error',
                                         title: 'OOps..',
@@ -300,8 +297,8 @@ export default function Suppliers() {
                             <p>Are you sure to submit ?</p>
                             <div className={style.alertbtns}>
                                 <button onClick={() => {
-                                    dispatch(setLoading(true))
-                                    axios.patch("/approve-supplier", dataToSend, { headers: { Authorization: `${user._id}` } }).then(() => {
+                                    dispatch(setSmallLoading(true))
+                                    axios.patch("/approve-supplier", {...dataToSend, approvedBy : user.Name}).then(() => {
                                         statusUpdated()
                                         Swal.fire({
                                             title: 'Success',
@@ -310,7 +307,7 @@ export default function Suppliers() {
                                             confirmButtonText: 'Go!',
                                         })
                                     }).catch(err => {
-                                        dispatch(setLoading(false));
+                                        dispatch(setSmallLoading(false));
                                         Swal.fire({
                                             icon: 'error',
                                             title: 'OOps..',

@@ -9,9 +9,9 @@ const ReportsSchema = new mongoose.Schema({
         ref: 'ConductAudits',
         required: true,
     },
-    User: {
+    UserDepartment: {
         type: Schema.Types.ObjectId,
-        ref: 'User'
+        ref: 'Department'
     },
     SelectedAnswers: [
         {

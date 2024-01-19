@@ -3,13 +3,13 @@ const YearlyPlan = require('../../models/HR/YearlyTrainingPlanModel')
 const router = new express.Router();
 const authMiddleware = require('../../middleware/auth');
 
-router.use(authMiddleware);
+// router.use(authMiddleware);
 // * POST YearlyPlan Data Into MongooDB Database
 router.post('/addYearlyPlan',  async (req, res) => {
   console.log(req.body);
   try {
 
-    const createdBy = req.user.Name;
+    const createdBy = req.body.createdBy;
     const yearlyPlan = await YearlyPlan.findOne({
       Year: req.body.Year
     });
@@ -33,7 +33,7 @@ router.post('/addYearlyPlan',  async (req, res) => {
 
     } else {
       const newYearlyPlan = new YearlyPlan({
-        User : req.user._id,
+        UserDepartment : req.header('Authorization'),
         Year: req.body.Year,
         Month: req.body.Month,
         CreatedBy: createdBy,
@@ -52,20 +52,11 @@ router.post('/addYearlyPlan',  async (req, res) => {
 // * GET All YearlyPlan Data From MongooDB Database
 router.get('/readYearlyPlan',  async (req, res) => {
   try {
-    const yearlyPlan = await YearlyPlan.find().populate({
+    const yearlyPlan = await YearlyPlan.find({UserDepartment : req.header('Authorization')}).populate({
       path: 'Month.Trainings.Training'
-    }).populate('User');
+    }).populate('UserDepartment');
 
-    const yearlyPlansToSend =  yearlyPlan.filter((Obj)=>{
-      if(Obj.User.Department.equals(req.user.Department)){
-        console.log('got Equal');
-        return Obj
-      }
-    });
-    
-    
-
-    res.status(201).send({ status: true, message: "The following are yearlyPlans!",  data: yearlyPlansToSend, });
+    res.status(201).send({ status: true, message: "The following are yearlyPlans!",  data: yearlyPlan, });
     console.log(new Date().toLocaleString() + ' ' + 'GET YearlyPlan Successfully!')
 
   } catch (e) {

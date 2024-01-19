@@ -6,7 +6,7 @@ import { BsArrowLeftCircle } from 'react-icons/bs'
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { changeId } from '../../redux/slices/idToProcessSlice';
-import { setLoading } from '../../redux/slices/loading';
+import { setSmallLoading } from '../../redux/slices/loading';
 
 function ReportsList() {
     const [alert, setalert] = useState(false);
@@ -30,10 +30,10 @@ function ReportsList() {
         return formatDate;
     }
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readReportByAuditId/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((response) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readReportByAuditId/${idToWatch}`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
             setReports(response.data.data)
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
             if (response.data.data == undefined) {
                 Swal.fire({
                     icon: 'error',
@@ -47,7 +47,7 @@ function ReportsList() {
                 })
             }
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon: 'error',
                 title: 'OOps..',
@@ -60,7 +60,6 @@ function ReportsList() {
 
     return (
         <>
-            <div className={style.subparent}>
                 <div className='mx-lg-5 px-2 mx-md-4 mx-2 mt-5 mb-1 '>
                     <BsArrowLeftCircle onClick={(e) => {
                         dispatch(updateTabData({ ...tabData, Tab: 'Non-Conformity Report' }))
@@ -104,7 +103,6 @@ function ReportsList() {
                         }
                     </table>
                 </div>
-            </div>
 
             {
                 alert ?

@@ -8,7 +8,7 @@ import Swal from 'sweetalert2'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateTabData } from '../../redux/slices/tabSlice'
 import { changeId } from '../../redux/slices/idToProcessSlice'
-import { setLoading } from '../../redux/slices/loading'
+import { setSmallLoading } from '../../redux/slices/loading'
 
 function ProcessDetails() {
     const [processesList, setProcessesList] = useState(null);
@@ -26,13 +26,13 @@ function ProcessDetails() {
     const tabData = useSelector(state => state.tab);
 
     const refreshData = () => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-processes`, { headers: { Authorization: `${user._id}` } }).then((response) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-processes`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
             setAllDataArr(response.data.data)
             setProcessesList(response.data.data.slice(startIndex, endIndex));
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon: 'error',
                 title: 'OOps..',
@@ -42,13 +42,13 @@ function ProcessDetails() {
     }
 
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-processes`, { headers: { Authorization: `${user._id}` } }).then((response) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-processes`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
             setAllDataArr(response.data.data)
             setProcessesList(response.data.data.slice(startIndex, endIndex));
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon: 'error',
                 title: 'OOps..',
@@ -96,8 +96,6 @@ function ProcessDetails() {
 
     return (
         <>
-
-            <div className={style.subparent}>
 
                 <div className={style.searchbar}>
                     <div className={style.sec1}>
@@ -271,7 +269,6 @@ function ProcessDetails() {
                         </button>
                     )}
                 </div>
-            </div>
 
             {
                 showBox && (
@@ -301,9 +298,9 @@ function ProcessDetails() {
                             <div className={style.alertbtns}>
                                 <button onClick={() => {
                                     setApprove(false)
-                                    dispatch(setLoading(true))
-                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/approve-process`, { id: idForAction }, { headers: { Authorization: `${user._id}` } }).then(() => {
-                                        dispatch(setLoading(false))
+                                    dispatch(setSmallLoading(true))
+                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/approve-process`, { id: idForAction, approvedBy : user.Name }).then(() => {
+                                        dispatch(setSmallLoading(false))
                                         Swal.fire({
                                             title: 'Success',
                                             text: 'Approved Successfully',
@@ -313,7 +310,7 @@ function ProcessDetails() {
                                         refreshData();
                                     }).catch(err => {
                                         console.log(err)
-                                        dispatch(setLoading(false));
+                                        dispatch(setSmallLoading(false));
                                         Swal.fire({
                                             icon: 'error',
                                             title: 'OOps..',
@@ -338,9 +335,9 @@ function ProcessDetails() {
                             <form onSubmit={(e) => {
                                 e.preventDefault();
                                 setReject(false);
-                                dispatch(setLoading(true))
-                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/disapprove-process`, { id: idForAction, Reason: reason }, { headers: { Authorization: `${user._id}` } }).then(() => {
-                                    dispatch(setLoading(false))
+                                dispatch(setSmallLoading(true))
+                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/disapprove-process`, { id: idForAction, Reason: reason, disapprovedBy : user.Name }).then(() => {
+                                    dispatch(setSmallLoading(false))
                                     Swal.fire({
                                         title: 'Success',
                                         text: 'DisApproved Successfully',
@@ -351,7 +348,7 @@ function ProcessDetails() {
 
                                     refreshData();
                                 }).catch(err => {
-                                    dispatch(setLoading(false));
+                                    dispatch(setSmallLoading(false));
                                     Swal.fire({
                                         icon: 'error',
                                         title: 'OOps..',

@@ -7,10 +7,11 @@ const Checklists = require('../../models/Auditor/ChecklistModel')
 require('dotenv').config()
 const cloudinary = require('cloudinary').v2;
 const multer = require('multer');
-const authMiddleware = require('../../middleware/auth');
+// const authMiddleware = require('../../middleware/auth');
 const { rgb, degrees, PDFDocument, StandardFonts } = require('pdf-lib');
 const axios = require('axios');
-router.use(authMiddleware);
+const user = require('../../models/AccountCreation/UserModel');
+// router.use(authMiddleware);
 
 cloudinary.config({
     cloud_name: process.env.cloud_name,
@@ -43,7 +44,16 @@ const uploadToCloudinary = (buffer) => {
         console.log('error inside uploadation' + error);
     }
 };
+const formatDate = (date) => {
 
+    const newDate = new Date(date);
+    const formatDate = newDate.toLocaleDateString('en-GB', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+    });
+    return formatDate;
+  }
 // Function to add the company logo and information to the first page
 const addFirstPage = async (page, logoImage, Company, user) => {
     const { width, height } = page.getSize();
@@ -106,8 +116,9 @@ async function checkQuestionIdExistence(questionId, reportId) {
 router.post('/addCorrectiveAction', upload.fields(generateCorrectiveDocArray()), async (req, res) => {
     console.log(req.files);
     try {
+        const requestUser = await user.findById(req.header('Authorization')).populate('Company Department')
 
-        const correctionBy = req.user.Name;
+        const correctionBy = requestUser.Name;
         const answers = JSON.parse(req.body.Answers);
         console.log(answers);
 
@@ -119,7 +130,7 @@ router.post('/addCorrectiveAction', upload.fields(generateCorrectiveDocArray()),
             for (const key in filesObj) {
                 const fileData = filesObj[key][0];
                 const index = fileData.fieldname.split('-')[1];
-                const response = await axios.get(req.user.Company.CompanyLogo, { responseType: 'arraybuffer' });
+                const response = await axios.get(requestUser.Company.CompanyLogo, { responseType: 'arraybuffer' });
                 const pdfDoc = await PDFDocument.load(fileData.buffer);
                 const logoImage = Buffer.from(response.data);
                 const logoImageDataUrl = `data:image/jpeg;base64,${logoImage.toString('base64')}`;
@@ -132,7 +143,7 @@ router.post('/addCorrectiveAction', upload.fields(generateCorrectiveDocArray()),
                     pdfLogoImage = await pdfDoc.embedPng(logoImage);
                 }
                 const firstPage = pdfDoc.insertPage(0);
-                addFirstPage(firstPage, pdfLogoImage, req.user.Company, req.user);
+                addFirstPage(firstPage, pdfLogoImage, requestUser.Company, requestUser);
                 const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
                 pdfDoc.getPages().slice(1).forEach(async (page) => {
                     page.translateContent(0, -30);
@@ -143,7 +154,7 @@ router.post('/addCorrectiveAction', upload.fields(generateCorrectiveDocArray()),
                     const centerWatermarkX = width / 2 - watermarkTextWidth / 2;
                     const centerWatermarkY = height - 18;
                     page.drawText(watermarkText, { x: centerWatermarkX, y: centerWatermarkY, size: watermarkFontSize, color: rgb(0, 0, 0) });
-                    const companyText = `${req.user.Company.CompanyName}`;
+                    const companyText = `${requestUser.Company.CompanyName}`;
                     const companyTextFontSize = 10;
                     const companyTextWidth = (helveticaFont.widthOfTextAtSize(companyText, companyTextFontSize));
                     const centerCompanyTextX = width - companyTextWidth - 20;
@@ -170,7 +181,7 @@ router.post('/addCorrectiveAction', upload.fields(generateCorrectiveDocArray()),
             ...req.body,
             CorrectionBy: correctionBy,
             CorrectionDate: new Date(),
-            User: req.user._id,
+            UserDepartment: requestUser.Department._id,
             Answers: answers
         });
 
@@ -189,7 +200,7 @@ router.post('/addCorrectiveAction', upload.fields(generateCorrectiveDocArray()),
 // * GET All CorrectiveAction Data From MongoDB Database
 router.get('/readCorrectiveActionByReportId/:reportId', async (req, res) => {
     try {
-        const correctiveActions = await CorrectiveAction.find({ Report: req.params.reportId }).populate('User').populate({
+        const correctiveActions = await CorrectiveAction.find({ Report: req.params.reportId, UserDepartment : req.header('Authorization') }).populate('UserDepartment').populate({
             path: 'Report',
             model: 'Reports',
             populate: {
@@ -207,13 +218,10 @@ router.get('/readCorrectiveActionByReportId/:reportId', async (req, res) => {
                 path: 'question',
                 model: 'ChecklistQuestion'
             }
-
         })
 
-        const correctiveActionToSend = correctiveActions.filter(Obj => Obj.User.Department.equals(req.user.Department))
 
-
-        res.status(200).send({ status: true, message: "The following are CorrectiveActions!", data: correctiveActionToSend });
+        res.status(200).send({ status: true, message: "The following are CorrectiveActions!", data: correctiveActions });
         console.log(new Date().toLocaleString() + ' ' + 'READ CorrectiveActions Successfully!')
 
     } catch (e) {
@@ -223,7 +231,7 @@ router.get('/readCorrectiveActionByReportId/:reportId', async (req, res) => {
 });
 router.get('/readCorrectiveActionById/:actionId', async (req, res) => {
     try {
-        const correctiveAction = await CorrectiveAction.findById(req.params.actionId).populate('User').populate({
+        const correctiveAction = await CorrectiveAction.findById(req.params.actionId).populate('UserDepartment').populate({
             path: 'Report',
             model: 'Reports',
             populate: {

@@ -6,8 +6,9 @@ const cloudinary = require('cloudinary').v2;
 const multer = require('multer');
 const authMiddleware = require('../../middleware/auth');
 const { rgb, degrees, PDFDocument, StandardFonts } = require('pdf-lib');
-router.use(authMiddleware);
-const axios = require('axios')
+// router.use(authMiddleware);
+const axios = require('axios');
+const user = require('../../models/AccountCreation/UserModel');
 
 // * Cloudinary Setup 
 cloudinary.config({
@@ -17,7 +18,16 @@ cloudinary.config({
 });
 
 const upload = multer();
+const formatDate = (date) => {
 
+  const newDate = new Date(date);
+  const formatDate = newDate.toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+  });
+  return formatDate;
+}
 // Function to add the company logo and information to the first page
 const addFirstPage = async (page, logoImage, Company, user) => {
   const { width, height } = page.getSize();
@@ -78,6 +88,7 @@ const uploadToCloudinary = (buffer) => {
 router.post('/addTraining', upload.fields([{ name: 'TrainingMaterial' }]), async (req, res) => {
   console.log("request made training..")
   try {
+    const requestUser = await user.findById(req.header('Authorization')).populate('Company Department')
 
     var trainingMaterial;
     if (req.files['TrainingMaterial']) {
@@ -87,7 +98,7 @@ router.post('/addTraining', upload.fields([{ name: 'TrainingMaterial' }]), async
     var materialUrl;
     if (trainingMaterial) {
 
-      const response = await axios.get(req.user.Company.CompanyLogo, { responseType: 'arraybuffer' });
+      const response = await axios.get(requestUser.Company.CompanyLogo, { responseType: 'arraybuffer' });
       const pdfDoc = await PDFDocument.load(trainingMaterial.buffer);
       const logoImage = Buffer.from(response.data);
       const logoImageDataUrl = `data:image/jpeg;base64,${logoImage.toString('base64')}`;
@@ -100,7 +111,7 @@ router.post('/addTraining', upload.fields([{ name: 'TrainingMaterial' }]), async
         pdfLogoImage = await pdfDoc.embedPng(logoImage);
       }
       const firstPage = pdfDoc.insertPage(0);
-      addFirstPage(firstPage, pdfLogoImage, req.user.Company, req.user);
+      addFirstPage(firstPage, pdfLogoImage, requestUser.Company, requestUser);
       const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
       pdfDoc.getPages().slice(1).forEach(async (page) => {
         page.translateContent(0, -30);
@@ -111,7 +122,7 @@ router.post('/addTraining', upload.fields([{ name: 'TrainingMaterial' }]), async
         const centerWatermarkX = width / 2 - watermarkTextWidth / 2;
         const centerWatermarkY = height - 18;
         page.drawText(watermarkText, { x: centerWatermarkX, y: centerWatermarkY, size: watermarkFontSize, color: rgb(0, 0, 0) });
-        const companyText = `${req.user.Company.CompanyName}`;
+        const companyText = `${requestUser.Company.CompanyName}`;
         const companyTextFontSize = 10;
         const companyTextWidth = (helveticaFont.widthOfTextAtSize(companyText, companyTextFontSize));
         const centerCompanyTextX = width - companyTextWidth - 20;
@@ -136,10 +147,10 @@ router.post('/addTraining', upload.fields([{ name: 'TrainingMaterial' }]), async
 
     console.log(materialUrl);
 
-    const createdBy = req.user.Name;
+    const createdBy = requestUser.Name;
     const training = new Training({
       ...req.body,
-      User: req.user._id,
+      UserDepartment: requestUser.Department._id,
       TrainingMaterial: materialUrl,
       CreatedBy: createdBy,
       CreationDate: new Date()
@@ -161,18 +172,11 @@ router.get('/readTraining', async (req, res) => {
   console.log("request made for training")
   try {
 
-    const training = await Training.find().populate('User');
+    const training = await Training.find({UserDepartment : req.header('Authorization')}).populate('UserDepartment');
 
-    const trainingsToSend = training.filter((Obj) => {
-      if (Obj.User.Department.equals(req.user.Department)) {
-        console.log('got Equal');
-        return Obj
-      }
-    });
+   
 
-
-
-    res.status(201).send({ status: true, message: "The Following are Trainings!", data: trainingsToSend, });
+    res.status(201).send({ status: true, message: "The Following are Trainings!", data: training, });
     console.log(new Date().toLocaleString() + ' ' + 'READ Training Successfully!')
 
   } catch (e) {

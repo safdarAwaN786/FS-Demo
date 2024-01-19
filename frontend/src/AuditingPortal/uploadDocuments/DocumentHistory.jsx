@@ -5,7 +5,7 @@ import Swal from 'sweetalert2';
 import { BsArrowLeftCircle } from 'react-icons/bs';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
-import { setLoading } from '../../redux/slices/loading';
+import { setSmallLoading } from '../../redux/slices/loading';
 
 function DocumentHistory() {
     const [commentBox, setCommentBox] = useState(false);
@@ -24,12 +24,12 @@ function DocumentHistory() {
     const handleDownloadImage = async (imageURL) => {
         try {
             if (imageURL) {
-                dispatch(setLoading(true))
+                dispatch(setSmallLoading(true))
                 const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/download-image`, {
                     params: {
                         url: imageURL,
                     },
-                    responseType: 'blob', headers: { Authorization: `${user._id}` } // Specify the response type as 'blob' to handle binary data
+                    responseType: 'blob' // Specify the response type as 'blob' to handle binary data
                 });
 
 
@@ -47,7 +47,7 @@ function DocumentHistory() {
 
                 // Append the anchor element to the document body and click it to trigger the download
                 document.body.appendChild(link);
-                dispatch(setLoading(false))
+                dispatch(setSmallLoading(false))
                 link.click();
                 // Clean up by removing the temporary anchor element
                 document.body.removeChild(link);
@@ -59,7 +59,7 @@ function DocumentHistory() {
                 })
             }
         } catch (error) {
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
             Swal.fire({
                 icon: 'error',
                 title: 'OOps..',
@@ -71,13 +71,13 @@ function DocumentHistory() {
 
 
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readDocumentById/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readDocumentById/${idToWatch}`).then((res) => {
             console.log(res.data.data);
             setDocumentData(res.data.data);
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon: 'error',
                 title: 'OOps..',
@@ -88,13 +88,13 @@ function DocumentHistory() {
     }, [])
 
     const refreshData = () => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readDocumentById/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readDocumentById/${idToWatch}`).then((res) => {
             console.log(res.data.data);
             setDocumentData(res.data.data);
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon: 'error',
                 title: 'OOps..',
@@ -111,7 +111,7 @@ function DocumentHistory() {
         <>
 
 
-            <div className={style.subparent}>
+           
                 <div className='d-flex flex-row bg-white px-lg-5 mx-lg-5 mx-3 px-2 py-2'>
                     <BsArrowLeftCircle
                         role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
@@ -217,7 +217,7 @@ function DocumentHistory() {
                 <div className={style.btnparent}>
                     <button className={style.download}>Download</button>
                 </div>
-            </div>
+            
 
             {
                 alert ?
@@ -237,9 +237,9 @@ function DocumentHistory() {
                             <form onSubmit={(e) => {
                                 e.preventDefault();
                                 setCommentBox(false);
-                                dispatch(setLoading(true))
-                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/comment-document/${idToWatch}`, { objIndex: indexForAction, comment: comment }, { headers: { Authorization: `${user._id}` } }).then(() => {
-                                    dispatch(setLoading(false))
+                                dispatch(setSmallLoading(true))
+                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/comment-document/${idToWatch}`, { objIndex: indexForAction, comment: comment }).then(() => {
+                                    dispatch(setSmallLoading(false))
                                     Swal.fire({
                                         title: 'Success',
                                         text: 'Added Successfully',
@@ -248,7 +248,7 @@ function DocumentHistory() {
                                     })
                                     refreshData();
                                 }).catch(err => {
-                                    dispatch(setLoading(false));
+                                    dispatch(setSmallLoading(false));
                                     Swal.fire({
                                         icon: 'error',
                                         title: 'OOps..',
@@ -259,8 +259,6 @@ function DocumentHistory() {
                                 <textarea onChange={(e) => {
                                     setComment(e.target.value);
                                 }} name="Reason" id="" cols="30" rows="10" placeholder='Comment here' required />
-
-
                                 <div className={`$ mt-3 d-flex justify-content-end `}>
                                     <button type='submit' className='btn btn-danger px-3 py-2 m-3'>Add</button>
                                     <a onClick={() => {

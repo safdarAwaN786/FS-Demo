@@ -6,7 +6,7 @@ import axios from "axios";
 import { useDispatch, useSelector } from 'react-redux';
 import { changeId } from '../../redux/slices/idToProcessSlice';
 import { updateTabData } from '../../redux/slices/tabSlice';
-import { setLoading } from '../../redux/slices/loading';
+import { setSmallLoading } from '../../redux/slices/loading';
 import Swal from 'sweetalert2';
 
 function UsersDepartments() {
@@ -23,8 +23,8 @@ function UsersDepartments() {
     const user = useSelector(state => state.auth.user);
 
     useEffect(() => {
-        dispatch(setLoading(true));
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-userByCompany/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((response) => {
+        dispatch(setSmallLoading(true));
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-userByCompany/${idToWatch}`).then((response) => {
             // Create a Set to keep track of unique property values
             const uniqueCompanyObjects = new Set();
             // Use reduce to build the new array with distinct property values
@@ -38,11 +38,11 @@ function UsersDepartments() {
                 }
                 return acc;
             }, []);
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             setAllDataArr(UniqueCompanyUsers)
             setUsersList(UniqueCompanyUsers.slice(startIndex, endIndex));
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon : 'error',
                 title : 'OOps..',
@@ -89,8 +89,6 @@ function UsersDepartments() {
 
     return (
         <>
-
-            <div className={style.subparent}>
 
                 <div className={style.searchbar}>
                     <div className={style.sec1}>
@@ -166,12 +164,7 @@ function UsersDepartments() {
                         </button>
                     )}
                 </div>
-            </div>
-
-
-
-
-
+         
             {
                 showBox && (
 

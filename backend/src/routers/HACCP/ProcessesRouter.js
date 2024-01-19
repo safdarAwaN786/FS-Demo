@@ -3,14 +3,14 @@ const router = express.Router();
 const Processes = require('../../models/HACCP/ProcessesModel').Processes;
 const authMiddleware = require('../../middleware/auth');
 const { ProcessDetailModel } = require('../../models/HACCP/ProcessesModel');
-router.use(authMiddleware);
+// router.use(authMiddleware);
 
 // * Create a new Process document
 router.post('/create-process', async (req, res) => {
   try {
 
     const processData = req.body; // The Process data sent in the request body
-    const createdBy = req.user.Name
+    const createdBy = req.body.createdBy
     const processDetailsIds = await Promise.all(
       processData.ProcessDetails.map(async (processObj) => {
         if (processObj.subProcesses?.length > 0) {
@@ -52,12 +52,10 @@ router.post('/create-process', async (req, res) => {
     
 
     console.log(processDetailsIds);
-
-    console.log(processDetailsIds);
     const mainProcessDoc = new Processes({
       ...processData,
       CreatedBy: createdBy,
-      User: req.user._id,
+      UserDepartment: req.header('Authorization'),
       ProcessDetails: processDetailsIds,
       CreationDate: new Date()
     })
@@ -79,7 +77,7 @@ router.post('/create-process', async (req, res) => {
 router.get('/get-all-processes', async (req, res) => {
   try {
 
-    const processes = await Processes.find().populate('Department').populate('User').populate({
+    const processes = await Processes.find({UserDepartment : req.header('Authorization')}).populate('Department').populate('UserDepartment').populate({
       path: 'ProcessDetails',
       populate: {
         path: 'subProcesses', // Assuming 'subProcesses' is the field you want to populate inside 'ProcessDetails'
@@ -92,10 +90,10 @@ router.get('/get-all-processes', async (req, res) => {
       console.log('Process documents not found');
       return res.status(404).json({ message: 'Process documents not found' });
     }
-    const processesToSend = processes.filter((productObj) => productObj.User.Department.equals(req.user.Department));
+    
 
     console.log('Process documents retrieved successfully');
-    res.status(200).json({ status: true, data: processesToSend });
+    res.status(200).json({ status: true, data: processes });
 
   } catch (error) {
     console.error(error);
@@ -108,7 +106,7 @@ router.get('/get-process/:processId', async (req, res) => {
   try {
 
     const processId = req.params.processId;
-    const process = await Processes.findById(processId).populate('Department').populate('User').populate({
+    const process = await Processes.findById(processId).populate('Department').populate('UserDepartment').populate({
       path: 'ProcessDetails',
       populate: {
         path: 'subProcesses', // Assuming 'subProcesses' is the field you want to populate inside 'ProcessDetails'
@@ -264,7 +262,7 @@ router.patch('/update-process/:processId', async (req, res) => {
     const updates = {
       ...req.body,
       ProcessDetails : processDetailsIds,
-      UpdatedBy: req.user.Name,
+      UpdatedBy: req.body.updatedBy,
       UpdationDate: new Date(),
       Status: 'Pending'
     };
@@ -284,7 +282,7 @@ router.patch('/update-process/:processId', async (req, res) => {
 router.patch('/approve-process', async (req, res) => {
   try {
 
-    const approvedBy = req.user.Name
+    const approvedBy = req.body.approvedBy;
     const processId = req.body.id;
 
     // Find the process by ID
@@ -323,7 +321,7 @@ router.patch('/approve-process', async (req, res) => {
 router.patch('/disapprove-process', async (req, res) => {
   try {
 
-    const disapprovedBy = req.user.Name
+    const disapprovedBy = req.body.disapprovedBy
     const processId = req.body.id;
     const Reason = req.body.Reason;
 

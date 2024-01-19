@@ -12,7 +12,7 @@ import Select from 'react-select';
 import { BiPlus } from 'react-icons/bi'
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
-import { setLoading } from '../../redux/slices/loading';
+import { setSmallLoading } from '../../redux/slices/loading';
 
 function EditForm() {
 
@@ -41,15 +41,15 @@ function EditForm() {
     };
 
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-form-by-id/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-form-by-id/${idToWatch}`).then((res) => {
             setDataToSend(res.data.form);
             setQuestions(res.data.form.questions);
             if (departmentsToShow) {
-                dispatch(setLoading(false))
+                dispatch(setSmallLoading(false))
             }
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon: 'error',
                 title: 'OOps..',
@@ -66,14 +66,14 @@ function EditForm() {
     const [departmentsToShow, SetDepartmentsToShow] = useState(null);
 
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`).then((res) => {
             SetDepartmentsToShow(res.data.data);
             if (questions) {
-                dispatch(setLoading(false))
+                dispatch(setSmallLoading(false))
             }
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon: 'error',
                 title: 'OOps..',
@@ -108,9 +108,9 @@ function EditForm() {
 
     const makeRequest = () => {
         if (dataToSend?.questions.length > 0) {
-            dispatch(setLoading(true))
-            axios.put(`${process.env.REACT_APP_BACKEND_URL}/update-form`, dataToSend, { headers: { Authorization: `${user._id}` } }).then(() => {
-                dispatch(setLoading(false))
+            dispatch(setSmallLoading(true))
+            axios.put(`${process.env.REACT_APP_BACKEND_URL}/update-form`, {...dataToSend, updatedBy : user.Name }).then(() => {
+                dispatch(setSmallLoading(false))
                 setDataToSend(null);
                 Swal.fire({
                     title: 'Success',
@@ -125,7 +125,7 @@ function EditForm() {
                 })
 
             }).catch(err => {
-                dispatch(setLoading(false));
+                dispatch(setSmallLoading(false));
                 Swal.fire({
                     icon: 'error',
                     title: 'OOps..',

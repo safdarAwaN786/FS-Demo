@@ -13,7 +13,7 @@ import { BsArrowLeftCircle } from 'react-icons/bs'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateTabData } from '../../redux/slices/tabSlice'
 import { changeId } from '../../redux/slices/idToProcessSlice'
-import { setLoading } from '../../redux/slices/loading'
+import { setSmallLoading } from '../../redux/slices/loading'
 
 function Info() {
     const [alert, setalert] = useState(false)
@@ -29,13 +29,13 @@ function Info() {
     const idToWatch = useSelector(state => state.idToProcess)
 
     useEffect(() => {
-        dispatch(setLoading(true));
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readMonthlyPlan`, { headers: { Authorization: `${user._id}` } }).then((response) => {
+        dispatch(setSmallLoading(true));
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readMonthlyPlan`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
             const assignedTrainingsList = response.data.data;
             setassignedTrainingToShow(assignedTrainingsList.find((training) => training._id === idToWatch));
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon : 'error',
                 title : 'OOps..',
@@ -58,16 +58,16 @@ function Info() {
 
     const makeRequest = () => {
         if (images) {
-            dispatch(setLoading(true))
+            dispatch(setSmallLoading(true))
             const formData = new FormData();
             formData.append("planId", idToWatch);
             images.forEach((image, index) => {
                 formData.append("Images", image); // Use the correct field name "Images"
             });
             console.log(formData);
-            axios.patch(`${process.env.REACT_APP_BACKEND_URL}/upload-images`, formData, { headers: { Authorization: `${user._id}` } }).then(() => {
+            axios.patch(`${process.env.REACT_APP_BACKEND_URL}/upload-images`, formData).then(() => {
                 console.log("request made !");
-                dispatch(setLoading(false))
+                dispatch(setSmallLoading(false))
                 Swal.fire({
                     title: 'Success',
                     text: 'Images Uploaded successfully',
@@ -75,7 +75,7 @@ function Info() {
                     confirmButtonText: 'Ok.',
                 })
             }).catch(err => {
-                dispatch(setLoading(false));
+                dispatch(setSmallLoading(false));
                 Swal.fire({
                     icon : 'error',
                     title : 'OOps..',
@@ -98,12 +98,12 @@ function Info() {
         try {
             if (imageURL) {
 
-                dispatch(setLoading(true))
+                dispatch(setSmallLoading(true))
                 const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/download-image`, {
                     params: {
                         url: imageURL,
                     },
-                    responseType: 'blob', headers: { Authorization: `${user._id}` } // Specify the response type as 'blob' to handle binary data
+                    responseType: 'blob' // Specify the response type as 'blob' to handle binary data
                 });
 
 
@@ -121,7 +121,7 @@ function Info() {
 
                 // Append the anchor element to the document body and click it to trigger the download
                 document.body.appendChild(link);
-                dispatch(setLoading(false))
+                dispatch(setSmallLoading(false))
                 link.click();
                 // Clean up by removing the temporary anchor element
                 document.body.removeChild(link);
@@ -133,7 +133,7 @@ function Info() {
                 })
             }
         } catch (error) {
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
             Swal.fire({
                 icon: 'error',
                 title: 'OOps..',
@@ -144,9 +144,6 @@ function Info() {
     };
     return (
         <>
-
-
-            <div className={style.subparent}>
                 <div className='d-flex flex-row px-4'>
                     <BsArrowLeftCircle role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
                         {
@@ -315,8 +312,6 @@ function Info() {
                     )}
 
                 </div>
-
-            </div>
 
             {
                 alert ?

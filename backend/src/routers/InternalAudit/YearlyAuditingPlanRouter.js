@@ -2,21 +2,19 @@ const express = require('express');
 const YearlyAuditPlan = require('../../models/InternalAudit/YearlyAuditingPlanModel')
 const ProcessOwner = require('../../models/InternalAudit/ProcessOwnerModel')
 const router = new express.Router();
-const authMiddleware = require('../../middleware/auth');
+// const authMiddleware = require('../../middleware/auth');
 
-router.use(authMiddleware);
+// router.use(authMiddleware);
 
 // * POST YearlyAuditPlan Data Into MongoDB Database
 router.post('/addYearlyAuditPlan',  async (req, res) => {
     console.log(req.body);
     try {
 
-        const yearlyAuditPlanAll = await YearlyAuditPlan.find({
+        const yearlyAuditPlan = await YearlyAuditPlan.find({
             Year: req.body.Year,
-        }).populate('User');
-        console.log(yearlyAuditPlanAll);
-
-        const yearlyAuditPlan = yearlyAuditPlanAll?.find(Obj => Obj.User.Department.equals(req.user.Department));
+            UserDepartment : req.header('Authorization')
+        }).populate('UserDepartment');
 
         if (yearlyAuditPlan) {
             return res.status(303).send({
@@ -25,12 +23,12 @@ router.post('/addYearlyAuditPlan',  async (req, res) => {
             });
         }
 
-        const createdBy = req.user.Name;
+       
         const newYearlyPlan = new YearlyAuditPlan({
             ...req.body,
-            CreatedBy: createdBy,
+            CreatedBy: req.body.createdBy,
             CreationDate: new Date(),
-            User : req.user._id
+            UserDepartment : req.header('Authorization')
         });
 
         // const auditsByProcess = {}; // To store the count of audits for each process
@@ -95,7 +93,7 @@ router.post('/addYearlyAuditPlan',  async (req, res) => {
 router.get('/readYearlyAuditPlan',  async (req, res) => {
     console.log('Request made for yearly audit plans');
     try {
-        const yearlyAuditPlans = await YearlyAuditPlan.find().populate({
+        const yearlyAuditPlans = await YearlyAuditPlan.find({UserDepartment : req.header('Authorization')}).populate({
             path: 'Selected',
             populate: {
                 path: 'Process',
@@ -105,15 +103,15 @@ router.get('/readYearlyAuditPlan',  async (req, res) => {
                     model : 'User'
                 }
             }
-        }).populate('User');
+        }).populate('UserDepartment');
 
         
-        const yearlyAuditPlansToSend = yearlyAuditPlans.filter(Obj => Obj.User.Department.equals(req.user.Department));
+       
 
         res.status(200).json({
             status: true,
             message: 'Yearly Audit Plans retrieved successfully',
-            data: yearlyAuditPlansToSend
+            data: yearlyAuditPlans
         });
 
         console.log(new Date().toLocaleString() + ' GET YearlyAuditPlan Successfully!');
@@ -137,7 +135,7 @@ router.get('/readYearlyAuditPlanById/:planId',  async (req, res) => {
                 path: 'Process',
                 model: 'ProcessOwner'
             }
-        }).populate('User');
+        }).populate('UserDepartment');
 
         console.log(new Date().toLocaleString() + ' ' + 'Loading YearlyAuditPlan...')
         const totalCollections = await yearlyAuditPlan.length

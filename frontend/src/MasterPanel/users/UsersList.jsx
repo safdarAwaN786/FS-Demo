@@ -6,7 +6,7 @@ import Swal from 'sweetalert2';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { changeId } from '../../redux/slices/idToProcessSlice';
-import { setLoading } from '../../redux/slices/loading';
+import { setSmallLoading } from '../../redux/slices/loading';
 
 function UsersList() {
     const [alert, setalert] = useState(false);
@@ -28,13 +28,13 @@ function UsersList() {
     const [allDataArr, setAllDataArr] = useState(null);
     const idToWatch = useSelector(state => state.idToProcess);
     useEffect(() => {
-        dispatch(setLoading(true));
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-usersByDepartment/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((response) => {
-            dispatch(setLoading(false));
+        dispatch(setSmallLoading(true));
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-usersByDepartment/${idToWatch}`).then((response) => {
+            dispatch(setSmallLoading(false));
             setAllDataArr(response.data.data);
             setUsersList(response.data.data.slice(startIndex, endIndex));
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon : 'error',
                 title : 'OOps..',
@@ -44,13 +44,13 @@ function UsersList() {
     }, [])
 
     const refreshData = () => {
-        dispatch(setLoading(true));
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-usersByDepartment/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((response) => {
-            dispatch(setLoading(false))
+        dispatch(setSmallLoading(true));
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-usersByDepartment/${idToWatch}`).then((response) => {
+            dispatch(setSmallLoading(false))
             setAllDataArr(response.data.data);
             setUsersList(response.data.data.slice(startIndex, endIndex));
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon : 'error',
                 title : 'OOps..',
@@ -96,7 +96,6 @@ function UsersList() {
 
     return (
         <>
-            <div className={style.subparent}>
                 <div className={style.searchbar}>
                     <div className={style.sec1}>
                         <img src={Search} alt="" />
@@ -211,7 +210,6 @@ function UsersList() {
                         </button>
                     )}
                 </div>
-            </div>
 
             {
                 showBox && (
@@ -248,7 +246,7 @@ function UsersList() {
                             <div className={style.alertbtns}>
                                 <button onClick={() => {
                                     alertManager();
-                                    axios.patch(`/suspend-user/${userIdForAccess}`, null, { headers: { Authorization: `${user._id}` } }).then((res) => {
+                                    axios.patch(`/suspend-user/${userIdForAccess}`, null).then((res) => {
                                         refreshData();
                                         Swal.fire({
                                             title: 'Success',
@@ -284,7 +282,7 @@ function UsersList() {
                             <div className={style.alertbtns}>
                                 <button onClick={() => {
                                     setalert2(false);
-                                    axios.patch(`/reassign-access/${userIdForAccess}`, null, { headers: { Authorization: `${user._id}` } }).then((res) => {
+                                    axios.patch(`/reassign-access/${userIdForAccess}`, null).then((res) => {
                                         refreshData();
                                         Swal.fire({
                                             title: 'Success',

@@ -8,7 +8,7 @@ import Swal from 'sweetalert2'
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { changeId } from '../../redux/slices/idToProcessSlice';
-import { setLoading } from '../../redux/slices/loading';
+import { setSmallLoading } from '../../redux/slices/loading';
 
 function DocumentsList() {
 
@@ -31,13 +31,13 @@ function DocumentsList() {
     const [departmentsToShow, SetDepartmentsToShow] = useState(null);
     const [documentToProcess, setDocumentToProcess] = useState(null);
     const refreshData = () => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-documents`, { headers: { Authorization: `${user._id}` } }).then((response) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-documents`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
             setAllDataArr(response.data.data)
             setDocumentsList(response.data.data.slice(startIndex, endIndex));
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon: 'error',
                 title: 'OOps..',
@@ -47,12 +47,12 @@ function DocumentsList() {
     }
 
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`).then((res) => {
             SetDepartmentsToShow(res.data.data);
 
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon: 'error',
                 title: 'OOps..',
@@ -61,13 +61,13 @@ function DocumentsList() {
         })
     }, [])
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-documents`, { headers: { Authorization: `${user._id}` } }).then((response) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-documents`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
             setAllDataArr(response.data.data)
             setDocumentsList(response.data.data.slice(startIndex, endIndex));
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon: 'error',
                 title: 'OOps..',
@@ -106,7 +106,6 @@ function DocumentsList() {
 
     return (
         <>
-            <div className={style.subparent}>
 
                 <div className={style.searchbar}>
                     <div className={style.sec1}>
@@ -308,7 +307,6 @@ function DocumentsList() {
                         </button>
                     )}
                 </div>
-            </div>
 
             {
                 showBox && (
@@ -331,9 +329,9 @@ function DocumentsList() {
                             <p class={style.msg}>Do you want to Approve this Document?</p>
                             <div className={style.alertbtns}>
                                 <button onClick={() => {
-                                    dispatch(setLoading(true))
-                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/approve-document`, { id: idForAction }, { headers: { Authorization: `${user._id}` } }).then(() => {
-                                        dispatch(setLoading(false))
+                                    dispatch(setSmallLoading(true))
+                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/approve-document`, { id: idForAction, approvedBy : user.Name }).then(() => {
+                                        dispatch(setSmallLoading(false))
                                         refreshData();
                                         Swal.fire({
                                             title: 'Success',
@@ -343,7 +341,7 @@ function DocumentsList() {
                                         });
                                         setApprove(false);
                                     }).catch(err => {
-                                        dispatch(setLoading(false));
+                                        dispatch(setSmallLoading(false));
                                         Swal.fire({
                                             icon: 'error',
                                             title: 'OOps..',
@@ -368,9 +366,9 @@ function DocumentsList() {
                             <div className={style.alertbtns}>
                                 <button onClick={() => {
                                     setReview(false);
-                                    dispatch(setLoading(true))
-                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/review-document`, { documentId: idForAction }, { headers: { Authorization: `${user._id}` } }).then(() => {
-                                        dispatch(setLoading(false))
+                                    dispatch(setSmallLoading(true))
+                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/review-document`, { documentId: idForAction, reviewedBy : user.Name }).then(() => {
+                                        dispatch(setSmallLoading(false))
                                         refreshData();
                                         Swal.fire({
                                             title: 'Success',
@@ -379,7 +377,7 @@ function DocumentsList() {
                                             confirmButtonText: 'Go!',
                                         });
                                     }).catch(err => {
-                                        dispatch(setLoading(false));
+                                        dispatch(setSmallLoading(false));
                                         Swal.fire({
                                             icon: 'error',
                                             title: 'OOps..',
@@ -404,9 +402,9 @@ function DocumentsList() {
                             <form onSubmit={(e) => {
                                 e.preventDefault();
                                 setDisApprove(false);
-                                dispatch(setLoading(true))
-                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/disapprove-document`, { documentId: idForAction, reason: reason }, { headers: { Authorization: `${user._id}` } }).then(() => {
-                                    dispatch(setLoading(false))
+                                dispatch(setSmallLoading(true))
+                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/disapprove-document`, { documentId: idForAction, reason: reason, disapprovedBy : user.Name }).then(() => {
+                                    dispatch(setSmallLoading(false))
                                     Swal.fire({
                                         title: 'Success',
                                         text: 'DisApproved Successfully',
@@ -415,7 +413,7 @@ function DocumentsList() {
                                     })
                                     refreshData();
                                 }).catch(err => {
-                                    dispatch(setLoading(false));
+                                    dispatch(setSmallLoading(false));
                                     Swal.fire({
                                         icon: 'error',
                                         title: 'OOps..',
@@ -444,9 +442,9 @@ function DocumentsList() {
                             <form onSubmit={(e) => {
                                 e.preventDefault();
                                 setReject(false);
-                                dispatch(setLoading(true))
-                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/reject-document`, { documentId: idForAction, reason: reason }, { headers: { Authorization: `${user._id}` } }).then(() => {
-                                    dispatch(setLoading(false))
+                                dispatch(setSmallLoading(true))
+                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/reject-document`, { documentId: idForAction, reason: reason, rejectedBy : user.Name }).then(() => {
+                                    dispatch(setSmallLoading(false))
                                     Swal.fire({
                                         title: 'Success',
                                         text: 'Rejected Successfully',
@@ -455,7 +453,7 @@ function DocumentsList() {
                                     })
                                     refreshData();
                                 }).catch(err => {
-                                    dispatch(setLoading(false));
+                                    dispatch(setSmallLoading(false));
                                     Swal.fire({
                                         icon: 'error',
                                         title: 'OOps..',
@@ -484,9 +482,9 @@ function DocumentsList() {
                             <form onSubmit={(e) => {
                                 e.preventDefault();
                                 if (documentToProcess?.SendToDepartments.length > 0) {
-                                    dispatch(setLoading(true))
-                                    axios.put(`${process.env.REACT_APP_BACKEND_URL}/send-form`, documentToProcess, { headers: { Authorization: `${user._id}` } }).then(() => {
-                                        dispatch(setLoading(false))
+                                    dispatch(setSmallLoading(true))
+                                    axios.put(`${process.env.REACT_APP_BACKEND_URL}/send-form`, documentToProcess).then(() => {
+                                        dispatch(setSmallLoading(false))
                                         setDocumentToProcess(null);
                                         setSend(false)
                                         Swal.fire({
@@ -494,11 +492,9 @@ function DocumentsList() {
                                             text: 'Sended Successfully',
                                             icon: 'success',
                                             confirmButtonText: 'Go!',
-
                                         })
-
                                     }).catch(err => {
-                                        dispatch(setLoading(false));
+                                        dispatch(setSmallLoading(false));
                                         setSend(false)
                                         Swal.fire({
                                             icon: 'error',

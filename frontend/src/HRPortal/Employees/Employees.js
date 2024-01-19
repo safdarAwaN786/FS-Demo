@@ -8,7 +8,7 @@ import Cookies from 'js-cookie'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateTabData } from '../../redux/slices/tabSlice'
 import { changeId } from '../../redux/slices/idToProcessSlice'
-import { setLoading } from '../../redux/slices/loading'
+import { setSmallLoading } from '../../redux/slices/loading'
 import Swal from 'sweetalert2'
 
 function Employees() {
@@ -27,13 +27,13 @@ function Employees() {
     const user = useSelector(state => state.auth.user);
     const [allDataArr, setAllDataArr] = useState(null);
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readEmployee`, { headers: { Authorization: `${user._id}` } }).then((response) => {
-            dispatch(setLoading(false))
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readEmployee`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
+            dispatch(setSmallLoading(false))
             setAllDataArr(response.data.data);
             setEmployeesList(response.data.data.slice(startIndex, endIndex))
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon: 'error',
                 title: 'OOps..',
@@ -61,7 +61,7 @@ function Employees() {
         try {
             if (imageURL) {
 
-                dispatch(setLoading(true))
+                dispatch(setSmallLoading(true))
                 const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/download-image`, {
                     params: {
                         url: imageURL,
@@ -84,7 +84,7 @@ function Employees() {
 
                 // Append the anchor element to the document body and click it to trigger the download
                 document.body.appendChild(link);
-                dispatch(setLoading(false))
+                dispatch(setSmallLoading(false))
                 link.click();
                 // Clean up by removing the temporary anchor element
                 document.body.removeChild(link);
@@ -96,7 +96,7 @@ function Employees() {
                 })
             }
         } catch (error) {
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
             Swal.fire({
                 icon: 'error',
                 title: 'OOps..',
@@ -126,10 +126,6 @@ function Employees() {
 
     return (
         <>
-
-
-            <div className={style.subparent}>
-
                 <div className={style.searchbar}>
                     <div className={style.sec1}>
                         <img src={Search} alt="" />
@@ -253,7 +249,6 @@ function Employees() {
                         </button>
                     )}
                 </div>
-            </div>
 
             {
                 alert ?

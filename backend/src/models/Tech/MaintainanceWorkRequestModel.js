@@ -11,9 +11,9 @@ const workRequestSchema = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Machinery'
   },
-  User: {
+  UserDepartment: {
     type: Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'Department',
   },
 
   Date: {

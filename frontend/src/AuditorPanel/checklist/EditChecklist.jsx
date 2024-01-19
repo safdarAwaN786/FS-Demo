@@ -8,7 +8,7 @@ import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import Select from 'react-select';
-import { setLoading } from '../../redux/slices/loading';
+import { setSmallLoading } from '../../redux/slices/loading';
 
 function EditChecklist() {
 
@@ -21,15 +21,15 @@ function EditChecklist() {
     const dispatch = useDispatch();
     const idToWatch = useSelector(state => state.idToProcess);
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/getChecklistById/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((response) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/getChecklistById/${idToWatch}`).then((response) => {
             setDataToSend(response.data.data);
             setQuestions(response.data.data.ChecklistQuestions);
             if (departmentsToShow) {
-                dispatch(setLoading(false))
+                dispatch(setSmallLoading(false))
             }
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon: 'error',
                 title: 'OOps..',
@@ -65,14 +65,14 @@ function EditChecklist() {
     const [departmentsToShow, SetDepartmentsToShow] = useState(null);
 
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`).then((res) => {
             SetDepartmentsToShow(res.data.data);
             if (questions) {
-                dispatch(setLoading(false))
+                dispatch(setSmallLoading(false))
             }
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon: 'error',
                 title: 'OOps..',
@@ -116,12 +116,12 @@ function EditChecklist() {
     }, [dataToSend])
     const makeRequest = () => {
         if (dataToSend) {
-            dispatch(setLoading(true))
-            axios.put(`${process.env.REACT_APP_BACKEND_URL}/updateChecklist`, dataToSend, { headers: { Authorization: `${user._id}` } }).then(() => {
+            dispatch(setSmallLoading(true))
+            axios.put(`${process.env.REACT_APP_BACKEND_URL}/updateChecklist`, dataToSend).then(() => {
                 console.log("request made !");
                 setDataToSend(null);
                 setQuestions([])
-                dispatch(setLoading(false));
+                dispatch(setSmallLoading(false));
                 Swal.fire({
                     title: 'Success',
                     text: 'Submitted Successfully',
@@ -135,7 +135,7 @@ function EditChecklist() {
                 })
 
             }).catch(err => {
-                dispatch(setLoading(false));
+                dispatch(setSmallLoading(false));
                 Swal.fire({
                     icon : 'error',
                     title : 'OOps..',

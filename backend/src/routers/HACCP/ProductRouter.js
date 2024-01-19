@@ -1,23 +1,24 @@
 const express = require('express');
 const router = express.Router();
 const Product = require('../../models/HACCP/ProductModel');
+const user = require('../../models/AccountCreation/UserModel');
 // const authMiddleWare = require('../../middleware/auth');
 // router.use(authMiddleWare); // Perform authentication checks using the attached user information
 
 // * Create a new Product document
 router.post('/create-product', async (req, res) => {
   try {
-
-    console.log(req.body);
+    const requestUser = await user.findById(req.header('Authorization')).populate('Company Department')
 
     const productData = req.body;
-    const createdBy = req.user.Name
+    const createdBy = req.body.createdBy
     const createdProduct = new Product({
       ...productData,
       CreatedBy: createdBy,
       CreationDate: new Date(),
       ProductDetails: req.body.ProductDetails,
-      User: req.user._id
+      UserDepartment: requestUser.Department._id,
+      User : requestUser
     });
     console.log(createdProduct);
 
@@ -37,9 +38,9 @@ router.post('/create-product', async (req, res) => {
 router.get('/get-all-products', async (req, res) => {
   try {
 
-    const products = await Product.find().populate('Department').populate({
-      path: 'User',
-      model: 'User'
+    const products = await Product.find({UserDepartment : req.header('Authorization')}).populate('Department').populate({
+      path: 'UserDepartment',
+      model: 'Department'
     });
 
     if (!products) {
@@ -47,11 +48,10 @@ router.get('/get-all-products', async (req, res) => {
       return res.status(404).json({ message: 'Product documents not found' });
     }
 
-    const productsToSend = products.filter((productObj) => productObj.User.Department.equals(req.user.Department));
-    console.log(productsToSend);
+   
 
     console.log('Product documents retrieved successfully');
-    res.status(200).json({ status: true, data: productsToSend });
+    res.status(200).json({ status: true, data: products });
 
   } catch (error) {
     console.error(error);
@@ -66,8 +66,8 @@ router.get('/get-product/:productId', async (req, res) => {
     const productId = req.params.productId;
     console.log(req.params);
     const product = await Product.findById(productId).populate('Department').populate({
-      path: 'User',
-      model: 'User'
+      path: 'UserDepartment',
+      model: 'Department'
     });;
     if (!product) {
       console.log(`Product document with ID: ${productId} not found`);
@@ -157,7 +157,7 @@ router.patch('/update-product/:productId', async (req, res) => {
 
     const updates = {
       ...req.body,
-      UpdatedBy: req.user.Name,
+      UpdatedBy: req.body.updatedBy,
       UpdationDate: new Date(),
       Status: 'Pending'
     };
@@ -178,7 +178,7 @@ router.patch('/update-product/:productId', async (req, res) => {
 router.patch('/approve-product', async (req, res) => {
   try {
 
-    const approvedBy = req.user.Name
+    const approvedBy = req.body.approvedBy
     const productId = req.body.id;
 
     // Find the product by ID
@@ -222,7 +222,7 @@ router.patch('/disapprove-product', async (req, res) => {
 
     const productId = req.body.id;
     const Reason = req.body.Reason;
-    const disapprovedBy = req.user.Name;
+    const disapprovedBy = req.body.disapprovedBy;
     // Find the product by ID
     const product = await Product.findById(productId);
 

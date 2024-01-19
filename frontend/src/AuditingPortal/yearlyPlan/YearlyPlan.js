@@ -6,7 +6,7 @@ import axios from 'axios'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateTabData } from '../../redux/slices/tabSlice'
 import { changeId } from '../../redux/slices/idToProcessSlice';
-import { setLoading } from '../../redux/slices/loading'
+import { setSmallLoading } from '../../redux/slices/loading'
 import Swal from 'sweetalert2'
 
 function YearlyPlanAuditing() {
@@ -19,14 +19,14 @@ function YearlyPlanAuditing() {
     const dispatch = useDispatch();
     const user = useSelector(state => state.auth.user);
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readYearlyAuditPlan`, { headers: { Authorization: `${user._id}` } }).then((response) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readYearlyAuditPlan`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
             console.log(response.data);
             setAllDataArr(response.data.data);
             setYearlyPlans(response.data.data.slice(startIndex, endIndex));
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon : 'error',
                 title : 'OOps..',
@@ -77,7 +77,8 @@ function YearlyPlanAuditing() {
     return (
 
 
-        <div className={style.subparent}>
+  <>
+
             <div className={style.searchbar}>
                 <div className={style.sec1}>
                     <img src={Search} alt="" />
@@ -140,7 +141,8 @@ function YearlyPlanAuditing() {
                     </button>
                 )}
             </div>
-        </div>
+  </>
+        
 
     )
 }

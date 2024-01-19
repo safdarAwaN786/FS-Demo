@@ -5,7 +5,7 @@ import Swal from 'sweetalert2'
 import { BsArrowLeftCircle } from 'react-icons/bs';
 import { useDispatch, useSelector } from 'react-redux'
 import { updateTabData } from '../../redux/slices/tabSlice'
-import { setLoading } from '../../redux/slices/loading'
+import { setSmallLoading } from '../../redux/slices/loading'
 
 function AddAuditingYearlyPlan() {
     const [dataToSend, setDataToSend] = useState(null)
@@ -60,13 +60,13 @@ function AddAuditingYearlyPlan() {
     }
     const [allDataArr, setAllDataArr] = useState(null);
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readProcess`, { headers: { Authorization: `${user._id}` } }).then((response) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readProcess`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
             setAllDataArr(response.data.data)
             setProcesses(response.data.data.slice(startIndex, endIndex));
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon: 'error',
                 title: 'OOps..',
@@ -76,10 +76,10 @@ function AddAuditingYearlyPlan() {
     }, [])
     const makeRequest = () => {
         if (dataToSend.Year !== '' && dataToSend.Selected.lenght !== 0) {
-            dispatch(setLoading(true))
-            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addYearlyAuditPlan`, dataToSend, { headers: { Authorization: `${user._id}` } }).then(() => {
+            dispatch(setSmallLoading(true))
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addYearlyAuditPlan`, {...dataToSend, createdBy : user.Name}, { headers: { Authorization: `${user.Department._id}` } }).then(() => {
                 setDataToSend(null);
-                dispatch(setLoading(false))
+                dispatch(setSmallLoading(false))
                 Swal.fire({
                     title: 'Success',
                     text: 'Submitted Successfully',
@@ -91,7 +91,7 @@ function AddAuditingYearlyPlan() {
                     }
                 })
             }).catch((error) => {
-                dispatch(setLoading(false))
+                dispatch(setSmallLoading(false))
                 if (error.response.status === 303) {
                     Swal.fire({
                         icon: 'error',
@@ -120,7 +120,7 @@ function AddAuditingYearlyPlan() {
 
     return (
         <>
-            <div className={style.subparent}>
+           
                 <form onSubmit={(event) => {
                     event.preventDefault();
                     console.log(yearlyPlanData)
@@ -212,7 +212,7 @@ function AddAuditingYearlyPlan() {
                         }} type='submit' className='mb-3' >Submit</button>
                     </div>
                 </form>
-            </div>
+        
             {
                 alert ?
                     <div class={style.alertparent}>

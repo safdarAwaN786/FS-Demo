@@ -5,7 +5,7 @@ import axios from 'axios'
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { changeId } from '../../redux/slices/idToProcessSlice';
-import { setLoading } from '../../redux/slices/loading';
+import { setSmallLoading } from '../../redux/slices/loading';
 import Swal from 'sweetalert2';
 
 function PendingTasks() {
@@ -18,15 +18,15 @@ function PendingTasks() {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readMonthlyPlan`, { headers: { Authorization: `${user._id}` } }).then((Response) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readMonthlyPlan`, { headers: { Authorization: `${user.Department._id}` } }).then((Response) => {
             const plannedTrainingsList = Response.data.data;
             const assignedTrainingsArr = plannedTrainingsList.filter((training)=> training.Assigned === true && training.TrainingResultStatus === 'Not Conducted' && training.Trainer._id == user._id);
             setAllDataArr(assignedTrainingsArr);
             setAssignedtrainings(assignedTrainingsArr.slice(startIndex, endIndex));
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon : 'error',
                 title : 'OOps..',
@@ -70,7 +70,7 @@ function PendingTasks() {
 
     return (
         
-            <div className={style.subparent}>
+            <>
                 <div className={style.searchbar}>
                     <div className={style.sec1}>
                         <img src={Search} alt="" />
@@ -127,7 +127,7 @@ function PendingTasks() {
                         </button>
                     )}
                 </div>
-            </div>
+            </>
         
     )
 }

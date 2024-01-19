@@ -10,9 +10,9 @@ const UploadDocumentsSchema = new mongoose.Schema({
   DocumentName: {
     type: String
   },
-  User : {
+  UserDepartment : {
     type : Schema.Types.ObjectId,
-    ref : 'User'
+    ref : 'Department'
   },
 
   DocumentId: {
@@ -116,21 +116,13 @@ const UploadDocumentsSchema = new mongoose.Schema({
 
 UploadDocumentsSchema.pre('save', async function (next) {
   try {
-    const department = await DepartmentModel.findById(this.Department);
+    const department = await DepartmentModel.findById(this.Department).populate('Company');
 
     if (!department) {
       throw new Error('Department not found');
     }
 
-    const user = await UserModel.findById(this.User); // Assuming you attach the user object to the request before calling this middleware
-    if (!user) {
-      throw new Error('User not found');
-    }
-
-    const company = await Company.findById(user.Company);
-    if (!company) {
-      throw new Error('Company not found');
-    }
+  
 
     const documentTypeNumber = { 'Manuals': 1, 'Procedures': 2, 'SOPs': 3, 'Forms': 4 }[this.DocumentType];
     if (!documentTypeNumber) {
@@ -149,7 +141,7 @@ UploadDocumentsSchema.pre('save', async function (next) {
       nextNumericPart = parseInt(parts[3]) + 1;
     }
 
-    this.DocumentId = `${company.ShortName}/${department.ShortName}/${documentTypeNumber}/${nextNumericPart}`;
+    this.DocumentId = `${department.Company.ShortName}/${department.ShortName}/${documentTypeNumber}/${nextNumericPart}`;
     next();
   } catch (error) {
     next(error);

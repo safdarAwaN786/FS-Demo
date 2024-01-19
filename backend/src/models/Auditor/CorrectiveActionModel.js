@@ -9,9 +9,9 @@ const CorrectiveActionSchema = new mongoose.Schema({
         ref: 'Reports',
         required: true,
     },
-    User : {
+    UserDepartment : {
         type : Schema.Types.ObjectId,
-        ref : 'User'
+        ref : 'UserDepartment'
     },
 
     Answers: [{

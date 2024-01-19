@@ -3,13 +3,13 @@ const router = express.Router();
 const Form = require('../../models/Admin/ListOfFormsModel').ListOfForms;
 const { QuestionModel } = require('../../models/Admin/ListOfFormsModel');
 const authMiddleware = require('../../middleware/auth');
-router.use(authMiddleware);
+// router.use(authMiddleware);
 
 // * Route to create a new form
 router.post('/create-form', async (req, res) => {
   try {
 
-    const createdBy = req.user.Name;
+    const createdBy = req.body.createdBy;
 
     const createdQuestions = await QuestionModel.create(req.body.questions);
     const questionsArr = Object.values(createdQuestions);
@@ -20,7 +20,7 @@ router.post('/create-form', async (req, res) => {
     const createdForm = new Form({
       ...req.body,
       CreatedBy: createdBy,
-      User: req.user._id,
+      UserDepartment: req.header('Authorization'),
       questions: questionsIds,
     });
 
@@ -40,7 +40,7 @@ router.get('/get-form-by-id/:formId', async (req, res) => {
   try {
 
     const formId = req.params.formId;
-    const form = await Form.findById(formId).populate('Department User').populate({
+    const form = await Form.findById(formId).populate('Department UserDepartment').populate({
       path: 'questions',
       model: 'Question'
     })
@@ -62,8 +62,8 @@ router.get('/get-form-by-id/:formId', async (req, res) => {
 // * Route to get all forms
 router.get('/get-all-forms', async (req, res) => {
   try {
-
-    const forms = await Form.find().populate('Department User').populate({
+    const departmentId = req.header('Authrization')
+    const forms = await Form.find({UserDepartment : departmentId}).populate('Department UserDepartment').populate({
       path: 'questions',
       model: 'Question'
     })
@@ -72,10 +72,8 @@ router.get('/get-all-forms', async (req, res) => {
       console.log('Form not found');
       return res.status(404).json({ message: 'Form not found' });
     }
-
-    const formsToSend = forms.filter(Obj => Obj.User.Department.equals(req.user.Department))
     console.log('Form retrieved successfully');
-    res.status(200).json({ status: true, forms: formsToSend });
+    res.status(200).json({ status: true, forms: forms });
 
   } catch (error) {
     console.error(error);
@@ -85,8 +83,8 @@ router.get('/get-all-forms', async (req, res) => {
 // * Route to get all forms
 router.get('/get-forms-to-fill', async (req, res) => {
   try {
-
-    const forms = await Form.find().populate('Department User').populate({
+    const departmentId = req.header('Authorization')
+    const forms = await Form.find({Status : 'Approved'}).populate('Department UserDepartment').populate({
       path: 'questions',
       model: 'Question'
     })
@@ -97,7 +95,7 @@ router.get('/get-forms-to-fill', async (req, res) => {
     }
 
     const formsToSend = forms.filter(Obj =>
-      Obj.SendToDepartments.includes(req.user.Department)
+      Obj.SendToDepartments.includes(departmentId)
     )
     console.log('Form retrieved successfully');
     res.status(200).json({ status: true, forms: formsToSend });
@@ -112,7 +110,7 @@ router.get('/get-forms-to-fill', async (req, res) => {
 router.put('/update-form', async (req, res) => {
   try {
 
-    const updatedBy = req.user.Name;
+    const updatedBy = req.body.updatedBy;
     const formId = req.body._id;
 
     const form = await Form.findById(formId);
@@ -187,7 +185,7 @@ router.put('/send-form', async (req, res) => {
 router.patch('/reviewForm', async (req, res) => {
   try {
 
-    const reviewedBy = req.user.Name;
+    const reviewedBy = req.body.reviewedBy;
     const formId = req.body.formId;
 
     // Find the document by ID
@@ -221,7 +219,7 @@ router.patch('/reviewForm', async (req, res) => {
 router.patch('/rejectForm', async (req, res) => {
   try {
 
-    const rejectBy = req.user.Name;
+    const rejectBy = req.body.rejectedBy;
     const { formId, reason } = req.body;
 
     // Find the document by ID
@@ -257,7 +255,7 @@ router.patch('/rejectForm', async (req, res) => {
 router.patch('/approveForm', async (req, res) => {
   try {
 
-    const approveBy = req.user.Name;
+    const approveBy = req.body.approveBy;
     const documentId = req.body.id;
 
     // Find the document by ID
@@ -297,7 +295,7 @@ router.patch('/approveForm', async (req, res) => {
 router.patch('/disapproveForm', async (req, res) => {
   try {
 
-    const disapproveBy = req.user.Name;
+    const disapproveBy = req.body.disapproveBy;
     const { formId, reason } = req.body;
 
     // Find the document by ID

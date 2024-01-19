@@ -10,7 +10,7 @@ import Swal from 'sweetalert2'
 import { BsArrowLeftCircle } from 'react-icons/bs';
 import { useDispatch, useSelector } from "react-redux";
 import { updateTabData } from '../../redux/slices/tabSlice'
-import { setLoading } from '../../redux/slices/loading'
+import { setSmallLoading } from '../../redux/slices/loading'
 
 function AddTrainer() {
 
@@ -103,10 +103,10 @@ function AddTrainer() {
     const dispatch = useDispatch();
     const makeRequest = () => {
         if (trainerData !== null) {
-            dispatch(setLoading(true))
+            dispatch(setSmallLoading(true))
             axios.post(`${process.env.REACT_APP_BACKEND_URL}/addTrainer`, trainerData, { headers: { Authorization: `${user._id}` } }).then(() => {
                 setTrainerData(null);
-                dispatch(setLoading(false))
+                dispatch(setSmallLoading(false))
                 Swal.fire({
                     title: 'Success',
                     text: 'Submitted Successfully',
@@ -121,7 +121,7 @@ function AddTrainer() {
                 })
 
             }).catch(err => {
-                dispatch(setLoading(false));
+                dispatch(setSmallLoading(false));
                 Swal.fire({
                     icon : 'error',
                     title : 'OOps..',

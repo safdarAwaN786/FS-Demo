@@ -4,7 +4,7 @@ import axios from "axios";
 import { BsArrowLeftCircle } from 'react-icons/bs'
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
-import { setLoading } from '../../redux/slices/loading';
+import { setSmallLoading } from '../../redux/slices/loading';
 import Swal from 'sweetalert2';
 
 function InternalExernal() {
@@ -22,15 +22,15 @@ function InternalExernal() {
     const idToWatch = useSelector(state => state.isToProcess);
 
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readCalibrationByEquipmentId/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readCalibrationByEquipmentId/${idToWatch}`, { headers: { Authorization: `${user.Department._id}` } }).then((res) => {
             if (res.data.data) {
                 const dataArr = res.data.data;
                 setCallibrationsToShow(dataArr.filter((data) => data.dateType === dateType && data.callibrationType === callibrationType));
             }
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon : 'error',
                 title : 'OOps..',
@@ -41,7 +41,7 @@ function InternalExernal() {
 
     useEffect(()=>{
         if(callibrationsToShow?.length === 0){
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon : 'warning',
                 title : 'OOps..',
@@ -52,8 +52,6 @@ function InternalExernal() {
 
     return (
         <>
-
-            <div className={style.subparent}>
                 <div className='d-flex flex-row bg-white px-lg-5 mx-1 px-2 py-2'>
                     <BsArrowLeftCircle role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
                         {
@@ -109,7 +107,6 @@ function InternalExernal() {
                         dispatch(updateTabData({...tabData, Tab : 'viewCallibration'}))
                     }}>Back</button>
                 </div>
-            </div>
 
             {
                 alert ?

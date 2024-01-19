@@ -12,7 +12,7 @@ const emailTemplates = require('../../EmailTemplates/userMRM.json');
 const template = emailTemplates.newMRMDiscussion;
 const authMiddleware = require('../../middleware/auth');
 
-router.use(authMiddleware);
+// router.use(authMiddleware);
 
 const transporter = nodemailer.createTransport(smtpTransport({
   host: process.env.host,
@@ -34,7 +34,7 @@ router.post('/create-mrm', async (req, res) => {
     // Create a new MRM document
     const createdMRM = new MRM({
       Notification: notification._id,
-      User: req.user._id,
+      UserDepartment: req.header('Authorization'),
       AgendaDetails,
     });
 
@@ -85,7 +85,7 @@ router.post('/create-mrm', async (req, res) => {
 // * Get all MRM documents
 router.get('/get-all-mrms', async (req, res) => {
   try {
-    const mrms = await MRM.find().populate('Notification').populate('User').populate({
+    const mrms = await MRM.find({UserDepartment : req.header('Authorization')}).populate('Notification').populate('UserDepartment').populate({
       path: 'AgendaDetails.Agenda',
       model: 'Agenda'
     }).populate({
@@ -98,15 +98,9 @@ router.get('/get-all-mrms', async (req, res) => {
       return res.status(404).json({ message: 'MRM documents not found' });
     }
 
-    const mrmsToSend = mrms.filter((Obj) => {
-      if (Obj.User.Department.equals(req.user.Department)) {
-        console.log('got Equal');
-        return Obj
-      }
-    });
 
     console.log('MRM documents retrieved successfully');
-    res.status(200).json({ status: true, data: mrmsToSend });
+    res.status(200).json({ status: true, data: mrms });
 
   } catch (error) {
     console.error(error);
@@ -119,7 +113,7 @@ router.get('/get-mrmbyId/:mrmId', async (req, res) => {
   try {
 
     const mrmId = req.params.mrmId;
-    const mrm = await MRM.findById(mrmId).populate('Notification').populate('User').populate({
+    const mrm = await MRM.findById(mrmId).populate('Notification').populate('UserDepartment').populate({
       path: 'AgendaDetails.Agenda',
       model: 'Agenda'
     }).populate({

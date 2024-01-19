@@ -21,9 +21,9 @@ const NotificationSchema = new mongoose.Schema({
         type: String
     },
 
-    User: {
+    UserDepartment: {
         type: Schema.Types.ObjectId,
-        ref: 'User',
+        ref: 'Department',
     },
     MRMNo: {
         type: String

@@ -6,7 +6,7 @@ import { BsArrowLeftCircle } from 'react-icons/bs'
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { changeId } from '../../redux/slices/idToProcessSlice';
-import { setLoading } from '../../redux/slices/loading';
+import { setSmallLoading } from '../../redux/slices/loading';
 
 function AuditsHistory() {
 
@@ -22,14 +22,14 @@ function AuditsHistory() {
     const idToWatch = useSelector(state => state.idToProcess)
     const user = useSelector(state => state.auth?.user);
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-conduct-audits-by-ChecklistId/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-conduct-audits-by-ChecklistId/${idToWatch}`, { headers: { Authorization: `${user.Department._id}` } }).then((res) => {
             console.log(res.data);
             setChecklistResults(res.data.data);
             setChecklistData(res.data.data[0]?.Checklist);
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon : 'error',
                 title : 'OOps..',
@@ -40,7 +40,6 @@ function AuditsHistory() {
 
     return (
         <>
-            <div className={style.subparent}>
                 <div className='mx-lg-5 px-2 mx-md-4 mx-2 mt-5 mb-1 '>
                     <BsArrowLeftCircle onClick={(e) => {
                         dispatch(updateTabData({...tabData, Tab : 'Conduct Audit'}))
@@ -124,7 +123,6 @@ function AuditsHistory() {
                 <div className={style.btnparent}>
                     <button className={style.download}>Download</button>
                 </div>
-            </div>
             {
                 alert ?
                     <div class={style.alertparent}>

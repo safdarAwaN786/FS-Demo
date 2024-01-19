@@ -50,9 +50,9 @@ const ChecklistAnswerModel = mongoose.model('ChecklistAnswer', ChecklistAnswerSc
 
 // * Creation of ConductAudits Schema
 const ConductAuditsSchema = new mongoose.Schema({
-    User: {
+    UserDepartment: {
         type: Schema.Types.ObjectId,
-        ref: 'User'
+        ref: 'Department'
     },
     Checklist: {
         type: Schema.Types.ObjectId,

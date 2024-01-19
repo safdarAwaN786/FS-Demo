@@ -6,7 +6,7 @@ import axios from 'axios'
 import { BsArrowLeftCircle } from 'react-icons/bs'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateTabData } from '../../redux/slices/tabSlice'
-import { setLoading } from '../../redux/slices/loading'
+import { setSmallLoading } from '../../redux/slices/loading'
 import Swal from 'sweetalert2'
 
 function Checked() {
@@ -21,17 +21,17 @@ function Checked() {
     const idToWatch = useSelector(state => state.idToProcess);
 
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readYearlyPlan`, { headers: { Authorization: `${user._id}` } }).then((response) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readYearlyPlan`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
             {
                 const yearlyPlansList = response.data.data;
                 const foundObj = yearlyPlansList.find((plan) => plan._id === idToWatch).Month.find((month) => month.MonthName === monthName);
                 setMonthToShow(foundObj);
                 setMonthTrainings(foundObj.Trainings);
-                dispatch(setLoading(false))
+                dispatch(setSmallLoading(false))
             }
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon : 'error',
                 title : 'OOps..',
@@ -57,7 +57,7 @@ function Checked() {
 
     return (
 
-        <div className={style.subparent}>
+  <>
             <div className='d-flex flex-row px-lg-5  px-2 my-2'>
                 <BsArrowLeftCircle role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
                     {
@@ -125,7 +125,7 @@ function Checked() {
             </div>
             
 
-        </div>
+        </>
 
     )
 }

@@ -6,7 +6,7 @@ import axios from "axios";
 import { BsArrowLeftCircle } from 'react-icons/bs';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
-import { setLoading } from '../../redux/slices/loading';
+import { setSmallLoading } from '../../redux/slices/loading';
 import Swal from 'sweetalert2';
 
 function ViewDepartments() {
@@ -23,13 +23,13 @@ function ViewDepartments() {
     const user = useSelector(state => state.auth.user);
 
     useEffect(() => {
-        dispatch(setLoading(true));
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((response) => {
-            dispatch(setLoading(false));
+        dispatch(setSmallLoading(true));
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${idToWatch}`).then((response) => {
+            dispatch(setSmallLoading(false));
             setAllDataArr(response.data.data)
             setDepartments(response.data.data.slice(startIndex, endIndex));
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon : 'error',
                 title : 'OOps..',
@@ -70,7 +70,6 @@ function ViewDepartments() {
 
     return (
         <>
-            <div className={style.subparent}>
                 <div className='d-flex flex-row px-lg-5 px-2 my-1'>
                     <BsArrowLeftCircle role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
                         {
@@ -137,9 +136,6 @@ function ViewDepartments() {
                         </button>
                     )}
                 </div>
-            </div>
-
-
 
 
 

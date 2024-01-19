@@ -6,7 +6,7 @@ import profile from '../../assets/images/addEmployee/prof.svg'
 import { BsArrowLeftCircle } from 'react-icons/bs'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateTabData } from '../../redux/slices/tabSlice'
-import { setLoading } from '../../redux/slices/loading'
+import { setSmallLoading } from '../../redux/slices/loading'
 import Swal from 'sweetalert2'
 
 function TrainedEmployeesForTrainer() {
@@ -41,17 +41,17 @@ function TrainedEmployeesForTrainer() {
     const [trainedEmployees, setTrainedEmployees] = useState(null);
 
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readMonthlyPlan`, { headers: { Authorization: `${user._id}` } }).then((response) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readMonthlyPlan`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
             const plannedTrainingsList = response.data.data;
             const foundTraining = plannedTrainingsList.find((training) => training._id === idToWatch);
             if (foundTraining) {
                 setTrainingToShow(foundTraining);
                 setTrainedEmployees(foundTraining.Employee?.slice(startIndex, endIndex))
             }
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon : 'error',
                 title : 'OOps..',
@@ -84,8 +84,6 @@ function TrainedEmployeesForTrainer() {
 
     return (
         <>
-
-            <div className={style.subparent}>
                 <div className='d-flex flex-row px-4 mt-5 mb-1'>
                     <BsArrowLeftCircle role='button' className='fs-3  text-danger' onClick={(e) => {
                         {
@@ -228,8 +226,6 @@ function TrainedEmployeesForTrainer() {
                         </button>
                     )}
                 </div>
-
-            </div>
 
             {
                 alert ?

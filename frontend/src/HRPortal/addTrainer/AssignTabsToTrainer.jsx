@@ -5,7 +5,7 @@ import axios from "axios";
 import Swal from 'sweetalert2'
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
-import { setLoading } from '../../redux/slices/loading';
+import { setSmallLoading } from '../../redux/slices/loading';
 
 function AssignTabsToTrainer() {
 
@@ -79,9 +79,9 @@ function AssignTabsToTrainer() {
 
     const makeRequest = () => {
         if (dataToSend.Tabs.length > 0) {
-            dispatch(setLoading(true))
-            axios.patch(`${process.env.REACT_APP_BACKEND_URL}/assign-tabs/${idToWatch}`, dataToSend, { headers: { Authorization: `${user._id}` } }).then(() => {
-                dispatch(setLoading(false))
+            dispatch(setSmallLoading(true))
+            axios.patch(`${process.env.REACT_APP_BACKEND_URL}/assign-tabs/${idToWatch}`, dataToSend).then(() => {
+                dispatch(setSmallLoading(false))
                 setDataToSend(null);
                 Swal.fire({
                     title: 'Success',
@@ -94,7 +94,7 @@ function AssignTabsToTrainer() {
                     }
                 })
             }).catch(err => {
-                dispatch(setLoading(false));
+                dispatch(setSmallLoading(false));
                 Swal.fire({
                     icon : 'error',
                     title : 'OOps..',

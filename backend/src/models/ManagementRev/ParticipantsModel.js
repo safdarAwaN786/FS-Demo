@@ -8,9 +8,9 @@ const ParticipantsSchema = new mongoose.Schema({
     Name: {
         type: String
     },
-    User: {
+    UserDepartment: {
         type: Schema.Types.ObjectId,
-        ref: 'User',
+        ref: 'Department',
     },
     ParticipantId: {
         type: String,

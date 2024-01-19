@@ -6,7 +6,7 @@ import Swal from 'sweetalert2'
 import { BsArrowLeftCircle } from 'react-icons/bs';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
-import { setLoading } from '../../redux/slices/loading';
+import { setSmallLoading } from '../../redux/slices/loading';
 
 
 function UpdateFoodSafetyPlan() {
@@ -21,11 +21,11 @@ function UpdateFoodSafetyPlan() {
     const user = useSelector(state => state.auth?.user);
 
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`).then((res) => {
             SetDepartmentsToShow(res.data.data);
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon: 'error',
                 title: 'OOps..',
@@ -40,9 +40,9 @@ function UpdateFoodSafetyPlan() {
     }, [dataToSend])
     useEffect(() => {
         if (departmentsToShow && treesToShow) {
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
         } else {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
         }
     }, [departmentsToShow, treesToShow])
 
@@ -53,14 +53,14 @@ function UpdateFoodSafetyPlan() {
     const idToWatch = useSelector(state => state.idToProcess);
 
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-food-safety/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-food-safety/${idToWatch}`).then((res) => {
             setDataToSend(res.data.data);
             if(treesToShow && departmentsToShow){
-                dispatch(setLoading(false))
+                dispatch(setSmallLoading(false))
             }
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon: 'error',
                 title: 'OOps..',
@@ -69,11 +69,11 @@ function UpdateFoodSafetyPlan() {
         })
     }, [])
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get("/get-all-decision-trees", { headers: { Authorization: `${user._id}` } }).then((response) => {
+        dispatch(setSmallLoading(true))
+        axios.get("/get-all-decision-trees", { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
             setTreesToShow(response.data.data);
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon: 'error',
                 title: 'OOps..',
@@ -100,7 +100,7 @@ function UpdateFoodSafetyPlan() {
     const makeRequest = () => {
         if (dataToSend.Plans?.length > 0) {
 
-            axios.patch(`${process.env.REACT_APP_BACKEND_URL}/update-food-safety/${idToWatch}`, dataToSend, { headers: { Authorization: `${user._id}` } }).then(() => {
+            axios.patch(`${process.env.REACT_APP_BACKEND_URL}/update-food-safety/${idToWatch}`, {...dataToSend, updatedBy : user.Name}).then(() => {
                 setDataToSend(null);
                 Swal.fire({
                     title: 'Success',

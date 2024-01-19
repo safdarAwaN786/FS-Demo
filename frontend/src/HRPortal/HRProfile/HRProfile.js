@@ -7,7 +7,7 @@ import profile from '../../assets/images/addEmployee/prof.svg'
 import Swal from 'sweetalert2'
 import axios from 'axios'
 import { useDispatch, useSelector } from 'react-redux'
-import { setLoading } from '../../redux/slices/loading'
+import { setSmallLoading } from '../../redux/slices/loading'
 
 
 function HRProfile() {
@@ -37,9 +37,9 @@ function HRProfile() {
     const makeRequest = () => {
         if (newPassword === confirmPassword) {
             if (validationMessage === 'Password is valid!') {
-                dispatch(setLoading(true))
+                dispatch(setSmallLoading(true))
                 axios.put(`${process.env.REACT_APP_BACKEND_URL}/change-password`, { newPassword: newPassword }, { headers: { Authorization: `${user._id}` } }).then(() => {
-                    dispatch(setLoading(false));
+                    dispatch(setSmallLoading(false));
                     setNewPassword(null);
                     setConfirmPassword(null);
                     window.location.reload();
@@ -52,7 +52,7 @@ function HRProfile() {
                     })
 
                 }).catch(err => {
-                    dispatch(setLoading(false));
+                    dispatch(setSmallLoading(false));
                     Swal.fire({
                         icon : 'error',
                         title : 'OOps..',

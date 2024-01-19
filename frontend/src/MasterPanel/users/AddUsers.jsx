@@ -7,7 +7,7 @@ import { FaMinus } from 'react-icons/fa'
 import { BsArrowLeftCircle } from 'react-icons/bs';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import { setLoading } from '../../redux/slices/loading';
+import { setSmallLoading } from '../../redux/slices/loading';
 
 function AddUsers() {
 
@@ -27,8 +27,8 @@ function AddUsers() {
     }
     const user = useSelector(state => state.auth.user);
     useEffect(() => {
-        dispatch(setLoading(true));
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-departments`, { headers: { Authorization: `${user._id}` } }).then((response) => {
+        dispatch(setSmallLoading(true));
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-departments`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
             // Those Companies which have some departments
             setAllDepartments(response.data.data);
             // Create a Set to keep track of unique property values
@@ -44,10 +44,10 @@ function AddUsers() {
                 }
                 return acc;
             }, []);
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             setCompanies(UniqueCompanyDepartments);
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon: 'error',
                 title: 'OOps..',
@@ -155,9 +155,9 @@ function AddUsers() {
     const makeRequest = () => {
         if (dataToSend.Users.length > 0) {
             if (dataToSend.Users.filter((obj) => obj.validationMessage !== 'Password is valid!').length === 0) {
-                dispatch(setLoading(true));
+                dispatch(setSmallLoading(true));
                 axios.post(`${process.env.REACT_APP_BACKEND_URL}/create-user`, dataToSend, { headers: { Authorization: `${user._id}` } }).then((res) => {
-                    dispatch(setLoading(false));
+                    dispatch(setSmallLoading(false));
                     setDataToSend(null);
                     if (res.data.status === 201) {
                         Swal.fire({
@@ -179,7 +179,7 @@ function AddUsers() {
                         })
                     }
                 }).catch(err => {
-                    dispatch(setLoading(false));
+                    dispatch(setSmallLoading(false));
                     console.log(err);
                     Swal.fire({
                         icon : 'error',

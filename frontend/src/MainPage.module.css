@@ -3,8 +3,19 @@
   width: 100%;
   display: flex;
 }
-
-
+.compLoader{
+  position: absolute !important;
+  width: 100% !important;
+  height: 100% !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+}
+.subparent {
+  width: 82.5%;
+  position: relative;
+}
 .sidebar {
   width: 17.5%;
 }
@@ -60,11 +71,35 @@
 
   cursor: 'pointer',
 }
-.subparent {
-  width: 82.5%;
-  position: relative;
-}
+@media (max-width: 1350px) {
 
+  .subparent {
+    width: 80%;
+  }
+}
+@media (max-width: 1250px) {
+
+  .subparent {
+    width: 75%;
+  }
+}
+@media (max-width: 950px) {
+
+  .subparent {
+    width: 70%;
+  }
+}
+@media (max-width: 750px) {
+  .sidebar {
+    width: 0%;
+  }
+  .subparent {
+    width: 100%;
+  }
+  .searchbar {
+    margin-top: 80px;
+  }
+}
 .smImage {
   width: 30px;
   border-radius: 360px;

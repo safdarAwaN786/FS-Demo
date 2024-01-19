@@ -7,7 +7,7 @@ import 'rc-slider/assets/index.css';
 import { BsArrowLeftCircle } from 'react-icons/bs';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
-import { setLoading } from '../../redux/slices/loading';
+import { setSmallLoading } from '../../redux/slices/loading';
 
 function FillForm() {
 
@@ -24,14 +24,14 @@ function FillForm() {
     const idToWatch = useSelector(state => state.idToProcess);
     const user = useSelector(state => state.auth.user)
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-form-by-id/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-form-by-id/${idToWatch}`).then((res) => {
             setDataToSend(res.data.form);
             setAnswerData({ Form: res.data.form._id })
             setQuestions(res.data.form.questions);
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon: 'error',
                 title: 'OOps..',
@@ -45,9 +45,9 @@ function FillForm() {
 
     const makeRequest = () => {
         if (answerData.answers?.length > 0) {
-            dispatch(setLoading(true))
-            axios.post(`${process.env.REACT_APP_BACKEND_URL}/submit-response`, answerData, { headers: { Authorization: `${user._id}` } }).then(() => {
-                dispatch(setLoading(false))
+            dispatch(setSmallLoading(true))
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/submit-response`, {...answerData, filledBy : user.Name}, { headers: { Authorization: `${user.Department._id}` } }).then(() => {
+                dispatch(setSmallLoading(false))
                 setAnswerData(null);
                 Swal.fire({
                     title: 'Success',
@@ -60,7 +60,7 @@ function FillForm() {
                     }
                 })
             }).catch(err => {
-                dispatch(setLoading(false));
+                dispatch(setSmallLoading(false));
                 Swal.fire({
                     icon: 'error',
                     title: 'OOps..',

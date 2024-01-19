@@ -13,7 +13,7 @@ require('dotenv').config();
 const CryptoJS = require('crypto-js')
 const jwt = require('jsonwebtoken');
 const authMiddleware = require('../../middleware/auth');
-router.use(authMiddleware);
+// router.use(authMiddleware);
 
 
 const transporter = nodemailer.createTransport(smtpTransport({
@@ -186,6 +186,12 @@ router.get('/get-usersByDepartment/:departmentId', async (req, res) => {
 // * Get all User documents
 router.get('/get-all-users', async (req, res) => {
   try {
+    const departmentExist = Department.findById(req.header('Authorization'));
+    if(!departmentExist){
+      return res.status(404).json({ message: `Department document with ID: ${req.header('Authorization')} not found` });
+
+    }
+
     const users = await User.find({isAuditor : false, isMember : false, isProcessOwner : false, isEmployee : false, isTrainer : false}).populate({
       path: 'Department',
       model: 'Department'
@@ -275,7 +281,7 @@ router.patch('/assign-tabs/:UserId', async (req, res) => {
       console.log(`User document with ID: ${userId} not found`);
       return res.status(404).json({ message: `User document with ID: ${userId} not found` });
     }
-
+    console.log(req.body);
     updatedUser.Tabs = req.body.Tabs;
     console.log(updatedUser);
 

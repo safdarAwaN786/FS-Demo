@@ -5,7 +5,7 @@ import Swal from 'sweetalert2'
 import { BsArrowLeftCircle } from 'react-icons/bs';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
-import { setLoading } from '../../redux/slices/loading';
+import { setSmallLoading } from '../../redux/slices/loading';
 
 function Formtype() {
     const [selectedImage, setSelectedImage] = useState(null);
@@ -22,12 +22,12 @@ function Formtype() {
     const idToWatch = useSelector(state => state.idToProcess);
 
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readMachinery/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readMachinery/${idToWatch}`).then((res) => {
             setMachine(res.data.data)
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon: 'error',
                 title: 'OOps..',
@@ -48,9 +48,9 @@ function Formtype() {
 
     const makeRequest = () => {
         if (formData) {
-            dispatch(setLoading(true))
-            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addPreventiveMaintaince/${idToWatch}`, formData, { headers: { Authorization: `${user._id}` } }).then((res) => {
-                dispatch(setLoading(false))
+            dispatch(setSmallLoading(true))
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addPreventiveMaintaince/${idToWatch}`, {...formData, submitBy : user.Name}, { headers: { Authorization: `${user.Department._id}` } }).then((res) => {
+                dispatch(setSmallLoading(false))
                 Swal.fire({
                     title: 'Success',
                     text: 'Submitted Successfully',
@@ -62,7 +62,7 @@ function Formtype() {
                     }
                 })
             }).catch(err => {
-                dispatch(setLoading(false));
+                dispatch(setSmallLoading(false));
                 Swal.fire({
                     icon: 'error',
                     title: 'OOps..',
@@ -73,8 +73,6 @@ function Formtype() {
     }
     return (
         <>
-
-            <div className={style.subparent}>
                 <div className='d-flex flex-row bg-white px-lg-5 mx-1 px-2 py-2'>
                     <BsArrowLeftCircle role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
                         {
@@ -192,7 +190,6 @@ function Formtype() {
                     </div>
 
                 </form>
-            </div>
 
             {
                 alert ?

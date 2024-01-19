@@ -6,7 +6,7 @@ import Swal from 'sweetalert2'
 import { BsArrowLeftCircle } from 'react-icons/bs';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
-import { setLoading } from '../../redux/slices/loading';
+import { setSmallLoading } from '../../redux/slices/loading';
 import html2pdf from 'html2pdf.js';
 
 const formatDate = (date) => {
@@ -31,12 +31,12 @@ function ViewFoodSafetyPlan() {
 
 
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-food-safety/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-food-safety/${idToWatch}`).then((res) => {
             setDataToSend(res.data.data);
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon: 'error',
                 title: 'OOps..',
@@ -152,40 +152,7 @@ function ViewFoodSafetyPlan() {
         }
     }, [selectedDecisionTree])
 
-    const makeRequest = () => {
-        if (dataToSend.Plans?.length > 0) {
-            dispatch(setLoading(true))
-            axios.post(`${process.env.REACT_APP_BACKEND_URL}/create-food-safety`, dataToSend, { headers: { Authorization: `${user._id}` } }).then(() => {
-                setDataToSend(null);
-                dispatch(setLoading(false))
-                Swal.fire({
-                    title: 'Success',
-                    text: 'Submitted Successfully',
-                    icon: 'success',
-                    confirmButtonText: 'Go!',
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        dispatch(updateTabData({ ...tabData, Tab: 'Generate Food Safety Plan' }))
-                    }
-                })
-            }).catch(err => {
-                dispatch(setLoading(false));
-                Swal.fire({
-                    icon: 'error',
-                    title: 'OOps..',
-                    text: 'Something went wrong, Try Again!'
-                })
-            })
-        } else {
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Kindly Select at least one Member !',
-                confirmButtonText: 'OK.'
-            })
-        }
-    }
-
+   
 
 
 
@@ -500,7 +467,7 @@ function ViewFoodSafetyPlan() {
                             <div className={style.alertbtns}>
                                 <button onClick={() => {
                                     alertManager();
-                                    makeRequest();
+                                    // makeRequest();
 
                                 }
                                 } className={style.btn1}>Submit</button>

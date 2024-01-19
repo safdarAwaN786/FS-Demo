@@ -7,7 +7,7 @@ import { BsArrowLeftCircle } from 'react-icons/bs';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import Cookies from 'js-cookie';
-import { setLoading } from '../../redux/slices/loading';
+import { setSmallLoading } from '../../redux/slices/loading';
 
 function AddHACCPTeam() {
 
@@ -104,12 +104,12 @@ function AddHACCPTeam() {
     const userToken = Cookies.get('userToken');
 
     useEffect(() => {
-        dispatch(setLoading(true))
+        dispatch(setSmallLoading(true))
         axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
             SetDepartmentsToShow(res.data.data);
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon : 'error',
                 title : 'OOps..',
@@ -120,11 +120,11 @@ function AddHACCPTeam() {
 
     const makeRequest = () => {
         if (finalFormData && dataToSend.TeamMembers.length !== 0) {
-            dispatch(setLoading(true))
+            dispatch(setSmallLoading(true))
             axios.post(`${process.env.REACT_APP_BACKEND_URL}/create-haccp-team`, finalFormData, { headers: { Authorization: `${user._id}` } }).then(() => {
                 console.log("request made !");
                 setDataToSend(null);
-                dispatch(setLoading(false))
+                dispatch(setSmallLoading(false))
                 Swal.fire({
                     title: 'Success',
                     text: 'Submitted Successfully',
@@ -136,7 +136,7 @@ function AddHACCPTeam() {
                     }
                 })
             }).catch(err => {
-                dispatch(setLoading(false));
+                dispatch(setSmallLoading(false));
                 Swal.fire({
                     icon : 'error',
                     title : 'OOps..',

@@ -10,9 +10,9 @@ const maintainanceSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Machinery',
   },
-  User: {
+  UserDepartment: {
     type: Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'Department',
   },
   dateType: {
     type: String,

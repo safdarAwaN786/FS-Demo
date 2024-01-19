@@ -5,7 +5,7 @@ const { HazardModel } = require('../../models/HACCP/ConductHaccpModel');
 const authMiddleware = require('../../middleware/auth');
 
 
-router.use(authMiddleware);
+// router.use(authMiddleware);
 
 // * Create a new ConductHaccp document
 router.post('/create-conduct-haccp', async (req, res) => {
@@ -20,9 +20,9 @@ router.post('/create-conduct-haccp', async (req, res) => {
 
         const createdConductHaccp = new ConductHaccp({
             ...req.body,
-            CreatedBy: req.user.Name,
+            CreatedBy: req.body.createdBy,
             Hazards: hazardsIds,
-            User: req.user._id,
+            UserDepartment: req.header('Authorization'),
             CreationDate: new Date()
         });
 
@@ -41,7 +41,7 @@ router.post('/create-conduct-haccp', async (req, res) => {
 router.get('/get-all-conduct-haccp', async (req, res) => {
     try {
 
-        const conductHaccps = await ConductHaccp.find().populate('Department Process User').populate({
+        const conductHaccps = await ConductHaccp.find({UserDepartment : req.header('Authorization')}).populate('Department Process UserDepartment').populate({
             path: 'Hazards',
             populate: {
                 path: 'Process',
@@ -59,9 +59,9 @@ router.get('/get-all-conduct-haccp', async (req, res) => {
             return res.status(404).json({ message: 'ConductHaccp documents not found' });
         }
 
-        const conductHaccpsToSend = conductHaccps.filter((Obj) => Obj.User.Department.equals(req.user.Department));
+        
         console.log('ConductHaccp documents retrieved successfully');
-        res.status(200).json({ status: true, data: conductHaccpsToSend });
+        res.status(200).json({ status: true, data: conductHaccps });
 
     } catch (error) {
         console.error(error);
@@ -74,7 +74,7 @@ router.get('/get-conduct-haccp/:haccpId', async (req, res) => {
     try {
 
         const conductHaccpId = req.params.haccpId;
-        const conductHaccp = await ConductHaccp.findById(conductHaccpId).populate('Department Process User').populate({
+        const conductHaccp = await ConductHaccp.findById(conductHaccpId).populate('Department Process UserDepartment').populate({
             path: 'Hazards',
             populate: {
                 path: 'Process',
@@ -175,7 +175,7 @@ router.put('/update-conduct-haccp/:haccpId', async (req, res) => {
 
         const updates = {
             ...req.body,
-            UpdatedBy: req.user.Name,
+            UpdatedBy: req.body.updatedBy,
             UpdationDate: new Date(),
             Hazards : hazardsIds,
             Status: 'Pending'

@@ -8,9 +8,9 @@ require('dotenv').config()
 const cloudinary = require('cloudinary').v2;
 const multer = require('multer');
 const fs = require("fs");
-const authMiddleware = require('../../middleware/auth');
+// const authMiddleware = require('../../middleware/auth');
 
-router.use(authMiddleware);
+// router.use(authMiddleware);
 
 // * Cloudinary Setup 
 cloudinary.config({
@@ -53,9 +53,9 @@ router.post('/addMonthlyAuditingPlan',  async (req, res) => {
         const selectedDepartment = req.body.Department;
 
         // Check if the YearlyAuditingPlan exists for the selected year
-        const yearlyPlanAll = await YearlyAuditingPlan.find({ Year: selectedYear }).populate('User');
+        const yearlyPlan = await YearlyAuditingPlan.find({ Year: selectedYear, UserDepartment : req.header('Authorization') }).populate('UserDepartment');
 
-        const yearlyPlan = yearlyPlanAll.find(Obj => Obj.User.Department.equals(req.user.Department))
+        
 
 
         if (!yearlyPlan) {
@@ -117,12 +117,12 @@ router.post('/addMonthlyAuditingPlan',  async (req, res) => {
 
         // Create the MonthlyAuditingPlan document
 
-        const createdBy = req.user.Name;
+        
         const monthlyAuditPlan = new MonthlyAuditingPlan({
             ...req.body,
-            CreatedBy: createdBy,
+            CreatedBy: req.body.createdBy,
             CreationDate: new Date(),
-            User : req.user._id
+            UserDepartment : req.header('Authorization')
         });
 
         await monthlyAuditPlan.save();
@@ -141,15 +141,13 @@ router.post('/addMonthlyAuditingPlan',  async (req, res) => {
 router.get('/readMonthlyAuditPlan',  async (req, res) => {
     try {
 
-        const monthlyAuditPlan = await MonthlyAuditingPlan.find().populate('LeadAuditor').populate('TeamAuditor').populate({
+        const monthlyPlansToSend = await MonthlyAuditingPlan.find({UserDepartment : req.header('Authorization')}).populate('LeadAuditor').populate('TeamAuditor').populate({
             path  : 'ProcessOwner',
             populate : {
                 path : 'ProcessOwner',
                 model : 'User'
             }
-        }).populate('YearlyAuditingPlan').populate('Department').populate('User');
-
-        const monthlyPlansToSend = monthlyAuditPlan.filter(Obj => Obj.User.Department.equals(req.user.Department)) 
+        }).populate('YearlyAuditingPlan').populate('Department').populate('UserDepartment');
       
 
         res.status(201).send({ status: true, message: "The Following are MonthlyAuditingPlans!",

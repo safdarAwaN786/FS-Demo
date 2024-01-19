@@ -3,21 +3,21 @@ const router = express.Router();
 const Reports = require('../../models/Auditor/ReportsModel'); // Import the Reports model
 const ConductAudits = require('../../models/Auditor/ConductAuditsModel').ConductAudits;
 
-const authMiddleware = require('../../middleware/auth')
+// const authMiddleware = require('../../middleware/auth')
 
-router.use(authMiddleware);
+// router.use(authMiddleware);
 // * POST Report Data Into MongoDB Database
 router.post('/addReport', async (req, res) => {
     console.log(req.body);
 
     try {
 
-        const ReportBy = req.user.Name;
+        const ReportBy = req.body.reportBy;
         const report = new Reports({
             ...req.body,
             ReportBy: ReportBy,
             ReportDate: new Date(),
-            User: req.user._id
+            UserDepartment: req.header('Authorization')
         });
 
         await report.save();
@@ -35,7 +35,7 @@ router.post('/addReport', async (req, res) => {
 router.get('/readReports', async (req, res) => {
     try {
 
-        const reports = await Reports.find().populate('User').populate({
+        const reports = await Reports.find({UserDepartment : req.header('Authorization')}).populate('UserDepartment').populate({
             path: 'ConductAudit',
             populate: [{
                 path: 'Checklist',
@@ -62,10 +62,10 @@ router.get('/readReports', async (req, res) => {
             }
         })
 
-        const reportsToSend = reports.filter(Obj => Obj.User.Department.equals(req.user.Department))
+       
 
 
-        res.status(200).send({ status: true, message: "The following are Reports!", data: reportsToSend });
+        res.status(200).send({ status: true, message: "The following are Reports!", data: reports });
         console.log(new Date().toLocaleString() + ' ' + 'READ Reports Successfully!')
 
     } catch (e) {
@@ -78,7 +78,7 @@ router.get('/readReports', async (req, res) => {
 router.get('/readReportByAuditId/:auditId', async (req, res) => {
     console.log(req.params.auditId);
     try {
-        const reports = await Reports.find({ ConductAudit: req.params.auditId }).populate('User').populate({
+        const reports = await Reports.find({ ConductAudit: req.params.auditId, UserDepartment : req.header('Authorization') }).populate('UserDepartment').populate({
             path: 'ConductAudit',
             populate: [{
                 path: 'Checklist',
@@ -105,11 +105,11 @@ router.get('/readReportByAuditId/:auditId', async (req, res) => {
             }
         })
 
-        const reportToSend = reports.filter(Obj => Obj.User.Department.equals(req.user.Department));
+        
 
 
 
-        res.status(200).send({ status: true, message: "The following are Reports!", data: reportToSend });
+        res.status(200).send({ status: true, message: "The following are Reports!", data: reports });
         console.log(new Date().toLocaleString() + ' ' + 'READ Reports Successfully!')
 
     } catch (e) {
@@ -122,7 +122,7 @@ router.get('/readReportByAuditId/:auditId', async (req, res) => {
 router.get('/readReportById/:reportId', async (req, res) => {
     console.log(req.params.auditId);
     try {
-        const reports = await Reports.findById(req.params.reportId).populate('User').populate({
+        const reports = await Reports.findById(req.params.reportId).populate('UserDepartment').populate({
             path: 'ConductAudit',
             populate: [{
                 path: 'Checklist',

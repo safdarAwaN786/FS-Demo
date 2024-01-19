@@ -8,7 +8,7 @@ import Swal from 'sweetalert2';
 import { useDispatch, useSelector } from 'react-redux'
 import { updateTabData } from '../../redux/slices/tabSlice'
 import { changeId } from '../../redux/slices/idToProcessSlice'
-import { setLoading } from '../../redux/slices/loading'
+import { setSmallLoading } from '../../redux/slices/loading'
 
 function TechMWR() {
     const [alert, setalert] = useState(false);
@@ -29,13 +29,13 @@ function TechMWR() {
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/getAllWorkRequests`, { headers: { Authorization: `${user._id}` } }).then((res) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/getAllWorkRequests`, { headers: { Authorization: `${user.Department._id}` } }).then((res) => {
             setAllDataArr(res.data.data);
             setRequests(res.data.data.slice(startIndex, endIndex));
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon: 'error',
                 title: 'OOps..',
@@ -45,13 +45,13 @@ function TechMWR() {
     }, [])
 
     const reGetData = () => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/getAllWorkRequests`, { headers: { Authorization: `${user._id}` } }).then((res) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/getAllWorkRequests`, { headers: { Authorization: `${user.Department._id}` } }).then((res) => {
             setAllDataArr(res.data.data);
             setRequests(res.data.data.slice(startIndex, endIndex));
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon: 'error',
                 title: 'OOps..',
@@ -128,8 +128,6 @@ function TechMWR() {
 
     return (
         <>
-
-            <div className={style.subparent}>
 
                 <div className={`${style.searchbar}`}>
                     <div className={style.sec1}>
@@ -308,7 +306,6 @@ function TechMWR() {
                         </button>
                     )}
                 </div>
-            </div>
 
             {
                 alert ?
@@ -327,9 +324,9 @@ function TechMWR() {
                         <div class={style.alert}>
                             <form onSubmit={(e) => {
                                 e.preventDefault();
-                                dispatch(setLoading(true))
-                                axios.patch(`/rejectMWR/${openedRequestId}`, rejectObj, { headers: { Authorization: `${user._id}` } }).then(() => {
-                                    dispatch(setLoading(false))
+                                dispatch(setSmallLoading(true))
+                                axios.patch(`/rejectMWR/${openedRequestId}`, {...rejectObj, rejectedBy : user.Name }).then(() => {
+                                    dispatch(setSmallLoading(false))
                                     Swal.fire({
                                         title: 'Success',
                                         text: 'Submitted Successfully',
@@ -341,7 +338,7 @@ function TechMWR() {
                                         }
                                     })
                                 }).catch(err => {
-                                    dispatch(setLoading(false));
+                                    dispatch(setSmallLoading(false));
                                     Swal.fire({
                                         icon: 'error',
                                         title: 'OOps..',
@@ -371,9 +368,9 @@ function TechMWR() {
                             <p className='text-center m-3 fs-5'>{popUpData}</p>
                             <div className={style.alertbtns}>
                                 <button onClick={() => {
-                                    dispatch(setLoading(true))
-                                    axios.patch(`/completeMWR/${openedRequestId}`, null, { headers: { Authorization: `${user._id}` } }).then(() => {
-                                        dispatch(setLoading(false))
+                                    dispatch(setSmallLoading(true))
+                                    axios.patch(`/completeMWR/${openedRequestId}`, {completedBy : user.Name}).then(() => {
+                                        dispatch(setSmallLoading(false))
                                         Swal.fire({
                                             title: 'Success',
                                             text: 'Submitted Successfully',
@@ -385,7 +382,7 @@ function TechMWR() {
                                             }
                                         })
                                     }).catch(err => {
-                                        dispatch(setLoading(false));
+                                        dispatch(setSmallLoading(false));
                                         Swal.fire({
                                             icon: 'error',
                                             title: 'OOps..',
@@ -409,9 +406,9 @@ function TechMWR() {
                                 e.preventDefault();
                                 setalert3(false);
                                 console.log(acceptObj)
-                                dispatch(setLoading(true))
-                                axios.patch(`/acceptMWR/${openedRequestId}`, acceptObj, { headers: { Authorization: `${user._id}` } }).then((res) => {
-                                    dispatch(setLoading(false))
+                                dispatch(setSmallLoading(true))
+                                axios.patch(`/acceptMWR/${openedRequestId}`, {...acceptObj, acceptedBy : user.Name }).then((res) => {
+                                    dispatch(setSmallLoading(false))
                                     Swal.fire({
                                         title: 'Success',
                                         text: 'Submitted Successfully',
@@ -423,7 +420,7 @@ function TechMWR() {
                                         }
                                     })
                                 }).catch(err => {
-                                    dispatch(setLoading(false));
+                                    dispatch(setSmallLoading(false));
                                     Swal.fire({
                                         icon: 'error',
                                         title: 'OOps..',

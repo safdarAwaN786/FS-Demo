@@ -1,23 +1,24 @@
 const express = require('express');
-const Document = require('../../models/Admin/ListOfDocumentsModel')
+const Document = require('../../models/Admin/ListOfDocumentsModel');
+const user = require('../../models/AccountCreation/UserModel');
 const router = new express.Router();
 
-const authMiddleware = require('../../middleware/auth');
+// const authMiddleware = require('../../middleware/auth');
 
-router.use(authMiddleware)
+// router.use(authMiddleware)
 
 // * Post a New document
 router.post('/create-document', async (req, res) => {
   try {
-
+   
     //  The document data sent in the request body
-    const createdBy = req.user.Name;
+    const createdBy = req.body.createdBy;
 
     // The changeRequest data sent in the request body
     const createdDocument = new Document({
       ...req.body,
       CreatedBy: createdBy,
-      User : req.user._id
+      UserDepartment : req.header('Authorization'),
 
     });
 
@@ -37,14 +38,12 @@ router.post('/create-document', async (req, res) => {
 // * Get  all documents
 router.get('/get-documents', async (req, res) => {
   try {
-
+    const departmentId = req.header('Authorization')
     //  The documents data find in the database
-    const documents = await Document.find().populate('Department User');
-
-    const documentsToSend = documents.filter(Obj => Obj.User.Department.equals(req.user.Department));
+    const documents = await Document.find({UserDepartment : departmentId}).populate('Department UserDepartment');
 
     console.log(new Date().toLocaleString() + ' ' + 'Fetching Documents...');
-    res.status(200).json({ status: true, message: 'Documents fetched successfully', data: documentsToSend });
+    res.status(200).json({ status: true, message: 'Documents fetched successfully', data: documents });
     console.log(new Date().toLocaleString() + ' ' + 'Fetched Documents Successfully!');
 
   } catch (error) {
@@ -58,7 +57,7 @@ router.get('/get-documentById/:documentId', async (req, res) => {
   try {
 
     // * The documents data find in the database
-    const documents = await Document.findById(req.params.documentId).populate('Department User');
+    const documents = await Document.findById(req.params.documentId).populate('Department UserDepartment');
     const totalCollections = await Document.countDocuments()
 
     console.log(new Date().toLocaleString() + ' ' + 'Fetching Documents...');
@@ -75,7 +74,7 @@ router.get('/get-documentById/:documentId', async (req, res) => {
 router.put('/updateDocument',  async (req, res) => {
   try {
 
-    const updatedBy = req.user.Name;
+    const updatedBy = req.body.updatedBy;
 
     // The document data find by Id in the database
     const id = req.body._id;
@@ -123,8 +122,8 @@ router.put('/updateDocument',  async (req, res) => {
 router.patch('/review-document',  async (req, res) => {
   try {
 
-    const reviewedBy = req.user.Name;
-    const { documentId } = req.body;
+
+    const { documentId, reviewedBy } = req.body;
 
     // Find the document by ID
     const document = await Document.findById(documentId);
@@ -157,8 +156,7 @@ router.patch('/review-document',  async (req, res) => {
 router.patch('/reject-document',  async (req, res) => {
   try {
 
-    const rejectedBy = req.user.Name;
-    const { documentId, reason } = req.body;
+    const { documentId, reason, rejectedBy } = req.body;
 
     // Find the document by ID
     const document = await Document.findById(documentId);
@@ -193,7 +191,7 @@ router.patch('/reject-document',  async (req, res) => {
 router.patch('/approve-document', async (req, res) => {
   try {
 
-    const approvedBy = req.user.Name;
+    const approvedBy = req.body.approvedBy;
     const documentId = req.body.id;
 
     // Find the document by ID
@@ -215,7 +213,7 @@ router.patch('/approve-document', async (req, res) => {
     }
 
     document.ApprovalDate = new Date(),
-      document.Status = 'Approved';
+    document.Status = 'Approved';
     document.DisapprovalDate = null
     document.ApprovedBy = approvedBy
 
@@ -232,8 +230,7 @@ router.patch('/approve-document', async (req, res) => {
 router.patch('/disapprove-document',  async (req, res) => {
   try {
 
-    const disapprovedBy = req.user.Name;
-    const { documentId, reason } = req.body;
+    const { documentId, reason, disapprovedBy } = req.body;
 
     // Find the document by ID
     const document = await Document.findById(documentId);

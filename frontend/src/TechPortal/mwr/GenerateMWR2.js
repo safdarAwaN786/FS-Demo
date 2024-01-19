@@ -5,7 +5,7 @@ import { BsArrowLeftCircle } from 'react-icons/bs';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import Swal from 'sweetalert2';
-import { setLoading } from '../../redux/slices/loading';
+import { setSmallLoading } from '../../redux/slices/loading';
 
 function GenerateMWR2() {
     const [alert, setalert] = useState(false);
@@ -20,12 +20,12 @@ function GenerateMWR2() {
     const idToWatch = useSelector(state => state.idToProcess);
 
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/getWorkRequestById/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/getWorkRequestById/${idToWatch}`).then((res) => {
             setRequest(res.data.data);
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon : 'error',
                 title : 'OOps..',
@@ -38,12 +38,12 @@ function GenerateMWR2() {
        try {
            if (imageURL) {
 
-               dispatch(setLoading(true))
+               dispatch(setSmallLoading(true))
                const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/download-image`, {
                    params: {
                        url: imageURL,
                    },
-                   responseType: 'blob', headers: { Authorization: `${user._id}` } // Specify the response type as 'blob' to handle binary data
+                   responseType: 'blob' // Specify the response type as 'blob' to handle binary data
                });
 
 
@@ -61,7 +61,7 @@ function GenerateMWR2() {
 
                // Append the anchor element to the document body and click it to trigger the download
                document.body.appendChild(link);
-               dispatch(setLoading(false))
+               dispatch(setSmallLoading(false))
                link.click();
                // Clean up by removing the temporary anchor element
                document.body.removeChild(link);
@@ -73,7 +73,7 @@ function GenerateMWR2() {
                })
            }
        } catch (error) {
-           dispatch(setLoading(false))
+           dispatch(setSmallLoading(false))
            Swal.fire({
                icon: 'error',
                title: 'OOps..',
@@ -89,8 +89,6 @@ function GenerateMWR2() {
 
     return (
         <>
-
-            <div className={style.subparent}>
                 <div className='d-flex flex-row bg-white px-lg-5 mx-1 px-2 py-2'>
                     <BsArrowLeftCircle
                         role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
@@ -170,7 +168,6 @@ function GenerateMWR2() {
                     <p>Image</p>
                     <button onClick={() => { handleDownloadImage(request?.imageURL) }} className={style.download}>Download</button>
                 </div>
-            </div>
 
             {
                 alert ?

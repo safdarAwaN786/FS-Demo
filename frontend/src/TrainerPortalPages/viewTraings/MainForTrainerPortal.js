@@ -7,7 +7,7 @@ import Swal from 'sweetalert2'
 import { BsArrowLeftCircle } from 'react-icons/bs'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateTabData } from '../../redux/slices/tabSlice'
-import { setLoading } from '../../redux/slices/loading'
+import { setSmallLoading } from '../../redux/slices/loading'
 
 function MainForTrainerPortal() {
     const [trainingToShow, setTrainingToShow] = useState(null);
@@ -28,9 +28,9 @@ function MainForTrainerPortal() {
     const [trainingEmployees, setTrainingEmployees] = useState(null);
 
     const makeRequest = () => {
-        dispatch(setLoading(true))
-        axios.patch(`${process.env.REACT_APP_BACKEND_URL}/update-training-status`, dataToSend, { headers: { Authorization: `${user._id}` } }).then((res) => {
-           dispatch(setLoading(false))
+        dispatch(setSmallLoading(true))
+        axios.patch(`${process.env.REACT_APP_BACKEND_URL}/update-training-status`, dataToSend).then((res) => {
+           dispatch(setSmallLoading(false))
             setDataToSend(null);
             Swal.fire({
                 title: 'Success',
@@ -45,7 +45,7 @@ function MainForTrainerPortal() {
             })
 
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon : 'error',
                 title : 'OOps..',
@@ -169,14 +169,14 @@ function MainForTrainerPortal() {
 
 
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readMonthlyPlan`, { headers: { Authorization: `${user._id}` } }).then((response) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readMonthlyPlan`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
             const plannedTrainingsList = response.data.data;
             setTrainingToShow(plannedTrainingsList.find((training) => training._id === idToWatch));
             setTrainingEmployees(plannedTrainingsList.find((training) => training._id === idToWatch)?.Employee.slice(startIndex, endIndex))
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon : 'error',
                 title : 'OOps..',
@@ -189,7 +189,6 @@ function MainForTrainerPortal() {
 
     return (
         <>
-            <div className={style.subparent}>
                 <div className='d-flex flex-row px-4 mt-5 mb-1'>
                     <BsArrowLeftCircle role='button' className='fs-3  text-danger' onClick={(e) => {
                         {
@@ -375,7 +374,6 @@ function MainForTrainerPortal() {
                         </button>
                     )}
                 </div>
-            </div>
             {
                 remarksInput ?
                     <div class={style.alertparent}>

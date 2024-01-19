@@ -4,7 +4,7 @@ import axios from "axios";
 import { BsArrowLeftCircle } from 'react-icons/bs';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
-import { setLoading } from '../../redux/slices/loading';
+import { setSmallLoading } from '../../redux/slices/loading';
 import Swal from 'sweetalert2';
 
 function MaintananceRect() {
@@ -17,12 +17,12 @@ function MaintananceRect() {
     const idToWatch = useSelector(state => state.idToProcess);
 
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/getWorkRequestsByMachineId/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/getWorkRequestsByMachineId/${idToWatch}`, { headers: { Authorization: `${user.Department._id}` } }).then((res) => {
             setRequests(res.data.data);
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon : 'error',
                 title : 'OOps..',
@@ -59,8 +59,6 @@ function MaintananceRect() {
 
     return (
         <>
-
-            <div className={style.subparent}>
                 <div className='d-flex flex-row bg-white px-lg-5 mx-1 px-2 py-2'>
                     <BsArrowLeftCircle role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
                         {
@@ -157,7 +155,7 @@ function MaintananceRect() {
                 {/* <div className={style.btnparent}>
                     <button className={style.download}>Download</button>
                 </div> */}
-            </div>
+
 
             {
                 alert ?

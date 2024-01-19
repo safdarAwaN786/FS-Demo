@@ -11,7 +11,7 @@ import { BsArrowLeftCircle } from 'react-icons/bs'
 import axios from 'axios'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateTabData } from '../../redux/slices/tabSlice'
-import { setLoading } from '../../redux/slices/loading'
+import { setSmallLoading } from '../../redux/slices/loading'
 import Swal from 'sweetalert2'
 
 function ProcessInfo() {
@@ -28,13 +28,13 @@ function ProcessInfo() {
     const planId = idToWatch;
 
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readMonthlyAuditPlanById/${planId}`, { headers: { Authorization: `${user._id}` } }).then((response) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readMonthlyAuditPlanById/${planId}`).then((response) => {
             console.log(response.data.data);
             setPlanData(response.data.data);
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon : 'error',
                 title : 'OOps..',
@@ -46,7 +46,7 @@ function ProcessInfo() {
     
     return (
         <>
-            <div className={style.subparent}>
+           
                 <div className='d-flex flex-row px-4'>
                     <BsArrowLeftCircle role='button' className='fs-4 mt-1 text-danger' onClick={(e)=>{{
                         dispatch(updateTabData({...tabData, Tab : 'Process Records'}))
@@ -172,7 +172,6 @@ function ProcessInfo() {
                         </div>
                     </div>
                 </div>
-            </div>
             {
                 alert ?
                     <div class={style.alertparent}>

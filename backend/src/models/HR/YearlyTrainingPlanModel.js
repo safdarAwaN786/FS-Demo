@@ -4,9 +4,9 @@ const Schema = mongoose.Schema;
 // * Creation of YearlyTrainingPlan Schema
 const yearlyTrainingPlanSchema = new Schema({
 
-  User: {
+  UserDepartment: {
     type: Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'Department',
   },
 
   Year: {

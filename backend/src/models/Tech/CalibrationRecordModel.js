@@ -6,9 +6,9 @@ const calibrationSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Equipment',
   },
-  User: {
+  UserDepartment: {
     type: Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'Department',
   },
   CR: {
     type: String,

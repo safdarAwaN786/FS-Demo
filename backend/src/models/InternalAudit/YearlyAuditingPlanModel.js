@@ -8,9 +8,9 @@ const yearlyAuditingPlanSchema = new Schema({
     type: Number,
     required: true
   },
-  User : {
+  UserDepartment : {
     type : Schema.Types.ObjectId,
-    ref : 'User'
+    ref : 'Department'
   },
   Selected: [{
     Process: {

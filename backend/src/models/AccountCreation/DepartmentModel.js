@@ -8,9 +8,6 @@ const DepartmentSchema = new mongoose.Schema({
         type: Schema.Types.ObjectId,
         ref: 'Company',
     },
-
-   
-
     DepartmentId: {
         type: String
     },

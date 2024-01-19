@@ -5,7 +5,7 @@ import Swal from 'sweetalert2'
 import { BsArrowLeftCircle } from 'react-icons/bs';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
-import { setLoading } from '../../redux/slices/loading';
+import { setSmallLoading } from '../../redux/slices/loading';
 
 function CallibrationRect2() {
     const [alert, setalert] = useState(false);
@@ -52,12 +52,12 @@ function CallibrationRect2() {
     const [equipment, setEquipment] = useState(null);
 
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readEquipment/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readEquipment/${idToWatch}`).then((res) => {
             setEquipment(res.data.data);
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon: 'error',
                 title: 'OOps..',
@@ -104,8 +104,6 @@ function CallibrationRect2() {
 
     return (
         <>
-
-            <div className={style.subparent}>
                 <div className='d-flex flex-row bg-white px-lg-5 mx-1 px-2 py-2'>
                     <BsArrowLeftCircle role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
                         {
@@ -204,9 +202,6 @@ function CallibrationRect2() {
                     }} >Submit</button>
 
                 </div>
-
-            </div>
-
             {
                 alert ?
                     <div class={style.alertparent}>
@@ -323,9 +318,9 @@ function CallibrationRect2() {
                                 <button onClick={() => {
                                     setSubmitAlert(false)
                                     const formData = convertStateToFormData(formValues);
-                                    dispatch(setLoading(true))
-                                    axios.post(`${process.env.REACT_APP_BACKEND_URL}/addCalibration/${idToWatch}`, formData, { headers: { Authorization: `${user._id}` } }).then((res) => {
-                                        dispatch(setLoading(false))
+                                    dispatch(setSmallLoading(true))
+                                    axios.post(`${process.env.REACT_APP_BACKEND_URL}/addCalibration/${idToWatch}`, {...formData, user : user}, { headers: { Authorization: `${user.Department._id}` } }).then((res) => {
+                                        dispatch(setSmallLoading(false))
                                         Swal.fire({
                                             title: 'Success',
                                             text: 'Submitted Successfully',
@@ -337,7 +332,7 @@ function CallibrationRect2() {
                                             }
                                         })
                                     }).catch(err => {
-                                        dispatch(setLoading(false));
+                                        dispatch(setSmallLoading(false));
                                         Swal.fire({
                                             icon: 'error',
                                             title: 'OOps..',

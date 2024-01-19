@@ -7,9 +7,9 @@ const FormRecordsSchema = new mongoose.Schema({
     type: String,
     unique: true
   },
-  User : {
+  UserDepartment : {
     type : Schema.Types.ObjectId,
-    ref : 'User'
+    ref : 'Department'
   },
   Form : {
     type : Schema.Types.ObjectId,

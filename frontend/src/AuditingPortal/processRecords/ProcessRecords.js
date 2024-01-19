@@ -6,7 +6,7 @@ import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { changeId } from '../../redux/slices/idToProcessSlice';
-import { setLoading } from '../../redux/slices/loading';
+import { setSmallLoading } from '../../redux/slices/loading';
 import Swal from 'sweetalert2';
 
 
@@ -20,13 +20,13 @@ function ProcessRecords() {
     const dispatch = useDispatch();
     const user = useSelector(state => state.auth.user);
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readMonthlyAuditPlan`, { headers: { Authorization: `${user._id}` } }).then((Response) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readMonthlyAuditPlan`, { headers: { Authorization: `${user.Department._id}` } }).then((Response) => {
             setAllDataArr(Response.data.data);
             setPlanProcesses(Response.data.data.slice(startIndex, endIndex));
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon : 'error',
                 title : 'OOps..',
@@ -73,8 +73,9 @@ function ProcessRecords() {
 
 
     return (
+        <>
 
-        <div className={style.subparent} >
+        
             {/* <ProfileUser path='/hr/profile' /> */}
             <div className={style.searchbar} >
                 <div className={style.sec1}>
@@ -144,7 +145,7 @@ function ProcessRecords() {
                     </button>
                 )}
             </div>
-        </div>
+        </>
     )
 }
 

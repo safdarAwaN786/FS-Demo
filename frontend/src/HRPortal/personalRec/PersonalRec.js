@@ -5,7 +5,7 @@ import { BsArrowLeftCircle } from 'react-icons/bs';
 import { useDispatch, useSelector } from 'react-redux';
 import { updatePersonFormData } from '../../redux/slices/appSlice';
 import { updateTabData } from '../../redux/slices/tabSlice';
-import { setLoading } from '../../redux/slices/loading';
+import { setSmallLoading } from '../../redux/slices/loading';
 import { useState } from 'react';
 
 function PersonalRec() {
@@ -20,9 +20,9 @@ function PersonalRec() {
     const user = useSelector(state => state.auth.user);
     const makeRequest = () => {
         if (personFormData) {
-            dispatch(setLoading(true))
-            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addPersonalRecuisition`, personFormData, { headers: { Authorization: `${user._id}` } }).then(() => {
-                dispatch(setLoading(false))
+            dispatch(setSmallLoading(true))
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addPersonalRecuisition`, {...personFormData, addedBy : user.Name}, { headers: { Authorization: `${user.Department._id}` } }).then(() => {
+                dispatch(setSmallLoading(false))
                 dispatch(updatePersonFormData(null));
                 Swal.fire({
                     title: 'Success',
@@ -36,7 +36,7 @@ function PersonalRec() {
                     }
                   })
             }).catch(err => {
-                dispatch(setLoading(false));
+                dispatch(setSmallLoading(false));
                 Swal.fire({
                     icon : 'error',
                     title : 'OOps..',
@@ -58,7 +58,7 @@ function PersonalRec() {
     return (
         <>
             
-                <div className={style.subparent}>
+               
                 <div className='d-flex flex-row bg-white px-lg-5  px-2 py-2'>
                     <BsArrowLeftCircle role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
                         {
@@ -297,8 +297,6 @@ function PersonalRec() {
                             <button type='submit'>Submit</button>
                         </div>
                     </form>
-                  
-                </div>
            
             {
                 alert ?

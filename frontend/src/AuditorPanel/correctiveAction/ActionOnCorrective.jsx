@@ -7,7 +7,7 @@ import { BsArrowLeftCircle } from 'react-icons/bs';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import Slider from 'rc-slider';
-import { setLoading } from '../../redux/slices/loading';
+import { setSmallLoading } from '../../redux/slices/loading';
 
 function ActionOnCorrective() {
 
@@ -32,14 +32,14 @@ function ActionOnCorrective() {
 
 
     useEffect(() => {
-        dispatch(setLoading(true))
+        dispatch(setSmallLoading(true))
         axios.get(`${process.env.REACT_APP_BACKEND_URL}/readReportById/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((response) => {
             console.log(response.data.data);
             setReportData(response.data.data)
             setAuditData(response.data.data.ConductAudit);
             setAnswers(response.data.data.SelectedAnswers);
             setQuestions(response.data.data.ConductAudit.Questions);
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
 
             if (response.data.data == undefined) {
                 Swal.fire({
@@ -57,7 +57,7 @@ function ActionOnCorrective() {
             }
 
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon: 'error',
                 title: 'OOps..',
@@ -70,12 +70,12 @@ function ActionOnCorrective() {
         try {
             if (imageURL) {
 
-                dispatch(setLoading(true))
+                dispatch(setSmallLoading(true))
                 const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/download-image`, {
                     params: {
                         url: imageURL,
                     },
-                    responseType: 'blob', headers: { Authorization: `${user._id}` } // Specify the response type as 'blob' to handle binary data
+                    responseType: 'blob' // Specify the response type as 'blob' to handle binary data
                 });
 
 
@@ -93,7 +93,7 @@ function ActionOnCorrective() {
 
                 // Append the anchor element to the document body and click it to trigger the download
                 document.body.appendChild(link);
-                dispatch(setLoading(false))
+                dispatch(setSmallLoading(false))
                 link.click();
                 // Clean up by removing the temporary anchor element
                 document.body.removeChild(link);
@@ -105,7 +105,7 @@ function ActionOnCorrective() {
                 })
             }
         } catch (error) {
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
             Swal.fire({
                 icon: 'error',
                 title: 'OOps..',
@@ -119,23 +119,21 @@ function ActionOnCorrective() {
     const makeRequest = () => {
         console.log(finalFormData)
         if (finalFormData) {
-            dispatch(setLoading(true))
+            dispatch(setSmallLoading(true))
             axios.post(`${process.env.REACT_APP_BACKEND_URL}/addCorrectiveAction`, finalFormData, { headers: { Authorization: `${user._id}` } }).then(() => {
-                console.log("request made !");
-                dispatch(setLoading(false))
+                dispatch(setSmallLoading(false))
                 Swal.fire({
                     title: 'Success',
                     text: 'Submitted Successfully',
                     icon: 'success',
                     confirmButtonText: 'Go!',
-
                 }).then((result) => {
                     if (result.isConfirmed) {
                         dispatch(updateTabData({ ...tabData, Tab: 'Corrective Action Plan' }))
                     }
                 })
             }).catch(err => {
-                dispatch(setLoading(false));
+                dispatch(setSmallLoading(false));
                 Swal.fire({
                     icon: 'error',
                     title: 'OOps..',

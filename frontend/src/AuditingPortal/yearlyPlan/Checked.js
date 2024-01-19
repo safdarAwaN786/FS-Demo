@@ -6,7 +6,7 @@ import axios from 'axios'
 import { BsArrowLeftCircle } from 'react-icons/bs'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateTabData } from '../../redux/slices/tabSlice'
-import { setLoading } from '../../redux/slices/loading'
+import { setSmallLoading } from '../../redux/slices/loading'
 import Swal from 'sweetalert2'
 
 function AuditingChecked() {
@@ -24,13 +24,13 @@ function AuditingChecked() {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readYearlyAuditPlanById/${planId}`, { headers: { Authorization: `${user._id}` } }).then((response) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readYearlyAuditPlanById/${planId}`).then((response) => {
             setPlanToShow(response.data.data);
             setPlanProcesses(response.data.data.Selected);
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon : 'error',
                 title : 'OOps..',
@@ -68,9 +68,10 @@ function AuditingChecked() {
 
 
     return (
+        
+        <>
 
 
-        <div className={style.subparent}>
             <div className='d-flex flex-row px-lg-5  px-2 mx-2 my-2'>
                 <BsArrowLeftCircle role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
                     {
@@ -126,7 +127,8 @@ function AuditingChecked() {
             </div>
            
 
-        </div>
+
+      </>
 
     )
 }

@@ -6,7 +6,7 @@ import { BsArrowLeftCircle } from 'react-icons/bs'
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { changeId } from '../../redux/slices/idToProcessSlice';
-import { setLoading } from '../../redux/slices/loading';
+import { setSmallLoading } from '../../redux/slices/loading';
 
 function ResultsHistory() {
 
@@ -33,13 +33,13 @@ function ResultsHistory() {
         return `${hours}:${minutes}:${seconds}`;
     }
     useEffect(() => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-responses-by-formId/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-responses-by-formId/${idToWatch}`, { headers: { Authorization: `${user.Department._id}` } }).then((res) => {
             setFormResults(res.data.data);
             setFormData(res.data.data[0]?.Form);
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon: 'error',
                 title: 'OOps..',
@@ -48,13 +48,13 @@ function ResultsHistory() {
         })
     }, [])
     const refreshData = () => {
-        dispatch(setLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-responses-by-formId/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-responses-by-formId/${idToWatch}`, { headers: { Authorization: `${user.Department._id}` } }).then((res) => {
             setFormResults(res.data.data);
             setFormData(res.data.data[0]?.Form);
-            dispatch(setLoading(false))
+            dispatch(setSmallLoading(false))
         }).catch(err => {
-            dispatch(setLoading(false));
+            dispatch(setSmallLoading(false));
             Swal.fire({
                 icon: 'error',
                 title: 'OOps..',
@@ -66,7 +66,7 @@ function ResultsHistory() {
 
     return (
         <>
-            <div className={style.subparent}>
+            
                 <div className='mx-lg-5 px-2 mx-md-4 mx-2 mt-5 mb-1 '>
                     <BsArrowLeftCircle onClick={(e) => {
                         dispatch(updateTabData({ ...tabData, Tab: 'Master List of Records/Forms' }))
@@ -181,7 +181,6 @@ function ResultsHistory() {
                 <div className={style.btnparent}>
                     <button className={style.download}>Download</button>
                 </div>
-            </div>
             {
                 alert ?
                     <div class={style.alertparent}>
@@ -201,9 +200,9 @@ function ResultsHistory() {
                             <div className={style.alertbtns}>
                                 <button onClick={() => {
                                     setVerify(false);
-                                    dispatch(setLoading(true))
-                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/verify-response`, { resultId: idForAction }, { headers: { Authorization: `${user._id}` } }).then(() => {
-                                        dispatch(setLoading(false))
+                                    dispatch(setSmallLoading(true))
+                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/verify-response`, { resultId: idForAction, verifiedBy : user.Name }).then(() => {
+                                        dispatch(setSmallLoading(false))
                                         Swal.fire({
                                             title: 'Success',
                                             text: 'Verified Successfully',
@@ -213,7 +212,7 @@ function ResultsHistory() {
                                         refreshData();
                                     }).catch(err => {
                                         console.log(err)
-                                        dispatch(setLoading(false));
+                                        dispatch(setSmallLoading(false));
                                         Swal.fire({
                                             icon: 'error',
                                             title: 'OOps..',
@@ -235,9 +234,9 @@ function ResultsHistory() {
                             <form onSubmit={(e) => {
                                 e.preventDefault();
                                 setCommentBox(false);
-                                dispatch(setLoading(true))
-                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/addComment`, { resultId: idForAction, comment: comment }, { headers: { Authorization: `${user._id}` } }).then(() => {
-                                    dispatch(setLoading(false))
+                                dispatch(setSmallLoading(true))
+                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/addComment`, { resultId: idForAction, comment: comment }).then(() => {
+                                    dispatch(setSmallLoading(false))
                                     Swal.fire({
                                         title: 'Success',
                                         text: 'Commented Successfully',
@@ -247,7 +246,7 @@ function ResultsHistory() {
                                     refreshData();
                                 }).catch(err => {
                                     console.log(err)
-                                    dispatch(setLoading(false));
+                                    dispatch(setSmallLoading(false));
                                     Swal.fire({
                                         icon: 'error',
                                         title: 'OOps..',

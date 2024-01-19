@@ -8,7 +8,7 @@ const multer = require('multer');
 const upload = multer();
 const authMiddleware = require('../../middleware/auth');
 
-router.use(authMiddleware);
+// router.use(authMiddleware);
 
 cloudinary.config({
   cloud_name: process.env.cloud_name,
@@ -69,8 +69,8 @@ router.post('/createWorkRequest',  upload.fields([{ name: 'mwrImage' }]), async 
       Discipline: JSON.parse(Discipline),
       Description, SpecialInstruction,
       imageURL,
-      User : req.user._id,
-      Department : req.user.Department,
+      UserDepartment : req.header('Authorization'),
+      Department : req.header('Authorization'),
       Machinery: MachineId,
       CreatedBy: createdBy,
       CreationDate: new Date()
@@ -96,7 +96,7 @@ router.patch('/rejectMWR/:id',  async (req, res) => {
   try {
     // Extract the MWR ID from the URL parameters
     const mwrId = req.params.id;
-    const rejectedBy = req.user.Name
+    const rejectedBy = req.body.rejectedBy
     // Extract the reason from the request body
     const { Reason, Priority } = req.body;
 
@@ -142,7 +142,7 @@ router.patch('/acceptMWR/:id',  async (req, res) => {
     console.log(req.body);
     // Extract the MWR ID from the URL parameters
     const mwrId = req.params.id;
-    const acceptedBy = req.user.Name
+    const acceptedBy = req.body.acceptedBy
     // Extract fields from the request body
     const { JobAssigned, Designation, DetailOfWork } = req.body;
 
@@ -193,7 +193,7 @@ router.patch('/completeMWR/:id',  async (req, res) => {
   try {
     // Extract the MWR ID from the URL parameters
     const mwrId = req.params.id;
-    const completedBy = req.user.Name
+    const completedBy = req.body.completedBy
     // Find the MWR by ID
     const mwr = await WorkRequest.findById(mwrId);
 
@@ -232,19 +232,14 @@ router.patch('/completeMWR/:id',  async (req, res) => {
 router.get('/getAllWorkRequests',  async (req, res) => {
   console.log('mwrs');
   try {
-    const workRequests = await WorkRequest.find().populate('Department')
-      .populate('Machinery').populate('User').exec();
+    const workRequests = await WorkRequest.find({UserDepartment : req.header('Authorization')}).populate('Department')
+      .populate('Machinery').populate('UserDepartment').exec();
 
-      const workRequestsToSend = workRequests.filter((Obj)=>{
-        if(Obj.User.Department.equals(req.user.Department)){
-          console.log('got Equal');
-          return Obj
-        }
-      });
+ 
 
     // Log successful retrieval
     console.log('All work requests retrieved successfully.');
-    res.status(200).json({ message: 'All work requests retrieved successfully', data: workRequestsToSend });
+    res.status(200).json({ message: 'All work requests retrieved successfully', data: workRequests });
 
   } catch (error) {
     console.error('Error retrieving all work requests:', error);
@@ -279,7 +274,7 @@ router.get('/getWorkRequestsByMachineId/:MachineId',  async (req, res) => {
   try {
 
     const MachineId = req.params.MachineId;
-    const workRequest = await WorkRequest.find({ Machinery: MachineId })
+    const workRequest = await WorkRequest.find({ Machinery: MachineId, UserDepartment : req.header('Authorization') })
       .populate('Machinery')
       .exec();
 

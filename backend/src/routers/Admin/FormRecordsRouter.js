@@ -3,8 +3,7 @@ const router = express.Router();
 const FormRecords = require('../../models/Admin/FormRecordsModel');
 const Form = require('../../models/Admin/ListOfFormsModel').ListOfForms;
 const authMiddleware = require('../../middleware/auth');
-
-router.use(authMiddleware);
+// router.use(authMiddleware);
 
 // * Route to submit user responses for a form
 router.post('/submit-response', async (req, res) => {
@@ -12,7 +11,7 @@ router.post('/submit-response', async (req, res) => {
 
 
     const formId = req.body.Form;
-
+    const departmentId = req.header('Authorization');
     const form = await Form.findById(formId);
     console.log(form);
 
@@ -25,10 +24,10 @@ router.post('/submit-response', async (req, res) => {
       return res.status(400).json({ message: 'Form is not in an Approved status' });
     }
 
-    const filledBy = req.user.Name;
+    const filledBy = req.body.filledBy;
     const formRecords = new FormRecords({
       ...req.body,
-      User: req.user._id,
+      UserDepartment: departmentId,
       FillBy: filledBy
     });
 
@@ -74,7 +73,7 @@ router.patch('/verify-response', async (req, res) => {
     // Find the document by ID
     const response = await FormRecords.findById(resultId);
     response.Status = 'Verified';
-    response.VerifiedBy = req.user.Name;
+    response.VerifiedBy = req.body.verifiedBy;
     response.VerificationDate = new Date();
 
     // Save the updated document
@@ -93,8 +92,9 @@ router.get('/get-responses-by-formId/:formId', async (req, res) => {
 
     const formId = req.params.formId;
     console.log(formId);
+    const departmentId = req.header('Authorization')
 
-    const responseForm = await FormRecords.find({ Form: formId }).populate('User').populate([
+    const responseForm = await FormRecords.find({ Form: formId, UserDepartment :  departmentId}).populate('UserDepartment').populate([
       {
         path: 'Form',
         model: 'Form',
@@ -113,15 +113,13 @@ router.get('/get-responses-by-formId/:formId', async (req, res) => {
       },
     ]);
 
-    const responsesToSend = responseForm.filter(Obj => Obj.User.Department.equals(req.user.Department));
-
     if (!responseForm) {
       console.log(new Date().toLocaleString() + ' ' + 'Form not found for responses');
       return res.status(404).json({ error: 'Form not found' });
     }
 
     console.log(new Date().toLocaleString() + ' ' + 'Getting User Responses...');
-    res.status(200).send({ status: true, message: 'Document rejected successfully', data: responsesToSend });
+    res.status(200).send({ status: true, message: 'Document rejected successfully', data: responseForm });
     console.log(new Date().toLocaleString() + ' ' + 'User Responses Retrieved Successfully');
 
   } catch (error) {
