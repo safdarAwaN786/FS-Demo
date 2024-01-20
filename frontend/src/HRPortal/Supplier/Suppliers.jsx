@@ -254,7 +254,7 @@ export default function Suppliers() {
                             <form onSubmit={(e) => {
                                 e.preventDefault();
                                 dispatch(setSmallLoading(true))
-                                axios.patch(`/disapprove-supplier`, dataToSend, ).then(() => {
+                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/disapprove-supplier`, {...dataToSend, disapprovedBy : user.Name}).then(() => {
                                     dispatch(setSmallLoading(false))
                                     Swal.fire({
                                         title: 'Success',
@@ -298,7 +298,7 @@ export default function Suppliers() {
                             <div className={style.alertbtns}>
                                 <button onClick={() => {
                                     dispatch(setSmallLoading(true))
-                                    axios.patch("/approve-supplier", {...dataToSend, approvedBy : user.Name}).then(() => {
+                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/approve-supplier`, {...dataToSend, approvedBy : user.Name}).then(() => {
                                         statusUpdated()
                                         Swal.fire({
                                             title: 'Success',
@@ -307,7 +307,6 @@ export default function Suppliers() {
                                             confirmButtonText: 'Go!',
                                         })
                                     }).catch(err => {
-                                        console.log(err)
                                         dispatch(setSmallLoading(false));
                                         Swal.fire({
                                             icon: 'error',
