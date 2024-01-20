@@ -35,6 +35,7 @@ router.post('/create-supplier',  async (req, res) => {
 router.get('/get-all-suppliers',  async (req, res) => {
     try {
         const suppliers = await Supplier.find({UserDepartment : req.header('Authorization')}).populate('UserDepartment');
+        console.log('getting supplier');
         if (!suppliers) {
             console.log('Supplier documents not found');
             return res.status(404).json({ message: 'Supplier documents not found' });
@@ -53,7 +54,7 @@ router.get('/get-supplier/:supplierId',  async (req, res) => {
     try {
         const supplierId = req.params.supplierId;
         const supplier = await Supplier.findById(supplierId);
-
+        console.log('geting-suppliers');
         if (!supplier) {
             console.log(`Supplier document with ID: ${supplierId} not found`);
             return res.status(404).json({ message: `Supplier document with ID: ${supplierId} not found` });

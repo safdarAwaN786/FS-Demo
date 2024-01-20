@@ -34,7 +34,7 @@ const CompanySchema = new mongoose.Schema({
 
     Email: {
         type: String,
-        unique: true,
+        unique: false,
         required: true,
         trim: true,
         lowercase: true,

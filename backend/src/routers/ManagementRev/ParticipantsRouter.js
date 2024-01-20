@@ -30,7 +30,7 @@ router.post('/create-participants', async (req, res) => {
 router.get('/get-all-participants', async (req, res) => {
   try {
 
-    const participantsDocs = await Participants.find({UserDepartment : req.header('Authorization')}).populate('User')
+    const participantsDocs = await Participants.find({UserDepartment : req.header('Authorization')}).populate('UserDepartment')
     if (!participantsDocs) {
       console.log('Participants documents not found');
       return res.status(404).json({ message: 'Participants documents not found' });

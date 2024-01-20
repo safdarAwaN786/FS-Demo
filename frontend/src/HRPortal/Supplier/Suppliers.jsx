@@ -254,7 +254,7 @@ export default function Suppliers() {
                             <form onSubmit={(e) => {
                                 e.preventDefault();
                                 dispatch(setSmallLoading(true))
-                                axios.patch(`/disapprove-supplier`, {...dataToSend, disapprovedBy : user.Name}).then(() => {
+                                axios.patch(`/disapprove-supplier`, dataToSend, ).then(() => {
                                     dispatch(setSmallLoading(false))
                                     Swal.fire({
                                         title: 'Success',
@@ -307,6 +307,7 @@ export default function Suppliers() {
                                             confirmButtonText: 'Go!',
                                         })
                                     }).catch(err => {
+                                        console.log(err)
                                         dispatch(setSmallLoading(false));
                                         Swal.fire({
                                             icon: 'error',
