@@ -127,29 +127,29 @@ function CallibrationRect2() {
                     <div className={style.sec1}>
                         <div>
                             <p>Device Id</p>
-                            <input type="text" value={equipment?.equipmentCode} />
+                            <input autoComplete='off' type="text" value={equipment?.equipmentCode} />
                         </div>
                         <div>
                             <p>Device name</p>
-                            <input type="text" value={equipment?.equipmentName} />
+                            <input autoComplete='off' type="text" value={equipment?.equipmentName} />
                         </div>
                         <div>
                             <p>Date type</p>
-                            <input type="text" value={dateType} />
+                            <input autoComplete='off' type="text" value={dateType} />
                         </div>
                     </div>
                     <div className={style.sec2}>
                         <div>
                             <p>Device location</p>
-                            <input type="text" value={equipment?.equipmentLocation} />
+                            <input autoComplete='off' type="text" value={equipment?.equipmentLocation} />
                         </div>
                         <div>
                             <p>Device Range</p>
-                            <input type="text" value={equipment?.Range} />
+                            <input autoComplete='off' type="text" value={equipment?.Range} />
                         </div>
                         <div>
                             <p>Callibration type</p>
-                            <input type="text" value={callibrationType} />
+                            <input autoComplete='off' type="text" value={callibrationType} />
                         </div>
                     </div>
                 </div>
@@ -181,12 +181,12 @@ function CallibrationRect2() {
 
                         <tr >
                             <td>{new Date().getDate()}/{new Date().getMonth()}/{new Date().getFullYear()}</td>
-                            <td ><input className='px-1' onChange={updateFormValues} name='firstReading' type="number" /></td>
-                            <td><input className='px-1' onChange={updateFormValues} name='secondReading' type="number" /></td>
-                            <td ><input className='px-1' onChange={updateFormValues} name='thirdReading' type="number" /></td>
+                            <td ><input autoComplete='off' className='px-1' onChange={updateFormValues} name='firstReading' type="number" /></td>
+                            <td><input autoComplete='off' className='px-1' onChange={updateFormValues} name='secondReading' type="number" /></td>
+                            <td ><input autoComplete='off' className='px-1' onChange={updateFormValues} name='thirdReading' type="number" /></td>
                             <td>{nextdate.getDate()}/{nextdate.getMonth()}/{nextdate.getFullYear()}</td>
                             <td ><button onClick={alertManager} className={style.btn}>add</button></td>
-                            <td><input className='px-1' value={user.Name} name='CR' type="text" /></td>
+                            <td><input autoComplete='off' className='px-1' value={user.Name} name='CR' type="text" /></td>
                         </tr>
 
                     </table>
@@ -281,11 +281,11 @@ function CallibrationRect2() {
                         <div class={style.alert2}>
                             <div>
                                 <p>Company name</p>
-                                <input name='companyName' onChange={updateFormValues} type="text" />
+                                <input autoComplete='off' name='companyName' onChange={updateFormValues} type="text" />
                             </div>
                             <div>
                                 <p>Master callibration reference</p>
-                                <input name='masterReference' onChange={updateFormValues} type="text" />
+                                <input autoComplete='off' name='masterReference' onChange={updateFormValues} type="text" />
                             </div>
                             <div>
                                 <p>Certificate</p>

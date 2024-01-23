@@ -214,7 +214,11 @@ router.patch('/update-process/:processId', async (req, res) => {
       processData.ProcessDetails.map(async (processObj) => {
         if (processObj.subProcesses?.length > 0) {
           try {
-            const createdSubProcesses = await ProcessDetailModel.create(processObj.subProcesses);
+            const createdSubProcesses = await ProcessDetailModel.create(processObj.subProcesses.map(process => {
+              const { _id, ...newProcess } = process;
+            
+              return newProcess;
+            }));
             const subProcessesArray = Object.values(createdSubProcesses);
             console.log(subProcessesArray);
             const subProcessesIds = subProcessesArray.map(item => item._id);

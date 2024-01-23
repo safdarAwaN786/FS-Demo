@@ -14,7 +14,7 @@ function Companies() {
 
     const [companiesList, setCompaniesList] = useState(null);
     const [showBox, setShowBox] = useState(false);
-    const tabData =  useSelector(state => state.tab);
+    const tabData = useSelector(state => state.tab);
     const [dataToShow, setDataToShow] = useState(null);
     const [startIndex, setStartIndex] = useState(0);
     const [endIndex, setEndIndex] = useState(8);
@@ -30,13 +30,30 @@ function Companies() {
         }).catch(err => {
             dispatch(setSmallLoading(false));
             Swal.fire({
-                icon : 'error',
-                title : 'OOps..',
-                text : 'Something went wrong, Try Again!'
+                icon: 'error',
+                title: 'OOps..',
+                text: 'Something went wrong, Try Again!'
             })
         })
     }, [])
-
+    const refresh = async () => {
+        dispatch(setSmallLoading(true));
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-companies`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
+            dispatch(setSmallLoading(false));
+            setAllDataArr(response.data.data)
+            console.log(response.data);
+            setCompaniesList(response.data.data.slice(startIndex, endIndex));
+        }).catch(err => {
+            dispatch(setSmallLoading(false));
+            Swal.fire({
+                icon: 'error',
+                title: 'OOps..',
+                text: 'Something went wrong, Try Again!'
+            })
+        })
+    }
+    const [alert, setAlert] = useState(false);
+    const [idToProcess, setIdToProcess] = useState(null);
 
     const nextPage = () => {
         setStartIndex(startIndex + 8);
@@ -69,95 +86,100 @@ function Companies() {
     return (
         <>
 
-                <div className={style.searchbar}>
-                    <div className={style.sec1}>
-                        <img src={Search} alt="" />
-                        <input onChange={search} type="text" placeholder='Search Company by name or Id' />
+            <div className={style.searchbar}>
+                <div className={style.sec1}>
+                    <img src={Search} alt="" />
+                    <input autoComplete='off' onChange={search} type="text" placeholder='Search Company by name or Id' />
+                </div>
+                {tabData?.Creation && (
+
+                    <div className={style.sec2} onClick={() => {
+                        dispatch(updateTabData({ ...tabData, Tab: 'addCompany' }))
+                    }}>
+                        <img src={add} alt="" />
+                        <p>Add New</p>
                     </div>
-                    {tabData?.Creation && (
+                )}
+            </div>
+            <div className={style.tableParent}>
+                {!companiesList || companiesList?.length === 0 ? (
+                    <div className='w-100 d-flex align-items-center justify-content-center'>
+                        <p className='text-center'>No any Records Available here.</p>
+                    </div>
+                ) : (
 
-                        <div className={style.sec2} onClick={() => {
-                            dispatch(updateTabData({...tabData, Tab : 'addCompany'}))
-                        }}>
-                            <img src={add} alt="" />
-                            <p>Add New</p>
-                        </div>
-                    )}
-                </div>
-                <div className={style.tableParent}>
-                    {!companiesList || companiesList?.length === 0 ? (
-                        <div className='w-100 d-flex align-items-center justify-content-center'>
-                            <p className='text-center'>No any Records Available here.</p>
-                        </div>
-                    ) : (
+                    <table className={style.table}>
+                        <tr className={style.headers}>
+                            <td>Company ID</td>
+                            <td>Company Name</td>
+                            <td>Short Name</td>
+                            <td>Email</td>
+                            <td>Address</td>
+                            <td>Contact #</td>
+                            <td>Action</td>
+                        </tr>
+                        {
+                            companiesList?.map((company, i) => {
+                                return (
+                                    <tr className={style.tablebody} key={i}>
+                                        <td ><p style={{
+                                            backgroundColor: "#f0f5f0",
+                                            padding: "2px 5px",
+                                            borderRadius: "10px",
+                                            fontFamily: "Inter",
+                                            fontSize: "12px",
+                                            fontStyle: "normal",
+                                            fontWeight: "400",
+                                            lineHeight: "20px",
+                                        }}>{company.CompanyId}</p></td>
+                                        <td className={style.simpleContent}><div style={{
+                                            width: "40px",
+                                            height: "40px",
+                                            borderRadius: "50%",
+                                            overflow: "hidden",
+                                            backgroundImage: `url(${profile})`,
+                                            backgroundSize: 'cover',
+                                            backgroundPosition: 'center',
 
-                        <table className={style.table}>
-                            <tr className={style.headers}>
-                                <td>Company ID</td>
-                                <td>Company Name</td>
-                                <td>Short Name</td>
-                                <td>Email</td>
-                                <td>Address</td>
-                                <td>Contact #</td>
-                            </tr>
-                            {
-                                companiesList?.map((company, i) => {
-                                    return (
-                                        <tr className={style.tablebody} key={i}>
-                                            <td ><p style={{
-                                                backgroundColor: "#f0f5f0",
-                                                padding: "2px 5px",
-                                                borderRadius: "10px",
-                                                fontFamily: "Inter",
-                                                fontSize: "12px",
-                                                fontStyle: "normal",
-                                                fontWeight: "400",
-                                                lineHeight: "20px",
-                                            }}>{company.CompanyId}</p></td>
-                                            <td className={style.simpleContent}><div style={{
-                                                width: "40px",
-                                                height: "40px",
-                                                borderRadius: "50%",
-                                                overflow: "hidden",
-                                                backgroundImage: `url(${profile})`,
-                                                backgroundSize: 'cover',
-                                                backgroundPosition: 'center',
+                                        }}>
+                                            <img style={{
+                                                width: "100%",
+                                                height: "100%",
+                                                objectFit: "cover"
+                                            }} onError={(e) => {
+                                                e.target.style.display = 'none'; // Hide the img tag on error
+                                            }} src={company.CompanyLogo || profile} alt="Image" />
 
-                                            }}>
-                                                <img style={{
-                                                    width: "100%",
-                                                    height: "100%",
-                                                    objectFit: "cover"
-                                                }} onError={(e) => {
-                                                    e.target.style.display = 'none'; // Hide the img tag on error
-                                                }} src={company.CompanyLogo || profile} alt="Image" />
+                                        </div> {company.CompanyName}</td>
+                                        <td>{company.ShortName}</td>
+                                        <td>{company.Email}</td>
+                                        <td>{company.Address}</td>
+                                        <td>{company.PhoneNo}</td>
+                                        <td><button onClick={() => {
+                                            setIdToProcess(company._id);
+                                            setAlert(true);
+                                        }} className='btn  btn-outline-danger px-3 py-1'>Delete</button></td>
+                                    </tr>
+                                )
+                            })
+                        }
+                    </table>
+                )}
+            </div>
+            <div className={style.Btns}>
+                {startIndex > 0 && (
 
-                                            </div> {company.CompanyName}</td>
-                                            <td>{company.ShortName}</td>
-                                            <td>{company.Email}</td>
-                                            <td>{company.Address}</td>
-                                            <td>{company.PhoneNo}</td>
-                                        </tr>
-                                    )
-                                })
-                            }
-                        </table>
-                    )}
-                </div>
-                <div className={style.Btns}>
-                    {startIndex > 0 && (
+                    <button onClick={backPage}>
+                        {'<< '}Back
+                    </button>
+                )}
+                {allDataArr?.length > endIndex && (
 
-                        <button onClick={backPage}>
-                            {'<< '}Back
-                        </button>
-                    )}
-                    {allDataArr?.length > endIndex && (
-
-                        <button onClick={nextPage}>
-                            next{'>> '}
-                        </button>
-                    )}
-                </div>
+                    <button onClick={nextPage}>
+                        next{'>> '}
+                    </button>
+                )}
+            </div>
 
             {
                 showBox && (
@@ -169,7 +191,10 @@ function Companies() {
 
                             <div className={style.alertbtns}>
 
-                                <button onClick={() => {
+                                <button style={{
+                                    marginLeft : '120px',
+                                    marginTop : '25px'
+                                }}  onClick={() => {
                                     setShowBox(false);
 
                                 }} className={style.btn2}>OK</button>
@@ -178,6 +203,46 @@ function Companies() {
                         </div>
                     </div>
                 )
+            }
+            {
+                alert ?
+                    <div class={style.alertparent}>
+                        <div class={style.alert}>
+                            <p class={style.msg}>Do you want to delete this company?</p>
+                            <div className={style.alertbtns}>
+                                <button onClick={() => {
+                                    setAlert(false)
+                                    dispatch(setSmallLoading(true))
+                                    axios.delete(`${process.env.REACT_APP_BACKEND_URL}/delete-company/${idToProcess}`).then((response) => {
+                                        dispatch(setSmallLoading(false));
+                                        Swal.fire({
+                                            icon: 'success',
+                                            title: 'Deleted Successfully',
+                                            text: 'Company Deleted Successfully!',
+                                            confirmButtonText: 'OK.'
+                                        }).then((result) => {
+                                            if (result.isConfirmed) {
+                                                refresh()
+                                            }
+                                        })
+                                        setAlert(false)
+                                    }).catch(err => {
+                                        dispatch(setSmallLoading(false));
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'OOps..',
+                                            text: 'Something went wrong, Try Again!'
+                                        })
+                                        setAlert(false)
+                                    })
+                                }} className={style.btn1}>Submit</button>
+                                <button onClick={() => {
+                                    setAlert(false)
+                                }} className={style.btn2}>Cancel</button>
+
+                            </div>
+                        </div>
+                    </div> : null
             }
 
         </>

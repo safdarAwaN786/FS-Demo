@@ -71,6 +71,7 @@ const uploadToCloudinary = (buffer) => {
         { resource_type: 'auto' },
         (error, result) => {
           if (error) {
+            console.log(error);
             reject(new Error('Failed to upload file to Cloudinary'));
           } else {
             resolve(result);
@@ -163,6 +164,7 @@ router.post('/addTraining', upload.fields([{ name: 'TrainingMaterial' }]), async
     console.log(new Date().toLocaleString() + ' ' + 'ADD Training Successfully!');
 
   } catch (e) {
+    console.log(e);
     res.status(400).json({ message: e.message });
   }
 });

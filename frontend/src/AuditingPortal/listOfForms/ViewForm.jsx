@@ -84,20 +84,20 @@ function ViewForm() {
                             <div className='w-100'>
                                 <p className='text-black'>Department</p>
                                 <div>
-                                    <input value={dataToSend?.Department.DepartmentName} className='w-100' name='FormDescription' type="text" readOnly />
+                                    <input autoComplete='off' value={dataToSend?.Department.DepartmentName} className='w-100' name='FormDescription' type="text" readOnly />
                                 </div>
                             </div>
                             <div className='w-100'>
                                 <p className='text-black'>Document Type</p>
                                 <div>
-                                    <input value={dataToSend?.DocumentType} className='w-100' name='FormDescription' type="text" readOnly />
+                                    <input autoComplete='off' value={dataToSend?.DocumentType} className='w-100' name='FormDescription' type="text" readOnly />
                                 </div>
                             </div>
 
                             <div className='w-100'>
                                 <p className='text-black'>Maintenance Frequency</p>
                                 <div>
-                                    <input value={dataToSend?.MaintenanceFrequency} className='w-100' name='FormDescription' type="text" readOnly />
+                                    <input autoComplete='off' value={dataToSend?.MaintenanceFrequency} className='w-100' name='FormDescription' type="text" readOnly />
                                 </div>
                             </div>
 
@@ -105,13 +105,13 @@ function ViewForm() {
                                 <p className='text-black'>Form Name</p>
                                 <div>
 
-                                    <input value={dataToSend?.FormName} className='w-100' name='FormName' type="text" readOnly />
+                                    <input autoComplete='off' value={dataToSend?.FormName} className='w-100' name='FormName' type="text" readOnly />
                                 </div>
                             </div>
                             <div className='w-100'>
                                 <p className='text-black'>Form Description</p>
                                 <div>
-                                    <input value={dataToSend?.FormDescription} className='w-100' name='FormDescription' type="text" readOnly />
+                                    <input autoComplete='off' value={dataToSend?.FormDescription} className='w-100' name='FormDescription' type="text" readOnly />
                                 </div>
                             </div>
 
@@ -125,7 +125,7 @@ function ViewForm() {
                                             <div style={{
                                                 width: '100%'
                                             }} className=' me-3 d-flex flex-column'>
-                                                <input value={dataToSend?.questions[index]?.questionText} style={{
+                                                <input autoComplete='off' value={dataToSend?.questions[index]?.questionText} style={{
                                                     borderRadius: '0px'
                                                 }} name='questionText' className='border-bottom border-secondary bg-light mt-2 mb-3 w-100 p-3' readOnly />
 
@@ -157,7 +157,7 @@ function ViewForm() {
                                                                         <th style={{
                                                                             minWidth: '80px'
                                                                         }}>
-                                                                            <input value={dataToSend?.questions[index].columns[colIndex].colTitle} className={`bg-light border-bottom border-secondary d-inline py-0 px-1 mx-1 ${style.noRadius}`} type='text' required readOnly />
+                                                                            <input autoComplete='off' value={dataToSend?.questions[index].columns[colIndex].colTitle} className={`bg-light border-bottom border-secondary d-inline py-0 px-1 mx-1 ${style.noRadius}`} type='text' required readOnly />
                                                                         </th>
                                                                     )
                                                                 })}
@@ -170,14 +170,14 @@ function ViewForm() {
                                                                     <tr>
                                                                         <td>
                                                                             <span>{rowIndex + 1}.</span>
-                                                                            <input value={dataToSend?.questions[index].rows[rowIndex].rowTitle} name='rowTitle' type='text' style={{
+                                                                            <input autoComplete='off' value={dataToSend?.questions[index].rows[rowIndex].rowTitle} name='rowTitle' type='text' style={{
                                                                                 borderRadius: '0px'
                                                                             }} className='bg-light border-bottom border-secondary  px-2 py-0 d-inline' readOnly />
                                                                         </td>
                                                                         {questions[index]?.columns.map((colnum, colIndex) => {
                                                                             return (
                                                                                 <td>
-                                                                                    <input className='mx-2' style={{
+                                                                                    <input autoComplete='off' className='mx-2' style={{
                                                                                         width: '20px',
                                                                                         height: '20px'
                                                                                     }} name={`R${rowIndex}`} type='radio' readOnly />
@@ -208,7 +208,7 @@ function ViewForm() {
                                                                         <th style={{
                                                                             minWidth: '80px'
                                                                         }}>
-                                                                            <input value={dataToSend?.questions[index].columns[colIndex].colTitle} className={`bg-light border-bottom border-secondary d-inline py-0 px-1 mx-1 ${style.noRadius}`} type='text' required readOnly />
+                                                                            <input autoComplete='off' value={dataToSend?.questions[index].columns[colIndex].colTitle} className={`bg-light border-bottom border-secondary d-inline py-0 px-1 mx-1 ${style.noRadius}`} type='text' required readOnly />
                                                                         </th>
                                                                     )
                                                                 })}
@@ -221,14 +221,14 @@ function ViewForm() {
                                                                     <tr>
                                                                         <td>
                                                                             <span>{rowIndex + 1}.</span>
-                                                                            <input value={dataToSend?.questions[index].rows[rowIndex].rowTitle} name='rowTitle' type='text' style={{
+                                                                            <input autoComplete='off' value={dataToSend?.questions[index].rows[rowIndex].rowTitle} name='rowTitle' type='text' style={{
                                                                                 borderRadius: '0px'
                                                                             }} className='bg-light border-bottom border-secondary  px-2 py-0 d-inline' readOnly />
                                                                         </td>
                                                                         {questions[index]?.columns.map((colnum, colIndex) => {
                                                                             return (
                                                                                 <td>
-                                                                                    <input className='mx-2' style={{
+                                                                                    <input autoComplete='off' className='mx-2' style={{
                                                                                         width: '20px',
                                                                                         height: '20px'
                                                                                     }} type='checkbox' readOnly />
@@ -264,7 +264,7 @@ function ViewForm() {
 
                                                             <span>{optindex + 1}.</span>
 
-                                                            <input type='text' value={dataToSend?.questions[index]?.options[optindex].optionText} style={{
+                                                            <input autoComplete='off' type='text' value={dataToSend?.questions[index]?.options[optindex].optionText} style={{
                                                                 borderRadius: '0px'
                                                             }} name='optionText' className='bg-light border-bottom border-secondary w-50 px-2 py-0 d-inline' readOnly />
                                                         </div>
@@ -315,7 +315,7 @@ function ViewForm() {
                                                 color: 'black'
                                             }}>Required</p>
                                             <label className={style.switch}>
-                                                <input className='ms-3' name='IsPass' type="checkbox" checked={dataToSend?.questions[index].Required} />
+                                                <input autoComplete='off' className='ms-3' name='IsPass' type="checkbox" checked={dataToSend?.questions[index].Required} />
                                                 <span className={`${style.slider} ${style.round}`} ></span>
                                             </label>
 

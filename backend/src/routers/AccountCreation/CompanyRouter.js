@@ -104,9 +104,9 @@ router.get('/get-company',  async (req, res) => {
 });
 
 // * Delete a Company document by ID
-router.delete('/delete-company',  async (req, res) => {
+router.delete('/delete-company/:companyId',  async (req, res) => {
     try {
-      const companyId = req.body.id;
+      const companyId = req.params.companyId;
       const deletedCompany = await Company.findByIdAndDelete(companyId);
   
       if (!deletedCompany) {

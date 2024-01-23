@@ -108,7 +108,7 @@ function AddTraining() {
                             <p>Training Name</p>
                             <div>
                                 <img src={office} alt="" />
-                                <input name='TrainingName' type="text" required />
+                                <input autoComplete='off' name='TrainingName' type="text" required />
                             </div>
                         </div>
                         <div>
@@ -125,7 +125,7 @@ function AddTraining() {
                                 <textarea name='EvaluationCriteria' className={style.fortextarea} type="text" required />
                             </div>
                         </div>
-                        <input onChange={handleDocumentChange} name='TrainingMaterial' type='file' accept='.pdf' ref={documentRef} style={{ display: 'none' }} />
+                        <input autoComplete='off' onChange={handleDocumentChange} name='TrainingMaterial' type='file' accept='.pdf' ref={documentRef} style={{ display: 'none' }} />
                         <div className={style.btns}>
                             <p style={{
                                 padding: "13px 20px",

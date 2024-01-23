@@ -81,7 +81,7 @@ function MRMDetails() {
                                     {/* <p>Document Type</p> */}
                                 </div>
                                 <div>
-                                <input value={dataToSend?.Notification?.MRMNo} className='w-100' type='text' readOnly/>
+                                <input autoComplete='off' value={dataToSend?.Notification?.MRMNo} className='w-100' type='text' readOnly/>
                                     
                                 </div>
                             </div>
@@ -95,7 +95,7 @@ function MRMDetails() {
                                                 }} className='fw-bold'>Agenda Name</p></div>
 
                                                 <div className='bg-light my-3 p-0'>
-                                                    <input style={{
+                                                    <input autoComplete='off' style={{
                                                         fontFamily: 'Poppins'
                                                     }} rows={4} value={agendaObj?.Agenda?.Name} name='Agenda' className='text-dark w-100 border-0 p-2' placeholder='Agenda Points' required readOnly />
                                                 </div>
@@ -107,7 +107,7 @@ function MRMDetails() {
                                                     }} className='fw-bold'>Target Date</p>
                                                 </div>
                                                 <div >
-                                                    <input value={formatDate(agendaObj?.TargetDate)} name='TargetDate' className='text-dark' type='text' required readOnly />
+                                                    <input autoComplete='off' value={formatDate(agendaObj?.TargetDate)} name='TargetDate' className='text-dark' type='text' required readOnly />
                                                 </div>
                                             </div>
                                             <div className={style.inputParent}>

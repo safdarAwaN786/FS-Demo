@@ -154,7 +154,7 @@ function AddChangeRequest() {
                                             <p>Line no</p>
                                         </div>
                                         <div>
-                                            <input onChange={(e) => {
+                                            <input autoComplete='off' onChange={(e) => {
                                                 updateData(e)
                                             }} name='LineNo' className='p-2 text-dark' type='number' />
                                         </div>
@@ -164,7 +164,7 @@ function AddChangeRequest() {
                                             <p>Paragraph No</p>
                                         </div>
                                         <div>
-                                            <input onChange={(e) => {
+                                            <input autoComplete='off' onChange={(e) => {
                                                 updateData(e)
                                             }} name='ParagraphNo' className='p-2 text-dark' type='number' />
                                         </div>
@@ -193,7 +193,7 @@ function AddChangeRequest() {
                                             <p>Page No</p>
                                         </div>
                                         <div>
-                                            <input onChange={(e) => {
+                                            <input autoComplete='off' onChange={(e) => {
                                                 updateData(e)
                                             }} name='PageNo' className='p-2 text-dark' type='number' />
                                         </div>

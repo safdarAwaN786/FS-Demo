@@ -1,5 +1,6 @@
 const express = require('express');
 const User = require('../../models/AccountCreation/UserModel');
+const Employee = require('../../models/HR/EmployeeModel');
 const router = new express.Router();
 require('dotenv').config()
 const cloudinary = require('cloudinary').v2;
@@ -95,136 +96,124 @@ const formatDate = (date) => {
 
   const newDate = new Date(date);
   const formatDate = newDate.toLocaleDateString('en-GB', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
   });
   return formatDate;
 }
 // * POST Employee Data Into MongooDB Database
 router.post('/addEmployee', upload.fields([{ name: 'Image' }, { name: 'CV' }]), async (req, res) => {
   try {
-    console.log(req.body);
     const requestUser = await User.findById(req.header('Authorization')).populate('Company Department')
-    const userNameExist = await User.findOne({ UserName: req.body.UserName });
-    console.log(requestUser);
-    if (userNameExist) {
-      console.log('Exists already');
-      res.status(201).json({ status: false, message: 'UserName already exists!' });
-    } else {
-      if (req.files) {
+    const emailExist = await Employee.findOne({Email : req.body.Email});
+    const phoneExist = await Employee.findOne({PhoneNumber : req.body.PhoneNumber});
+    const cnicExist = await Employee.findOne({CNIC : req.body.CNIC});
+    if(emailExist){
+      res.status(400).json({ message: 'Employee with Email already exists!'});
+      return
+    }else if(phoneExist){
+      res.status(400).json({ message: 'Employee with Phone Number already exists!'});
+      return
+    }else if(cnicExist){
+      res.status(400).json({ message: 'Employee with CNIC already exists!'});
+      return
+    }
 
-
-        // Get the file buffers of the uploaded image and document
-        var imageUrl;
-        if (req.files['Image']) {
-          imageFile = req.files['Image'][0];
-          // Upload the image  to Cloudinary and obtain the URL
-          imageUrl = await uploadToCloudinary(imageFile.buffer).then((result) => {
-            return (result.secure_url)
-          }).catch((err) => {
-            console.log(err);
-          });
-        }
-
-        var CVFile;
-        var CVUrl;
-        if (req.files['CV']) {
-          CVFile = req.files['CV'][0];
-          const response = await axios.get(requestUser.Company.CompanyLogo, { responseType: 'arraybuffer' });
-          const pdfDoc = await PDFDocument.load(CVFile.buffer);
-          const logoImage = Buffer.from(response.data);
-          const logoImageDataUrl = `data:image/jpeg;base64,${logoImage.toString('base64')}`;
-          const isJpg = logoImageDataUrl.includes('data:image/jpeg') || logoImageDataUrl.includes('data:image/jpg');
-          const isPng = logoImageDataUrl.includes('data:image/png');
-          let pdfLogoImage;
-          if (isJpg) {
-            pdfLogoImage = await pdfDoc.embedJpg(logoImage);
-          } else if (isPng) {
-            pdfLogoImage = await pdfDoc.embedPng(logoImage);
-          }
-          const firstPage = pdfDoc.insertPage(0);
-          addFirstPage(firstPage, pdfLogoImage, requestUser.Company, requestUser);
-          const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
-          pdfDoc.getPages().slice(1).forEach(async (page) => {
-            page.translateContent(0, -30);
-            const { width, height } = page.getSize();
-            const watermarkText = 'Powered By Feat Technology';
-            const watermarkFontSize = 15;
-            const watermarkTextWidth = (helveticaFont.widthOfTextAtSize(watermarkText, watermarkFontSize));
-            const centerWatermarkX = width / 2 - watermarkTextWidth / 2;
-            const centerWatermarkY = height - 18;
-            page.drawText(watermarkText, { x: centerWatermarkX, y: centerWatermarkY, size: watermarkFontSize, color: rgb(0, 0, 0) });
-            const companyText = `${requestUser.Company.CompanyName}`;
-            const companyTextFontSize = 10;
-            const companyTextWidth = (helveticaFont.widthOfTextAtSize(companyText, companyTextFontSize));
-            const centerCompanyTextX = width - companyTextWidth - 20;
-            const centerCompanyTextY = height - 16;
-            page.drawText(companyText, { x: centerCompanyTextX, y: centerCompanyTextY, size: companyTextFontSize, color: rgb(0, 0, 0) });
-            const dateText = `Upload Date : ${formatDate(new Date())}`;
-            const dateTextFontSize = 10;
-            const dateTextWidth = (helveticaFont.widthOfTextAtSize(dateText, dateTextFontSize));
-            const centerDateTextX = width - dateTextWidth - 20;
-            const centerDateTextY = height - 30;
-            page.drawText(dateText, { x: centerDateTextX, y: centerDateTextY, size: dateTextFontSize, color: rgb(0, 0, 0) });
-          });
-          // Save the modified PDF
-          const modifiedPdfBuffer = await pdfDoc.save();
-
-          // Upload the document  to Cloudinary and obtain the URLs
-          CVUrl = await uploadToCloudinary(modifiedPdfBuffer).then((result) => {
-            return (result.secure_url)
-          }).catch((err) => {
-            console.log(err);
-          })
-        }
+    if (req.files) {
+      // Get the file buffers of the uploaded image and document
+      var imageUrl;
+      if (req.files['Image']) {
+        imageFile = req.files['Image'][0];
+        // Upload the image  to Cloudinary and obtain the URL
+        imageUrl = await uploadToCloudinary(imageFile.buffer).then((result) => {
+          return (result.secure_url)
+        }).catch((err) => {
+          console.log(err);
+        });
       }
 
-      const createdBy = requestUser?.Name;
-      // Create a new employee document with the image and document URLs
-      const newUser = new User({
-        ...req.body,
-        UserDepartment: requestUser.Department._id,
-        DepartmentText: req.body.Department,
-        Department: requestUser.Department,
-        Company: requestUser.Company,
-        isEmployee: true,
-        EmployeeImage: imageUrl,
-        EmployeeCV: CVUrl,
-        CreatedBy: createdBy,
-        Password: CryptoJS.AES.encrypt(req.body.Password, process.env.PASS_CODE).toString(),
-        CreationDate: new Date()
-      });
-
-      // Send email to the new user
-      const emailBody = template.body.replace('{{name}}', newUser.Name)
-        .replace('{{username}}', newUser.UserName)
-        .replace('{{password}}', req.body.Password);
-    
-      const mailOptions = {
-        from: process.env.email, // Sender email address
-        to: newUser.Email, // Recipient's email address
-        subject: template.subject,
-        text: emailBody
-      };
-
-      transporter.sendMail(mailOptions, function (error, info) {
-        if (error) {
-          console.error('Error sending email:', error);
-          return res.status(500).json({ message: 'Error sending email', error: error.message });
-        } else {
-          console.log('Email sent: ' + info.response);
-          // Save the new user after sending email
-          newUser.save().then(() => {
-            res.status(200).send({ status: true, message: "The employee is added!", data: newUser });
-          }).catch((error) => {
-            console.error(error);
-            res.status(500).json({ message: 'Error adding Employee!', error: error.message });
-          });
+      var CVFile;
+      var CVUrl;
+      if (req.files['CV']) {
+        CVFile = req.files['CV'][0];
+        const response = await axios.get(requestUser.Company.CompanyLogo, { responseType: 'arraybuffer' });
+        const pdfDoc = await PDFDocument.load(CVFile.buffer);
+        const logoImage = Buffer.from(response.data);
+        const logoImageDataUrl = `data:image/jpeg;base64,${logoImage.toString('base64')}`;
+        const isJpg = logoImageDataUrl.includes('data:image/jpeg') || logoImageDataUrl.includes('data:image/jpg');
+        const isPng = logoImageDataUrl.includes('data:image/png');
+        let pdfLogoImage;
+        if (isJpg) {
+          pdfLogoImage = await pdfDoc.embedJpg(logoImage);
+        } else if (isPng) {
+          pdfLogoImage = await pdfDoc.embedPng(logoImage);
         }
-      });
+        const firstPage = pdfDoc.insertPage(0);
+        addFirstPage(firstPage, pdfLogoImage, requestUser.Company, requestUser);
+        const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
+        pdfDoc.getPages().slice(1).forEach(async (page) => {
+          page.translateContent(0, -30);
+          const { width, height } = page.getSize();
+          const watermarkText = 'Powered By Feat Technology';
+          const watermarkFontSize = 15;
+          const watermarkTextWidth = (helveticaFont.widthOfTextAtSize(watermarkText, watermarkFontSize));
+          const centerWatermarkX = width / 2 - watermarkTextWidth / 2;
+          const centerWatermarkY = height - 18;
+          page.drawText(watermarkText, { x: centerWatermarkX, y: centerWatermarkY, size: watermarkFontSize, color: rgb(0, 0, 0) });
+          const companyText = `${requestUser.Company.CompanyName}`;
+          const companyTextFontSize = 10;
+          const companyTextWidth = (helveticaFont.widthOfTextAtSize(companyText, companyTextFontSize));
+          const centerCompanyTextX = width - companyTextWidth - 20;
+          const centerCompanyTextY = height - 16;
+          page.drawText(companyText, { x: centerCompanyTextX, y: centerCompanyTextY, size: companyTextFontSize, color: rgb(0, 0, 0) });
+          const dateText = `Upload Date : ${formatDate(new Date())}`;
+          const dateTextFontSize = 10;
+          const dateTextWidth = (helveticaFont.widthOfTextAtSize(dateText, dateTextFontSize));
+          const centerDateTextX = width - dateTextWidth - 20;
+          const centerDateTextY = height - 30;
+          page.drawText(dateText, { x: centerDateTextX, y: centerDateTextY, size: dateTextFontSize, color: rgb(0, 0, 0) });
+        });
+        // Save the modified PDF
+        const modifiedPdfBuffer = await pdfDoc.save();
 
+        // Upload the document  to Cloudinary and obtain the URLs
+        CVUrl = await uploadToCloudinary(modifiedPdfBuffer).then((result) => {
+          return (result.secure_url)
+        }).catch((err) => {
+          console.log(err);
+        })
+      }
     }
+
+    const createdBy = requestUser?.Name;
+    // Create a new employee document with the image and document URLs
+    const newEmployee = new Employee({
+      ...req.body,
+      UserDepartment: requestUser.Department._id,
+      DepartmentText: req.body.Department,
+      Department: requestUser.Department,
+      Company: requestUser.Company,
+      isEmployee: true,
+      EmployeeImage: imageUrl,
+      EmployeeCV: CVUrl,
+      CreatedBy: createdBy,
+      CreationDate: new Date()
+    });
+
+
+
+
+    // Save the new user after sending email
+    newEmployee.save().then(() => {
+      res.status(200).send({ status: true, message: "The employee is added!", data: newEmployee });
+    }).catch((error) => {
+      console.error(error);
+      res.status(500).json({ message: 'Error adding Employee!', error: error.message });
+    });
+
+
+
 
 
 
@@ -238,12 +227,8 @@ router.post('/addEmployee', upload.fields([{ name: 'Image' }, { name: 'CV' }]), 
 router.get('/readEmployee', async (req, res) => {
   try {
 
-    const employee = await User.find({ isEmployee: true, UserDepartment: req.header('Authorization') }).populate('Department').populate('UserDepartment')
-
-
+    const employee = await Employee.find({ UserDepartment: req.header('Authorization') }).populate('Department').populate('UserDepartment')
     res.status(201).send({ status: true, message: "The Following Are Employees!", data: employee, });
-
-
   } catch (e) {
     res.status(500).json({ message: e.message });
   }
@@ -253,7 +238,7 @@ router.get('/readEmployee', async (req, res) => {
 router.delete('/deleteEmployee/:id', async (req, res) => {
   try {
 
-    const employee = await User.findOneAndDelete({ _id: req.params.id })
+    const employee = await Employee.findOneAndDelete({ _id: req.params.id })
     console.log(new Date().toLocaleString() + ' ' + 'Checking Employees...')
 
     if (!employee) {
@@ -272,7 +257,7 @@ router.delete('/deleteEmployee/:id', async (req, res) => {
 router.delete('/deleteAllEmployees', async (req, res) => {
   try {
 
-    const employee = await User.deleteMany({})
+    const employee = await Employee.deleteMany({})
     console.log(new Date().toLocaleString() + ' ' + 'Checking Employees...')
 
     if (employee.deletedCount === 0) {

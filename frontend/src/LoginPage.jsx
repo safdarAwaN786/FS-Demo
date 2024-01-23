@@ -118,7 +118,7 @@ export default function LoginPage() {
             <div style={{
                 height: '100vh',
                 fontFamily: 'Poppins'
-            }} className='w-100 ps-lg-5 pe-lg-3 pt-lg-4 pb-lg-3 ps-2 pt-2 row'>
+            }} className='w-100 ps-lg-5 pe-lg-3 m-auto pt-lg-4 pb-lg-3 ps-2 pt-2 row'>
                 <div className='col-lg-6 col-md-6 bg-light col-12 p-lg-5 p-md-4 d-flex justify-content-center align-items-center p-2'>
                     <h1 style={{
                         fontFamily: 'Poppins'

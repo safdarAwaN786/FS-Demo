@@ -163,7 +163,10 @@ function MaintananceRect() {
                         <div class={style.alert}>
                             <p class={style.msg}>{popUpData}</p>
                             <div className={style.alertbtns}>
-                                <button onClick={() => {
+                                <button style={{
+                                    marginLeft : '120px',
+                                    marginTop : '25px'
+                                }}  onClick={() => {
                                     setAlert(false);
                                 }} className={style.btn2}>Close</button>
                             </div>

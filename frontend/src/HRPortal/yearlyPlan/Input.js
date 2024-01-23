@@ -211,22 +211,22 @@ function Input() {
                                                 <p>{training.TrainingName}</p>
                                             </td>
                                             <td>
-                                                <input onChange={(event) => {
+                                                <input autoComplete='off' onChange={(event) => {
                                                     handleCheckbox(event, training._id)
                                                 }} value={1} type="checkbox" />
                                             </td>
                                             <td>
-                                                <input onChange={(event) => {
+                                                <input autoComplete='off' onChange={(event) => {
                                                     handleCheckbox(event, training._id)
                                                 }} value={2} type="checkbox" />
                                             </td>
                                             <td>
-                                                <input onChange={(event) => {
+                                                <input autoComplete='off' onChange={(event) => {
                                                     handleCheckbox(event, training._id)
                                                 }} value={3} type="checkbox" />
                                             </td>
                                             <td>
-                                                <input onChange={(event) => {
+                                                <input autoComplete='off' onChange={(event) => {
                                                     handleCheckbox(event, training._id)
                                                 }} value={4} type="checkbox" />
                                             </td>
@@ -273,7 +273,10 @@ function Input() {
                         <div class={style.alert}>
                             <p class={style.msg}>{popUpData}</p>
                             <div className={style.alertbtns}>
-                                <button onClick={() => {
+                                <button style={{
+                                    marginLeft : '120px',
+                                    marginTop : '25px'
+                                }}  onClick={() => {
                                     setShowBox(false)
                                     setPopUpData(null);
                                 }} className={style.btn1}>Ok.</button>

@@ -188,7 +188,7 @@ function AddProcess() {
                                 <p>Process Name</p>
                                 <div>
                                     <img src={office} alt="" />
-                                    <input name='ProcessName' onChange={(event) => {
+                                    <input autoComplete='off' name='ProcessName' onChange={(event) => {
                                         updateProcessInfo(event);
                                     }} type="text" required />
                                 </div>
@@ -268,38 +268,38 @@ function AddProcess() {
                             </div>
                             <div className={`mx-auto my-2 `}>
                                 <p>Name</p>
-                                <input value={ownerDetail?.Name} type='text' name='Name' onChange={(event) => {
+                                <input autoComplete='off' value={ownerDetail?.Name} type='text' name='Name' onChange={(event) => {
                                     updateOwnerDetail(event);
                                 }} className={`p-3 w-100`} required />
                             </div>
                             <div className={`mx-auto my-2 `}>
                                 <p>Designation</p>
-                                <input value={ownerDetail?.Designation} type='text' onChange={(event) => {
+                                <input autoComplete='off' value={ownerDetail?.Designation} type='text' onChange={(event) => {
                                     updateOwnerDetail(event);
                                 }} name='Designation' className={`p-3 w-100`} required />
                             </div>
                             <div className={`mx-auto my-2 `}>
                                 <p>Phone</p>
-                                <input value={ownerDetail?.PhoneNumber} name='PhoneNumber' onChange={(event) => {
+                                <input autoComplete='off' value={ownerDetail?.PhoneNumber} name='PhoneNumber' onChange={(event) => {
                                     updateOwnerDetail(event);
                                 }} type='number' className={`p-3 w-100`} required />
                             </div>
                             <div className={`mx-auto my-2 `}>
                                 <p>Email Address</p>
-                                <input value={ownerDetail?.Email} name='Email' onChange={(event) => {
+                                <input autoComplete='off' value={ownerDetail?.Email} name='Email' onChange={(event) => {
                                     updateOwnerDetail(event);
-                                }} type='text' className={`p-3 w-100`} required />
+                                }} type='email' className={`p-3 w-100`} required />
                             </div>
                             <div className={`mx-auto my-2 `}>
                                 <p>UserName (for login)</p>
-                                <input value={ownerDetail?.UserName} name='UserName' onChange={(event) => {
+                                <input autoComplete='off' value={ownerDetail?.UserName} name='UserName' onChange={(event) => {
                                     updateOwnerDetail(event);
                                 }} type='text' className={`p-3 w-100`} required />
                             </div>
                             <div className={`mx-auto my-2 `}>
                                 <p>Password</p>
                                 <div className='mb-0 d-flex flex-row justify-content-start'>
-                                    <input name='Password' value={ownerDetail?.Password} onChange={(event) => {
+                                    <input autoComplete='off' name='Password' value={ownerDetail?.Password} onChange={(event) => {
                                         updateOwnerDetail(event);
                                         CheckPassword(ownerDetail.Password);
 
@@ -313,9 +313,9 @@ function AddProcess() {
                                 )}
                             </div>
                             <div className={`mx-auto my-3 gap-2 d-flex flex-row`}>
-                                <input className='mt-1' value={ownerDetail?.UserName} name='UserName' onChange={(event) => {
+                                <input autoComplete='off' className='mt-1' value={ownerDetail?.UserName} name='UserName' onChange={(event) => {
                                     setOwnerDetail({ ...ownerDetail, deputyOwner: event.target.checked })
-                                }} type='checkbox' required />
+                                }} type='checkbox' />
                                 <p>Deputy Process Owner</p>
                             </div>
                             <div className={style.btns}>

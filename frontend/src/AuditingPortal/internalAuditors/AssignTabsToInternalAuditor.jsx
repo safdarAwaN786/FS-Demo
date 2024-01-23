@@ -118,7 +118,7 @@ function AssignTabsToInternalAuditor() {
                                     return (
                                         <>
                                             <div className='d-flex flex-row my-2'>
-                                                <input onChange={(e) => {
+                                                <input autoComplete='off' onChange={(e) => {
                                                     var updatedTabsArr1;
                                                     if (e.target.checked) {
                                                         updatedTabsArr1 = [...tabsArr1];
@@ -143,7 +143,7 @@ function AssignTabsToInternalAuditor() {
                                     return (
                                         <>
                                             <div className='d-flex flex-row my-2'>
-                                                <input onChange={(e) => {
+                                                <input autoComplete='off' onChange={(e) => {
                                                     var updatedTabsArr2;
                                                     if (e.target.checked) {
                                                         updatedTabsArr2 = [...tabsArr2];
@@ -163,7 +163,7 @@ function AssignTabsToInternalAuditor() {
                                             </div>
                                             {tabsArr2.some(obj => obj.Tab === tab.Tab) && (
                                                 <div className='d-flex flex-row ps-3 mb-5 mt-2' >
-                                                    <input onChange={(e) => {
+                                                    <input autoComplete='off' onChange={(e) => {
                                                         const updatedTabsArr2 = [...tabsArr2];
                                                         const foundObj = updatedTabsArr2.find(obj => obj.Tab === tab.Tab);
                                                         if (e.target.checked) {
@@ -183,7 +183,7 @@ function AssignTabsToInternalAuditor() {
                                     return (
                                         <>
                                             <div className='d-flex flex-row my-2'>
-                                                <input onChange={(e) => {
+                                                <input autoComplete='off' onChange={(e) => {
                                                     var updatedTabsArr3;
                                                     if (e.target.checked) {
                                                         updatedTabsArr3 = [...tabsArr3];
@@ -204,7 +204,7 @@ function AssignTabsToInternalAuditor() {
                                             {tabsArr3.some(obj => obj.Tab === tab.Tab) && (
                                                 <div className='d-flex flex-row ps-3 mb-5 mt-2' >
                                                     <div className='mx-2'>
-                                                        <input onChange={(e) => {
+                                                        <input autoComplete='off' onChange={(e) => {
                                                             const updatedTabsArr3 = [...tabsArr3];
                                                             const foundObj = updatedTabsArr3.find(obj => obj.Tab === tab.Tab);
                                                             if (e.target.checked) {
@@ -217,7 +217,7 @@ function AssignTabsToInternalAuditor() {
                                                         <label className="btn btn-outline-danger" for={`${tab.Tab}-C`}>Creation</label>
                                                     </div>
                                                     <div className='mx-2'>
-                                                        <input onChange={(e) => {
+                                                        <input autoComplete='off' onChange={(e) => {
                                                             const updatedTabsArr3 = [...tabsArr3];
                                                             const foundObj = updatedTabsArr3.find(obj => obj.Tab === tab.Tab);
                                                             if (e.target.checked) {
@@ -238,7 +238,7 @@ function AssignTabsToInternalAuditor() {
                                     return (
                                         <>
                                             <div className='d-flex flex-row my-2'>
-                                                <input onChange={(e) => {
+                                                <input autoComplete='off' onChange={(e) => {
                                                     var updatedTabsArr4;
                                                     if (e.target.checked) {
                                                         updatedTabsArr4 = [...tabsArr4];
@@ -259,7 +259,7 @@ function AssignTabsToInternalAuditor() {
                                             {tabsArr4.some(obj => obj.Tab === tab.Tab) && (
                                                 <div className='d-flex flex-row ps-3 mb-5 mt-2' >
                                                     <div className='mx-2'>
-                                                        <input onChange={(e) => {
+                                                        <input autoComplete='off' onChange={(e) => {
                                                             const updatedTabsArr4 = [...tabsArr4];
                                                             const foundObj = updatedTabsArr4.find(obj => obj.Tab === tab.Tab);
                                                             if (e.target.checked) {
@@ -272,7 +272,7 @@ function AssignTabsToInternalAuditor() {
                                                         <label className="btn btn-outline-danger" for={`${tab.Tab}-C`}>Creation</label>
                                                     </div>
                                                     <div className='mx-2'>
-                                                        <input onChange={(e) => {
+                                                        <input autoComplete='off' onChange={(e) => {
                                                             const updatedTabsArr4 = [...tabsArr4];
                                                             const foundObj = updatedTabsArr4.find(obj => obj.Tab === tab.Tab);
                                                             if (e.target.checked) {
@@ -285,7 +285,7 @@ function AssignTabsToInternalAuditor() {
                                                         <label className="btn btn-outline-success" for={`${tab.Tab}-A`}>Approval</label>
                                                     </div>
                                                     <div className='mx-2'>
-                                                        <input onChange={(e) => {
+                                                        <input autoComplete='off' onChange={(e) => {
                                                             const updatedTabsArr4 = [...tabsArr4];
                                                             const foundObj = updatedTabsArr4.find(obj => obj.Tab === tab.Tab);
                                                             if (e.target.checked) {
@@ -306,7 +306,7 @@ function AssignTabsToInternalAuditor() {
                                     return (
                                         <>
                                             <div className='d-flex flex-row my-2'>
-                                                <input onChange={(e) => {
+                                                <input autoComplete='off' onChange={(e) => {
                                                     var updatedTabsArr5;
                                                     if (e.target.checked) {
                                                         updatedTabsArr5 = [...tabsArr5];
@@ -327,7 +327,7 @@ function AssignTabsToInternalAuditor() {
                                             {tabsArr5.some(obj => obj.Tab === tab.Tab) && (
                                                 <div className='d-flex flex-row ps-3 mb-5 mt-2' >
                                                     <div className='mx-2'>
-                                                        <input onChange={(e) => {
+                                                        <input autoComplete='off' onChange={(e) => {
                                                             const updatedTabsArr5 = [...tabsArr5];
                                                             const foundObj = updatedTabsArr5.find(obj => obj.Tab === tab.Tab);
                                                             if (e.target.checked) {
@@ -340,7 +340,7 @@ function AssignTabsToInternalAuditor() {
                                                         <label className="btn btn-outline-danger" for={`${tab.Tab}-C`}>Creation</label>
                                                     </div>
                                                     <div className='mx-2'>
-                                                        <input onChange={(e) => {
+                                                        <input autoComplete='off' onChange={(e) => {
                                                             const updatedTabsArr5 = [...tabsArr5];
                                                             const foundObj = updatedTabsArr5.find(obj => obj.Tab === tab.Tab);
                                                             if (e.target.checked) {
@@ -353,7 +353,7 @@ function AssignTabsToInternalAuditor() {
                                                         <label className="btn btn-outline-success" for={`${tab.Tab}-A`}>Approval</label>
                                                     </div>
                                                     <div className='mx-2'>
-                                                        <input onChange={(e) => {
+                                                        <input autoComplete='off' onChange={(e) => {
                                                             const updatedTabsArr5 = [...tabsArr5];
                                                             const foundObj = updatedTabsArr5.find(obj => obj.Tab === tab.Tab);
                                                             if (e.target.checked) {
@@ -374,7 +374,7 @@ function AssignTabsToInternalAuditor() {
                                     return (
                                         <>
                                             <div className='d-flex flex-row my-2'>
-                                                <input onChange={(e) => {
+                                                <input autoComplete='off' onChange={(e) => {
                                                     var updatedTabsArr6;
                                                     if (e.target.checked) {
                                                         updatedTabsArr6 = [...tabsArr6];
@@ -395,7 +395,7 @@ function AssignTabsToInternalAuditor() {
                                             {tabsArr6.some(obj => obj.Tab === tab.Tab) && (
                                                 <div className='d-flex flex-row ps-3 mb-5 mt-2' >
                                                     <div className='mx-2'>
-                                                        <input onChange={(e) => {
+                                                        <input autoComplete='off' onChange={(e) => {
                                                             const updatedTabsArr6 = [...tabsArr6];
                                                             const foundObj = updatedTabsArr6.find(obj => obj.Tab === tab.Tab);
                                                             if (e.target.checked) {
@@ -408,7 +408,7 @@ function AssignTabsToInternalAuditor() {
                                                         <label className="btn btn-outline-danger" for={`${tab.Tab}-C`}>Creation</label>
                                                     </div>
                                                     <div className='mx-2'>
-                                                        <input onChange={(e) => {
+                                                        <input autoComplete='off' onChange={(e) => {
                                                             const updatedTabsArr6 = [...tabsArr6];
                                                             const foundObj = updatedTabsArr6.find(obj => obj.Tab === tab.Tab);
                                                             if (e.target.checked) {
@@ -421,7 +421,7 @@ function AssignTabsToInternalAuditor() {
                                                         <label className="btn btn-outline-success" for={`${tab.Tab}-A`}>Approval</label>
                                                     </div>
                                                     <div className='mx-2'>
-                                                        <input onChange={(e) => {
+                                                        <input autoComplete='off' onChange={(e) => {
                                                             const updatedTabsArr6 = [...tabsArr6];
                                                             const foundObj = updatedTabsArr6.find(obj => obj.Tab === tab.Tab);
                                                             if (e.target.checked) {
@@ -434,7 +434,7 @@ function AssignTabsToInternalAuditor() {
                                                         <label className="btn btn-outline-primary" for={`${tab.Tab}-R`}>Review</label>
                                                     </div>
                                                     <div className='mx-2'>
-                                                        <input onChange={(e) => {
+                                                        <input autoComplete='off' onChange={(e) => {
                                                             const updatedTabsArr6 = [...tabsArr6];
                                                             const foundObj = updatedTabsArr6.find(obj => obj.Tab === tab.Tab);
                                                             if (e.target.checked) {

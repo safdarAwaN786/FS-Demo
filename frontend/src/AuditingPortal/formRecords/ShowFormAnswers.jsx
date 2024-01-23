@@ -65,13 +65,13 @@ function ShowFormAnswers() {
                             <div className='w-100'>
                                 <p className='text-black'>Form Name</p>
                                 <div>
-                                    <input value={dataToSend?.Form.FormName} className='w-100' name='FormName' type="text" readOnly />
+                                    <input autoComplete='off' value={dataToSend?.Form.FormName} className='w-100' name='FormName' type="text" readOnly />
                                 </div>
                             </div>
                             <div className='w-100'>
                                 <p className='text-black'>Form Description</p>
                                 <div>
-                                    <input value={dataToSend?.Form.FormDescription} className='w-100' name='FormDescription' type="text" readOnly />
+                                    <input autoComplete='off' value={dataToSend?.Form.FormDescription} className='w-100' name='FormDescription' type="text" readOnly />
                                 </div>
                             </div>
                             {answers.map((answer, index) => {
@@ -83,7 +83,7 @@ function ShowFormAnswers() {
                                             <div style={{
                                                 width: '100%'
                                             }} className=' me-3 d-flex flex-column'>
-                                                <input value={answer.question.questionText} style={{
+                                                <input autoComplete='off' value={answer.question.questionText} style={{
                                                     borderRadius: '0px'
                                                 }} name='questionText' className='border-bottom border-secondary bg-light mt-2 mb-3 w-100 p-3' readOnly />
 
@@ -92,7 +92,7 @@ function ShowFormAnswers() {
                                         {(answer.question.questionType === 'ShortText') && (
                                             <div className='pe-4'>
                                                 <span>Short Answer :</span>
-                                                <input value={answer.shortTextAnswer} className='bg-light border-bottom border-secondary py-1 my-1  w-100' type='text' readOnly />
+                                                <input autoComplete='off' value={answer.shortTextAnswer} className='bg-light border-bottom border-secondary py-1 my-1  w-100' type='text' readOnly />
                                             </div>
                                         )}
                                         {(answer.question.questionType === 'LongText') && (
@@ -115,7 +115,7 @@ function ShowFormAnswers() {
                                                                         <th style={{
                                                                             minWidth: '80px'
                                                                         }}>
-                                                                            <input value={column.colTitle} className={`bg-light border-bottom border-secondary d-inline py-0 px-1 mx-1 ${style.noRadius}`} type='text' readOnly />
+                                                                            <input autoComplete='off' value={column.colTitle} className={`bg-light border-bottom border-secondary d-inline py-0 px-1 mx-1 ${style.noRadius}`} type='text' readOnly />
                                                                         </th>
                                                                     )
                                                                 })}
@@ -127,14 +127,14 @@ function ShowFormAnswers() {
                                                                     <tr>
                                                                         <td>
                                                                             <span>{rowIndex + 1}.</span>
-                                                                            <input value={row.rowTitle} name='rowTitle' type='text' style={{
+                                                                            <input autoComplete='off' value={row.rowTitle} name='rowTitle' type='text' style={{
                                                                                 borderRadius: '0px'
                                                                             }} className='bg-light border-bottom border-secondary  px-2 py-0 d-inline' readOnly />
                                                                         </td>
                                                                         {answer.question?.columns.map((colnum, colIndex) => {
                                                                             return (
                                                                                 <td>
-                                                                                    <input style={{
+                                                                                    <input autoComplete='off' style={{
                                                                                         width: '20px',
                                                                                         height: '20px'
                                                                                     }} checked={answer.multipleChoiceGridAnswers.includes(`R${rowIndex}-C${colIndex}`)} name={`R${rowIndex}`} type='radio' readOnly />
@@ -163,7 +163,7 @@ function ShowFormAnswers() {
                                                                         <th style={{
                                                                             minWidth: '80px'
                                                                         }}>
-                                                                            <input value={column.colTitle} className={`bg-light border-bottom border-secondary d-inline py-0 px-1 mx-1 ${style.noRadius}`} type='text' readOnly />
+                                                                            <input autoComplete='off' value={column.colTitle} className={`bg-light border-bottom border-secondary d-inline py-0 px-1 mx-1 ${style.noRadius}`} type='text' readOnly />
                                                                         </th>
                                                                     )
                                                                 })}
@@ -175,14 +175,14 @@ function ShowFormAnswers() {
                                                                     <tr>
                                                                         <td>
                                                                             <span>{rowIndex + 1}.</span>
-                                                                            <input value={row.rowTitle} type='text' style={{
+                                                                            <input autoComplete='off' value={row.rowTitle} type='text' style={{
                                                                                 borderRadius: '0px'
                                                                             }} className='bg-light border-bottom border-secondary  px-2 py-0 d-inline' readOnly />
                                                                         </td>
                                                                         {answer.question?.columns.map((colnum, colIndex) => {
                                                                             return (
                                                                                 <td>
-                                                                                    <input style={{
+                                                                                    <input autoComplete='off' style={{
                                                                                         width: '20px',
                                                                                         height: '20px'
                                                                                     }} checked={answer.checkboxGridAnswers.includes(`R${rowIndex}-C${colIndex}`)} className='mx-2' type='checkbox' readOnly />
@@ -214,7 +214,7 @@ function ShowFormAnswers() {
                                                 {answer.question?.options?.map((option, optindex) => {
                                                     return (
                                                         <div className='my-2 d-flex flex-row'>
-                                                            <input value={answer.CheckboxesAnswers.includes(option.optionText)} className='mx-2 mt-1' type='checkbox' readOnly />                                               <input type='text' value={option.optionText} style={{
+                                                            <input autoComplete='off' value={answer.CheckboxesAnswers.includes(option.optionText)} className='mx-2 mt-1' type='checkbox' readOnly />                                               <input autoComplete='off' type='text' value={option.optionText} style={{
                                                                 borderRadius: '0px'
                                                             }} name='optionText' className='bg-light border-bottom border-secondary w-50 px-2 py-0 d-inline' readOnly />
                                                         </div>
@@ -227,10 +227,10 @@ function ShowFormAnswers() {
                                                 {answer.question?.options?.map((option, optindex) => {
                                                     return (
                                                         <div className='my-2 d-flex flex-row'>
-                                                            <input value={(answer.multipleChoiceAnswer === option.optionText)} style={{
+                                                            <input autoComplete='off' value={(answer.multipleChoiceAnswer === option.optionText)} style={{
                                                                 width: '23px'
                                                             }} className='mx-2' type='radio' name={`question-${index}`} readOnly />
-                                                            <input type='text' value={option.optionText} style={{
+                                                            <input autoComplete='off' type='text' value={option.optionText} style={{
                                                                 borderRadius: '0px'
                                                             }} name='optionText' className='bg-light border-bottom border-secondary w-50 px-2 py-0 d-inline' readOnly />
                                                         </div>
@@ -248,12 +248,12 @@ function ShowFormAnswers() {
                                         {answer.question.questionType === 'Date' && (
                                             <div className=' d-flex my-3 flex-column pe-4'>
                                                 <span>Selected Date :</span>
-                                                <input value={answer.dateAnswer} type='date' className='w-50 bg-light p-2 border-0 border-bottom border-secondary' readOnly />
+                                                <input autoComplete='off' value={answer.dateAnswer} type='date' className='w-50 bg-light p-2 border-0 border-bottom border-secondary' readOnly />
                                             </div>
                                         )}
                                         {answer.question.questionType === 'Time' && (
                                             <div className=' d-flex my-3 flex-column pe-4'>
-                                                <input value={answer.timeAnswer} type='time' className='w-50 bg-light p-2 border-0 border-bottom border-secondary' readOnly />
+                                                <input autoComplete='off' value={answer.timeAnswer} type='time' className='w-50 bg-light p-2 border-0 border-bottom border-secondary' readOnly />
                                             </div>
                                         )}
                                         <div className='my-2 mt-4 d-flex justify-content-end'>
@@ -262,7 +262,7 @@ function ShowFormAnswers() {
                                                 color: 'black'
                                             }}>Required</p>
                                             <label className={style.switch}>
-                                                <input className='ms-3' name='IsPass' type="checkbox" checked={answer.question.Required} />
+                                                <input autoComplete='off' className='ms-3' name='IsPass' type="checkbox" checked={answer.question.Required} />
                                                 <span className={`${style.slider} ${style.round}`} ></span>
                                             </label>
                                         </div>

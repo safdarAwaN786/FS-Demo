@@ -93,7 +93,7 @@ function ChangeRequests() {
             <div className={style.searchbar}>
                 <div className={style.sec1}>
                     <img src={Search} alt="" />
-                    <input onChange={search} type="text" placeholder='Search request by name' />
+                    <input autoComplete='off' onChange={search} type="text" placeholder='Search request by name' />
                 </div>
                 {tabData?.Creation && (
                     <div className={style.sec2} onClick={() => {
@@ -239,7 +239,10 @@ function ChangeRequests() {
                         <div class={style.alert}>
                             <p class={style.msg}>{dataToShow}</p>
                             <div className={style.alertbtns}>
-                                <button onClick={() => {
+                                <button style={{
+                                    marginLeft : '120px',
+                                    marginTop : '25px'
+                                }}  onClick={() => {
                                     setShowBox(false);
                                 }} className={style.btn2}>OK</button>
                             </div>

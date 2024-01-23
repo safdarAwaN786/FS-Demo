@@ -126,12 +126,6 @@ router.delete('/delete-all-products', async (req, res) => {
 router.patch('/update-product/:productId', async (req, res) => {
   try {
     const productId = req.params.productId;
-
-    // Check if the provided ID is valid
-    if (!mongoose.Types.ObjectId.isValid(productId)) {
-      return res.status(400).json({ message: 'Invalid Product ID' });
-    }
-
     // Retrieve existing product document
     const existingProduct = await Product.findById(productId);
 

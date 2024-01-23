@@ -90,7 +90,7 @@ function AddSupplier() {
                                             {/* <p>Document Type</p> */}
                                         </div>
                                         <div >
-                                            <input value={dataToSend?.Name} onChange={(e) => {
+                                            <input autoComplete='off' value={dataToSend?.Name} onChange={(e) => {
                                                 setDataToSend({ ...dataToSend, [e.target.name]: e.target.value });
                                             }} name='Name' className='text-dark' type='text' placeholder='Name' required />
                                         </div>
@@ -100,7 +100,7 @@ function AddSupplier() {
                                             {/* <p>Document Type</p> */}
                                         </div>
                                         <div >
-                                            <input value={dataToSend?.Address} onChange={(e) => {
+                                            <input autoComplete='off' value={dataToSend?.Address} onChange={(e) => {
                                                 setDataToSend({ ...dataToSend, [e.target.name]: e.target.value });
                                             }} name='Address' className='text-dark' type='text' placeholder='Address' required />
                                         </div>
@@ -140,7 +140,7 @@ function AddSupplier() {
                                             <p>Current Approval Date</p>
                                         </div>
                                         <div >
-                                            <input value={dataToSend?.CurrentApprovalDate} onChange={(e) => {
+                                            <input autoComplete='off' value={dataToSend?.CurrentApprovalDate} onChange={(e) => {
                                                 setDataToSend({ ...dataToSend, [e.target.name]: e.target.value });
                                             }} name='CurrentApprovalDate' className='text-dark' type='date' placeholder='Product Service Offered' required />
                                         </div>
@@ -153,7 +153,7 @@ function AddSupplier() {
                                             {/* <p>Document Type</p> */}
                                         </div>
                                         <div >
-                                            <input value={dataToSend?.ContactPerson} onChange={(e) => {
+                                            <input autoComplete='off' value={dataToSend?.ContactPerson} onChange={(e) => {
                                                 setDataToSend({ ...dataToSend, [e.target.name]: e.target.value });
                                             }} name='ContactPerson' className='text-dark' type='text' placeholder='Contact Person' required />
                                         </div>
@@ -163,7 +163,7 @@ function AddSupplier() {
                                             {/* <p>Document Type</p> */}
                                         </div>
                                         <div >
-                                            <input value={dataToSend?.PhoneNumber} onChange={(e) => {
+                                            <input autoComplete='off' value={dataToSend?.PhoneNumber} onChange={(e) => {
                                                 setDataToSend({ ...dataToSend, [e.target.name]: e.target.value });
                                             }} name='PhoneNumber' className='text-dark' type='number' placeholder='Contact No' required />
                                         </div>
@@ -173,7 +173,7 @@ function AddSupplier() {
                                             {/* <p>Document Type</p> */}
                                         </div>
                                         <div >
-                                            <input value={dataToSend?.PhoneNumber2} onChange={(e) => {
+                                            <input autoComplete='off' value={dataToSend?.PhoneNumber2} onChange={(e) => {
                                                 setDataToSend({ ...dataToSend, [e.target.name]: e.target.value });
                                             }} name='PhoneNumber2' className='text-dark' type='number' placeholder='Second Contact No' />
                                         </div>
@@ -183,7 +183,7 @@ function AddSupplier() {
                                             {/* <p>Document Type</p> */}
                                         </div>
                                         <div >
-                                            <input value={dataToSend?.ProductServiceOffered} onChange={(e) => {
+                                            <input autoComplete='off' value={dataToSend?.ProductServiceOffered} onChange={(e) => {
                                                 setDataToSend({ ...dataToSend, [e.target.name]: e.target.value });
                                             }} name='ProductServiceOffered' className='text-dark' type='text' placeholder='Product Service Offered' required />
                                         </div>
@@ -193,7 +193,7 @@ function AddSupplier() {
                                             <p>Next Approval Date</p>
                                         </div>
                                         <div >
-                                            <input value={dataToSend?.NextApprovalDate} onChange={(e) => {
+                                            <input autoComplete='off' value={dataToSend?.NextApprovalDate} onChange={(e) => {
                                                 setDataToSend({ ...dataToSend, [e.target.name]: e.target.value });
                                             }} name='NextApprovalDate' className='text-dark' type='date' placeholder='Product Service Offered' required />
                                         </div>

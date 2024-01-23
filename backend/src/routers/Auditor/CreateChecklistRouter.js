@@ -46,12 +46,12 @@ router.post('/addChecklist', async (req, res) => {
 router.get('/getChecklists', async (req, res) => {
     try {
 
-        const checklists = await Checklists.find({UserDepartment : req.header('Authorization')}).populate('Department UserDepartment').populate({
+        const checklists = await Checklists.find({ UserDepartment: req.header('Authorization') }).populate('Department UserDepartment').populate({
             path: 'ChecklistQuestions',
             model: 'ChecklistQuestion'
         });
 
-       
+
         res.status(200).send({ status: true, message: 'The following are Checklists!', data: checklists });
         console.log(new Date().toLocaleString() + ' ' + 'GET Checklists Successfully!');
 
@@ -120,18 +120,22 @@ router.delete('/deleteAllChecklist', async (req, res) => {
 
 // * PATCH update a checklist by ID
 router.put('/updateChecklist', async (req, res) => {
-    
+
     try {
 
         const currentChecklist = await Checklists.findById(req.body._id);
         if (!currentChecklist) {
             return res.status(404).json({ message: 'Checklist not found' });
         }
+        const newQuestions = req.body.ChecklistQuestions.map((question) => {
+            const { _id, ...updatedQuestion } = question;
+            return updatedQuestion;
+        })
 
-        const createdQuestions = await ChecklistQuestionModel.create(req.body.ChecklistQuestions);
+        const createdQuestions = await ChecklistQuestionModel.create(newQuestions);
         const questionsArr = Object.values(createdQuestions);
         const questionsIds = questionsArr.map(questionObj => questionObj._id);
-        console.log(questionsIds);
+
 
 
         let updatedData = {
@@ -156,7 +160,7 @@ router.put('/updateChecklist', async (req, res) => {
 
         const updatedChecklist = await Checklists.findByIdAndUpdate(
             req.body._id,
-            { $set: updatedData },
+            updatedData,
             { new: true }
         );
 
@@ -166,7 +170,7 @@ router.put('/updateChecklist', async (req, res) => {
         console.log(new Date().toLocaleString() + ' ' + 'PATCH Checklist Successfully!');
 
     } catch (e) {
-        console.error(new Date().toLocaleString() + ' ' + 'Error updating checklist:', e.message);
+        console.error(e);
         res.status(500).json({ message: e.message });
     }
 });

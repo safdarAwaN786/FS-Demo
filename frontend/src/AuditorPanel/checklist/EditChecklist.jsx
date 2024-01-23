@@ -193,39 +193,7 @@ function EditChecklist() {
                     }}>
                         <div className={`${style.myBox} pb-4`}>
                             <div className={style.formDivider}>
-                                <div className={style.sec1}>
-                                    <div className={style.inputParent}>
-                                        <div className={style.para}>
-                                            <p>Document Type</p>
-                                        </div>
-                                        <div className='border border-dark-subtle'>
-                                            <select className='form-select  form-select-lg' value={dataToSend?.DocumentType} onChange={updateDataToSend} name='DocumentType' style={{ width: "100%" }} required >
-                                                <option value="" disabled>Choose Type</option>
-                                                <option value="Manuals">Manuals</option>
-                                                <option value="Procedures">Procedures</option>
-                                                <option value="SOPs">SOPs</option>
-                                                <option value="Forms">Forms</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className={style.sec2}>
-                                    <div className={style.inputParent}>
-                                        <div className={style.para}>
-                                            <p>Department</p>
-                                        </div>
-                                        <div className='border border-dark-subtle'>
-                                            <select className='form-select  form-select-lg' value={dataToSend?.Department?.DepartmentName} onChange={updateDataToSend} name='Department' style={{ width: "100%" }} required >
-                                                <option value="" disabled>Choose Department</option>
-                                                {departmentsToShow?.map((depObj) => {
-                                                    return (
-                                                        <option value={depObj._id}>{depObj?.DepartmentName}</option>
-                                                    )
-                                                })}
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
+                                
                             </div>
                             <div className={`${style.formDivider} flex-column justify-content-center`}>
                                 {questions?.map((question, index) => {
@@ -238,7 +206,7 @@ function EditChecklist() {
                                                 <div style={{
                                                     width: '100%'
                                                 }} className=' me-3 d-flex flex-column'>
-                                                    <input value={dataToSend?.ChecklistQuestions[index]?.questionText} onChange={(e) => {
+                                                    <input autoComplete='off' value={dataToSend?.ChecklistQuestions[index]?.questionText} onChange={(e) => {
                                                         const updatedQuestions = [...questions];
                                                         updatedQuestions[index][e.target.name] = e.target.value;
                                                         setQuestions(updatedQuestions);
@@ -268,7 +236,7 @@ function EditChecklist() {
                                                         color: 'black'
                                                     }}>Required</p>
                                                     <label className={style.switch}>
-                                                        <input checked={question?.Required} className='ms-3' name='Required' type="checkbox" onChange={(event) => {
+                                                        <input autoComplete='off' checked={question?.Required} className='ms-3' name='Required' type="checkbox" onChange={(event) => {
                                                             const updatedQuestions = [...questions];
                                                             updatedQuestions[index].Required = event.target.checked;
 
@@ -318,7 +286,7 @@ function EditChecklist() {
                                 } className={style.btn1}>Submit</button>
 
 
-                                <button onClick={alertManager} className={style.btn2}>Cencel</button>
+                                <button onClick={alertManager} className={style.btn2}>Cancel</button>
 
                             </div>
                         </div>

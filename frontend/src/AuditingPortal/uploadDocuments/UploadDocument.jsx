@@ -104,7 +104,7 @@ function UploadDocument() {
                                             <p>Document Name</p>
                                         </div>
                                         <div>
-                                            <input className='text-dark' name='DocumentName' type="text" placeholder='' required />
+                                            <input autoComplete='off' className='text-dark' name='DocumentName' type="text" placeholder='' required />
                                         </div>
                                     </div>
                                     <div className={style.inputParent}>
@@ -142,7 +142,7 @@ function UploadDocument() {
                             </div>
                         </div>
                         <div className={`${style.btn} d-flex flex-wrap `}>
-                            <input type='file' accept='.pdf' name='file' className='btn btn-outline-danger px-3 py-2 m-2' required />
+                            <input autoComplete='off' type='file' accept='.pdf' name='file' className='btn btn-outline-danger px-3 py-2 m-2' required />
                             <button type='submit' >Submit</button>
                         </div>
                     </form>

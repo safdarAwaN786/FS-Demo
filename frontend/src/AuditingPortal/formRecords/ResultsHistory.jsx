@@ -86,37 +86,37 @@ function ResultsHistory() {
                     <div className={style.sec1}>
                         <div>
                             <p>Form Id</p>
-                            <input value={formData?.FormId} type="text" readOnly />
+                            <input autoComplete='off' value={formData?.FormId} type="text" readOnly />
                         </div>
                         <div>
                             <p>Created By</p>
-                            <input value={formData?.CreatedBy} type="text" readOnly />
+                            <input autoComplete='off' value={formData?.CreatedBy} type="text" readOnly />
                         </div>
                         <div>
                             <p>Creation Date</p>
                             {formData?.CreationDate ? (
-                                <input value={`${formData?.CreationDate?.slice(0, 10).split('-')[2]}/${formData?.CreationDate?.slice(0, 10).split('-')[1]}/${formData?.CreationDate?.slice(0, 10).split('-')[0]}`} type="text" readOnly />
+                                <input autoComplete='off' value={`${formData?.CreationDate?.slice(0, 10).split('-')[2]}/${formData?.CreationDate?.slice(0, 10).split('-')[1]}/${formData?.CreationDate?.slice(0, 10).split('-')[0]}`} type="text" readOnly />
                             ) : (
-                                <input value='- - -' />
+                                <input autoComplete='off' value='- - -' />
                             )}
                         </div>
                     </div>
                     <div className={style.sec2}>
                         <div>
                             <p>Form Name</p>
-                            <input value={formData?.FormName} type="text" />
+                            <input autoComplete='off' value={formData?.FormName} type="text" />
                         </div>
                         <div>
                             <p>Approved By</p>
-                            <input value={formData?.ApprovedBy || '- - -'} type="text" readOnly />
+                            <input autoComplete='off' value={formData?.ApprovedBy || '- - -'} type="text" readOnly />
                         </div>
                         <div>
                             <p>Approval Date</p>
                             {formData?.ApprovalDate !== undefined ? (
 
-                                <input type="text" value={`${formData?.ApprovalDate?.slice(0, 10).split('-')[2]}/${formData?.ApprovalDate?.slice(0, 10).split('-')[1]}/${formData?.ApprovalDate?.slice(0, 10).split('-')[0]}`} />
+                                <input autoComplete='off' type="text" value={`${formData?.ApprovalDate?.slice(0, 10).split('-')[2]}/${formData?.ApprovalDate?.slice(0, 10).split('-')[1]}/${formData?.ApprovalDate?.slice(0, 10).split('-')[0]}`} />
                             ) : (
-                                <input type="text" value={`- - -`} />
+                                <input autoComplete='off' type="text" value={`- - -`} />
                             )}
                         </div>
                     </div>
@@ -187,7 +187,10 @@ function ResultsHistory() {
                         <div class={style.alert}>
                             <p class={style.msg}>{popUpData}</p>
                             <div className={style.alertbtns}>
-                                <button onClick={alertManager} className={style.btn2}>OK.</button>
+                                <button style={{
+                                    marginLeft : '120px',
+                                    marginTop : '25px'
+                                }}  onClick={alertManager} className={style.btn2}>OK.</button>
                             </div>
                         </div>
                     </div> : null

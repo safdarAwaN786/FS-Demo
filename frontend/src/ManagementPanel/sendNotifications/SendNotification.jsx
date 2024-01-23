@@ -141,7 +141,7 @@ function SendNotification() {
                                             {/* <p>Document Type</p> */}
                                         </div>
                                         <div >
-                                            <input value={dataToSend?.Venue} onChange={(e) => {
+                                            <input autoComplete='off' value={dataToSend?.Venue} onChange={(e) => {
                                                 setDataToSend({ ...dataToSend, [e.target.name]: e.target.value });
                                             }} name='Venue' className='text-dark' type='text' placeholder='Venue' required />
                                         </div>
@@ -151,7 +151,7 @@ function SendNotification() {
                                             {/* <p>Document Type</p> */}
                                         </div>
                                         <div >
-                                            <input value={dataToSend?.Date} onChange={(e) => {
+                                            <input autoComplete='off' value={dataToSend?.Date} onChange={(e) => {
                                                 setDataToSend({ ...dataToSend, [e.target.name]: e.target.value });
                                             }} name='Date' className='text-dark' type='date' placeholder='Date' required />
                                         </div>
@@ -165,7 +165,7 @@ function SendNotification() {
                                                 return (
 
                                                     <div className='d-flex flex-row my-1'>
-                                                        <input onChange={(e) => {
+                                                        <input autoComplete='off' onChange={(e) => {
                                                             var updatedParticipants = [...selectedParticipants];
 
                                                             if (e.target.checked) {
@@ -195,7 +195,7 @@ function SendNotification() {
                                             {/* <p>Document Type</p> */}
                                         </div>
                                         <div >
-                                            <input value={dataToSend?.MRMNo} onChange={(e) => {
+                                            <input autoComplete='off' value={dataToSend?.MRMNo} onChange={(e) => {
                                                 setDataToSend({ ...dataToSend, [e.target.name]: e.target.value });
                                             }} name='MRMNo' className='text-dark' type='number' placeholder='MRM#' required />
                                         </div>
@@ -205,7 +205,7 @@ function SendNotification() {
                                             {/* <p>Document Type</p> */}
                                         </div>
                                         <div >
-                                            <input value={dataToSend?.Time} onChange={(e) => {
+                                            <input autoComplete='off' value={dataToSend?.Time} onChange={(e) => {
                                                 setDataToSend({ ...dataToSend, [e.target.name]: e.target.value });
                                             }} name='Time' className='text-dark' type='time' required />
                                         </div>
@@ -222,7 +222,7 @@ function SendNotification() {
                                             <div className='d-flex justify-content-center'>
 
                                                 <div className='mx-lg-4 mx-md-3 mx-2'>
-                                                    <input value={agenda.Name} onChange={(event) => {
+                                                    <input autoComplete='off' value={agenda.Name} onChange={(event) => {
                                                         updateAgenda(event, index)
                                                     }} name='Name' type='text' className='p-3 bg-light my-3 w-100 border-0' placeholder='Agenda Name' required />
                                                     <textarea value={agenda.Description} onChange={(event) => {

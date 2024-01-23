@@ -58,7 +58,7 @@ const monthlyTrainingPlanSchema = new mongoose.Schema({
 
   Employee: [{
     type: Schema.Types.ObjectId,
-    ref: 'User'
+    ref: 'Employee'
   }],
 
   YearlyTrainingPlan: {

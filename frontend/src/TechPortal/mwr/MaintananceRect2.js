@@ -134,25 +134,25 @@ function MaintananceRect2() {
                     <div className={style.sec1}>
                         <div>
                             <p>Machine Id</p>
-                            <input type="text" value={machine?.machineCode} />
+                            <input autoComplete='off' type="text" value={machine?.machineCode} />
                         </div>
                         <div>
                             <p>Machine name</p>
-                            <input type="text" value={machine?.machineName} />
+                            <input autoComplete='off' type="text" value={machine?.machineName} />
                         </div>
                         <div>
                             <p>Date type</p>
-                            <input type="text" value={dateType} />
+                            <input autoComplete='off' type="text" value={dateType} />
                         </div>
                     </div>
                     <div className={style.sec2}>
                         <div>
                             <p>Machine location</p>
-                            <input type="text" value={machine?.machinaryLocation} />
+                            <input autoComplete='off' type="text" value={machine?.machinaryLocation} />
                         </div>
                         <div>
                             <p>Maintainance type</p>
-                            <input type="text" value='Preventive' />
+                            <input autoComplete='off' type="text" value='Preventive' />
                         </div>
                     </div>
                 </div>
@@ -215,7 +215,10 @@ function MaintananceRect2() {
                         <div class={style.alert}>
                             <p class={style.msg}>{popUpData}</p>
                             <div className={style.alertbtns}>
-                                <button onClick={alertManager} className={style.btn2}>OK.</button>
+                                <button style={{
+                                    marginLeft : '120px',
+                                    marginTop : '25px'
+                                }}  onClick={alertManager} className={style.btn2}>OK.</button>
                             </div>
                         </div>
                     </div> : null

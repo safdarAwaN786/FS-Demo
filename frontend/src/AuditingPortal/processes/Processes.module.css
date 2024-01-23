@@ -537,8 +537,8 @@
 }
 .addOwnerForm {
   width: 500px;
-  margin: auto;
-  margin-top: 169px;
+  /* margin: auto; */
+  /* margin-top: 169px; */
   border-radius: 0px 0px 10px 10px;
   background: #fafafa !important;
   padding-bottom: 97px;

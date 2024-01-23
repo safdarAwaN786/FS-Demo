@@ -187,7 +187,7 @@ function AssignTabsToMember() {
                                         <>
 
                                             <div className='d-flex flex-row my-2'>
-                                                <input onChange={(e) => {
+                                                <input autoComplete='off' onChange={(e) => {
                                                     var updatedTabsArr1;
 
                                                     if (e.target.checked) {
@@ -215,7 +215,7 @@ function AssignTabsToMember() {
                                         <>
 
                                             <div className='d-flex flex-row my-2'>
-                                                <input onChange={(e) => {
+                                                <input autoComplete='off' onChange={(e) => {
                                                     var updatedTabsArr2;
 
                                                     if (e.target.checked) {
@@ -237,7 +237,7 @@ function AssignTabsToMember() {
                                             {tabsArr2.some(obj => obj.Tab === tab.Tab) && (
 
                                                 <div className='d-flex flex-row ps-3 mb-5 mt-2' >
-                                                    <input onChange={(e) => {
+                                                    <input autoComplete='off' onChange={(e) => {
                                                         const updatedTabsArr2 = [...tabsArr2];
                                                         const foundObj = updatedTabsArr2.find(obj => obj.Tab === tab.Tab);
                                                         if (e.target.checked) {
@@ -262,7 +262,7 @@ function AssignTabsToMember() {
                                         <>
 
                                             <div className='d-flex flex-row my-2'>
-                                                <input onChange={(e) => {
+                                                <input autoComplete='off' onChange={(e) => {
                                                     var updatedTabsArr3;
 
                                                     if (e.target.checked) {
@@ -286,7 +286,7 @@ function AssignTabsToMember() {
                                                 <div className='d-flex flex-row ps-3 mb-5 mt-2' >
                                                     <div className='mx-2'>
 
-                                                        <input onChange={(e) => {
+                                                        <input autoComplete='off' onChange={(e) => {
                                                             const updatedTabsArr3 = [...tabsArr3];
                                                             const foundObj = updatedTabsArr3.find(obj => obj.Tab === tab.Tab);
                                                             if (e.target.checked) {
@@ -301,7 +301,7 @@ function AssignTabsToMember() {
                                                     </div>
                                                     <div className='mx-2'>
 
-                                                        <input onChange={(e) => {
+                                                        <input autoComplete='off' onChange={(e) => {
                                                             const updatedTabsArr3 = [...tabsArr3];
                                                             const foundObj = updatedTabsArr3.find(obj => obj.Tab === tab.Tab);
                                                             if (e.target.checked) {
@@ -326,7 +326,7 @@ function AssignTabsToMember() {
                                         <>
 
                                             <div className='d-flex flex-row my-2'>
-                                                <input onChange={(e) => {
+                                                <input autoComplete='off' onChange={(e) => {
                                                     var updatedTabsArr4;
 
                                                     if (e.target.checked) {
@@ -350,7 +350,7 @@ function AssignTabsToMember() {
                                                 <div className='d-flex flex-row ps-3 mb-5 mt-2' >
                                                     <div className='mx-2'>
 
-                                                        <input onChange={(e) => {
+                                                        <input autoComplete='off' onChange={(e) => {
                                                             const updatedTabsArr4 = [...tabsArr4];
                                                             const foundObj = updatedTabsArr4.find(obj => obj.Tab === tab.Tab);
                                                             if (e.target.checked) {
@@ -365,7 +365,7 @@ function AssignTabsToMember() {
                                                     </div>
                                                     <div className='mx-2'>
 
-                                                        <input onChange={(e) => {
+                                                        <input autoComplete='off' onChange={(e) => {
                                                             const updatedTabsArr4 = [...tabsArr4];
                                                             const foundObj = updatedTabsArr4.find(obj => obj.Tab === tab.Tab);
                                                             if (e.target.checked) {
@@ -380,7 +380,7 @@ function AssignTabsToMember() {
                                                     </div>
                                                     <div className='mx-2'>
 
-                                                        <input onChange={(e) => {
+                                                        <input autoComplete='off' onChange={(e) => {
                                                             const updatedTabsArr4 = [...tabsArr4];
                                                             const foundObj = updatedTabsArr4.find(obj => obj.Tab === tab.Tab);
                                                             if (e.target.checked) {
@@ -405,7 +405,7 @@ function AssignTabsToMember() {
                                         <>
 
                                             <div className='d-flex flex-row my-2'>
-                                                <input onChange={(e) => {
+                                                <input autoComplete='off' onChange={(e) => {
                                                     var updatedTabsArr5;
 
                                                     if (e.target.checked) {
@@ -429,7 +429,7 @@ function AssignTabsToMember() {
                                                 <div className='d-flex flex-row ps-3 mb-5 mt-2' >
                                                     <div className='mx-2'>
 
-                                                        <input onChange={(e) => {
+                                                        <input autoComplete='off' onChange={(e) => {
                                                             const updatedTabsArr5 = [...tabsArr5];
                                                             const foundObj = updatedTabsArr5.find(obj => obj.Tab === tab.Tab);
                                                             if (e.target.checked) {
@@ -444,7 +444,7 @@ function AssignTabsToMember() {
                                                     </div>
                                                     <div className='mx-2'>
 
-                                                        <input onChange={(e) => {
+                                                        <input autoComplete='off' onChange={(e) => {
                                                             const updatedTabsArr5 = [...tabsArr5];
                                                             const foundObj = updatedTabsArr5.find(obj => obj.Tab === tab.Tab);
                                                             if (e.target.checked) {
@@ -459,7 +459,7 @@ function AssignTabsToMember() {
                                                     </div>
                                                     <div className='mx-2'>
 
-                                                        <input onChange={(e) => {
+                                                        <input autoComplete='off' onChange={(e) => {
                                                             const updatedTabsArr5 = [...tabsArr5];
                                                             const foundObj = updatedTabsArr5.find(obj => obj.Tab === tab.Tab);
                                                             if (e.target.checked) {
@@ -483,7 +483,7 @@ function AssignTabsToMember() {
                                         <>
 
                                             <div className='d-flex flex-row my-2'>
-                                                <input onChange={(e) => {
+                                                <input autoComplete='off' onChange={(e) => {
                                                     var updatedTabsArr6;
 
                                                     if (e.target.checked) {
@@ -507,7 +507,7 @@ function AssignTabsToMember() {
                                                 <div className='d-flex flex-row ps-3 mb-5 mt-2' >
                                                     <div className='mx-2'>
 
-                                                        <input onChange={(e) => {
+                                                        <input autoComplete='off' onChange={(e) => {
                                                             const updatedTabsArr6 = [...tabsArr6];
                                                             const foundObj = updatedTabsArr6.find(obj => obj.Tab === tab.Tab);
                                                             if (e.target.checked) {
@@ -522,7 +522,7 @@ function AssignTabsToMember() {
                                                     </div>
                                                     <div className='mx-2'>
 
-                                                        <input onChange={(e) => {
+                                                        <input autoComplete='off' onChange={(e) => {
                                                             const updatedTabsArr6 = [...tabsArr6];
                                                             const foundObj = updatedTabsArr6.find(obj => obj.Tab === tab.Tab);
                                                             if (e.target.checked) {
@@ -537,7 +537,7 @@ function AssignTabsToMember() {
                                                     </div>
                                                     <div className='mx-2'>
 
-                                                        <input onChange={(e) => {
+                                                        <input autoComplete='off' onChange={(e) => {
                                                             const updatedTabsArr6 = [...tabsArr6];
                                                             const foundObj = updatedTabsArr6.find(obj => obj.Tab === tab.Tab);
                                                             if (e.target.checked) {
@@ -552,7 +552,7 @@ function AssignTabsToMember() {
                                                     </div>
                                                     <div className='mx-2'>
 
-                                                        <input onChange={(e) => {
+                                                        <input autoComplete='off' onChange={(e) => {
                                                             const updatedTabsArr6 = [...tabsArr6];
                                                             const foundObj = updatedTabsArr6.find(obj => obj.Tab === tab.Tab);
                                                             if (e.target.checked) {

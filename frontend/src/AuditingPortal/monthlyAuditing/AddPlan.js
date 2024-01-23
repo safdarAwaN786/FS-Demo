@@ -251,7 +251,7 @@ function AddPlanAuditing() {
                                         <p>Process Owner : </p>
                                     </div>
                                     <div>
-                                        <input value={selectedPlanProcess?.Process.ProcessOwner.Name} className='text-black' name='Duration' type="text" readOnly
+                                        <input autoComplete='off' value={selectedPlanProcess?.Process.ProcessOwner.Name} className='text-black' name='Duration' type="text" readOnly
                                             required />
                                     </div>
                                 </div>

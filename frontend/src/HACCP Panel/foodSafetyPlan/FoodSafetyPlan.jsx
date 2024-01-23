@@ -99,7 +99,7 @@ function FoodSafetyPlan() {
                 <div className={style.searchbar}>
                     <div className={style.sec1}>
                         <img src={Search} alt="" />
-                        <input onChange={search} type="text" placeholder='Search Document by name' />
+                        <input autoComplete='off' onChange={search} type="text" placeholder='Search Document by name' />
                     </div>
                     {tabData?.Creation && (
                         <div className={style.sec2} onClick={() => {

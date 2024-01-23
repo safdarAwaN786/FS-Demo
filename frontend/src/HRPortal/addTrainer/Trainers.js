@@ -121,7 +121,7 @@ function Trainers() {
                 <div className={style.searchbar}>
                     <div className={style.sec1}>
                         <img src={Search} alt="" />
-                        <input onChange={search} type="text" placeholder='Search Trainer by name or id' />
+                        <input autoComplete='off' onChange={search} type="text" placeholder='Search Trainer by name or id' />
                     </div>
                     {tabData.Creation && (
 
@@ -152,8 +152,8 @@ function Trainers() {
                                 <td>Speciality</td>
                                 <td>Documents</td>
 
-                                <td>Action</td>
-                                <td>Action</td>
+                                {/* <td>Action</td> */}
+                                <td style={{width : '200px'}}>Action</td>
                             </tr>
                             {
                                 trainersList?.map((trainer, i) => {
@@ -200,12 +200,12 @@ function Trainers() {
                                                 }} className={`${style.download} btn btn-outline-primary`}>Download</button>
                                             </td>
 
-                                            <td >
+                                            {/* <td >
                                                 <button style={{
                                                     cursor: "pointer"
                                                 }} className={`${style.emailbtn} btn btn-outline-primary`}>Send Email</button>
-                                            </td>
-                                            <td><a onClick={() => {
+                                            </td> */}
+                                            <td style={{width : '200px'}}><a onClick={() => {
                                                 dispatch(updateTabData({ ...tabData, Tab: 'assignTabsToTrainer' }));
                                                 dispatch(changeId(trainer._id));
                                             }} type='button' className='btn btn-outline-success p-1'>Assign Tabs</a></td>
@@ -243,7 +243,10 @@ function Trainers() {
 
                             <div className={style.alertbtns}>
 
-                                <button onClick={() => {
+                                <button style={{
+                                    marginLeft : '120px',
+                                    marginTop : '25px'
+                                }}  onClick={() => {
                                     setShowBox(false);
 
                                 }} className={style.btn2}>OK</button>

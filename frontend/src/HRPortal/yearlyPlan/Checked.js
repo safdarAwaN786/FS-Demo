@@ -70,7 +70,7 @@ function Checked() {
             <div className={`${style.searchbar} mt-1 `}>
                 <div className={style.sec1}>
                     <img src={Search} alt="" />
-                    <input onChange={search} type="text" placeholder='Search Training by name ' />
+                    <input autoComplete='off' onChange={search} type="text" placeholder='Search Training by name ' />
                 </div>
             </div>
             <div className={style.tableParent2}>

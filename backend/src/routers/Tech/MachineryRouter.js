@@ -38,7 +38,7 @@ router.post('/addMachinery',  async (req, res) => {
 router.get('/readAllMachinery',  async (req, res) => {
   try {
 
-    const equipment = await Machinery.find({UserDepartment : req.header('Authorization')}).populate('User');
+    const equipment = await Machinery.find({UserDepartment : req.header('Authorization')}).populate('UserDepartment');
     
 
     res.status(201).send({ status: true, message: "The following are Machinery!", data: equipment });

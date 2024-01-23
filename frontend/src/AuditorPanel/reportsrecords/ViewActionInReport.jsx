@@ -87,7 +87,7 @@ function ViewActionInReport() {
                                         <div style={{
                                             width: '100%'
                                         }} className=' me-3 d-flex flex-column'>
-                                            <input value={correctiveAnswer.question.question.questionText} style={{
+                                            <input autoComplete='off' value={correctiveAnswer.question.question.questionText} style={{
                                                 borderRadius: '0px'
                                             }} name='questionText' placeholder='Untitled Question' className='border-0  border-secondary bg-light mt-2 mb-3 w-100 p-3' required readOnly />
 
@@ -110,24 +110,24 @@ function ViewActionInReport() {
                                             {correctiveAnswer.question.question.ComplianceType === 'Yes/No' && (
                                                 <div className='d-flex flex-row flex-wrap'>
 
-                                                    <input checked={correctiveAnswer.question.YesNoAnswer === 'Yes'} type="radio" class="btn-check" name={correctiveAnswer.question.question._id} id={`Yes-${index}`} autocomplete="off" readOnly />
+                                                    <input autoComplete='off' checked={correctiveAnswer.question.YesNoAnswer === 'Yes'} type="radio" class="btn-check" name={correctiveAnswer.question.question._id} id={`Yes-${index}`} autocomplete="off" readOnly />
                                                     <label class="btn btn-outline-success m-2" for={`Yes-${index}`}>Yes</label>
 
-                                                    <input checked={correctiveAnswer.question.YesNoAnswer === 'No'} type="radio" class="btn-check" name={correctiveAnswer.question.question._id} id={`No-${index}`} autocomplete="off" readOnly />
+                                                    <input autoComplete='off' checked={correctiveAnswer.question.YesNoAnswer === 'No'} type="radio" class="btn-check" name={correctiveAnswer.question.question._id} id={`No-${index}`} autocomplete="off" readOnly />
                                                     <label class="btn btn-outline-danger m-2" for={`No-${index}`}>No</label>
-                                                    <input checked={correctiveAnswer.question.YesNoAnswer === 'N/A'} type="radio" class="btn-check" name={correctiveAnswer.question.question._id} id={`N/A-${index}`} autocomplete="off" />
+                                                    <input autoComplete='off' checked={correctiveAnswer.question.YesNoAnswer === 'N/A'} type="radio" class="btn-check" name={correctiveAnswer.question.question._id} id={`N/A-${index}`} autocomplete="off" />
                                                     <label class="btn btn-outline-secondary m-2" for={`N/A-${index}`}>N/A</label>
                                                 </div>
                                             )}
                                             {correctiveAnswer.question.question.ComplianceType === 'Safe/AtRisk' && (
                                                 <div className='d-flex flex-row flex-wrap'>
 
-                                                    <input checked={correctiveAnswer.question.SafeAtRiskAnswer === 'Safe'} type="radio" class="btn-check" name={correctiveAnswer.question.question._id} id={`Safe-${index}`} autocomplete="off" />
+                                                    <input autoComplete='off' checked={correctiveAnswer.question.SafeAtRiskAnswer === 'Safe'} type="radio" class="btn-check" name={correctiveAnswer.question.question._id} id={`Safe-${index}`} autocomplete="off" />
                                                     <label class="btn btn-outline-success m-2" for={`Safe-${index}`}>Safe</label>
 
-                                                    <input checked={correctiveAnswer.question.SafeAtRiskAnswer === 'At Risk'} type="radio" class="btn-check" name={correctiveAnswer.question.question._id} id={`At Risk-${index}`} autocomplete="off" />
+                                                    <input autoComplete='off' checked={correctiveAnswer.question.SafeAtRiskAnswer === 'At Risk'} type="radio" class="btn-check" name={correctiveAnswer.question.question._id} id={`At Risk-${index}`} autocomplete="off" />
                                                     <label class="btn btn-outline-danger m-2" for={`At Risk-${index}`}>At Risk</label>
-                                                    <input checked={correctiveAnswer.question.SafeAtRiskAnswer === 'N/A'} type="radio" class="btn-check" name={correctiveAnswer.question.question._id} id={`N/A-${index}`} autocomplete="off" />
+                                                    <input autoComplete='off' checked={correctiveAnswer.question.SafeAtRiskAnswer === 'N/A'} type="radio" class="btn-check" name={correctiveAnswer.question.question._id} id={`N/A-${index}`} autocomplete="off" />
                                                     <label class="btn btn-outline-secondary m-2" for={`N/A-${index}`}>N/A</label>
                                                 </div>
                                             )}
@@ -135,38 +135,38 @@ function ViewActionInReport() {
                                             {correctiveAnswer.question.question.ComplianceType === 'Pass/Fail' && (
                                                 <div className='d-flex flex-row flex-wrap'>
 
-                                                    <input checked={correctiveAnswer.question.PassFailAnswer === 'Pass'} type="radio" class="btn-check" name={correctiveAnswer.question.question._id} id={`Pass-${index}`} autocomplete="off" />
+                                                    <input autoComplete='off' checked={correctiveAnswer.question.PassFailAnswer === 'Pass'} type="radio" class="btn-check" name={correctiveAnswer.question.question._id} id={`Pass-${index}`} autocomplete="off" />
                                                     <label class="btn btn-outline-success m-2" for={`Pass-${index}`}>Pass</label>
 
-                                                    <input checked={correctiveAnswer.question.PassFailAnswer === 'Fail'} type="radio" class="btn-check" name={correctiveAnswer.question.question._id} id={`Fail-${index}`} autocomplete="off" />
+                                                    <input autoComplete='off' checked={correctiveAnswer.question.PassFailAnswer === 'Fail'} type="radio" class="btn-check" name={correctiveAnswer.question.question._id} id={`Fail-${index}`} autocomplete="off" />
                                                     <label class="btn btn-outline-danger m-2" for={`Fail-${index}`}>Fail</label>
-                                                    <input checked={correctiveAnswer.question.PassFailAnswer === 'N/A'} type="radio" class="btn-check" name={correctiveAnswer.question.question._id} id={`N/A-${index}`} autocomplete="off" />
+                                                    <input autoComplete='off' checked={correctiveAnswer.question.PassFailAnswer === 'N/A'} type="radio" class="btn-check" name={correctiveAnswer.question.question._id} id={`N/A-${index}`} autocomplete="off" />
                                                     <label class="btn btn-outline-secondary m-2" for={`N/A-${index}`}>N/A</label>
                                                 </div>
                                             )}
                                             {correctiveAnswer.question.question.ComplianceType === 'Compliant/NonCompliant' && (
                                                 <div className='d-flex flex-row flex-wrap'>
 
-                                                    <input checked={correctiveAnswer.question.CompliantNonCompliantAnswer === 'Compliant'} type="radio" class="btn-check" name={correctiveAnswer.question.question._id} id={`Compliant-${index}`} autocomplete="off" />
+                                                    <input autoComplete='off' checked={correctiveAnswer.question.CompliantNonCompliantAnswer === 'Compliant'} type="radio" class="btn-check" name={correctiveAnswer.question.question._id} id={`Compliant-${index}`} autocomplete="off" />
                                                     <label class="btn btn-outline-success m-2" for={`Compliant-${index}`}>Compliant</label>
 
-                                                    <input checked={correctiveAnswer.question.CompliantNonCompliantAnswer === 'Non-Compliant'} type="radio" class="btn-check" name={correctiveAnswer.question.question._id} id={`Non-Compliant-${index}`} autocomplete="off" />
+                                                    <input autoComplete='off' checked={correctiveAnswer.question.CompliantNonCompliantAnswer === 'Non-Compliant'} type="radio" class="btn-check" name={correctiveAnswer.question.question._id} id={`Non-Compliant-${index}`} autocomplete="off" />
                                                     <label class="btn btn-outline-danger m-2" for={`Non-Compliant-${index}`}>Non-Compliant</label>
-                                                    <input checked={correctiveAnswer.question.CompliantNonCompliantAnswer === 'N/A'} type="radio" class="btn-check" name={correctiveAnswer.question.question._id} id={`N/A-${index}`} autocomplete="off" />
+                                                    <input autoComplete='off' checked={correctiveAnswer.question.CompliantNonCompliantAnswer === 'N/A'} type="radio" class="btn-check" name={correctiveAnswer.question.question._id} id={`N/A-${index}`} autocomplete="off" />
                                                     <label class="btn btn-outline-secondary m-2" for={`N/A-${index}`}>N/A</label>
                                                 </div>
                                             )}
                                             {correctiveAnswer.question.question.ComplianceType === 'Good/Fair/Poor' && (
                                                 <div className='d-flex flex-row flex-wrap'>
 
-                                                    <input checked={correctiveAnswer.question.GoodFairPoorAnswer === 'Good'} type="radio" class="btn-check" name={correctiveAnswer.question.question._id} id={`Good-${index}`} autocomplete="off" />
+                                                    <input autoComplete='off' checked={correctiveAnswer.question.GoodFairPoorAnswer === 'Good'} type="radio" class="btn-check" name={correctiveAnswer.question.question._id} id={`Good-${index}`} autocomplete="off" />
                                                     <label class="btn btn-outline-success m-2" for={`Good-${index}`}>Good</label>
-                                                    <input checked={correctiveAnswer.question.GoodFairPoorAnswer === 'Fair'} type="radio" class="btn-check" name={correctiveAnswer.question.question._id} id={`Fair-${index}`} autocomplete="off" />
+                                                    <input autoComplete='off' checked={correctiveAnswer.question.GoodFairPoorAnswer === 'Fair'} type="radio" class="btn-check" name={correctiveAnswer.question.question._id} id={`Fair-${index}`} autocomplete="off" />
                                                     <label class="btn btn-outline-warning m-2" for={`Fair-${index}`}>Fair</label>
 
-                                                    <input checked={correctiveAnswer.question.GoodFairPoorAnswer === 'Poor'} type="radio" class="btn-check" name={correctiveAnswer.question.question._id} id={`Poor-${index}`} autocomplete="off" />
+                                                    <input autoComplete='off' checked={correctiveAnswer.question.GoodFairPoorAnswer === 'Poor'} type="radio" class="btn-check" name={correctiveAnswer.question.question._id} id={`Poor-${index}`} autocomplete="off" />
                                                     <label class="btn btn-outline-danger m-2" for={`Poor-${index}`}>Poor</label>
-                                                    <input checked={correctiveAnswer.question.GoodFairPoorAnswer === 'N/A'} type="radio" class="btn-check" name={correctiveAnswer.question.question._id} id={`N/A-${index}`} autocomplete="off" />
+                                                    <input autoComplete='off' checked={correctiveAnswer.question.GoodFairPoorAnswer === 'N/A'} type="radio" class="btn-check" name={correctiveAnswer.question.question._id} id={`N/A-${index}`} autocomplete="off" />
                                                     <label class="btn btn-outline-secondary m-2" for={`N/A-${index}`}>N/A</label>
                                                 </div>
                                             )}
@@ -174,19 +174,19 @@ function ViewActionInReport() {
                                             {correctiveAnswer.question.question.ComplianceType === 'Conform/MinorNonComform/MajorNonConform/CriticalNonConform/Observation' && (
                                                 <div className='d-flex flex-row flex-wrap'>
 
-                                                    <input checked={correctiveAnswer.question.ConformObservationAnswer === 'Conform'} type="radio" class="btn-check" name={correctiveAnswer.question.question._id} id={`Conform-${index}`} autocomplete="off" />
+                                                    <input autoComplete='off' checked={correctiveAnswer.question.ConformObservationAnswer === 'Conform'} type="radio" class="btn-check" name={correctiveAnswer.question.question._id} id={`Conform-${index}`} autocomplete="off" />
                                                     <label class="btn btn-outline-success m-2" for={`Conform-${index}`}>Conform</label>
-                                                    <input checked={correctiveAnswer.question.ConformObservationAnswer === 'Minor Non-Conform'} type="radio" class="btn-check" name={correctiveAnswer.question.question._id} id={`Minor Non-Conform-${index}`} autocomplete="off" />
+                                                    <input autoComplete='off' checked={correctiveAnswer.question.ConformObservationAnswer === 'Minor Non-Conform'} type="radio" class="btn-check" name={correctiveAnswer.question.question._id} id={`Minor Non-Conform-${index}`} autocomplete="off" />
                                                     <label class="btn btn-outline-warning m-2" for={`Minor Non-Conform-${index}`}>Minor Non-Conform</label>
 
-                                                    <input checked={correctiveAnswer.question.ConformObservationAnswer === 'Major Non-Conform'} type="radio" class="btn-check" name={correctiveAnswer.question.question._id} id={`Major Non-Conform-${index}`} autocomplete="off" />
+                                                    <input autoComplete='off' checked={correctiveAnswer.question.ConformObservationAnswer === 'Major Non-Conform'} type="radio" class="btn-check" name={correctiveAnswer.question.question._id} id={`Major Non-Conform-${index}`} autocomplete="off" />
                                                     <label class="btn btn-outline-danger m-2" for={`Major Non-Conform-${index}`}>Major Non-Conform</label>
-                                                    <input checked={correctiveAnswer.question.ConformObservationAnswer === 'Critical Non-Conform'} type="radio" class="btn-check" name={correctiveAnswer.question.question._id} id={`Critical Non-Conform-${index}`} autocomplete="off" />
+                                                    <input autoComplete='off' checked={correctiveAnswer.question.ConformObservationAnswer === 'Critical Non-Conform'} type="radio" class="btn-check" name={correctiveAnswer.question.question._id} id={`Critical Non-Conform-${index}`} autocomplete="off" />
                                                     <label class="btn btn-outline-primary m-2" for={`Critical Non-Conform-${index}`}>Critical Non-Conform</label>
 
-                                                    <input checked={correctiveAnswer.question.ConformObservationAnswer === 'Observation'} type="radio" class="btn-check" name={correctiveAnswer.question.question._id} id={`Observation-${index}`} autocomplete="off" />
+                                                    <input autoComplete='off' checked={correctiveAnswer.question.ConformObservationAnswer === 'Observation'} type="radio" class="btn-check" name={correctiveAnswer.question.question._id} id={`Observation-${index}`} autocomplete="off" />
                                                     <label class="btn btn-outline-info m-2" for={`Observation-${index}`}>Observation</label>
-                                                    <input checked={correctiveAnswer.question.ConformObservationAnswer = 'N/A'} type="radio" class="btn-check" name={correctiveAnswer.question.question._id} id={`N/A-${index}`} autocomplete="off" />
+                                                    <input autoComplete='off' checked={correctiveAnswer.question.ConformObservationAnswer = 'N/A'} type="radio" class="btn-check" name={correctiveAnswer.question.question._id} id={`N/A-${index}`} autocomplete="off" />
                                                     <label class="btn btn-outline-secondary m-2" for={`N/A-${index}`}>N/A</label>
                                                 </div>
                                             )}
@@ -212,7 +212,7 @@ function ViewActionInReport() {
                                                 color: 'black'
                                             }}>Required</p>
                                             <label className={style.switch}>
-                                                <input checked={correctiveAnswer.question.question?.Required} className='ms-3' name='Required' type="checkbox" readOnly />
+                                                <input autoComplete='off' checked={correctiveAnswer.question.question?.Required} className='ms-3' name='Required' type="checkbox" readOnly />
                                                 <span className={`${style.slider} ${style.round}`} ></span>
                                             </label>
                                         </div>
@@ -261,7 +261,10 @@ function ViewActionInReport() {
                         <div class={style.alert}>
                             <p class={style.msg}>{dataToShow}</p>
                             <div className={style.alertbtns}>
-                                <button onClick={() => {
+                                <button style={{
+                                    marginLeft : '120px',
+                                    marginTop : '25px'
+                                }}  onClick={() => {
                                     setShowBox(false)
 
                                 }} className={style.btn1}>Ok.</button>

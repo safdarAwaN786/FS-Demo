@@ -91,11 +91,11 @@ function AddMachine() {
                             <div className={style.sec1}>
 
                                 <div className='mb-5'>
-                                    <input onChange={updateData} name='machineName' value={formData?.machineName} type="text" placeholder='Machinery name' required />
+                                    <input autoComplete='off' onChange={updateData} name='machineName' value={formData?.machineName} type="text" placeholder='Machinery name' required />
                                     <img src={profile} alt="" />
                                 </div>
                                 <div>
-                                    <input value={formData?.machinaryLocation} onChange={updateData} name='machinaryLocation' type="text" placeholder='Machinery location' required />
+                                    <input autoComplete='off' value={formData?.machinaryLocation} onChange={updateData} name='machinaryLocation' type="text" placeholder='Machinery location' required />
                                     <img src={Phone} alt="" />
 
                                 </div>
@@ -104,25 +104,25 @@ function AddMachine() {
                                     <p>Add Maintainance</p>
 
                                     <div className={style.droper}>
-                                        <p className={style.optStyle} ><input onChange={(e) => {
+                                        <p className={style.optStyle} ><input autoComplete='off' onChange={(e) => {
                                             toggleCommentBox(e);
                                             setDailyChecked(e.target.checked);
                                         }} type="checkbox" name='Daily' /> Daily {isDailyChecked && maintenance?.Daily && <p className='text-success fs-6'> ( Added )</p>}  {isDailyChecked && !maintenance?.Daily && <p className='text-danger fs-6'> ( Not Added )</p>}</p>
 
-                                        <p className={style.optStyle} ><input onChange={(e) => {
+                                        <p className={style.optStyle} ><input autoComplete='off' onChange={(e) => {
                                             toggleCommentBox(e);
                                             setWeeklyChecked(e.target.checked);
                                         }} name='Weekly' type="checkbox" /> Weekly  {isWeeklyChecked && maintenance?.Weekly && <p className='text-success fs-6'> ( Added )</p>}  {isWeeklyChecked && !maintenance?.Weekly && <p className='text-danger fs-6'> ( Not Added )</p>}</p>
 
-                                        <p className={style.optStyle} ><input onChange={(e) => {
+                                        <p className={style.optStyle} ><input autoComplete='off' onChange={(e) => {
                                             toggleCommentBox(e);
                                             setMonthlyChecked(e.target.checked);
                                         }} name='Monthly' type="checkbox" /> Monthly  {isMonthlyChecked && maintenance?.Monthly && <p className='text-success fs-6'> ( Added )</p>}  {isMonthlyChecked && !maintenance?.Monthly && <p className='text-danger fs-6'> ( Not Added )</p>}</p>
-                                        <p className={style.optStyle} ><input onChange={(e) => {
+                                        <p className={style.optStyle} ><input autoComplete='off' onChange={(e) => {
                                             toggleCommentBox(e);
                                             setQuarterlyChecked(e.target.checked);
                                         }} name='Quarterly' type="checkbox" /> Quarterly  {isQuarterlyChecked && maintenance?.Quarterly && <p className='text-success fs-6'> ( Added )</p>}  {isQuarterlyChecked && !maintenance?.Quarterly && <p className='text-danger fs-6'> ( Not Added )</p>}</p>
-                                        <p className={style.optStyle} ><input onChange={(e) => {
+                                        <p className={style.optStyle} ><input autoComplete='off' onChange={(e) => {
                                             toggleCommentBox(e);
                                             setYearlyChecked(e.target.checked);
                                         }} name='Yearly' type="checkbox" /> Yearly  {isYearlyChecked && maintenance?.Yearly && <p className='text-success fs-6'> ( Added )</p>}   {isYearlyChecked && !maintenance?.Yearly && <p className='text-danger fs-6'> ( Not Added )</p>}</p>
@@ -130,9 +130,9 @@ function AddMachine() {
                                 </div>
                             </div>
                         </div>
-                        <div className={style.resbtns}>
-                            <button type='submit' className={style.submit} >Submit</button>
-                        </div>
+                            <div className={style.resbtns}>
+                                <button type='submit' className={style.submit} >Submit</button>
+                            </div>
                     </form>
                 </div>
             </div>
@@ -186,7 +186,7 @@ function AddMachine() {
                                 <button onClick={() => {
                                     setSubmitAlert(false)
                                     dispatch(setSmallLoading(true))
-                                    axios.post(`${process.env.REACT_APP_BACKEND_URL}/addMachinery`, {...formData, createdBy : user.Name}, { headers: { Authorization: `${user.Department._id}` } }).then((res) => {
+                                    axios.post(`${process.env.REACT_APP_BACKEND_URL}/addMachinery`, { ...formData, createdBy: user.Name }, { headers: { Authorization: `${user.Department._id}` } }).then((res) => {
                                         dispatch(setSmallLoading(false))
                                         setFormData(null)
                                         Swal.fire({

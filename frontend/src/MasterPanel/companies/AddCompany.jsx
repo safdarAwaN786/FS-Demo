@@ -95,7 +95,7 @@ function AddCompany() {
                                             {/* <p>Document Type</p> */}
                                         </div>
                                         <div >
-                                            <input name='CompanyName' className='text-dark' type='text' placeholder='Company Name' required />
+                                            <input autoComplete='off' name='CompanyName' className='text-dark' type='text' placeholder='Company Name' required />
                                             <img style={{
                                                 width: '20px'
                                             }} src={profile} />
@@ -106,7 +106,7 @@ function AddCompany() {
                                             {/* <p>Document Type</p> */}
                                         </div>
                                         <div >
-                                            <input name='PhoneNo' className='text-dark' type='number' placeholder='Company Phone Number' required />
+                                            <input autoComplete='off' name='PhoneNo' className='text-dark' type='number' placeholder='Company Phone Number' required />
                                             <img style={{
                                                 width: '20px'
                                             }} src={Phone} />
@@ -117,7 +117,7 @@ function AddCompany() {
                                             {/* <p>Document Type</p> */}
                                         </div>
                                         <div >
-                                            <input name='Email' className='text-dark' type='email' placeholder='Company Email' required />
+                                            <input autoComplete='off' name='Email' className='text-dark' type='email' placeholder='Company Email' required />
                                             <img style={{
                                                 width: '20px'
                                             }} src={mail} />
@@ -136,7 +136,7 @@ function AddCompany() {
                                             {/* <p>Document Type</p> */}
                                         </div>
                                         <div >
-                                            <input name='ShortName' className='text-dark' type='text' placeholder='Company Short Name' required />
+                                            <input autoComplete='off' name='ShortName' className='text-dark' type='text' placeholder='Company Short Name' required />
                                             <img style={{
                                                 width: '20px'
                                             }} src={man} />
@@ -147,7 +147,7 @@ function AddCompany() {
                                             {/* <p>Document Type</p> */}
                                         </div>
                                         <div >
-                                            <input name='Address' className='text-dark' type='text' placeholder='Company Address' required />
+                                            <input autoComplete='off' name='Address' className='text-dark' type='text' placeholder='Company Address' required />
                                             <img style={{
                                                 width: '20px'
                                             }} src={Location} />
@@ -158,7 +158,7 @@ function AddCompany() {
                                             <p>Company Logo</p>
                                         </div>
                                         <div className='bg-danger'>
-                                            <input name='CompanyLogo' className='btn btn-danger bg-danger w-100' accept='.png, .jpg, .jpeg' type='file' required />
+                                            <input autoComplete='off' name='CompanyLogo' className='btn btn-danger bg-danger w-100' accept='.png, .jpg, .jpeg' type='file' required />
                                         </div>
                                     </div>
 

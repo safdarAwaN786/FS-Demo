@@ -159,10 +159,10 @@ function AddDepartments() {
                                         <div className='d-flex justify-content-center'>
 
                                             <div className='mx-lg-4 mx-md-3 mx-2'>
-                                                <input value={department.DepartmentName} onChange={(event) => {
+                                                <input autoComplete='off' value={department.DepartmentName} onChange={(event) => {
                                                     updateDepartments(event, index)
                                                 }} name='DepartmentName' type='text' className='p-3 bg-light my-3 w-100 border-0' placeholder='Department Name' required />
-                                                <input value={department.ShortName} onChange={(event) => {
+                                                <input autoComplete='off' value={department.ShortName} onChange={(event) => {
                                                     updateDepartments(event, index)
                                                 }} name='ShortName' type='text' className='p-3 bg-light my-3 w-100 border-0' placeholder='Department Short Name' required />
                                             </div>

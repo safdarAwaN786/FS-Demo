@@ -67,33 +67,12 @@ function ViewProductDetails() {
                         alertManager();
                     }}>
                         <div className={`${style.myBox} bg-light pb-3`}>
-                            <div className={style.formDivider}>
-                                <div className={style.sec1}>
-                                    <div className={style.inputParent}>
-                                        <div className={style.para}>
-                                            <p>Document Type</p>
-                                        </div>
-                                        <div className='border border-dark-subtle'>
-                                        <input value={dataToSend?.DocumentType} className='w-100' type="text" readOnly />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className={style.sec2}>
-                                    <div className={style.inputParent}>
-                                        <div className={style.para}>
-                                            <p>Department</p>
-                                        </div>
-                                        <div className='border border-dark-subtle'>
-                                        <input value={dataToSend?.Department.DepartmentName} className='w-100' type="text" readOnly />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                           
                             <div className='bg-white   m-lg-5 m-2 p-3 '>
                                 <div className='row'>
                                     <div className='col-lg-6 col-md-12 p-2'>
-                                        <input name='Name'  value={product.Name} type='text' className='p-3 bg-light  my-3 w-100 border-0' placeholder='Name' required readOnly/>
-                                        <input name='RawMaterial'  value={product.RawMaterial} type='text' className='p-3 bg-light  my-3 w-100 border-0' placeholder='Raw Material' required readOnly/>
+                                        <input autoComplete='off' name='Name'  value={product.Name} type='text' className='p-3 bg-light  my-3 w-100 border-0' placeholder='Name' required readOnly/>
+                                        <input autoComplete='off' name='RawMaterial'  value={product.RawMaterial} type='text' className='p-3 bg-light  my-3 w-100 border-0' placeholder='Raw Material' required readOnly/>
                                         <textarea  value={product.PhysicalProperties} name='PhysicalProperties' type='text' className='p-3 bg-light  my-3 w-100 border-0' placeholder='Physical Properties' required readOnly/>
                                         <textarea  value={product.ProductDescription} name='ProductDescription' type='text' className='p-3 bg-light  my-3 w-100 border-0' placeholder='Product Description' required readOnly/>
                                         <textarea  name='Allergens' value={product.Allergens} type='text' className='p-3 bg-light  my-3 w-100 border-0' placeholder='Allergens' required readOnly/>
@@ -101,8 +80,8 @@ function ViewProductDetails() {
                                         <textarea  name='Transportation' value={product.Transportation} type='text' className='p-3 bg-light  my-3  w-100 border-0' placeholder='Transportation' required readOnly/>
                                     </div>
                                     <div className='col-lg-6 col-md-12 p-2'>
-                                        <input  name='Origin' value={product.Origin} type='text' className='p-3 bg-light  my-3  w-100 border-0' placeholder='Origin' required readOnly/>
-                                        <input  name='PackingMaterial' value={product.PackingMaterial} type='text' className='p-3 bg-light  my-3  w-100 border-0' placeholder='Packing Material' required readOnly/>
+                                        <input autoComplete='off'  name='Origin' value={product.Origin} type='text' className='p-3 bg-light  my-3  w-100 border-0' placeholder='Origin' required readOnly/>
+                                        <input autoComplete='off'  name='PackingMaterial' value={product.PackingMaterial} type='text' className='p-3 bg-light  my-3  w-100 border-0' placeholder='Packing Material' required readOnly/>
                                         <textarea  name='ChemicalProperties' value={product.ChemicalProperties} type='text' className='p-3 bg-light  my-3  w-100 border-0' placeholder='Chemical Properties' required readOnly/>
                                         <textarea  name='MicrobialProperties' value={product.MicrobialProperties} type='text' className='p-3 bg-light  my-3  w-100 border-0' placeholder='Microbial Properties' required readOnly/>
                                         <textarea  name='IntendedUsers' value={product.IntendedUsers} type='text' className='p-3 bg-light  my-3  w-100 border-0' placeholder='Intended users' required readOnly/>
@@ -125,7 +104,7 @@ function ViewProductDetails() {
                                     alertManager();
                                     // makeRequest();
                                 }} className={style.btn1}>Submit</button>
-                                <button onClick={alertManager} className={style.btn2}>Cencel</button>
+                                <button onClick={alertManager} className={style.btn2}>Cancel</button>
                             </div>
                         </div>
                     </div> : null

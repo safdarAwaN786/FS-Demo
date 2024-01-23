@@ -129,7 +129,7 @@ function Employees() {
                 <div className={style.searchbar}>
                     <div className={style.sec1}>
                         <img src={Search} alt="" />
-                        <input onChange={search} type="text" placeholder='Search Employee by name or id' />
+                        <input autoComplete='off' onChange={search} type="text" placeholder='Search Employee by name or id' />
                     </div>
                     {tabData?.Creation && (
 
@@ -162,7 +162,7 @@ function Employees() {
                                 <td>Training Status</td>
                                 <td>Profile</td>
                                 <td>CV Certificate</td>
-                                <td></td>
+                                {/* <td></td> */}
                             </tr>
 
                             {
@@ -216,12 +216,12 @@ function Employees() {
                                                     Download
                                                 </a>
                                             </td>
-                                            <td>
+                                            {/* <td>
                                                 <button onClick={() => {
                                                     dispatch(updateTabData({ ...tabData, Tab: 'assignTabsToEmployee' }));
                                                     dispatch(changeId(employee._id));
                                                 }} type='button' className='btn btn-outline-success w-100 ms-2 p-1'>Assign Tabs</button>
-                                            </td>
+                                            </td> */}
                                         </tr>
                                     )
 
@@ -256,9 +256,10 @@ function Employees() {
                         <div class={style.alert}>
                             <p class={style.msg}>{popUpData}</p>
                             <div className={style.alertbtns}>
-
-                                <button onClick={alertManager} className={style.btn2}>OK.</button>
-
+                                <button  style={{
+                                    marginLeft : '120px',
+                                    marginTop : '25px'
+                                }}  onClick={alertManager} className={style.btn2}>OK.</button>
                             </div>
                         </div>
                     </div> : null

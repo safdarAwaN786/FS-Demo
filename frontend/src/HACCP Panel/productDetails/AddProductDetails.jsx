@@ -51,7 +51,7 @@ function AddProductDetails() {
     const makeRequest = () => {
 
         dispatch(setSmallLoading(true))
-        axios.post(`${process.env.REACT_APP_BACKEND_URL}/create-product`, {...dataToSend, createdBy : user.Name}, { headers: { Authorization: `${user._id}` } }).then(() => {
+        axios.post(`${process.env.REACT_APP_BACKEND_URL}/create-product`, { ...dataToSend, createdBy: user.Name }, { headers: { Authorization: `${user._id}` } }).then(() => {
             setDataToSend(null);
             Swal.fire({
                 title: 'Success',
@@ -81,7 +81,7 @@ function AddProductDetails() {
                         <BsArrowLeftCircle
                             role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
                                 {
-                                    dispatch({ ...tabData, Tab: 'Describe Product' })
+                                    dispatch(updateTabData({ ...tabData, Tab: 'Describe Product' }))
                                 }
                             }} />
                     </div>
@@ -142,10 +142,10 @@ function AddProductDetails() {
                             <div className='bg-white   m-lg-5 m-2 p-3 '>
                                 <div className='row'>
                                     <div className='col-lg-6 col-md-12 p-2'>
-                                        <input name='Name' onChange={(event) => {
+                                        <input autoComplete='off' name='Name' onChange={(event) => {
                                             updateProduct(event)
                                         }} value={product.Name} type='text' className='p-3 bg-light  my-3 w-100 border-0' placeholder='Name' required />
-                                        <input name='RawMaterial' onChange={(event) => {
+                                        <input autoComplete='off' name='RawMaterial' onChange={(event) => {
                                             updateProduct(event)
                                         }} value={product.RawMaterial} type='text' className='p-3 bg-light  my-3 w-100 border-0' placeholder='Raw Material' required />
                                         <textarea onChange={(event) => {
@@ -163,12 +163,19 @@ function AddProductDetails() {
                                         <textarea onChange={(event) => {
                                             updateProduct(event)
                                         }} name='Transportation' value={product.Transportation} type='text' className='p-3 bg-light  my-3  w-100 border-0' placeholder='Transportation' required />
+                                        <textarea onChange={(event) => {
+                                            updateProduct(event)
+                                        }} name='ShelfLife' value={product.ShelfLife} type='text' className='p-3 bg-light  my-3  w-100 border-0' placeholder='Shelf Life' required />
+                                        <textarea onChange={(event) => {
+                                            updateProduct(event)
+                                        }} name='Transportation' value={product.Transportation} type='text' className='p-3 bg-light  my-3  w-100 border-0' placeholder='Transportation' required />
+
                                     </div>
                                     <div className='col-lg-6 col-md-12 p-2'>
-                                        <input onChange={(event) => {
+                                        <input autoComplete='off' onChange={(event) => {
                                             updateProduct(event)
                                         }} name='Origin' value={product.Origin} type='text' className='p-3 bg-light  my-3  w-100 border-0' placeholder='Origin' required />
-                                        <input onChange={(event) => {
+                                        <input autoComplete='off' onChange={(event) => {
                                             updateProduct(event)
                                         }} name='PackingMaterial' value={product.PackingMaterial} type='text' className='p-3 bg-light  my-3  w-100 border-0' placeholder='Packing Material' required />
                                         <textarea onChange={(event) => {
@@ -186,6 +193,12 @@ function AddProductDetails() {
                                         <textarea onChange={(event) => {
                                             updateProduct(event)
                                         }} name='FoodSafetyRisk' value={product.FoodSafetyRisk} type='text' className='p-3 bg-light  my-3  w-100 border-0' placeholder='Food Safety Risks' required />
+                                        <textarea onChange={(event) => {
+                                            updateProduct(event)
+                                        }} name='TargetMarket' value={product.TargetMarket} type='text' className='p-3 bg-light  my-3  w-100 border-0' placeholder='Target Market' required />
+                                        <textarea onChange={(event) => {
+                                            updateProduct(event)
+                                        }} name='Consumer' value={product.Consumer} type='text' className='p-3 bg-light  my-3  w-100 border-0' placeholder='Consumer' required />
                                     </div>
                                 </div>
                             </div>

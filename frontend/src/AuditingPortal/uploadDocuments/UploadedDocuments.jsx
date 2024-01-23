@@ -156,7 +156,7 @@ function UploadedDocuments() {
                 <div className={style.searchbar}>
                     <div className={style.sec1}>
                         <img src={Search} alt="" />
-                        <input onChange={search} type="text" placeholder='Search Document by name' />
+                        <input autoComplete='off' onChange={search} type="text" placeholder='Search Document by name' />
                     </div>
                     {tabData?.Creation && (
 
@@ -373,7 +373,10 @@ function UploadedDocuments() {
 
                             <div className={style.alertbtns}>
 
-                                <button onClick={() => {
+                                <button style={{
+                                    marginLeft : '120px',
+                                    marginTop : '25px'
+                                }}  onClick={() => {
                                     setShowBox(false);
 
                                 }} className={style.btn2}>OK</button>
@@ -415,7 +418,7 @@ function UploadedDocuments() {
                                 setUploadDoc(false)
                             }}>
 
-                                <input type='file' name='file' className='btn btn-danger mx-5 my-4 px-2 py-1' required />
+                                <input autoComplete='off' type='file' name='file' className='btn btn-danger mx-5 my-4 px-2 py-1' required />
 
                                 <div className={style.alertbtns}>
 

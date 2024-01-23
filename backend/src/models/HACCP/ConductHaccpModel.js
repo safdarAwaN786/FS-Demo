@@ -51,7 +51,7 @@ const ConductHaccpSchema = new mongoose.Schema({
     },
     UserDepartment: {
         type: Schema.Types.ObjectId,
-        ref: 'Departrment',
+        ref: 'Department',
         required: true
     },
 

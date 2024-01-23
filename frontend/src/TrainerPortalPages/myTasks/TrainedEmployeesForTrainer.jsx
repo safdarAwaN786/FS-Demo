@@ -96,7 +96,7 @@ function TrainedEmployeesForTrainer() {
                 <div className={`${style.searchbar} mt-1`}>
                     <div className={style.sec1}>
                         <img src={Search} alt="" />
-                        <input onChange={search} type="text" placeholder='Search Employee by name or id' />
+                        <input autoComplete='off' onChange={search} type="text" placeholder='Search Employee by name or id' />
                     </div>
                 </div>
                 <div className={style.tableParent}>
@@ -155,14 +155,14 @@ function TrainedEmployeesForTrainer() {
 
                                                     <td>{employee.EmployeeData[findObjectIndexByPropertyValue(employee.EmployeeData)].EmployeeResultStatus}</td>
                                                     <td><label className={style.switch}>
-                                                        <input type="checkbox" checked={employee.EmployeeData[findObjectIndexByPropertyValue(employee.EmployeeData)].IsPass} />
+                                                        <input autoComplete='off' type="checkbox" checked={employee.EmployeeData[findObjectIndexByPropertyValue(employee.EmployeeData)].IsPass} />
 
                                                         <span className={`${style.slider} ${style.round}`} ></span>
                                                     </label></td>
 
                                                     <td>
                                                         <label className={style.switch}>
-                                                            <input type="checkbox" checked={employee.EmployeeData[findObjectIndexByPropertyValue(employee.EmployeeData)].IsPresent} />
+                                                            <input autoComplete='off' type="checkbox" checked={employee.EmployeeData[findObjectIndexByPropertyValue(employee.EmployeeData)].IsPresent} />
                                                             <span className={`${style.slider} ${style.round}`} ></span>
                                                         </label>
                                                     </td>
@@ -180,14 +180,14 @@ function TrainedEmployeesForTrainer() {
                                                 <>
                                                     <td>Pending</td>
                                                     <td><label className={style.switch}>
-                                                        <input type="checkbox" checked={false} />
+                                                        <input autoComplete='off' type="checkbox" checked={false} />
 
                                                         <span className={`${style.slider} ${style.round}`} ></span>
                                                     </label></td>
 
                                                     <td>
                                                         <label className={style.switch}>
-                                                            <input type="checkbox" checked={false} />
+                                                            <input autoComplete='off' type="checkbox" checked={false} />
                                                             <span className={`${style.slider} ${style.round}`} ></span>
                                                         </label>
                                                     </td>
@@ -234,7 +234,10 @@ function TrainedEmployeesForTrainer() {
                             <p class={style.msg}>{popUpData}</p>
                             <div className={style.alertbtns}>
 
-                                <button onClick={alertManager} className={style.btn2}>OK.</button>
+                                <button style={{
+                                    marginLeft : '120px',
+                                    marginTop : '25px'
+                                }}  onClick={alertManager} className={style.btn2}>OK.</button>
 
                             </div>
                         </div>

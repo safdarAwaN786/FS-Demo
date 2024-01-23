@@ -132,7 +132,7 @@ function TechMWR() {
                 <div className={`${style.searchbar}`}>
                     <div className={style.sec1}>
                         <img src={Search} alt="" />
-                        <input onChange={searchFunction} type="text" placeholder='Search MWR by id' />
+                        <input autoComplete='off' onChange={searchFunction} type="text" placeholder='Search MWR by id' />
                     </div>
                     {tabData?.Creation && (
                         <div onClick={() => {
@@ -313,7 +313,10 @@ function TechMWR() {
                         <div class={style.alert}>
                             <p class={style.msg}>{popUpData}</p>
                             <div className={style.alertbtns}>
-                                <button onClick={alertManager} className={style.btn2}>Close</button>
+                                <button style={{
+                                    marginLeft : '120px',
+                                    marginTop : '25px'
+                                }}  onClick={alertManager} className={style.btn2}>Close</button>
                             </div>
                         </div>
                     </div> : null
@@ -431,19 +434,19 @@ function TechMWR() {
 
                                 <div>
                                     <p>Job Assign</p>
-                                    <input name='JobAssigned' onChange={(e) => {
+                                    <input autoComplete='off' name='JobAssigned' onChange={(e) => {
                                         setAcceptObj({ ...acceptObj, [e.target.name]: e.target.value })
                                     }} type="text" required />
                                 </div>
                                 <div>
                                     <p>Designation</p>
-                                    <input onChange={(e) => {
+                                    <input autoComplete='off' onChange={(e) => {
                                         setAcceptObj({ ...acceptObj, [e.target.name]: e.target.value })
                                     }} name='Designation' type="text" required />
                                 </div>
                                 <div>
                                     <p>Detail</p>
-                                    <input onChange={(e) => {
+                                    <input autoComplete='off' onChange={(e) => {
                                         setAcceptObj({ ...acceptObj, [e.target.name]: e.target.value })
                                     }} name='DetailOfWork' type="text" required />
                                 </div>

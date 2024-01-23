@@ -6,6 +6,7 @@ import Swal from 'sweetalert2'
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { setSmallLoading } from '../../redux/slices/loading';
+import { BsArrowLeftCircle } from 'react-icons/bs';
 
 function AssignTabsToOwner() {
 
@@ -121,6 +122,13 @@ function AssignTabsToOwner() {
 
 
                 <div className={`${style.subparent} mx-2 mx-sm-4  mx-lg-5`}>
+                <div className='d-flex flex-row bg-white px-lg-3 px-2 ps-sm-5 ms-sm-5 py-2'>
+                        <BsArrowLeftCircle role='button' className='fs-3 ms-sm-3 mt-1 text-danger' onClick={(e) => {
+                            {
+                                dispatch(updateTabData({ ...tabData, Tab: 'Define Process' }))
+                            }
+                        }} />
+                    </div>
                     <div className={`${style.headers} d-flex justify-content-start ps-3 align-items-center `}>
                         <div className={style.spans}>
                             <span></span>
@@ -156,7 +164,7 @@ function AssignTabsToOwner() {
                                         <>
 
                                             <div className='d-flex flex-row my-2'>
-                                                <input onChange={(e) => {
+                                                <input autoComplete='off' onChange={(e) => {
                                                     var updatedTabsArr1;
 
                                                     if (e.target.checked) {
@@ -184,7 +192,7 @@ function AssignTabsToOwner() {
                                         <>
 
                                             <div className='d-flex flex-row my-2'>
-                                                <input onChange={(e) => {
+                                                <input autoComplete='off' onChange={(e) => {
                                                     var updatedTabsArr2;
 
                                                     if (e.target.checked) {
@@ -206,7 +214,7 @@ function AssignTabsToOwner() {
                                             {tabsArr2.some(obj => obj.Tab === tab.Tab) && (
 
                                                 <div className='d-flex flex-row ps-3 mb-5 mt-2' >
-                                                    <input onChange={(e) => {
+                                                    <input autoComplete='off' onChange={(e) => {
                                                         const updatedTabsArr2 = [...tabsArr2];
                                                         const foundObj = updatedTabsArr2.find(obj => obj.Tab === tab.Tab);
                                                         if (e.target.checked) {
@@ -231,7 +239,7 @@ function AssignTabsToOwner() {
                                         <>
 
                                             <div className='d-flex flex-row my-2'>
-                                                <input onChange={(e) => {
+                                                <input autoComplete='off' onChange={(e) => {
                                                     var updatedTabsArr3;
 
                                                     if (e.target.checked) {
@@ -255,7 +263,7 @@ function AssignTabsToOwner() {
                                                 <div className='d-flex flex-row ps-3 mb-5 mt-2' >
                                                     <div className='mx-2'>
 
-                                                        <input onChange={(e) => {
+                                                        <input autoComplete='off' onChange={(e) => {
                                                             const updatedTabsArr3 = [...tabsArr3];
                                                             const foundObj = updatedTabsArr3.find(obj => obj.Tab === tab.Tab);
                                                             if (e.target.checked) {
@@ -270,7 +278,7 @@ function AssignTabsToOwner() {
                                                     </div>
                                                     <div className='mx-2'>
 
-                                                        <input onChange={(e) => {
+                                                        <input autoComplete='off' onChange={(e) => {
                                                             const updatedTabsArr3 = [...tabsArr3];
                                                             const foundObj = updatedTabsArr3.find(obj => obj.Tab === tab.Tab);
                                                             if (e.target.checked) {
@@ -295,7 +303,7 @@ function AssignTabsToOwner() {
                                         <>
 
                                             <div className='d-flex flex-row my-2'>
-                                                <input onChange={(e) => {
+                                                <input autoComplete='off' onChange={(e) => {
                                                     var updatedTabsArr4;
 
                                                     if (e.target.checked) {
@@ -319,7 +327,7 @@ function AssignTabsToOwner() {
                                                 <div className='d-flex flex-row ps-3 mb-5 mt-2' >
                                                     <div className='mx-2'>
 
-                                                        <input onChange={(e) => {
+                                                        <input autoComplete='off' onChange={(e) => {
                                                             const updatedTabsArr4 = [...tabsArr4];
                                                             const foundObj = updatedTabsArr4.find(obj => obj.Tab === tab.Tab);
                                                             if (e.target.checked) {
@@ -334,7 +342,7 @@ function AssignTabsToOwner() {
                                                     </div>
                                                     <div className='mx-2'>
 
-                                                        <input onChange={(e) => {
+                                                        <input autoComplete='off' onChange={(e) => {
                                                             const updatedTabsArr4 = [...tabsArr4];
                                                             const foundObj = updatedTabsArr4.find(obj => obj.Tab === tab.Tab);
                                                             if (e.target.checked) {
@@ -349,7 +357,7 @@ function AssignTabsToOwner() {
                                                     </div>
                                                     <div className='mx-2'>
 
-                                                        <input onChange={(e) => {
+                                                        <input autoComplete='off' onChange={(e) => {
                                                             const updatedTabsArr4 = [...tabsArr4];
                                                             const foundObj = updatedTabsArr4.find(obj => obj.Tab === tab.Tab);
                                                             if (e.target.checked) {
@@ -374,7 +382,7 @@ function AssignTabsToOwner() {
                                         <>
 
                                             <div className='d-flex flex-row my-2'>
-                                                <input onChange={(e) => {
+                                                <input autoComplete='off' onChange={(e) => {
                                                     var updatedTabsArr5;
 
                                                     if (e.target.checked) {
@@ -398,7 +406,7 @@ function AssignTabsToOwner() {
                                                 <div className='d-flex flex-row ps-3 mb-5 mt-2' >
                                                     <div className='mx-2'>
 
-                                                        <input onChange={(e) => {
+                                                        <input autoComplete='off' onChange={(e) => {
                                                             const updatedTabsArr5 = [...tabsArr5];
                                                             const foundObj = updatedTabsArr5.find(obj => obj.Tab === tab.Tab);
                                                             if (e.target.checked) {
@@ -413,7 +421,7 @@ function AssignTabsToOwner() {
                                                     </div>
                                                     <div className='mx-2'>
 
-                                                        <input onChange={(e) => {
+                                                        <input autoComplete='off' onChange={(e) => {
                                                             const updatedTabsArr5 = [...tabsArr5];
                                                             const foundObj = updatedTabsArr5.find(obj => obj.Tab === tab.Tab);
                                                             if (e.target.checked) {
@@ -428,7 +436,7 @@ function AssignTabsToOwner() {
                                                     </div>
                                                     <div className='mx-2'>
 
-                                                        <input onChange={(e) => {
+                                                        <input autoComplete='off' onChange={(e) => {
                                                             const updatedTabsArr5 = [...tabsArr5];
                                                             const foundObj = updatedTabsArr5.find(obj => obj.Tab === tab.Tab);
                                                             if (e.target.checked) {
@@ -452,7 +460,7 @@ function AssignTabsToOwner() {
                                         <>
 
                                             <div className='d-flex flex-row my-2'>
-                                                <input onChange={(e) => {
+                                                <input autoComplete='off' onChange={(e) => {
                                                     var updatedTabsArr6;
 
                                                     if (e.target.checked) {
@@ -476,7 +484,7 @@ function AssignTabsToOwner() {
                                                 <div className='d-flex flex-row ps-3 mb-5 mt-2' >
                                                     <div className='mx-2'>
 
-                                                        <input onChange={(e) => {
+                                                        <input autoComplete='off' onChange={(e) => {
                                                             const updatedTabsArr6 = [...tabsArr6];
                                                             const foundObj = updatedTabsArr6.find(obj => obj.Tab === tab.Tab);
                                                             if (e.target.checked) {
@@ -491,7 +499,7 @@ function AssignTabsToOwner() {
                                                     </div>
                                                     <div className='mx-2'>
 
-                                                        <input onChange={(e) => {
+                                                        <input autoComplete='off' onChange={(e) => {
                                                             const updatedTabsArr6 = [...tabsArr6];
                                                             const foundObj = updatedTabsArr6.find(obj => obj.Tab === tab.Tab);
                                                             if (e.target.checked) {
@@ -506,7 +514,7 @@ function AssignTabsToOwner() {
                                                     </div>
                                                     <div className='mx-2'>
 
-                                                        <input onChange={(e) => {
+                                                        <input autoComplete='off' onChange={(e) => {
                                                             const updatedTabsArr6 = [...tabsArr6];
                                                             const foundObj = updatedTabsArr6.find(obj => obj.Tab === tab.Tab);
                                                             if (e.target.checked) {
@@ -521,7 +529,7 @@ function AssignTabsToOwner() {
                                                     </div>
                                                     <div className='mx-2'>
 
-                                                        <input onChange={(e) => {
+                                                        <input autoComplete='off' onChange={(e) => {
                                                             const updatedTabsArr6 = [...tabsArr6];
                                                             const foundObj = updatedTabsArr6.find(obj => obj.Tab === tab.Tab);
                                                             if (e.target.checked) {

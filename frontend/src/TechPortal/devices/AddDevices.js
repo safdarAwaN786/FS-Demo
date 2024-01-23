@@ -62,7 +62,7 @@ function AddDevices() {
 
     return (
         <>
-            <div className={style.addEmployee}>
+            {/* <div className={style.addEmployee}> */}
                 <div className='d-flex flex-row bg-white px-lg-5 mx-1 px-2 py-2'>
                     <BsArrowLeftCircle role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
                         {
@@ -147,18 +147,18 @@ function AddDevices() {
 
                             <div className={style.sec1}>
                                 <div className='mb-4'>
-                                    <input type="text" name='equipmentName' placeholder='Device Name' onChange={updateFormValues} required />
+                                    <input autoComplete='off' type="text" name='equipmentName' placeholder='Device Name' onChange={updateFormValues} required />
                                     <img src={profile} alt="" />
                                 </div>
                                 <div>
-                                    <input type="text" placeholder='Device Location' name='equipmentLocation' onChange={updateFormValues} required />
+                                    <input autoComplete='off' type="text" placeholder='Device Location' name='equipmentLocation' onChange={updateFormValues} required />
                                     <div className={style.indicator}>
                                         <img src={Phone} alt="" />
                                     </div>
                                 </div>
 
                                 <div className='mt-4'>
-                                    <input type="number" name='Range' onChange={updateFormValues} placeholder='Range' required />
+                                    <input autoComplete='off' type="number" name='Range' onChange={updateFormValues} placeholder='Range' required />
                                 </div>
                                 <div className={`${style.dropdown} bg-white p-3 `}>
                                     <p className='fs-4'>Add Callibration</p>
@@ -166,7 +166,7 @@ function AddDevices() {
                                     <div className='w-100 p-0 m-0 d-flex flex-row justify-content-between'>
                                         <div className=' align-items-center d-flex flex-column'>
                                             <div className='my-2 d-flex align-items-center flex-row'>
-                                                <input style={{
+                                                <input autoComplete='off' style={{
                                                     width: '20px',
                                                     height: '20px',
                                                     borderRadius: '50%',
@@ -190,7 +190,7 @@ function AddDevices() {
 
                                                 <div>
                                                     <div className='my-2  d-flex align-items-center flex-row'>
-                                                        <input style={{
+                                                        <input autoComplete='off' style={{
                                                             width: '20px',
                                                             height: '20px',
                                                             borderRadius: '50%',
@@ -206,7 +206,7 @@ function AddDevices() {
 
                                                     </div>
                                                     <div className='my-2 d-flex align-items-center flex-row'>
-                                                        <input style={{
+                                                        <input autoComplete='off' style={{
                                                             width: '20px',
                                                             height: '20px',
                                                             borderRadius: '50%',
@@ -223,7 +223,7 @@ function AddDevices() {
                                                     </div>
 
                                                     <div className='my-2 d-flex align-items-center flex-row'>
-                                                        <input style={{
+                                                        <input autoComplete='off' style={{
                                                             width: '20px',
                                                             height: '20px',
                                                             borderRadius: '50%',
@@ -239,7 +239,7 @@ function AddDevices() {
 
                                                     </div>
                                                     <div className='my-2 d-flex align-items-center flex-row'>
-                                                        <input style={{
+                                                        <input autoComplete='off' style={{
                                                             width: '20px',
                                                             height: '20px',
                                                             borderRadius: '50%',
@@ -255,7 +255,7 @@ function AddDevices() {
 
                                                     </div>
                                                     <div className='my-2 d-flex align-items-center flex-row'>
-                                                        <input style={{
+                                                        <input autoComplete='off' style={{
                                                             width: '20px',
                                                             height: '20px',
                                                             borderRadius: '50%',
@@ -276,7 +276,7 @@ function AddDevices() {
                                         </div>
                                         <div className=' align-items-center d-flex flex-column'>
                                             <div className='my-2 d-flex align-items-center flex-row'>
-                                                <input style={{
+                                                <input autoComplete='off' style={{
                                                     width: '20px',
                                                     height: '20px',
                                                     borderRadius: '50%',
@@ -300,7 +300,7 @@ function AddDevices() {
                                                 <div >
 
                                                     <div className='my-2 justify-content-start d-flex align-items-center flex-row'>
-                                                        <input style={{
+                                                        <input autoComplete='off' style={{
                                                             width: '20px',
                                                             height: '20px',
                                                             borderRadius: '50%',
@@ -316,7 +316,7 @@ function AddDevices() {
 
                                                     </div>
                                                     <div className='my-2 d-flex align-items-center flex-row'>
-                                                        <input style={{
+                                                        <input autoComplete='off' style={{
                                                             width: '20px',
                                                             height: '20px',
                                                             borderRadius: '50%',
@@ -332,7 +332,7 @@ function AddDevices() {
 
                                                     </div>
                                                     <div className='my-2 d-flex align-items-center flex-row'>
-                                                        <input style={{
+                                                        <input autoComplete='off' style={{
                                                             width: '20px',
                                                             height: '20px',
                                                             borderRadius: '50%',
@@ -348,7 +348,7 @@ function AddDevices() {
 
                                                     </div>
                                                     <div className='my-2 d-flex align-items-center flex-row'>
-                                                        <input style={{
+                                                        <input autoComplete='off' style={{
                                                             width: '20px',
                                                             height: '20px',
                                                             borderRadius: '50%',
@@ -364,7 +364,7 @@ function AddDevices() {
 
                                                     </div>
                                                     <div className='my-2 d-flex align-items-center flex-row'>
-                                                        <input style={{
+                                                        <input autoComplete='off' style={{
                                                             width: '20px',
                                                             height: '20px',
                                                             borderRadius: '50%',
@@ -395,7 +395,7 @@ function AddDevices() {
                 </div>
 
 
-            </div>
+            {/* </div> */}
 
             {
                 alert ?
@@ -448,7 +448,7 @@ function AddDevices() {
                                 <button onClick={() => {
                                     setSubmitAlert(false)
                                     dispatch(setSmallLoading(true))
-                                    axios.post('/addEquipment', {...formValues, createdBy : user.Name }, { headers: { Authorization: `${user.Department._id}` } }).then((res) => {
+                                    axios.post(`${process.env.REACT_APP_BACKEND_URL}/addEquipment`, {...formValues, createdBy : user.Name }, { headers: { Authorization: `${user.Department._id}` } }).then((res) => {
                                         dispatch(setSmallLoading(false))
                                         Swal.fire({
                                             title: 'Success',

@@ -163,7 +163,7 @@ function SendMRM() {
                                                 }} className='fw-bold'>Agenda Name</p></div>
 
                                                 <div className='bg-light my-3 p-0'>
-                                                    <input style={{
+                                                    <input autoComplete='off' style={{
                                                         fontFamily: 'Poppins'
                                                     }} rows={4} value={agendaObj?.Name} name='Agenda' className='text-dark w-100 border-0 p-2' placeholder='Agenda Points' required readOnly />
                                                 </div>
@@ -173,7 +173,7 @@ function SendMRM() {
                                                     {/* <p>Document Type</p> */}
                                                 </div>
                                                 <div >
-                                                    <input value={agendaObj?.TargetDate} onChange={(e) => {
+                                                    <input autoComplete='off' value={agendaObj?.TargetDate} onChange={(e) => {
                                                         updateAgendasArr(e, index)
                                                     }} name='TargetDate' className='text-dark' type='date' required />
                                                 </div>
@@ -224,7 +224,7 @@ function SendMRM() {
                                                     {selectedNotification.Participants?.map((participant) => {
                                                         return (
                                                             <div className='d-flex flex-row my-1'>
-                                                                <input onChange={(e) => {
+                                                                <input autoComplete='off' onChange={(e) => {
                                                                     let updatedParticipants;
                                                                     if (agendaObj.Participants) {
                                                                         updatedParticipants = [...agendaObj?.Participants]

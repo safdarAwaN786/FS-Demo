@@ -70,7 +70,7 @@ function ReportsRecords() {
                 <div className={style.searchbar}>
                     <div className={style.sec1}>
                         <img src={Search} alt="" />
-                        <input onChange={search} type="text" placeholder='Search document by name' />
+                        <input autoComplete='off' onChange={search} type="text" placeholder='Search document by name' />
                     </div>
 
                 </div>

@@ -126,6 +126,13 @@ function HRProfile() {
                                 <p className={style.card1para2}>{user.Email}</p>
                             </div>
                         </div>
+                        <div>
+                            <img src={mail} alt="" />
+                            <div>
+                                <p className={style.card1para}>UserName</p>
+                                <p className={style.card1para2}>{user.UserName}</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div className={style.card2}>
@@ -140,11 +147,11 @@ function HRProfile() {
                     }}>
                         <div className={style.card2body}>
 
-                            <input value={newPassword} onChange={(e) => {
+                            <input autoComplete='off' value={newPassword} onChange={(e) => {
                                 setNewPassword(e.target.value);
                                 CheckPassword(e.target.value);
                             }} type="text" placeholder='Change password' required />
-                            <input value={confirmPassword} onChange={(e) => {
+                            <input autoComplete='off' value={confirmPassword} onChange={(e) => {
                                 setConfirmPassword(e.target.value);
                             }} type="text" placeholder='Confirm Password' required />
                             <button type='submit'>Update Password</button>

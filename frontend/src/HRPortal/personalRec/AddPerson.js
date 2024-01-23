@@ -50,7 +50,7 @@ function AddPerson() {
                                     <p className={style.paraincard}>Station</p>
                                 </div>
                                 <div className={style.inputp}>
-                                    <input onChange={(event) => {
+                                    <input autoComplete='off' onChange={(event) => {
                                         dispatch(updatePersonFormData({ ...personFormData, [event.target.name]: event.target.value }));
                                     }} name='Station' value={personFormData?.Station} type="text" />
                                 </div>
@@ -60,7 +60,7 @@ function AddPerson() {
                                     <p className={style.paraincard}>Job Title</p>
                                 </div>
                                 <div className={style.inputp}>
-                                    <input onChange={(event) => {
+                                    <input autoComplete='off' onChange={(event) => {
                                          dispatch(updatePersonFormData({ ...personFormData, [event.target.name]: event.target.value }));
                                     }} value={personFormData?.JobTitle} name='JobTitle' type="text" />
                                 </div>
@@ -70,7 +70,7 @@ function AddPerson() {
                                     <p className={style.paraincard}>Department</p>
                                 </div>
                                 <div className={style.inputp}>
-                                    <input onChange={(event) => {
+                                    <input autoComplete='off' onChange={(event) => {
                                         dispatch(updatePersonFormData({ ...personFormData, [event.target.name]: event.target.value }));
                                     }} value={personFormData?.DepartmentText} name='DepartmentText' type="text" required />
                                 </div>
@@ -80,7 +80,7 @@ function AddPerson() {
                                     <p className={style.paraincard}>Section</p>
                                 </div>
                                 <div className={style.inputp}>
-                                    <input onChange={(event) => {
+                                    <input autoComplete='off' onChange={(event) => {
                                         dispatch(updatePersonFormData({ ...personFormData, [event.target.name]: event.target.value }));
                                     }} value={personFormData?.Section} name='Section' type="text" required />
                                 </div>
@@ -90,7 +90,7 @@ function AddPerson() {
                                     <p className={style.paraincard}>Supervisor</p>
                                 </div>
                                 <div className={style.inputp}>
-                                    <input onChange={(event) => {
+                                    <input autoComplete='off' onChange={(event) => {
                                         dispatch(updatePersonFormData({ ...personFormData, [event.target.name]: event.target.value }));
                                     }} value={personFormData?.Supervisor} name='Supervisor' type="text" required />
                                 </div>
@@ -112,19 +112,19 @@ function AddPerson() {
                             <div className={` ${style.bg} ${style.checksParent}`}>
                                 <div className={style.checks}>
                                     <div className='d-flex justify-content-between align-items-center gap-2' >
-                                        <input onChange={(event) => {
+                                        <input autoComplete='off' onChange={(event) => {
                                             dispatch(updatePersonFormData({ ...personFormData, [event.target.name]: event.target.value }));
                                         }} checked={personFormData?.EmploymentType === "Permanent"} name='EmploymentType' style={{ width: '26px', height: '36px' }} value="Permanent" type="radio" />
                                         <p className={style.paraind}>Permanent</p>
                                     </div>
                                     <div className='d-flex justify-content-between align-items-center gap-2' >
-                                        <input checked={personFormData?.EmploymentType === "Contractual"} onChange={(event) => {
+                                        <input autoComplete='off' checked={personFormData?.EmploymentType === "Contractual"} onChange={(event) => {
                                              dispatch(updatePersonFormData({ ...personFormData, [event.target.name]: event.target.value }));
                                         }} name='EmploymentType' style={{ width: '26px', height: '36px' }} value="Contractual" type="radio" />
                                         <p className={style.paraind}>Contractual</p>
                                     </div>
                                     <div className='d-flex justify-content-between align-items-center gap-2' >
-                                        <input checked={personFormData?.EmploymentType === "Specific Record"} onChange={(event) => {
+                                        <input autoComplete='off' checked={personFormData?.EmploymentType === "Specific Record"} onChange={(event) => {
                                             dispatch(updatePersonFormData({ ...personFormData, [event.target.name]: event.target.value }));
                                         }} name='EmploymentType' style={{ width: '26px', height: '36px' }} value="Specific Record" type="radio" />
                                         <p className={style.paraind}>Specific Record</p>
@@ -134,19 +134,19 @@ function AddPerson() {
                             <div className={` ${style.bg} ${style.checksParent}`}>
                                 <div className={style.checks}>
                                     <div className='d-flex justify-content-between align-items-center gap-2' >
-                                        <input checked={personFormData?.EmploymentType === "Part Time"} onChange={(event) => {
+                                        <input autoComplete='off' checked={personFormData?.EmploymentType === "Part Time"} onChange={(event) => {
                                             dispatch(updatePersonFormData({ ...personFormData, [event.target.name]: event.target.value }));
                                         }} name='EmploymentType' style={{ width: '26px', height: '36px' }} value="Part Time" type="radio" />
                                         <p className={style.paraind}>Part Time</p>
                                     </div>
                                     <div className='d-flex justify-content-between align-items-center gap-2' >
-                                        <input checked={personFormData?.EmploymentType === "Temporary"} onChange={(event) => {
+                                        <input autoComplete='off' checked={personFormData?.EmploymentType === "Temporary"} onChange={(event) => {
                                             dispatch(updatePersonFormData({ ...personFormData, [event.target.name]: event.target.value }));
                                         }} name='EmploymentType' style={{ width: '26px', height: '36px' }} value="Temporary" type="radio" />
                                         <p className={style.paraind}>Temporary</p>
                                     </div>
                                     <div className='d-flex justify-content-between align-items-center gap-2' >
-                                        <input checked={personFormData?.EmploymentType === "Internship"} onChange={(event) => {
+                                        <input autoComplete='off' checked={personFormData?.EmploymentType === "Internship"} onChange={(event) => {
                                            dispatch(updatePersonFormData({ ...personFormData, [event.target.name]: event.target.value }));
                                         }} name='EmploymentType' style={{ width: '26px', height: '36px' }} value="Internship" type="radio" />
                                         <p className={style.paraind}>Internship</p>
@@ -173,7 +173,7 @@ function AddPerson() {
                                         <p className={style.paraincard}>Gross Salary</p>
                                     </div>
                                     <div className={style.inputp}>
-                                        <input onChange={(event) => {
+                                        <input autoComplete='off' onChange={(event) => {
                                             dispatch(updatePersonFormData({ ...personFormData, [event.target.name]: event.target.value }));
                                         }} value={personFormData?.GrossSalary} name='GrossSalary' type="number" />
                                     </div>
@@ -183,7 +183,7 @@ function AddPerson() {
                                         <p className={style.paraincard}>Net Salary</p>
                                     </div>
                                     <div className={style.inputp}>
-                                        <input onChange={(event) => {
+                                        <input autoComplete='off' onChange={(event) => {
                                              dispatch(updatePersonFormData({ ...personFormData, [event.target.name]: event.target.value }));
                                         }} value={personFormData?.NetSalary} name='NetSalary' type="number" />
                                     </div>
@@ -193,7 +193,7 @@ function AddPerson() {
                                         <p className={style.paraincard}>Basic Salary</p>
                                     </div>
                                     <div className={style.inputp}>
-                                        <input onChange={(event) => {
+                                        <input autoComplete='off' onChange={(event) => {
                                             dispatch(updatePersonFormData({ ...personFormData, [event.target.name]: event.target.value }));
                                         }} value={personFormData?.BasicSalaryDetail} name='BasicSalaryDetail' type="text" />
                                     </div>
@@ -203,7 +203,7 @@ function AddPerson() {
                                         <p className={style.paraincard}>Allowence</p>
                                     </div>
                                     <div className={style.inputp}>
-                                        <input onChange={(event) => {
+                                        <input autoComplete='off' onChange={(event) => {
                                             dispatch(updatePersonFormData({ ...personFormData, [event.target.name]: event.target.value }));
                                         }} value={personFormData?.AllowanceDetail} name='AllowanceDetail' type="text" />
                                     </div>
@@ -213,7 +213,7 @@ function AddPerson() {
                                         <p className={style.paraincard}>Incentives</p>
                                     </div>
                                     <div className={style.inputp}>
-                                        <input onChange={(event) => {
+                                        <input autoComplete='off' onChange={(event) => {
                                             dispatch(updatePersonFormData({ ...personFormData, [event.target.name]: event.target.value }));
                                         }} value={personFormData?.IncentivesDetail} name='IncentivesDetail' type="text" />
                                     </div>

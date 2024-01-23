@@ -105,7 +105,7 @@ function Auditors() {
                 <div className={style.searchbar}>
                     <div className={style.sec1}>
                         <img src={Search} alt="" />
-                        <input onChange={search} type="text" placeholder='Search Auditor by name, id' />
+                        <input autoComplete='off' onChange={search} type="text" placeholder='Search Auditor by name, id' />
                     </div>
                     {tabData?.Creation && (
                         <div onClick={() => {
@@ -220,7 +220,10 @@ function Auditors() {
                         <div class={style.alert}>
                             <p class={style.msg}>{popUpData}</p>
                             <div className={style.alertbtns}>
-                                <button onClick={() => {
+                                <button style={{
+                                    marginLeft : '120px',
+                                    marginTop : '25px'
+                                }}  onClick={() => {
                                     setShowBox(false);
                                 }} className={style.btn2}>OK</button>
                             </div>
@@ -239,7 +242,7 @@ function Auditors() {
                                         borderRadius: '30px'
                                     }}>owner@gmail.com</p>
                                 </span>
-                                <input type='text' placeholder='Subject' />
+                                <input autoComplete='off' type='text' placeholder='Subject' />
                                 <textarea name="Reason" id="" cols="30" rows="10" placeholder='Comment here' required />
                                 <div className={`${style.alertbtns} mt-3 d-flex justify-content-center `}>
                                     <button type='submit' className={style.btn1}>Send</button>

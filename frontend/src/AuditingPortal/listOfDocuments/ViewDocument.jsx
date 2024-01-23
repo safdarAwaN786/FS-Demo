@@ -75,7 +75,7 @@ function ViewDocument() {
                                             <p className='text-black'>Document Title</p>
                                         </div>
                                         <div>
-                                            <input className='text-dark' value={documentData?.DocumentTitle} readOnly />
+                                            <input autoComplete='off' className='text-dark' value={documentData?.DocumentTitle} readOnly />
 
                                         </div>
                                     </div>
@@ -86,7 +86,7 @@ function ViewDocument() {
 
                                         </div>
                                         <div>
-                                            <input className='text-dark'  value={documentData?.RevisionNo} readOnly />
+                                            <input autoComplete='off' className='text-dark'  value={documentData?.RevisionNo} readOnly />
                                         </div>
                                     </div>
                                     <div className={style.inputParent}>
@@ -94,7 +94,7 @@ function ViewDocument() {
                                             <p className='text-black'>Department</p>
                                         </div>
                                         <div>
-                                            <input className='text-dark'  value={documentData?.Department.DepartmentName} readOnly />
+                                            <input autoComplete='off' className='text-dark'  value={documentData?.Department.DepartmentName} readOnly />
                                         </div>
                                     </div>
                                     <div className={style.inputParent}>
@@ -102,7 +102,7 @@ function ViewDocument() {
                                             <p className='text-black'>Created Date</p>
                                         </div>
                                         <div>
-                                            <input className='text-dark'  value={`${documentData?.CreationDate?.slice(0, 10).split('-')[2]}/${documentData?.CreationDate?.slice(0, 10).split('-')[1]}/${documentData?.CreationDate?.slice(0, 10).split('-')[0]}`} readOnly />
+                                            <input autoComplete='off' className='text-dark'  value={`${documentData?.CreationDate?.slice(0, 10).split('-')[2]}/${documentData?.CreationDate?.slice(0, 10).split('-')[1]}/${documentData?.CreationDate?.slice(0, 10).split('-')[0]}`} readOnly />
                                         </div>
                                     </div>
                                     <div className={style.inputParent}>
@@ -112,9 +112,9 @@ function ViewDocument() {
                                         </div>
                                         <div>
                                             {documentData?.ReviewDate ? (
-                                                <input className='text-dark'  value={`${documentData?.ReviewDate?.slice(0, 10).split('-')[2]}/${documentData?.ReviewDate?.slice(0, 10).split('-')[1]}/${documentData?.ReviewDate?.slice(0, 10).split('-')[0]}`} readOnly />
+                                                <input autoComplete='off' className='text-dark'  value={`${documentData?.ReviewDate?.slice(0, 10).split('-')[2]}/${documentData?.ReviewDate?.slice(0, 10).split('-')[1]}/${documentData?.ReviewDate?.slice(0, 10).split('-')[0]}`} readOnly />
                                             ) : (
-                                                <input className='text-dark'  value='- - -' />
+                                                <input autoComplete='off' className='text-dark'  value='- - -' />
                                             )}
 
                                         </div>
@@ -127,9 +127,9 @@ function ViewDocument() {
                                         <div>
                                         {documentData?.ApprovalDate ? (
 
-                                            <input className='text-dark'  value={`${documentData?.ApprovalDate?.slice(0, 10).split('-')[2]}/${documentData?.ApprovalDate?.slice(0, 10).split('-')[1]}/${documentData?.ApprovalDate?.slice(0, 10).split('-')[0]}`} readOnly />
+                                            <input autoComplete='off' className='text-dark'  value={`${documentData?.ApprovalDate?.slice(0, 10).split('-')[2]}/${documentData?.ApprovalDate?.slice(0, 10).split('-')[1]}/${documentData?.ApprovalDate?.slice(0, 10).split('-')[0]}`} readOnly />
                                         ) : (
-                                            <input className='text-dark'  value='- - -' />
+                                            <input autoComplete='off' className='text-dark'  value='- - -' />
                                         )}
 
 
@@ -145,7 +145,7 @@ function ViewDocument() {
 
                                         </div>
                                         <div>
-                                            <input className='text-dark'  value={documentData?.DocumentId} readOnly />
+                                            <input autoComplete='off' className='text-dark'  value={documentData?.DocumentId} readOnly />
 
 
                                         </div>
@@ -156,7 +156,7 @@ function ViewDocument() {
 
                                         </div>
                                         <div>
-                                            <input className='text-dark'  value={documentData?.DocumentType} readOnly />
+                                            <input autoComplete='off' className='text-dark'  value={documentData?.DocumentType} readOnly />
 
 
                                         </div>
@@ -168,7 +168,7 @@ function ViewDocument() {
                                         </div>
                                         <div>
                                         
-                                            <input className='text-dark'  value={documentData?.CreatedBy} readOnly />
+                                            <input autoComplete='off' className='text-dark'  value={documentData?.CreatedBy} readOnly />
 
 
                                         </div>
@@ -181,9 +181,9 @@ function ViewDocument() {
                                         <div>
                                         {documentData?.ReviewedBy ? (
 
-                                            <input className='text-dark'  value={documentData?.ReviewedBy} readOnly />
+                                            <input autoComplete='off' className='text-dark'  value={documentData?.ReviewedBy} readOnly />
                                         ) : (
-                                            <input value='- - -' />
+                                            <input autoComplete='off' value='- - -' />
                                         )}
 
 
@@ -197,9 +197,9 @@ function ViewDocument() {
                                         <div>
                                         {documentData?.ApprovedBy ? (
 
-                                            <input className='text-dark'  value={documentData?.ApprovedBy} readOnly />
+                                            <input autoComplete='off' className='text-dark'  value={documentData?.ApprovedBy} readOnly />
                                         ) : (
-                                            <input className='text-dark'  value='- - -' />
+                                            <input autoComplete='off' className='text-dark'  value='- - -' />
                                         )}
 
 

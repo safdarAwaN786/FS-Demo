@@ -214,7 +214,7 @@ function MainPage() {
                         <img className={`${style.logoImg}`} src={user?.Company?.CompanyLogo} alt="logo" />
                         <span className='fs-5 text-secondary fw-bold'>{user?.Company?.CompanyName}</span>
                     </div>
-                    <div className='d-sm-none d-md-block'>
+                    <div className='d-none d-md-block d-lg-block'>
                         <span className='fs-4 fw-bold text-secondary mt-1'>Food Safety Management System Software</span>
                     </div>
                     <div className='d-flex flex-row align-items-center'>
@@ -357,7 +357,7 @@ function MainPage() {
                             </div>
                         </div>
                     </div>
-                    <div className={style.subparent}>
+                    <div className={`${style.subparent} mb-3 pb-4`}>
 
 
                         {smallLoading && (

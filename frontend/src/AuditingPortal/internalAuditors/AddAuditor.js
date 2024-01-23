@@ -224,31 +224,31 @@ function AddAuditor() {
                         </div>
                         <div className={`${style.sec1} px-lg-5 px-sm-4 px-2`}>
                             <div>
-                                <input name='Name' type="text" placeholder='Name here' required />
+                                <input autoComplete='off' name='Name' type="text" placeholder='Name here' required />
                                 <img style={{ width: '20px', height: '20px', cursor: 'pointer' }} src={profile} alt="" />
                             </div>
                             <div>
-                                <input name='Designation' type="text" placeholder='Designation here' required />
+                                <input autoComplete='off' name='Designation' type="text" placeholder='Designation here' required />
                                 <img style={{ width: '20px', height: '20px', cursor: 'pointer' }} src={Office} alt="" />
                             </div>
                             <div>
-                                <input name='Age' type="number" placeholder='Age here' required />
+                                <input autoComplete='off' name='Age' type="number" placeholder='Age here' required />
                                 <img style={{ width: '20px', height: '20px', cursor: 'pointer' }} src={profile} alt="" />
                             </div>
                             <div>
-                                <input name='PhoneNumber' type="number" placeholder='Phone Number' required />
+                                <input autoComplete='off' name='PhoneNumber' type="number" placeholder='Phone Number' required />
                                 <img style={{ width: '20px', height: '20px', cursor: 'pointer' }} src={profile} alt="" />
                             </div>
                             <div>
-                                <input name='Email' type="email" placeholder='Email Address' required />
+                                <input autoComplete='off' name='Email' type="email" placeholder='Email Address' required />
                                 <img style={{ width: '20px', height: '20px', cursor: 'pointer' }} src={msg} alt="" />
                             </div>
                             <div>
-                                <input name='UserName' type="text" placeholder='UserName (for login)' required />
+                                <input autoComplete='off' name='UserName' type="text" placeholder='UserName (for login)' required />
                                 <img style={{ width: '20px', height: '20px', cursor: 'pointer' }} src={msg} alt="" />
                             </div>
                             <div className='d-flex align-items-center justify-content-between'>
-                                <input value={generatedPassword} onChange={(e) => {
+                                <input autoComplete='off' value={generatedPassword} onChange={(e) => {
                                     setGeneratedPassowrd(e.target.value);
                                 }} name='Password' type="text" placeholder='Password here' required />
                                 <a onClick={handleGenerateClick} className='btn btn-outline-primary  mx-2' >Generate</a>
@@ -257,15 +257,15 @@ function AddAuditor() {
                                 <p className={`${validationMessage === 'Password is valid!' ? 'text-success' : 'text-danger'} mb-3 ms-3`}>{validationMessage}</p>
                             )}
                             <div >
-                                <input name='Experience' type="text" placeholder='Experience here' required />
+                                <input autoComplete='off' name='Experience' type="text" placeholder='Experience here' required />
                                 <img style={{ width: '20px', height: '20px', cursor: 'pointer' }} src={Office} alt="" />
                             </div>
                             <div >
-                                <input name='Skills' type="text" placeholder='Skills here' required />
+                                <input autoComplete='off' name='Skills' type="text" placeholder='Skills here' required />
                                 <img style={{ width: '20px', height: '20px', cursor: 'pointer' }} src={Office} alt="" />
                             </div>
                             <div >
-                                <input name='Education' type="text" placeholder='Education here' required />
+                                <input autoComplete='off' name='Education' type="text" placeholder='Education here' required />
                                 <img style={{ width: '20px', height: '20px', cursor: 'pointer' }} src={Office} alt="" />
                             </div>
                             <select name='Department' class="form-select fs-6 form-select-lg mb-3" aria-label="Large select example" required>
@@ -285,7 +285,7 @@ function AddAuditor() {
                                 <a onClick={handleDocumentClick} className='btn btn-outline-primary '>{selectedDocument?.slice(0, 15) || "Upload Document"}</a>
                             </div>
                             <div className='p-3 d-flex justify-content-between'>
-                                <div className='w-75 m-0 d-flex align-items-center'><p><b>Approved Internal Auditor</b></p> <input value={approvedAuditor} name='ApprovedInternalAuditor' style={{
+                                <div className='w-75 m-0 d-flex align-items-center'><p><b>Approved Internal Auditor</b></p> <input autoComplete='off' value={approvedAuditor} name='ApprovedInternalAuditor' style={{
                                     width: '20px',
                                     margin: '10px'
                                 }} type='checkbox' onChange={(event) => {

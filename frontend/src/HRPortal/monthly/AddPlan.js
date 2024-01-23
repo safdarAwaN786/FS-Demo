@@ -317,7 +317,7 @@ function AddPlan() {
                                     <p>Venue</p>
                                 </div>
                                 <div>
-                                    <input className='text-dark' onChange={(e) => {
+                                    <input autoComplete='off' className='text-dark' onChange={(e) => {
                                         setDataToSend({ ...dataToSend, [e.target.name]: e.target.value })
                                     }} name='Venue' type="text" placeholder='(e.g) Training Hall' required />
 
@@ -328,7 +328,7 @@ function AddPlan() {
                                     <p>Duration</p>
                                 </div>
                                 <div>
-                                    <input className='text-dark' onChange={(e) => {
+                                    <input autoComplete='off' className='text-dark' onChange={(e) => {
                                         setDataToSend({ ...dataToSend, [e.target.name]: e.target.value })
                                     }} name='Duration' type="text" placeholder='(e.g) 2 Days' required />
 
@@ -339,7 +339,7 @@ function AddPlan() {
                                     <p>Time : </p>
                                 </div>
                                 <div>
-                                    <input className='text-dark' onChange={(e) => {
+                                    <input autoComplete='off' className='text-dark' onChange={(e) => {
                                         setDataToSend({ ...dataToSend, [e.target.name]: e.target.value })
                                     }} name='Time' type="time" placeholder='(e.g) 2 Days' required />
 
@@ -352,13 +352,13 @@ function AddPlan() {
                                 </div>
                                 <div className={style.dropdown}>
                                     <div className='d-flex justify-content-between align-items-center gap-2' >
-                                        <input onChange={(e) => {
+                                        <input autoComplete='off' onChange={(e) => {
                                             setDataToSend({ ...dataToSend, [e.target.name]: e.target.value })
                                         }} name='InternalExternal' style={{ width: '26px', height: '36px' }} value="Internal" type="radio" required />
                                         <p className={style.paraind}>Internal</p>
                                     </div>
                                     <div className='d-flex justify-content-between align-items-center gap-2' >
-                                        <input onChange={(e) => {
+                                        <input autoComplete='off' onChange={(e) => {
                                             setDataToSend({ ...dataToSend, [e.target.name]: e.target.value })
                                         }} name='InternalExternal' style={{ width: '26px', height: '36px' }} value="Internal" type="radio" required />
                                         <p className={style.paraind}>External</p>

@@ -87,7 +87,7 @@ function Departments() {
                 <div className={style.searchbar}>
                     <div className={style.sec1}>
                         <img src={Search} alt="" />
-                        <input onChange={search} type="text" placeholder='Search Company by name or Id' />
+                        <input autoComplete='off' onChange={search} type="text" placeholder='Search Company by name or Id' />
                     </div>
                     {tabData?.Creation && (
 
@@ -114,6 +114,7 @@ function Departments() {
                                 <td>Company Name</td>
                                 <td>Short Name</td>
                                 <td>Departments</td>
+                                
                             </tr>
                             {
                                 depCompaniesList?.map((depCompany, i) => {
@@ -150,9 +151,9 @@ function Departments() {
                                             <td>{depCompany.Company?.ShortName}</td>
                                             <td> <p onClick={() => {
                                                  dispatch(updateTabData({...tabData, Tab : 'viewDepartments'}));
-                                                 console.log(depCompany.Company)
-                                                dispatch(changeId(depCompany.Company._id))
+                                                dispatch(changeId(depCompany.Company?._id))
                                             }} className={style.click}>View</p></td>
+
                                         </tr>
                                     )
 
@@ -186,7 +187,10 @@ function Departments() {
 
                             <div className={style.alertbtns}>
 
-                                <button onClick={() => {
+                                <button style={{
+                                    marginLeft : '120px',
+                                    marginTop : '25px'
+                                }}  onClick={() => {
                                     setShowBox(false);
 
                                 }} className={style.btn2}>OK</button>

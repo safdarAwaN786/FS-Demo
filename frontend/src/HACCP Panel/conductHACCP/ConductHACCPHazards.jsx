@@ -199,7 +199,7 @@ function ConductHACCPHazards() {
                                         <div style={{
                                             border: '1px solid silver'
                                         }}>
-                                            <input value={dataToSend?.DocumentType} type='text' className='w-100 text-dark' readOnly />
+                                            <input autoComplete='off' value={dataToSend?.DocumentType} type='text' className='w-100 text-dark' readOnly />
                                         </div>
                                     </div>
                                     {teamsToShow?.length > 0 && (
@@ -227,7 +227,7 @@ function ConductHACCPHazards() {
                                         <div style={{
                                             border: '1px solid silver'
                                         }}>
-                                            <input value={dataToSend?.Department.DepartmentName} type='text' className='w-100 text-dark' readOnly />
+                                            <input autoComplete='off' value={dataToSend?.Department.DepartmentName} type='text' className='w-100 text-dark' readOnly />
                                         </div>
                                     </div>
                                     <div className={style.inputParent}>
@@ -237,7 +237,7 @@ function ConductHACCPHazards() {
                                         <div style={{
                                             border: '1px solid silver'
                                         }}>
-                                            <input value={dataToSend?.Process.ProcessName} type='text' className='w-100 text-dark' readOnly />
+                                            <input autoComplete='off' value={dataToSend?.Process.ProcessName} type='text' className='w-100 text-dark' readOnly />
                                         </div>
                                     </div>
                                 </div>
@@ -282,7 +282,7 @@ function ConductHACCPHazards() {
                                                 <div className='row'>
                                                     <div className='col-lg-6 col-md-12 p-2'>
                                                         <textarea value={hazard?.Description} rows={3} type='text' name='Description' className='w-100 p-2 my-3  border-0' placeholder='Description' required readOnly />
-                                                        <input value={hazard?.ControlMeasures} type='text' name='ControlMeasures' placeholder='Control Measurres' className='w-100 p-2 my-3  border-0' required readOnly />
+                                                        <input autoComplete='off' value={hazard?.ControlMeasures} type='text' name='ControlMeasures' placeholder='Control Measurres' className='w-100 p-2 my-3  border-0' required readOnly />
                                                     </div>
                                                     <div className='col-lg-6 col-md-12 p-2'>
                                                         <select value={hazard?.Occurence} className='p-2 my-2 w-100 border-0' name='Occurence' style={{ width: "100%" }} required>
@@ -307,7 +307,7 @@ function ConductHACCPHazards() {
                                                             <option value={5}>5</option> */}
 
                                                         </select>
-                                                        <input type='number' value={hazard.SignificanceLevel} placeholder='Significance Score (Occurence x Severity)' className='w-100 p-2 my-3  border-0' readOnly />
+                                                        <input autoComplete='off' type='number' value={hazard.SignificanceLevel} placeholder='Significance Score (Occurence x Severity)' className='w-100 p-2 my-3  border-0' readOnly />
                                                     </div>
                                                 </div>
                                             </div>

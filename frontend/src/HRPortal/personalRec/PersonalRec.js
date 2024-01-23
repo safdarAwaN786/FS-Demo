@@ -91,7 +91,7 @@ function PersonalRec() {
                                         <p>Minimum Qualification Required</p>
                                     </div>
                                     <div>
-                                        <input className='text-dark' onChange={(event) => {
+                                        <input autoComplete='off' className='text-dark' onChange={(event) => {
                                             dispatch(updatePersonFormData({ ...personFormData, [event.target.name]: event.target.value }))
                                            
                                         }} value={personFormData?.MiniQualification} name='MiniQualification' type="text" required />
@@ -103,7 +103,7 @@ function PersonalRec() {
                                         <p>Minimum Experience Required</p>
                                     </div>
                                     <div>
-                                        <input className='text-dark'  onChange={(event) => {
+                                        <input autoComplete='off' className='text-dark'  onChange={(event) => {
                                             dispatch(updatePersonFormData({ ...personFormData, [event.target.name]: event.target.value }))
                                         }} value={personFormData?.MiniExperienced} name='MiniExperienced' type="text" required />
 
@@ -114,7 +114,7 @@ function PersonalRec() {
                                         <p>Industry Specific Experience</p>
                                     </div>
                                     <div>
-                                        <input  className='text-dark'  onChange={(event) => {
+                                        <input autoComplete='off'  className='text-dark'  onChange={(event) => {
                                             dispatch(updatePersonFormData({ ...personFormData, [event.target.name]: event.target.value }))
                                         }} value={personFormData?.IndustrySpecificExp} name='IndustrySpecificExp' type="text" required />
 
@@ -125,7 +125,7 @@ function PersonalRec() {
                                         <p>Age Bracket</p>
                                     </div>
                                     <div>
-                                        <input className='text-dark'  onChange={(event) => {
+                                        <input autoComplete='off' className='text-dark'  onChange={(event) => {
                                            dispatch(updatePersonFormData({ ...personFormData, [event.target.name]: event.target.value }))
                                         }} value={personFormData?.AgeBracket} name='AgeBracket' type="text" required />
 
@@ -147,7 +147,7 @@ function PersonalRec() {
                                         <p>Designation</p>
                                     </div>
                                     <div>
-                                        <input  className='text-dark'  onChange={(event) => {
+                                        <input autoComplete='off'  className='text-dark'  onChange={(event) => {
                                            dispatch(updatePersonFormData({ ...personFormData, [event.target.name]: event.target.value }))
                                         }} value={personFormData?.Designation} name='Designation' type="text" required />
 
@@ -161,25 +161,25 @@ function PersonalRec() {
                                     </div>
                                     <div className={style.checks}>
                                         <div className='d-flex justify-content-between align-items-center gap-2' >
-                                            <input onChange={(event) => {
+                                            <input autoComplete='off' onChange={(event) => {
                                                dispatch(updatePersonFormData({ ...personFormData, [event.target.name]: event.target.value }))
                                             }} checked={personFormData?.CommunicationSkill === "High"} name='CommunicationSkill' value="High" style={{ width: '26px', height: '36px' }} type="radio" />
                                             <p className={style.paraind}>High</p>
                                         </div>
                                         <div className='d-flex justify-content-between align-items-center gap-2' >
-                                            <input onChange={(event) => {
+                                            <input autoComplete='off' onChange={(event) => {
                                                dispatch(updatePersonFormData({ ...personFormData, [event.target.name]: event.target.value }))
                                             }} checked={personFormData?.CommunicationSkill === "Medium"} value="Medium" name='CommunicationSkill' style={{ width: '26px', height: '36px' }} type="radio" />
                                             <p className={style.paraind}>Medium</p>
                                         </div>
                                         <div className='d-flex justify-content-between align-items-center gap-2' >
-                                            <input onChange={(event) => {
+                                            <input autoComplete='off' onChange={(event) => {
                                                dispatch(updatePersonFormData({ ...personFormData, [event.target.name]: event.target.value }))
                                             }} checked={personFormData?.CommunicationSkill === "Average"} value="Average" name='CommunicationSkill' style={{ width: '26px', height: '36px' }} type="radio" />
                                             <p className={style.paraind}>Average</p>
                                         </div>
                                         <div className='d-flex justify-content-between align-items-center gap-2' >
-                                            <input onChange={(event) => {
+                                            <input autoComplete='off' onChange={(event) => {
                                                 dispatch(updatePersonFormData({ ...personFormData, [event.target.name]: event.target.value }))
                                             }} checked={personFormData?.CommunicationSkill === "Not Applicable"} value="Not Applicable" name='CommunicationSkill' style={{ width: '26px', height: '36px' }} type="radio" />
                                             <p className={style.paraind}>Not Applicable</p>
@@ -192,25 +192,25 @@ function PersonalRec() {
                                     </div>
                                     <div className={style.checks}>
                                         <div className='d-flex justify-content-between align-items-center gap-2' >
-                                            <input onChange={(event) => {
+                                            <input autoComplete='off' onChange={(event) => {
                                                dispatch(updatePersonFormData({ ...personFormData, [event.target.name]: event.target.value }))
                                             }} checked={personFormData?.ComputerSkill === "High"} name='ComputerSkill' value="High" style={{ width: '26px', height: '36px' }} type="radio" />
                                             <p className={style.paraind}>High</p>
                                         </div>
                                         <div className='d-flex justify-content-between align-items-center gap-2' >
-                                            <input onChange={(event) => {
+                                            <input autoComplete='off' onChange={(event) => {
                                                  dispatch(updatePersonFormData({ ...personFormData, [event.target.name]: event.target.value }))
                                             }} checked={personFormData?.ComputerSkill === "Medium"} name='ComputerSkill' value="Medium" style={{ width: '26px', height: '36px' }} type="radio" />
                                             <p className={style.paraind}>Medium</p>
                                         </div>
                                         <div className='d-flex justify-content-between align-items-center gap-2' >
-                                            <input onChange={(event) => {
+                                            <input autoComplete='off' onChange={(event) => {
                                                 dispatch(updatePersonFormData({ ...personFormData, [event.target.name]: event.target.value }))
                                             }} checked={personFormData?.ComputerSkill === "Average"} name='ComputerSkill' value="Average" style={{ width: '26px', height: '36px' }} type="radio" />
                                             <p className={style.paraind}>Average</p>
                                         </div>
                                         <div className='d-flex justify-content-between align-items-center gap-2' >
-                                            <input onChange={(event) => {
+                                            <input autoComplete='off' onChange={(event) => {
                                                dispatch(updatePersonFormData({ ...personFormData, [event.target.name]: event.target.value }))
                                             }} checked={personFormData?.ComputerSkill === "Not Applicable"} name='ComputerSkill' style={{ width: '26px', height: '36px' }} value="Not Applicable" type="radio" />
                                             <p className={style.paraind}>Not Applicable</p>
@@ -223,13 +223,13 @@ function PersonalRec() {
                                     </div>
                                     <div className={style.checks}>
                                         <div className='d-flex justify-content-between align-items-center gap-2' >
-                                            <input onChange={(event) => {
+                                            <input autoComplete='off' onChange={(event) => {
                                                 dispatch(updatePersonFormData({ ...personFormData, [event.target.name]: event.target.value }))
                                             }} checked={personFormData?.Justification === "New Business Need"} value="New Business Need" name='Justification' style={{ width: '26px', height: '36px' }} type="radio" />
                                             <p className={style.paraind}>New Business Need</p>
                                         </div>
                                         <div className='d-flex justify-content-between align-items-center gap-2' >
-                                            <input onChange={(event) => {
+                                            <input autoComplete='off' onChange={(event) => {
                                                 dispatch(updatePersonFormData({ ...personFormData, [event.target.name]: event.target.value }))
                                             }} checked={personFormData?.Justification === "New Structure Need"} name='Justification' value="New Structure Need" style={{ width: '26px', height: '36px' }} type="radio" />
                                             <p className={style.paraind}>New Structure Need</p>
@@ -237,13 +237,13 @@ function PersonalRec() {
                                     </div>
                                     <div className={style.checks}>
                                         <div className='d-flex justify-content-between align-items-center gap-2' >
-                                            <input onChange={(event) => {
+                                            <input autoComplete='off' onChange={(event) => {
                                                 dispatch(updatePersonFormData({ ...personFormData, [event.target.name]: event.target.value }))
                                             }} checked={personFormData?.Justification === "New Target Requirement"} name='Justification' value="New Target Requirement" style={{ width: '26px', height: '36px' }} type="radio" />
                                             <p className={style.paraind}>New Target Requirment</p>
                                         </div>
                                         <div className='d-flex justify-content-between align-items-center gap-2' >
-                                            <input onChange={(event) => {
+                                            <input autoComplete='off' onChange={(event) => {
                                                 dispatch(updatePersonFormData({ ...personFormData, [event.target.name]: event.target.value }))
                                             }} checked={personFormData?.Justification === "Department Extension"} value="Department Extension" name='Justification' style={{ width: '26px', height: '36px' }} type="radio" />
                                             <p className={style.paraind}>Department Extension</p>
@@ -251,13 +251,13 @@ function PersonalRec() {
                                     </div>
                                     <div className={style.checks}>
                                         <div className='d-flex justify-content-between align-items-center gap-2' >
-                                            <input onChange={(event) => {
+                                            <input autoComplete='off' onChange={(event) => {
                                                 dispatch(updatePersonFormData({ ...personFormData, [event.target.name]: event.target.value }))
                                             }} checked={personFormData?.Justification === "Work Overloaded Sharing"} name='Justification' style={{ width: '26px', height: '36px' }} value="Work Overload Sharing" type="radio" />
                                             <p className={style.paraind}>Work Overload Sharing</p>
                                         </div>
                                         <div className='d-flex justify-content-between align-items-center gap-2' >
-                                            <input onChange={(event) => {
+                                            <input autoComplete='off' onChange={(event) => {
                                                 dispatch(updatePersonFormData({ ...personFormData, [event.target.name]: event.target.value }))
                                             }} checked={personFormData?.Justification === "Employee Resignation"} name='Justification' value="Employee Resignation" style={{ width: '26px', height: '36px' }} type="radio" />
                                             <p className={style.paraind}>Employee Resignation</p>
@@ -270,7 +270,7 @@ function PersonalRec() {
                                         <p>Others</p>
                                     </div>
                                     <div>
-                                        <input onChange={(event) => {
+                                        <input autoComplete='off' onChange={(event) => {
                                             dispatch(updatePersonFormData({ ...personFormData, [event.target.name]: event.target.value }))
                                         }} value={personFormData?.others} name='others' type="text" />
                                     </div>
@@ -280,7 +280,7 @@ function PersonalRec() {
                                         <p>Request Initiated by</p>
                                     </div>
                                     <div>
-                                        <input onChange={(event) => {
+                                        <input autoComplete='off' onChange={(event) => {
                                             dispatch(updatePersonFormData({ ...personFormData, [event.target.name]: event.target.value }))
                                         }} value={personFormData?.RequestInitiatedBy} name='RequestInitiatedBy' type="text" />
                                     </div>

@@ -136,7 +136,7 @@ router.get('/get-userByCompany/:companyId', async (req, res) => {
   try {
     const CompanyId = req.params.companyId;
     console.log(CompanyId);
-    const user = await User.find({ Company: CompanyId, isAuditor : false, isMember : false, isProcessOwner : false, isEmployee : false, isTrainer : false }).populate({
+    const user = await User.find({ Company: CompanyId, isAuditor: false, isMember: false, isProcessOwner: false, isEmployee: false, isTrainer: false }).populate({
       path: 'Department',
       model: 'Department'
     }).populate({
@@ -161,7 +161,7 @@ router.get('/get-usersByDepartment/:departmentId', async (req, res) => {
   try {
     const DepartmentId = req.params.departmentId;
 
-    const user = await User.find({ Department: DepartmentId, isAuditor : false, isMember : false, isProcessOwner : false, isEmployee : false, isTrainer : false }).populate({
+    const user = await User.find({ Department: DepartmentId, isAuditor: false, isMember: false, isProcessOwner: false, isEmployee: false, isTrainer: false }).populate({
       path: 'Department',
       model: 'Department'
     }).populate({
@@ -187,12 +187,12 @@ router.get('/get-usersByDepartment/:departmentId', async (req, res) => {
 router.get('/get-all-users', async (req, res) => {
   try {
     const departmentExist = Department.findById(req.header('Authorization'));
-    if(!departmentExist){
+    if (!departmentExist) {
       return res.status(404).json({ message: `Department document with ID: ${req.header('Authorization')} not found` });
 
     }
 
-    const users = await User.find({isAuditor : false, isMember : false, isProcessOwner : false, isEmployee : false, isTrainer : false}).populate({
+    const users = await User.find({ isAuditor: false, isMember: false, isProcessOwner: false, isEmployee: false, isTrainer: false }).populate({
       path: 'Department',
       model: 'Department'
     }).populate({
@@ -215,9 +215,9 @@ router.get('/get-all-users', async (req, res) => {
 });
 
 // * Delete a User document by ID
-router.delete('/delete-user', async (req, res) => {
+router.delete('/delete-user/:userId', async (req, res) => {
   try {
-    const userId = req.body.userId;
+    const userId = req.params.userId;
     const deletedUser = await User.findByIdAndDelete(userId);
 
     if (!deletedUser) {
@@ -337,24 +337,14 @@ router.post('/user/login', async (req, res) => {
 });
 
 // * Reassign access the tabs User, HaccpTeam, Trainer, ProcessOwner
-router.patch('/reassign-access', async (req, res) => {
+router.patch('/reassign-access/:userId', async (req, res) => {
   try {
-    const userId = req.body.userId;
+    const userId = req.params.userId;
 
-    // List of models to search for the user
-    const modelsToSearch = [User, ProcessOwner, HaccpTeam, Trainer, Auditor];
 
-    let updatedUser = null;
+      updatedUser = await User.findByIdAndUpdate(userId, { $set: { isSuspended: false } });
 
-    // Attempt to find and update the user in each model
-    for (const model of modelsToSearch) {
-      updatedUser = await model.findByIdAndUpdate(userId, { $set: { isSuspended: false } });
-
-      if (updatedUser) {
-        // User found in this model, break the loop
-        break;
-      }
-    }
+      
 
     if (!updatedUser) {
       console.log(`User with ID: ${userId} not found`);
@@ -370,25 +360,11 @@ router.patch('/reassign-access', async (req, res) => {
 });
 
 // * Suspend the user temporarily and reassign access User, HaccpTeam, Trainer, ProcessOwner
-router.patch('/suspend-user', async (req, res) => {
+router.patch('/suspend-user/:userId', async (req, res) => {
   try {
-    const userId = req.body.userId;
+    const userId = req.params.userId;
 
-    // Attempt to find and suspend the user in different models
-    const modelsToSearch = [User, ProcessOwner, HaccpTeam, Trainer, Auditor];
-    let suspendedUser = null;
-
-    // Attempt to suspend the user in each model
-    for (const model of modelsToSearch) {
-      suspendedUser = await model.findByIdAndUpdate(userId, { $set: { isSuspended: true } });
-
-      if (suspendedUser) {
-
-        // User found in this model, break the loop
-        break;
-      }
-    }
-    console.log(suspendedUser)
+    suspendedUser = await User.findByIdAndUpdate(userId, { $set: { isSuspended: true } });
 
     if (!suspendedUser) {
       console.log(`User with ID: ${userId} not found`);

@@ -196,23 +196,23 @@ function AddTrainer() {
                     </div>
                     <div className={`${style.sec1} pb-3`}>
                         <div>
-                            <input name='Name' type="text" placeholder='Name here' required />
+                            <input autoComplete='off' name='Name' type="text" placeholder='Name here' required />
                             <img style={{ width: '20px', height: '20px', cursor: 'pointer' }} src={profile} alt="" />
                         </div>
                         <div>
-                            <input name='Age' type="number" placeholder='Age here' required />
+                            <input autoComplete='off' name='Age' type="number" placeholder='Age here' required />
                             <img style={{ width: '20px', height: '20px', cursor: 'pointer' }} src={profile} alt="" />
                         </div>
                         <div>
-                            <input name='Email' type="email" placeholder='Email here' required />
+                            <input autoComplete='off' name='Email' type="email" placeholder='Email here' required />
                             <img style={{ width: '20px', height: '20px', cursor: 'pointer' }} src={msg} alt="" />
                         </div>
                         <div>
-                            <input name='UserName' type="text" placeholder='username (for login)' required />
+                            <input autoComplete='off' name='UserName' type="text" placeholder='username (for login)' required />
                             <img style={{ width: '20px', height: '20px', cursor: 'pointer' }} src={msg} alt="" />
                         </div>
                         <div className='d-flex align-items-center justify-content-between'>
-                            <input value={password} onChange={(event) => {
+                            <input autoComplete='off' value={password} onChange={(event) => {
                                 setPassword(event.target.value);
                                 CheckPassword(event.target.value);
                             }} name='Password' type="text" placeholder='Password here' required />
@@ -225,18 +225,18 @@ function AddTrainer() {
                             )}
                         </div>
                         <div>
-                            <input  name='Experience' type="text" placeholder='Experience here' required />
+                            <input autoComplete='off'  name='Experience' type="text" placeholder='Experience here' required />
                             <img style={{ width: '20px', height: '20px', cursor: 'pointer' }} src={Office} alt="" />
                         </div>
                         <div>
-                            <input name='Qualification' type="text" placeholder='Qualification Here' required />
+                            <input autoComplete='off' name='Qualification' type="text" placeholder='Qualification Here' required />
                             <img style={{ width: '20px', height: '20px', cursor: 'pointer' }} src={Office} alt="" />
                         </div>
                         <div className={style.spec}>
-                            <input name='Specialities' type="text" placeholder='Speciality here' />
+                            <input autoComplete='off' name='Specialities' type="text" placeholder='Speciality here' />
                             <img style={{ width: '20px', height: '20px', cursor: 'pointer' }} src={copyP} alt="" />
                         </div>
-                        <input onChange={handleDocumentChange} name='TrainerDocument' type='file' accept='.pdf' ref={documentRef} style={{ display: 'none' }} />
+                        <input autoComplete='off' onChange={handleDocumentChange} name='TrainerDocument' type='file' accept='.pdf' ref={documentRef} style={{ display: 'none' }} />
                         <div className={`${style.btns}`}>
                             <p style={{
                                 padding: "13px 20px",

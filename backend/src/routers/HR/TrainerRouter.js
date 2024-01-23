@@ -101,10 +101,9 @@ const transporter = nodemailer.createTransport(smtpTransport({
 
 
 router.post("/addTrainer", upload.fields([{ name: 'TrainerImage' }, { name: 'TrainerDocument' }]), async (req, res) => {
-  console.log("request made trainer..");
   try {
     const requestUser = await User.findById(req.header('Authorization')).populate('Company Department')
-
+ 
     const userNameExist = await User.findOne({ UserName: req.body.UserName });
 
     if (userNameExist) {
@@ -236,14 +235,8 @@ router.post("/addTrainer", upload.fields([{ name: 'TrainerImage' }, { name: 'Tra
 // * GET All Trainer Data From MongooDB Database
 router.get("/readTrainer", async (req, res) => {
   try {
-
-    const trainer = await User.find({ isTrainer: true, UserDepartment: req.header('Authorization') }).populate('User')
-
-
-
+    const trainer = await User.find({ isTrainer: true, UserDepartment: req.header('Authorization') }).populate('UserDepartment')
     res.status(201).send({ status: true, message: "The Following are the Trainers!", data: trainer });
-
-
   } catch (e) {
     res.status(500).json({ message: e.message });
   }

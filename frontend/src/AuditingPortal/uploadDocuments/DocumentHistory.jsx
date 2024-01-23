@@ -136,22 +136,22 @@ function DocumentHistory() {
                     <div className={style.sec1}>
                         <div>
                             <p>Document Id</p>
-                            <input type="text" value={documentData?.DocumentId} readOnly />
+                            <input autoComplete='off' type="text" value={documentData?.DocumentId} readOnly />
                         </div>
                         <div>
                             <p>Department</p>
-                            <input type="text" value={documentData?.Department} readOnly />
+                            <input autoComplete='off' type="text" value={documentData?.Department} readOnly />
                         </div>
 
                     </div>
                     <div className={style.sec2}>
                         <div>
                             <p>Document Name</p>
-                            <input type="text" value={documentData?.DocumentName} readOnly />
+                            <input autoComplete='off' type="text" value={documentData?.DocumentName} readOnly />
                         </div>
                         <div>
                             <p>Document Type</p>
-                            <input type="text" value={documentData?.DocumentType} readOnly />
+                            <input autoComplete='off' type="text" value={documentData?.DocumentType} readOnly />
                         </div>
 
                     </div>
@@ -225,7 +225,10 @@ function DocumentHistory() {
                         <div class={style.alert}>
                             <p class={style.msg}>{popUpData}</p>
                             <div className={style.alertbtns}>
-                                <button onClick={alertManager} className={style.btn2}>OK.</button>
+                                <button style={{
+                                    marginLeft : '120px',
+                                    marginTop : '25px'
+                                }}  onClick={alertManager} className={style.btn2}>OK.</button>
                             </div>
                         </div>
                     </div> : null

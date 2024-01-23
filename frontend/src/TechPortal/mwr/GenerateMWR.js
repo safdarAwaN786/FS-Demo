@@ -279,24 +279,24 @@ function GenerateMWR() {
 
                             <div className={style.droper}>
                                 <div>
-                                    <input value='Mechenical' onChange={updateDiscipline} type="checkbox" />
+                                    <input autoComplete='off' value='Mechenical' onChange={updateDiscipline} type="checkbox" />
                                     <p >Mechanical</p>
                                 </div>
                                 <div>
-                                    <input value='Electrical' onChange={updateDiscipline} type="checkbox" />
+                                    <input autoComplete='off' value='Electrical' onChange={updateDiscipline} type="checkbox" />
                                     <p >Electrical</p>
                                 </div>
 
                                 <div>
-                                    <input value='Insulation & Paint' onChange={updateDiscipline} type="checkbox" />
+                                    <input autoComplete='off' value='Insulation & Paint' onChange={updateDiscipline} type="checkbox" />
                                     <p >Insulation & Paint</p>
                                 </div>
                                 <div>
-                                    <input value='Carpentary' onChange={updateDiscipline} type="checkbox" />
+                                    <input autoComplete='off' value='Carpentary' onChange={updateDiscipline} type="checkbox" />
                                     <p >Carpentary</p>
                                 </div>
                                 <div>
-                                    <input value='Civil' onChange={updateDiscipline} type="checkbox" />
+                                    <input autoComplete='off' value='Civil' onChange={updateDiscipline} type="checkbox" />
                                     <p >Civil</p>
                                 </div>
                             </div>
@@ -335,9 +335,10 @@ function GenerateMWR() {
                         <div class={style.alert}>
                             <p class={style.msg}>{popUpData}</p>
                             <div className={style.alertbtns}>
-
-                                <button onClick={alertManager} className={style.btn2}>OK.</button>
-
+                                <button style={{
+                                    marginLeft : '120px',
+                                    marginTop : '25px'
+                                }}  onClick={alertManager} className={style.btn2}>OK.</button>
                             </div>
                         </div>
                     </div> : null

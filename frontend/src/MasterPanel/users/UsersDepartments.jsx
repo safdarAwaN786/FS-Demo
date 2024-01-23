@@ -8,6 +8,7 @@ import { changeId } from '../../redux/slices/idToProcessSlice';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { setSmallLoading } from '../../redux/slices/loading';
 import Swal from 'sweetalert2';
+import { BsArrowLeftCircle } from 'react-icons/bs';
 
 function UsersDepartments() {
 
@@ -44,9 +45,9 @@ function UsersDepartments() {
         }).catch(err => {
             dispatch(setSmallLoading(false));
             Swal.fire({
-                icon : 'error',
-                title : 'OOps..',
-                text : 'Something went wrong, Try Again!'
+                icon: 'error',
+                title: 'OOps..',
+                text: 'Something went wrong, Try Again!'
             })
         })
     }, [])
@@ -89,82 +90,89 @@ function UsersDepartments() {
 
     return (
         <>
+            <div className='d-flex flex-row px-lg-5 px-2 mt-4 pt-3'>
+                <BsArrowLeftCircle role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
+                    {
+                        dispatch(updateTabData({ ...tabData, Tab: 'Users Details' }))
+                    }
+                }} />
 
-                <div className={style.searchbar}>
-                    <div className={style.sec1}>
-                        <img src={Search} alt="" />
-                        <input onChange={search} type="text" placeholder='Search Department by name or Id' />
+            </div>
+            <div className={style.searchbar}>
+                <div className={style.sec1}>
+                    <img src={Search} alt="" />
+                    <input autoComplete='off' onChange={search} type="text" placeholder='Search Department by name or Id' />
+                </div>
+                {tabData?.Creation && (
+                    <div className={style.sec2} style={{
+                        width: '150px'
+                    }} onClick={() => {
+                        dispatch(updateTabData({ ...tabData, Tab: 'addUsers' }))
+
+                    }}>
+                        <img src={add} alt="" />
+                        <p>Add Users</p>
                     </div>
-                    {tabData?.Creation && (
-                        <div className={style.sec2} style={{
-                            width: '150px'
-                        }} onClick={() => {
-                            dispatch(updateTabData({ ...tabData, Tab: 'addUsers' }))
+                )}
+            </div>
+            <div className={style.tableParent}>
+                {!usersList || usersList?.length === 0 ? (
+                    <div className='w-100 d-flex align-items-center justify-content-center'>
+                        <p className='text-center'>No any Records Available here.</p>
+                    </div>
+                ) : (
 
-                        }}>
-                            <img src={add} alt="" />
-                            <p>Add Users</p>
-                        </div>
-                    )}
-                </div>
-                <div className={style.tableParent}>
-                    {!usersList || usersList?.length === 0 ? (
-                        <div className='w-100 d-flex align-items-center justify-content-center'>
-                            <p className='text-center'>No any Records Available here.</p>
-                        </div>
-                    ) : (
+                    <table className={style.table}>
+                        <tr className={style.headers}>
+                            <td>Department ID</td>
+                            <td>Department Name</td>
+                            <td>Users</td>
+                        </tr>
+                        {
+                            usersList?.map((user, i) => {
+                                return (
+                                    <tr className={style.tablebody} key={i}>
+                                        <td ><p style={{
+                                            backgroundColor: "#f0f5f0",
+                                            padding: "2px 5px",
+                                            borderRadius: "10px",
+                                            fontFamily: "Inter",
+                                            fontSize: "12px",
+                                            fontStyle: "normal",
+                                            fontWeight: "400",
+                                            lineHeight: "20px",
+                                        }}>{user.Department?.DepartmentId}</p></td>
+                                        <td >{user.Department?.DepartmentName}</td>
+                                        <td> <p onClick={() => {
+                                            dispatch(updateTabData({ ...tabData, Tab: 'viewUsersList' }))
+                                            dispatch(changeId(user.Department?._id))
 
-                        <table className={style.table}>
-                            <tr className={style.headers}>
-                                <td>Department ID</td>
-                                <td>Department Name</td>
-                                <td>Users</td>
-                            </tr>
-                            {
-                                usersList?.map((user, i) => {
-                                    return (
-                                        <tr className={style.tablebody} key={i}>
-                                            <td ><p style={{
-                                                backgroundColor: "#f0f5f0",
-                                                padding: "2px 5px",
-                                                borderRadius: "10px",
-                                                fontFamily: "Inter",
-                                                fontSize: "12px",
-                                                fontStyle: "normal",
-                                                fontWeight: "400",
-                                                lineHeight: "20px",
-                                            }}>{user.Department?.DepartmentId}</p></td>
-                                            <td >{user.Department?.DepartmentName}</td>
-                                            <td> <p onClick={() => {
-                                                dispatch(updateTabData({ ...tabData, Tab: 'viewUsersList' }))
-                                                dispatch(changeId(user.Department?._id))
+                                        }} className={style.click}>View</p></td>
 
-                                            }} className={style.click}>View</p></td>
+                                    </tr>
 
-                                        </tr>
+                                )
 
-                                    )
+                            })
+                        }
+                    </table>
+                )}
+            </div>
+            <div className={style.Btns}>
+                {startIndex > 0 && (
 
-                                })
-                            }
-                        </table>
-                    )}
-                </div>
-                <div className={style.Btns}>
-                    {startIndex > 0 && (
+                    <button onClick={backPage}>
+                        {'<< '}Back
+                    </button>
+                )}
+                {allDataArr?.length > endIndex && (
 
-                        <button onClick={backPage}>
-                            {'<< '}Back
-                        </button>
-                    )}
-                    {allDataArr?.length > endIndex && (
+                    <button onClick={nextPage}>
+                        next{'>> '}
+                    </button>
+                )}
+            </div>
 
-                        <button onClick={nextPage}>
-                            next{'>> '}
-                        </button>
-                    )}
-                </div>
-         
             {
                 showBox && (
 
@@ -175,7 +183,10 @@ function UsersDepartments() {
 
                             <div className={style.alertbtns}>
 
-                                <button onClick={() => {
+                                <button style={{
+                                    marginLeft : '120px',
+                                    marginTop : '25px'
+                                }}  onClick={() => {
                                     setShowBox(false);
 
                                 }} className={style.btn2}>OK</button>

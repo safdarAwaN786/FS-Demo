@@ -95,7 +95,7 @@ function Devices() {
                 <div className={`${style.searchbar} `}>
                     <div className={style.sec1}>
                         <img src={search} alt="" />
-                        <input onChange={searchFunction} type="text" placeholder='Search Measuring Device by name or code' />
+                        <input autoComplete='off' onChange={searchFunction} type="text" placeholder='Search Measuring Device by name or code' />
                     </div>
                     <div className='d-flex flex-row'>
 

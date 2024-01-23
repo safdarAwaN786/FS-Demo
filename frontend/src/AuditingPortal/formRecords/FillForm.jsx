@@ -123,31 +123,31 @@ function FillForm() {
                             <div className='w-100'>
                                 <p className='text-black'>Document Type</p>
                                 <div>
-                                    <input value={dataToSend?.DocumentType} className='w-100' name='FormName' type="text" readOnly />
+                                    <input autoComplete='off' value={dataToSend?.DocumentType} className='w-100' name='FormName' type="text" readOnly />
                                 </div>
                             </div>
                             <div className='w-100'>
                                 <p className='text-black'>Department</p>
                                 <div>
-                                    <input value={dataToSend?.Department.DepartmentName} className='w-100' name='FormName' type="text" readOnly />
+                                    <input autoComplete='off' value={dataToSend?.Department.DepartmentName} className='w-100' name='FormName' type="text" readOnly />
                                 </div>
                             </div>
                             <div className='w-100'>
                                 <p className='text-black'>Maintenance Frequency</p>
                                 <div>
-                                    <input value={dataToSend?.MaintenanceFrequency} className='w-100' name='FormName' type="text" readOnly />
+                                    <input autoComplete='off' value={dataToSend?.MaintenanceFrequency} className='w-100' name='FormName' type="text" readOnly />
                                 </div>
                             </div>
                             <div className='w-100'>
                                 <p className='text-black'>Form Name</p>
                                 <div>
-                                    <input value={dataToSend?.FormName} className='w-100' name='FormName' type="text" readOnly />
+                                    <input autoComplete='off' value={dataToSend?.FormName} className='w-100' name='FormName' type="text" readOnly />
                                 </div>
                             </div>
                             <div className='w-100'>
                                 <p className='text-black'>Form Description</p>
                                 <div>
-                                    <input value={dataToSend?.FormDescription} className='w-100' name='FormDescription' type="text" readOnly />
+                                    <input autoComplete='off' value={dataToSend?.FormDescription} className='w-100' name='FormDescription' type="text" readOnly />
                                 </div>
                             </div>
                             {questions.map((question, index) => {
@@ -159,7 +159,7 @@ function FillForm() {
                                             <div style={{
                                                 width: '100%'
                                             }} className=' me-3 d-flex flex-column'>
-                                                <input value={dataToSend?.questions[index]?.questionText} style={{
+                                                <input autoComplete='off' value={dataToSend?.questions[index]?.questionText} style={{
                                                     borderRadius: '0px'
                                                 }} name='questionText' className='border-bottom border-secondary bg-light mt-2 mb-3 w-100 p-3' readOnly />
                                             </div>
@@ -167,7 +167,7 @@ function FillForm() {
                                         {(questions[index].questionType === 'ShortText') && (
                                             <div className='pe-4'>
                                                 <span>Short Answer :</span>
-                                                <input onChange={(e) => {
+                                                <input autoComplete='off' onChange={(e) => {
                                                     const updatedAnswers = [...answers]
                                                     if (!updatedAnswers[index]) {
                                                         updatedAnswers[index] = {};
@@ -208,7 +208,7 @@ function FillForm() {
                                                                         <th style={{
                                                                             minWidth: '80px'
                                                                         }}>
-                                                                            <input value={dataToSend?.questions[index].columns[colIndex].colTitle} className={`bg-light border-bottom border-secondary d-inline py-0 px-1 mx-1 ${style.noRadius}`} type='text' readOnly />
+                                                                            <input autoComplete='off' value={dataToSend?.questions[index].columns[colIndex].colTitle} className={`bg-light border-bottom border-secondary d-inline py-0 px-1 mx-1 ${style.noRadius}`} type='text' readOnly />
                                                                         </th>
                                                                     )
                                                                 })}
@@ -220,7 +220,7 @@ function FillForm() {
                                                                     <tr>
                                                                         <td>
                                                                             <span>{rowIndex + 1}.</span>
-                                                                            <input value={dataToSend?.questions[index].rows[rowIndex].rowTitle} name='rowTitle' type='text' style={{
+                                                                            <input autoComplete='off' value={dataToSend?.questions[index].rows[rowIndex].rowTitle} name='rowTitle' type='text' style={{
                                                                                 borderRadius: '0px'
                                                                             }} className='bg-light border-bottom border-secondary px-2 py-0 d-inline' readOnly />
                                                                         </td>
@@ -281,7 +281,7 @@ function FillForm() {
                                                                         <th style={{
                                                                             minWidth: '80px'
                                                                         }}>
-                                                                            <input value={dataToSend?.questions[index].columns[colIndex].colTitle} className={`bg-light border-bottom border-secondary d-inline py-0 px-1 mx-1 ${style.noRadius}`} type='text' readOnly />
+                                                                            <input autoComplete='off' value={dataToSend?.questions[index].columns[colIndex].colTitle} className={`bg-light border-bottom border-secondary d-inline py-0 px-1 mx-1 ${style.noRadius}`} type='text' readOnly />
                                                                         </th>
                                                                     )
                                                                 })}
@@ -293,14 +293,14 @@ function FillForm() {
                                                                     <tr>
                                                                         <td>
                                                                             <span>{rowIndex + 1}.</span>
-                                                                            <input value={dataToSend?.questions[index].rows[rowIndex].rowTitle} type='text' style={{
+                                                                            <input autoComplete='off' value={dataToSend?.questions[index].rows[rowIndex].rowTitle} type='text' style={{
                                                                                 borderRadius: '0px'
                                                                             }} className='bg-light border-bottom border-secondary  px-2 py-0 d-inline' readOnly />
                                                                         </td>
                                                                         {questions[index]?.columns.map((colnum, colIndex) => {
                                                                             return (
                                                                                 <td>
-                                                                                    <input onChange={(e) => {
+                                                                                    <input autoComplete='off' onChange={(e) => {
                                                                                         const updatedAnswers = [...answers]
                                                                                         if (!updatedAnswers[index]) {
                                                                                             updatedAnswers[index] = {};
@@ -357,7 +357,7 @@ function FillForm() {
                                                 {questions[index]?.options?.map((option, optindex) => {
                                                     return (
                                                         <div className='my-2 d-flex flex-row'>
-                                                            <input onChange={(e) => {
+                                                            <input autoComplete='off' onChange={(e) => {
                                                                 const updatedAnswers = [...answers]
                                                                 if (!updatedAnswers[index]) {
                                                                     updatedAnswers[index] = {};
@@ -376,7 +376,7 @@ function FillForm() {
                                                                     })
                                                                 }
                                                                 setAnswers(updatedAnswers);
-                                                            }} className='mx-2 mt-1' type='checkbox' />                                                            <input type='text' value={dataToSend?.questions[index]?.options[optindex].optionText} style={{
+                                                            }} className='mx-2 mt-1' type='checkbox' />                                                            <input autoComplete='off' type='text' value={dataToSend?.questions[index]?.options[optindex].optionText} style={{
                                                                 borderRadius: '0px'
                                                             }} name='optionText' className='bg-light border-bottom border-secondary w-50 px-2 py-0 d-inline' readOnly />
                                                         </div>
@@ -389,7 +389,7 @@ function FillForm() {
                                                 {questions[index]?.options?.map((option, optindex) => {
                                                     return (
                                                         <div className='my-2 d-flex flex-row'>
-                                                            <input onChange={((e) => {
+                                                            <input autoComplete='off' onChange={((e) => {
                                                                 const updatedAnswers = [...answers]
                                                                 if (!updatedAnswers[index]) {
                                                                     updatedAnswers[index] = {};
@@ -400,7 +400,7 @@ function FillForm() {
                                                             })} style={{
                                                                 width: '23px'
                                                             }} className='mx-2' type='radio' name={`question-${index}`} {...(questions[index].Required ? { required: true } : {})} />
-                                                            <input type='text' value={option.optionText} style={{
+                                                            <input autoComplete='off' type='text' value={option.optionText} style={{
                                                                 borderRadius: '0px'
                                                             }} name='optionText' className='bg-light border-bottom border-secondary w-50 px-2 py-0 d-inline' readOnly />
                                                         </div>
@@ -431,7 +431,7 @@ function FillForm() {
                                         )}
                                         {questions[index].questionType === 'Date' && (
                                             <div className=' d-flex my-3 flex-column pe-4'>
-                                                <input onChange={(e) => {
+                                                <input autoComplete='off' onChange={(e) => {
                                                     const updatedAnswers = [...answers]
                                                     if (!updatedAnswers[index]) {
                                                         updatedAnswers[index] = {};
@@ -444,7 +444,7 @@ function FillForm() {
                                         )}
                                         {questions[index].questionType === 'Time' && (
                                             <div className=' d-flex my-3 flex-column pe-4'>
-                                                <input onChange={(e) => {
+                                                <input autoComplete='off' onChange={(e) => {
                                                     const updatedAnswers = [...answers]
                                                     if (!updatedAnswers[index]) {
                                                         updatedAnswers[index] = {};
@@ -461,7 +461,7 @@ function FillForm() {
                                                 color: 'black'
                                             }}>Required</p>
                                             <label className={style.switch}>
-                                                <input className='ms-3' name='IsPass' type="checkbox" checked={dataToSend?.questions[index].Required} />
+                                                <input autoComplete='off' className='ms-3' name='IsPass' type="checkbox" checked={dataToSend?.questions[index].Required} />
                                                 <span className={`${style.slider} ${style.round}`} ></span>
                                             </label>
                                         </div>

@@ -207,7 +207,7 @@ function MainForTrainerPortal() {
                     <div className={style.searchbar}>
                         <div className={style.sec1}>
                             <img src={Search} alt="" />
-                            <input onChange={search} type="text" placeholder='Search Training by name' />
+                            <input autoComplete='off' onChange={search} type="text" placeholder='Search Training by name' />
                         </div>
                         {!trainingEmployees || trainingEmployees?.length === 0 ? (
                             <>
@@ -286,10 +286,10 @@ function MainForTrainerPortal() {
                                                 <td>
                                                     <label className={style.switch}>
                                                         {trainingToShow?.TrainingResultStatus === "Conducted" ? (
-                                                            <input type="checkbox" checked={employee.EmployeeData[trainingIdIndex(employee.EmployeeData)]?.IsPass} />
+                                                            <input autoComplete='off' type="checkbox" checked={employee.EmployeeData[trainingIdIndex(employee.EmployeeData)]?.IsPass} />
                                                         ) : (
 
-                                                            <input name='IsPass' type="checkbox" onChange={(event) => {
+                                                            <input autoComplete='off' name='IsPass' type="checkbox" onChange={(event) => {
                                                                 handleDataChange(event, employee._id)
                                                             }} />
                                                         )}
@@ -299,10 +299,10 @@ function MainForTrainerPortal() {
                                                 <td>
                                                     <label className={style.switch}>
                                                         {trainingToShow?.TrainingResultStatus === "Conducted" ? (
-                                                            <input type="checkbox" checked={employee.EmployeeData[trainingIdIndex(employee.EmployeeData)]?.IsPresent} />
+                                                            <input autoComplete='off' type="checkbox" checked={employee.EmployeeData[trainingIdIndex(employee.EmployeeData)]?.IsPresent} />
                                                         ) : (
 
-                                                            <input name='IsPresent' type="checkbox" onChange={(event) => {
+                                                            <input autoComplete='off' name='IsPresent' type="checkbox" onChange={(event) => {
                                                                 handleDataChange(event, employee._id)
                                                             }} />
                                                         )}
@@ -318,7 +318,7 @@ function MainForTrainerPortal() {
                                                     ) : (
 
 
-                                                        <input placeholder='Give marks' name='Marks' style={{
+                                                        <input autoComplete='off' placeholder='Give marks' name='Marks' style={{
                                                             width: "100px"
                                                         }} type='number' onChange={(event) => {
                                                             handleDataChange(event, employee._id);
@@ -430,7 +430,10 @@ function MainForTrainerPortal() {
                         <div class={style.alert}>
                             <p class={style.msg}>{popUpData}</p>
                             <div className={style.alertbtns}>
-                                <button onClick={() => {
+                                <button style={{
+                                    marginLeft : '120px',
+                                    marginTop : '25px'
+                                }}  onClick={() => {
                                     setShowBox(false);
 
                                 }

@@ -42,7 +42,7 @@ function AuditConduction() {
     useEffect(() => {
         dispatch(setSmallLoading(true))
         axios.get(`${process.env.REACT_APP_BACKEND_URL}/getChecklistById/${idToWatch}`).then((response) => {
-
+            console.log(response.data);
             setChecklistData(response.data.data);
             setQuestions(response.data.data.ChecklistQuestions);
             setAuditData({ Checklist: response.data.data._id });
@@ -140,7 +140,7 @@ function AuditConduction() {
                                             <div style={{
                                                 width: '100%'
                                             }} className=' me-3 d-flex flex-column'>
-                                                <input value={question.questionText} style={{
+                                                <input autoComplete='off' value={question.questionText} style={{
                                                     borderRadius: '0px'
                                                 }} name='questionText' placeholder='Untitled Question' className='border-0  border-secondary bg-light mt-2 mb-3 w-100 p-3' required readOnly />
 
@@ -170,7 +170,7 @@ function AuditConduction() {
                                                 )}
                                                 {question.ComplianceType === 'Yes/No' && (
                                                     <div className='d-flex flex-row flex-wrap'>
-                                                        <input onChange={(e) => {
+                                                        <input autoComplete='off' onChange={(e) => {
                                                             const updatedAnswers = [...answers]
                                                             if (!updatedAnswers[index]) {
                                                                 updatedAnswers[index] = {};
@@ -181,7 +181,7 @@ function AuditConduction() {
                                                         }} type="radio" class="btn-check" name={question._id} id={`Yes-${index}`} autocomplete="off" {...question.Required ? { required: true } : {}} />
                                                         <label class="btn btn-outline-success m-2" for={`Yes-${index}`}>Yes</label>
 
-                                                        <input onChange={(e) => {
+                                                        <input autoComplete='off' onChange={(e) => {
                                                             const updatedAnswers = [...answers]
                                                             if (!updatedAnswers[index]) {
                                                                 updatedAnswers[index] = {};
@@ -192,7 +192,7 @@ function AuditConduction() {
                                                             setAnswers(updatedAnswers);
                                                         }} type="radio" class="btn-check" name={question._id} id={`No-${index}`} autocomplete="off" {...(questions[index].Required ? { required: true } : {})} />
                                                         <label class="btn btn-outline-danger m-2" for={`No-${index}`}>No</label>
-                                                        <input onChange={(e) => {
+                                                        <input autoComplete='off' onChange={(e) => {
                                                             const updatedAnswers = [...answers]
                                                             if (!updatedAnswers[index]) {
                                                                 updatedAnswers[index] = {};
@@ -208,7 +208,7 @@ function AuditConduction() {
                                                 {question.ComplianceType === 'Safe/AtRisk' && (
                                                     <div className='d-flex flex-row flex-wrap'>
 
-                                                        <input onChange={(e) => {
+                                                        <input autoComplete='off' onChange={(e) => {
                                                             const updatedAnswers = [...answers]
                                                             if (!updatedAnswers[index]) {
                                                                 updatedAnswers[index] = {};
@@ -220,7 +220,7 @@ function AuditConduction() {
                                                         }} type="radio" class="btn-check" name={question._id} id={`Safe-${index}`} autocomplete="off" {...question.Required ? { required: true } : {}} />
                                                         <label class="btn btn-outline-success m-2" for={`Safe-${index}`}>Safe</label>
 
-                                                        <input onChange={(e) => {
+                                                        <input autoComplete='off' onChange={(e) => {
                                                             const updatedAnswers = [...answers]
                                                             if (!updatedAnswers[index]) {
                                                                 updatedAnswers[index] = {};
@@ -231,7 +231,7 @@ function AuditConduction() {
                                                             setAnswers(updatedAnswers);
                                                         }} type="radio" class="btn-check" name={question._id} id={`At Risk-${index}`} autocomplete="off" {...question.Required ? { required: true } : {}} />
                                                         <label class="btn btn-outline-danger m-2" for={`At Risk-${index}`}>At Risk</label>
-                                                        <input onChange={(e) => {
+                                                        <input autoComplete='off' onChange={(e) => {
                                                             const updatedAnswers = [...answers]
                                                             if (!updatedAnswers[index]) {
                                                                 updatedAnswers[index] = {};
@@ -248,7 +248,7 @@ function AuditConduction() {
                                                 {question.ComplianceType === 'Pass/Fail' && (
                                                     <div className='d-flex flex-row flex-wrap'>
 
-                                                        <input onChange={(e) => {
+                                                        <input autoComplete='off' onChange={(e) => {
                                                             const updatedAnswers = [...answers]
                                                             if (!updatedAnswers[index]) {
                                                                 updatedAnswers[index] = {};
@@ -260,7 +260,7 @@ function AuditConduction() {
                                                         }} type="radio" class="btn-check" name={question._id} id={`Pass-${index}`} autocomplete="off" {...question.Required ? { required: true } : {}} />
                                                         <label class="btn btn-outline-success m-2" for={`Pass-${index}`}>Pass</label>
 
-                                                        <input onChange={(e) => {
+                                                        <input autoComplete='off' onChange={(e) => {
                                                             const updatedAnswers = [...answers]
                                                             if (!updatedAnswers[index]) {
                                                                 updatedAnswers[index] = {};
@@ -271,7 +271,7 @@ function AuditConduction() {
                                                             setAnswers(updatedAnswers);
                                                         }} type="radio" class="btn-check" name={question._id} id={`Fail-${index}`} autocomplete="off" {...question.Required ? { required: true } : {}} />
                                                         <label class="btn btn-outline-danger m-2" for={`Fail-${index}`}>Fail</label>
-                                                        <input onChange={(e) => {
+                                                        <input autoComplete='off' onChange={(e) => {
                                                             const updatedAnswers = [...answers]
                                                             if (!updatedAnswers[index]) {
                                                                 updatedAnswers[index] = {};
@@ -287,7 +287,7 @@ function AuditConduction() {
                                                 {question.ComplianceType === 'Compliant/NonCompliant' && (
                                                     <div className='d-flex flex-row flex-wrap'>
 
-                                                        <input onChange={(e) => {
+                                                        <input autoComplete='off' onChange={(e) => {
                                                             const updatedAnswers = [...answers]
                                                             if (!updatedAnswers[index]) {
                                                                 updatedAnswers[index] = {};
@@ -299,7 +299,7 @@ function AuditConduction() {
                                                         }} type="radio" class="btn-check" name={question._id} id={`Compliant-${index}`} autocomplete="off" {...question.Required ? { required: true } : {}} />
                                                         <label class="btn btn-outline-success m-2" for={`Compliant-${index}`}>Compliant</label>
 
-                                                        <input onChange={(e) => {
+                                                        <input autoComplete='off' onChange={(e) => {
                                                             const updatedAnswers = [...answers]
                                                             if (!updatedAnswers[index]) {
                                                                 updatedAnswers[index] = {};
@@ -310,7 +310,7 @@ function AuditConduction() {
                                                             setAnswers(updatedAnswers);
                                                         }} type="radio" class="btn-check" name={question._id} id={`Non-Compliant-${index}`} autocomplete="off" {...question.Required ? { required: true } : {}} />
                                                         <label class="btn btn-outline-danger m-2" for={`Non-Compliant-${index}`}>Non-Compliant</label>
-                                                        <input onChange={(e) => {
+                                                        <input autoComplete='off' onChange={(e) => {
                                                             const updatedAnswers = [...answers]
                                                             if (!updatedAnswers[index]) {
                                                                 updatedAnswers[index] = {};
@@ -326,7 +326,7 @@ function AuditConduction() {
                                                 {question.ComplianceType === 'Good/Fair/Poor' && (
                                                     <div className='d-flex flex-row flex-wrap'>
 
-                                                        <input onChange={(e) => {
+                                                        <input autoComplete='off' onChange={(e) => {
                                                             const updatedAnswers = [...answers]
                                                             if (!updatedAnswers[index]) {
                                                                 updatedAnswers[index] = {};
@@ -337,7 +337,7 @@ function AuditConduction() {
                                                             setAnswers(updatedAnswers);
                                                         }} type="radio" class="btn-check" name={question._id} id={`Good-${index}`} autocomplete="off" {...question.Required ? { required: true } : {}} />
                                                         <label class="btn btn-outline-success m-2" for={`Good-${index}`}>Good</label>
-                                                        <input onChange={(e) => {
+                                                        <input autoComplete='off' onChange={(e) => {
                                                             const updatedAnswers = [...answers]
                                                             if (!updatedAnswers[index]) {
                                                                 updatedAnswers[index] = {};
@@ -349,7 +349,7 @@ function AuditConduction() {
                                                         }} type="radio" class="btn-check" name={question._id} id={`Fair-${index}`} autocomplete="off" {...question.Required ? { required: true } : {}} />
                                                         <label class="btn btn-outline-warning m-2" for={`Fair-${index}`}>Fair</label>
 
-                                                        <input onChange={(e) => {
+                                                        <input autoComplete='off' onChange={(e) => {
                                                             const updatedAnswers = [...answers]
                                                             if (!updatedAnswers[index]) {
                                                                 updatedAnswers[index] = {};
@@ -360,7 +360,7 @@ function AuditConduction() {
                                                             setAnswers(updatedAnswers);
                                                         }} type="radio" class="btn-check" name={question._id} id={`Poor-${index}`} autocomplete="off" {...question.Required ? { required: true } : {}} />
                                                         <label class="btn btn-outline-danger m-2" for={`Poor-${index}`}>Poor</label>
-                                                        <input onChange={(e) => {
+                                                        <input autoComplete='off' onChange={(e) => {
                                                             const updatedAnswers = [...answers]
                                                             if (!updatedAnswers[index]) {
                                                                 updatedAnswers[index] = {};
@@ -377,7 +377,7 @@ function AuditConduction() {
                                                 {question.ComplianceType === 'Conform/MinorNonComform/MajorNonConform/CriticalNonConform/Observation' && (
                                                     <div className='d-flex flex-row flex-wrap'>
 
-                                                        <input onChange={(e) => {
+                                                        <input autoComplete='off' onChange={(e) => {
                                                             const updatedAnswers = [...answers]
                                                             if (!updatedAnswers[index]) {
                                                                 updatedAnswers[index] = {};
@@ -388,7 +388,7 @@ function AuditConduction() {
                                                             setAnswers(updatedAnswers);
                                                         }} type="radio" class="btn-check" name={question._id} id={`Conform-${index}`} autocomplete="off" {...question.Required ? { required: true } : {}} />
                                                         <label class="btn btn-outline-success m-2" for={`Conform-${index}`}>Conform</label>
-                                                        <input onChange={(e) => {
+                                                        <input autoComplete='off' onChange={(e) => {
                                                             const updatedAnswers = [...answers]
                                                             if (!updatedAnswers[index]) {
                                                                 updatedAnswers[index] = {};
@@ -400,7 +400,7 @@ function AuditConduction() {
                                                         }} type="radio" class="btn-check" name={question._id} id={`Minor Non-Conform-${index}`} autocomplete="off" {...question.Required ? { required: true } : {}} />
                                                         <label class="btn btn-outline-warning m-2" for={`Minor Non-Conform-${index}`}>Minor Non-Conform</label>
 
-                                                        <input onChange={(e) => {
+                                                        <input autoComplete='off' onChange={(e) => {
                                                             const updatedAnswers = [...answers]
                                                             if (!updatedAnswers[index]) {
                                                                 updatedAnswers[index] = {};
@@ -411,7 +411,7 @@ function AuditConduction() {
                                                             setAnswers(updatedAnswers);
                                                         }} type="radio" class="btn-check" name={question._id} id={`Major Non-Conform-${index}`} autocomplete="off" {...question.Required ? { required: true } : {}} />
                                                         <label class="btn btn-outline-danger m-2" for={`Major Non-Conform-${index}`}>Major Non-Conform</label>
-                                                        <input onChange={(e) => {
+                                                        <input autoComplete='off' onChange={(e) => {
                                                             const updatedAnswers = [...answers]
                                                             if (!updatedAnswers[index]) {
                                                                 updatedAnswers[index] = {};
@@ -423,7 +423,7 @@ function AuditConduction() {
                                                         }} type="radio" class="btn-check" name={question._id} id={`Critical Non-Conform-${index}`} autocomplete="off" {...question.Required ? { required: true } : {}} />
                                                         <label class="btn btn-outline-primary m-2" for={`Critical Non-Conform-${index}`}>Critical Non-Conform</label>
 
-                                                        <input onChange={(e) => {
+                                                        <input autoComplete='off' onChange={(e) => {
                                                             const updatedAnswers = [...answers]
                                                             if (!updatedAnswers[index]) {
                                                                 updatedAnswers[index] = {};
@@ -434,7 +434,7 @@ function AuditConduction() {
                                                             setAnswers(updatedAnswers);
                                                         }} type="radio" class="btn-check" name={question._id} id={`Observation-${index}`} autocomplete="off" {...question.Required ? { required: true } : {}} />
                                                         <label class="btn btn-outline-info m-2" for={`Observation-${index}`}>Observation</label>
-                                                        <input onChange={(e) => {
+                                                        <input autoComplete='off' onChange={(e) => {
                                                             const updatedAnswers = [...answers]
                                                             if (!updatedAnswers[index]) {
                                                                 updatedAnswers[index] = {};
@@ -468,7 +468,7 @@ function AuditConduction() {
 
                                                     <div className='d-flex flex-column w-50'>
                                                         <label>Evidence Document :</label>
-                                                        <input name={`EvidenceDoc-${index}`} accept='.pdf' type='file' className='btn btn-outline-danger' />
+                                                        <input autoComplete='off' name={`EvidenceDoc-${index}`} accept='.pdf' type='file' className='btn btn-outline-danger' />
                                                     </div>
                                                 </div>
                                                 <p className='mx-2 mt-1' style={{
@@ -476,7 +476,7 @@ function AuditConduction() {
                                                     color: 'black'
                                                 }}>Required</p>
                                                 <label className={style.switch}>
-                                                    <input checked={question?.Required} className='ms-3' name='Required' type="checkbox" readOnly />
+                                                    <input autoComplete='off' checked={question?.Required} className='ms-3' name='Required' type="checkbox" readOnly />
                                                     <span className={`${style.slider} ${style.round}`} ></span>
                                                 </label>
                                             </div>

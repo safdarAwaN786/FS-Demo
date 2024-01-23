@@ -110,7 +110,7 @@ function DocumentsList() {
                 <div className={style.searchbar}>
                     <div className={style.sec1}>
                         <img src={Search} alt="" />
-                        <input onChange={search} type="text" placeholder='Search Document by name' />
+                        <input autoComplete='off' onChange={search} type="text" placeholder='Search Document by name' />
                     </div>
                     {tabData?.Creation && (
 
@@ -314,7 +314,10 @@ function DocumentsList() {
                         <div class={style.alert}>
                             <p class={style.msg}>{dataToShow}</p>
                             <div className={style.alertbtns}>
-                                <button onClick={() => {
+                                <button style={{
+                                    marginLeft : '120px',
+                                    marginTop : '25px'
+                                }}  onClick={() => {
                                     setShowBox(false);
                                 }} className={style.btn2}>OK</button>
                             </div>
@@ -515,7 +518,7 @@ function DocumentsList() {
                                 {departmentsToShow.map((depObj) => {
                                     return (
                                         <div className='mx-4 my-4 d-inline'>
-                                            <input type='checkbox' onChange={(e) => {
+                                            <input autoComplete='off' type='checkbox' onChange={(e) => {
                                                 const updatedDocument = { ...documentToProcess }
                                                 if (!updatedDocument.SendToDepartments) {
                                                     updatedDocument.SendToDepartments = []

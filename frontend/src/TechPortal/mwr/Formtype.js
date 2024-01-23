@@ -139,7 +139,7 @@ function Formtype() {
 
                             <div>
                                 <p>Date type</p>
-                                <input name='dateType' value={dateType} type="text" />
+                                <input autoComplete='off' name='dateType' value={dateType} type="text" />
                             </div>
 
 
@@ -157,7 +157,7 @@ function Formtype() {
 
                             <div>
                                 <p>Maintainance type</p>
-                                <input name='maintenanceType' value='Preventive' type="text" />
+                                <input autoComplete='off' name='maintenanceType' value='Preventive' type="text" />
                             </div>
 
                             <div>
@@ -182,7 +182,7 @@ function Formtype() {
                         <a className='btn btn-outline-danger' onClick={() => {
                             // navigate('/tech/maintanancerect2')
                         }}>Generate Certificate</a>
-                        <input onChange={handleImageChange} accept='.jpg, .jpeg, .png' name='Image' type='file' ref={fileInputRef} style={{ display: 'none' }} />
+                        <input autoComplete='off' onChange={handleImageChange} accept='.jpg, .jpeg, .png' name='Image' type='file' ref={fileInputRef} style={{ display: 'none' }} />
                     </div>
 
                     <div className={style.btnparent2}>

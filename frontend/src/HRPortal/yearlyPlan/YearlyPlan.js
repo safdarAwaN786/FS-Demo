@@ -66,7 +66,7 @@ function YearlyPlan() {
             <div className={style.searchbar}>
                 <div className={style.sec1}>
                     <img src={Search} alt="" />
-                    <input onChange={search} type="number" placeholder='Search year in numbers ' />
+                    <input autoComplete='off' onChange={search} type="number" placeholder='Search year in numbers ' />
                 </div>
                 {tabData?.Creation && (
 

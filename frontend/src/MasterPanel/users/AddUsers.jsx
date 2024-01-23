@@ -299,19 +299,19 @@ function AddUsers() {
                                         <div className='row'>
 
                                             <div className='col-lg-6 col-md-12 p-2'>
-                                                <input onChange={(event) => {
+                                                <input autoComplete='off' onChange={(event) => {
                                                     updateUsers(event, index)
                                                 }} value={user.Name} name='Name' type='text' className='p-3 bg-light my-3 w-100 border-0' placeholder='User Name' required />
-                                                <input onChange={(event) => {
+                                                <input autoComplete='off' onChange={(event) => {
                                                     updateUsers(event, index)
                                                 }} value={user.PhoneNo} name='PhoneNo' type='number' className='p-3 bg-light my-3 w-100 border-0' placeholder='Phone Number' required />
-                                                <input onChange={(event) => {
+                                                <input autoComplete='off' onChange={(event) => {
                                                     updateUsers(event, index)
                                                 }} value={user.UserName} name='UserName' type='text' className='p-3 bg-light my-3 w-100 border-0' placeholder='username (for login)' required />
 
                                                 <div className='d-flex flex-row'>
 
-                                                    <input onChange={(event) => {
+                                                    <input autoComplete='off' onChange={(event) => {
                                                         updateUsers(event, index);
                                                         CheckPassword(user.Password, index);
                                                     }} value={user.Password} name='Password' type='text' className='p-3 bg-light mt-3 mb-1 w-100 border-0' placeholder='Password' required />
@@ -329,10 +329,10 @@ function AddUsers() {
 
                                             </div>
                                             <div className='col-lg-6 col-md-12 p-2'>
-                                                <input onChange={(event) => {
+                                                <input autoComplete='off' onChange={(event) => {
                                                     updateUsers(event, index)
                                                 }} value={user.Designation} name='Designation' type='text' className='p-3 bg-light my-3 w-100 border-0' placeholder='User Designation' required />
-                                                <input onChange={(event) => {
+                                                <input autoComplete='off' onChange={(event) => {
                                                     updateUsers(event, index)
                                                 }} value={user.Email} name='Email' type='email' className='p-3 bg-light my-3 w-100 border-0' placeholder='Email Addess' required />
                                                 <select onChange={(event) => {

@@ -7,16 +7,18 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { changeId } from '../../redux/slices/idToProcessSlice';
 import { setSmallLoading } from '../../redux/slices/loading';
+import { BsArrowLeftCircle } from 'react-icons/bs';
 
 function UsersList() {
     const [alert, setalert] = useState(false);
     const [alert2, setalert2] = useState(false);
+    const [deleteUser, setDeleteUser] = useState(false);
     const [usersList, setUsersList] = useState(null);
     const [showBox, setShowBox] = useState(false);
     const [passwordVisible, setPasswordVisible] = useState(false); // State to control password visibility
     const [selectedUser, setSelectedUser] = useState(null); // State to keep track of the selected user
     const user = useSelector(state => state.auth.user);
-  
+
     const alertManager = () => {
         setalert(!alert)
     }
@@ -36,9 +38,9 @@ function UsersList() {
         }).catch(err => {
             dispatch(setSmallLoading(false));
             Swal.fire({
-                icon : 'error',
-                title : 'OOps..',
-                text : 'Something went wrong, Try Again!'
+                icon: 'error',
+                title: 'OOps..',
+                text: 'Something went wrong, Try Again!'
             })
         })
     }, [])
@@ -52,14 +54,15 @@ function UsersList() {
         }).catch(err => {
             dispatch(setSmallLoading(false));
             Swal.fire({
-                icon : 'error',
-                title : 'OOps..',
-                text : 'Something went wrong, Try Again!'
+                icon: 'error',
+                title: 'OOps..',
+                text: 'Something went wrong, Try Again!'
             })
         })
     }
 
 
+    const [idToProcess, setIdToProcess] = useState(null);
 
 
     const nextPage = () => {
@@ -96,120 +99,129 @@ function UsersList() {
 
     return (
         <>
-                <div className={style.searchbar}>
-                    <div className={style.sec1}>
-                        <img src={Search} alt="" />
-                        <input onChange={search} type="text" placeholder='Search Document by name' />
+            <div className='d-flex flex-row px-lg-5 px-2 pt-5'>
+                <BsArrowLeftCircle role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
+                    {
+                        dispatch(changeId(usersList[0].Company._id))
+                        dispatch(updateTabData({ ...tabData, Tab: 'viewUsersDepartments' }));
+                    }
+                }} />
+
+            </div>
+            <div className={style.searchbar}>
+                <div className={style.sec1}>
+                    <img src={Search} alt="" />
+                    <input autoComplete='off' onChange={search} type="text" placeholder='Search Document by name' />
+                </div>
+
+            </div>
+            <div className={style.tableParent}>
+                {!usersList || usersList?.length === 0 ? (
+                    <div className='w-100 d-flex align-items-center justify-content-center'>
+                        <p className='text-center'>No any Records Available here.</p>
                     </div>
+                ) : (
 
-                </div>
-                <div className={style.tableParent}>
-                    {!usersList || usersList?.length === 0 ? (
-                        <div className='w-100 d-flex align-items-center justify-content-center'>
-                            <p className='text-center'>No any Records Available here.</p>
-                        </div>
-                    ) : (
+                    <table className={style.table}>
+                        <tr className={style.headers}>
 
-                        <table className={style.table}>
-                            <tr className={style.headers}>
+                            <td>Name</td>
+                            <td>Designation</td>
+                            <td>Role No</td>
+                            <td>Phone No</td>
+                            <td>Email Address</td>
+                            <td>Username</td>
+                            {/* <td>Password</td> */}
+                            <td>Assigned Tabs</td>
+                            <td>Action</td>
+                            {/* <td>Send</td> */}
+                            <td>Action</td>
+                            <td>Action</td>
 
-                                <td>Name</td>
-                                <td>Designation</td>
-                                <td>Role No</td>
-                                <td>Phone No</td>
-                                <td>Email Address</td>
-                                <td>Username</td>
-                                {/* <td>Password</td> */}
-                                <td>Assigned Tabs</td>
-                                <td>Action</td>
-                                <td>Send</td>
-                                <td>Action</td>
+                        </tr>
+                        {
+                            usersList?.map((user, i) => {
+                                return (
+                                    <tr className={style.tablebody} key={i}>
+                                        <td ><p style={{
+                                            backgroundColor: "#f0f5f0",
+                                            padding: "2px 5px",
+                                            borderRadius: "10px",
+                                            fontFamily: "Inter",
+                                            fontSize: "12px",
+                                            fontStyle: "normal",
+                                            fontWeight: "400",
+                                            lineHeight: "20px",
+                                        }}>{user.Name}</p></td>
 
-                            </tr>
-                            {
-                                usersList?.map((user, i) => {
-                                    return (
-                                        <tr className={style.tablebody} key={i}>
-                                            <td ><p style={{
-                                                backgroundColor: "#f0f5f0",
-                                                padding: "2px 5px",
-                                                borderRadius: "10px",
-                                                fontFamily: "Inter",
-                                                fontSize: "12px",
-                                                fontStyle: "normal",
-                                                fontWeight: "400",
-                                                lineHeight: "20px",
-                                            }}>{user.Name}</p></td>
+                                        <td>{user.Designation}</td>
+                                        <td>{user.Role}</td>
+                                        <td>{user.PhoneNo}</td>
+                                        <td>{user.Email}</td>
+                                        <td>{user.UserName}</td>
 
-                                            <td>{user.Designation}</td>
-                                            <td>{user.Role}</td>
-                                            <td>{user.PhoneNo}</td>
-                                            <td>{user.Email}</td>
-                                            <td>{user.UserName}</td>
-                                           
-                                            <td >
-                                                <p onClick={() => {
-                                                    setUserTabs(user.Tabs);
-                                                    setShowBox(true);
-                                                }} className={style.redclick}>View</p>
-                                            </td>
-                                            <td>
-                                                <p onClick={() => {
-                                                    dispatch(updateTabData({ ...tabData, Tab: 'assignTabs' }))
+                                        <td >
+                                            <p onClick={() => {
+                                                setUserTabs(user.Tabs);
+                                                setShowBox(true);
+                                            }} className={style.redclick}>View</p>
+                                        </td>
+                                        <td>
+                                            <p onClick={() => {
+                                                dispatch(updateTabData({ ...tabData, Tab: 'assignTabs' }))
 
-                                                    dispatch(changeId(user._id))
+                                                dispatch(changeId(user._id))
 
 
 
-                                                }} className='btn btn-outline-success p-1 m-2'>Assign Tabs</p>
-                                            </td>
-                                            <td>
-                                                <p onClick={() => {
+                                            }} className='btn btn-outline-success p-1 m-2'>Assign Tabs</p>
+                                        </td>
+                                        {/* <td>
+                                            <p onClick={() => {
 
-                                                }} className='btn btn-outline-primary p-1 m-2'>Send Email</p>
-                                            </td>
-                                            <td>
-                                                {user.isSuspended ? (
-                                                    <button onClick={() => {
-                                                        setUserIdForAccess(user._id);
-                                                        setalert2(true);
+                                            }} className='btn btn-outline-primary p-1 m-2'>Send Email</p>
+                                        </td> */}
+                                        <td>
+                                            {user.isSuspended ? (
+                                                <button onClick={() => {
+                                                    setUserIdForAccess(user._id);
+                                                    setalert2(true);
 
-                                                    }} className='btn btn-outline-primary  p-1'>Allow Access</button>
-                                                ) : (
-                                                    <button onClick={() => {
-                                                        setUserIdForAccess(user._id);
-                                                        alertManager();
+                                                }} className='btn btn-outline-primary  p-1'>Allow Access</button>
+                                            ) : (
+                                                <button onClick={() => {
+                                                    setUserIdForAccess(user._id);
+                                                    alertManager();
 
-                                                    }} className='btn btn-outline-primary  p-1'>Stop Access</button>
-                                                )}
-                                            </td>
+                                                }} className='btn btn-outline-primary  p-1'>Stop Access</button>
+                                            )}
+                                        </td>
+                                        <td><button onClick={() => {
+                                            setIdToProcess(user._id);
+                                            setDeleteUser(true);
+                                        }} className='btn  btn-outline-danger px-3 py-1'>Delete</button></td>
+                                    </tr>
+                                )
 
+                            })
+                        }
+                    </table>
+                )}
+            </div>
+            <div className={style.Btns}>
+                {startIndex > 0 && (
 
+                    <button onClick={backPage}>
+                        {'<< '}Back
+                    </button>
+                )}
+                {allDataArr?.length > endIndex && (
 
-
-                                        </tr>
-
-                                    )
-
-                                })
-                            }
-                        </table>
-                    )}
-                </div>
-                <div className={style.Btns}>
-                    {startIndex > 0 && (
-
-                        <button onClick={backPage}>
-                            {'<< '}Back
-                        </button>
-                    )}
-                    {allDataArr?.length > endIndex && (
-
-                        <button onClick={nextPage}>
-                            next{'>> '}
-                        </button>
-                    )}
-                </div>
+                    <button onClick={nextPage}>
+                        next{'>> '}
+                    </button>
+                )}
+            </div>
 
             {
                 showBox && (
@@ -228,7 +240,10 @@ function UsersList() {
 
                             <div className={style.alertbtns}>
 
-                                <button onClick={() => {
+                                <button style={{
+                                    marginLeft : '120px',
+                                    marginTop : '25px'
+                                }}  onClick={() => {
                                     setShowBox(false);
 
                                 }} className={style.btn2}>OK</button>
@@ -246,7 +261,7 @@ function UsersList() {
                             <div className={style.alertbtns}>
                                 <button onClick={() => {
                                     alertManager();
-                                    axios.patch(`/suspend-user/${userIdForAccess}`, null).then((res) => {
+                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/suspend-user/${userIdForAccess}`).then((res) => {
                                         refreshData();
                                         Swal.fire({
                                             title: 'Success',
@@ -282,7 +297,7 @@ function UsersList() {
                             <div className={style.alertbtns}>
                                 <button onClick={() => {
                                     setalert2(false);
-                                    axios.patch(`/reassign-access/${userIdForAccess}`, null).then((res) => {
+                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/reassign-access/${userIdForAccess}`, null).then((res) => {
                                         refreshData();
                                         Swal.fire({
                                             title: 'Success',
@@ -305,6 +320,47 @@ function UsersList() {
 
 
                                 <button onClick={alertManager} className={style.btn2}>Cancel</button>
+
+                            </div>
+                        </div>
+                    </div> : null
+            }
+
+            {
+                deleteUser ?
+                    <div class={style.alertparent}>
+                        <div class={style.alert}>
+                            <p class={style.msg}>Do you want to delete this user?</p>
+                            <div className={style.alertbtns}>
+                                <button onClick={() => {
+                                    setDeleteUser(false)
+                                    dispatch(setSmallLoading(true))
+                                    axios.delete(`${process.env.REACT_APP_BACKEND_URL}/delete-user/${idToProcess}`).then((response) => {
+                                        dispatch(setSmallLoading(false));
+                                        Swal.fire({
+                                            icon: 'success',
+                                            title: 'Deleted Successfully',
+                                            text: 'User Deleted Successfully!',
+                                            confirmButtonText: 'OK.'
+                                        }).then((result) => {
+                                            if (result.isConfirmed) {
+                                                refreshData()
+                                            }
+                                        })
+
+                                    }).catch(err => {
+                                        dispatch(setSmallLoading(false));
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'OOps..',
+                                            text: 'Something went wrong, Try Again!'
+                                        })
+
+                                    })
+                                }} className={style.btn1}>Submit</button>
+                                <button onClick={() => {
+                                    setDeleteUser(false);
+                                }} className={style.btn2}>Cancel</button>
 
                             </div>
                         </div>

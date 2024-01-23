@@ -34,9 +34,9 @@ function Processes() {
         }).catch(err => {
             dispatch(setSmallLoading(false));
             Swal.fire({
-                icon : 'error',
-                title : 'OOps..',
-                text : 'Something went wrong, Try Again!'
+                icon: 'error',
+                title: 'OOps..',
+                text: 'Something went wrong, Try Again!'
             })
         })
     }, [])
@@ -73,139 +73,136 @@ function Processes() {
 
     return (
         <>
+            <div className={style.searchbar}>
+                <div className={style.sec1}>
+                    <img src={Search} alt="" />
+                    <input autoComplete='off' onChange={search} type="text" placeholder='Search Process by name' />
+                </div>
+                {tabData?.Creation && (
 
-            
-
-                <div className={style.searchbar}>
-                    <div className={style.sec1}>
-                        <img src={Search} alt="" />
-                        <input onChange={search} type="text" placeholder='Search Process by name' />
+                    <div className={style.sec2} onClick={() => {
+                        dispatch(updateTabData({ ...tabData, Tab: 'addProcess' }));
+                    }}>
+                        <img src={add} alt="" />
+                        <p>Add New</p>
                     </div>
-                    {tabData?.Creation && (
+                )}
+            </div>
+            <div className={style.tableParent}>
+                {!processesList || processesList?.length === 0 ? (
+                    <div className='w-100 d-flex align-items-center justify-content-center'>
+                        <p className='text-center'>No any Records Available here.</p>
+                    </div>
+                ) : (
 
-                        <div className={style.sec2} onClick={() => {
-                            dispatch(updateTabData({ ...tabData, Tab: 'addProcess' }));
-                        }}>
-                            <img src={add} alt="" />
-                            <p>Add New</p>
-                        </div>
-                    )}
-                </div>
-                <div className={style.tableParent}>
-                    {!processesList || processesList?.length === 0 ? (
-                        <div className='w-100 d-flex align-items-center justify-content-center'>
-                            <p className='text-center'>No any Records Available here.</p>
-                        </div>
-                    ) : (
+                    <table className={style.table}>
+                        <tr className={style.headers}>
+                            <td>Process ID</td>
+                            <td>Process Name</td>
+                            <td>Department</td>
+                            <td>Risk Assesment</td>
+                            <td>Activities</td>
+                            <td >Special Instructions</td>
+                            <td>Shift Breaks</td>
+                            <td>Critical Areas</td>
+                            <td>Process Owner</td>
+                            <td>Action</td>
+                        </tr>
+                        {
+                            processesList?.map((process, i) => {
+                                return (
+                                    <tr className={style.tablebody} key={i}>
+                                        <td ><p style={{
+                                            backgroundColor: "#f0f5f0",
+                                            padding: "2px 5px",
+                                            borderRadius: "10px",
+                                            fontFamily: "Inter",
+                                            fontSize: "12px",
+                                            fontStyle: "normal",
+                                            fontWeight: "400",
+                                            lineHeight: "20px",
+                                        }}>{process.ProcessCode}</p></td>
+                                        <td className={style.simpleContent}>{process.ProcessName}</td>
+                                        <td>{process.Department.DepartmentName}</td>
+                                        <td>{process.ProcessRiskAssessment}</td>
 
-                        <table className={style.table}>
-                            <tr className={style.headers}>
-                                <td>Process ID</td>
-                                <td>Process Name</td>
-                                <td>Department</td>
-                                <td>Risk Assesment</td>
-                                <td>Activities</td>
-                                <td >Special Instructions</td>
-                                <td>Shift Breaks</td>
-                                <td>Critical Areas</td>
-                                <td>Process Owner</td>
-                                <td>Action</td>
-                            </tr>
-                            {
-                                processesList?.map((process, i) => {
-                                    return (
-                                        <tr className={style.tablebody} key={i}>
-                                            <td ><p style={{
-                                                backgroundColor: "#f0f5f0",
-                                                padding: "2px 5px",
-                                                borderRadius: "10px",
-                                                fontFamily: "Inter",
-                                                fontSize: "12px",
-                                                fontStyle: "normal",
-                                                fontWeight: "400",
-                                                lineHeight: "20px",
-                                            }}>{process.ProcessCode}</p></td>
-                                            <td className={style.simpleContent}>{process.ProcessName}</td>
-                                            <td>{process.Department.DepartmentName}</td>
-                                            <td>{process.ProcessRiskAssessment}</td>
+                                        <td >
 
-                                            <td >
+                                            <p onClick={() => {
+                                                setShowBox(true);
+                                                setDataToShow(process.Activities)
+                                            }} className={style.click}>View</p>
+                                        </td>
+                                        <td >
 
-                                                <p onClick={() => {
-                                                    setShowBox(true);
-                                                    setDataToShow(process.Activities)
-                                                }} className={style.click}>View</p>
-                                            </td>
-                                            <td >
+                                            <p onClick={() => {
+                                                setShowBox(true);
+                                                setDataToShow(process.SpecialInstructions)
+                                            }} className={style.click}>View</p>
+                                        </td>
+                                        <td >
 
-                                                <p onClick={() => {
-                                                    setShowBox(true);
-                                                    setDataToShow(process.SpecialInstructions)
-                                                }} className={style.click}>View</p>
-                                            </td>
-                                            <td >
+                                            <p onClick={() => {
+                                                setShowBox(true);
+                                                setDataToShow(process.ShiftBreaks)
+                                            }} className={style.click}>View</p>
+                                        </td>
+                                        <td >
 
-                                                <p onClick={() => {
-                                                    setShowBox(true);
-                                                    setDataToShow(process.ShiftBreaks)
-                                                }} className={style.click}>View</p>
-                                            </td>
-                                            <td >
+                                            <p onClick={() => {
+                                                setShowBox(true);
+                                                setDataToShow(process.CriticalAreas)
+                                            }} className={style.click}>View</p>
+                                        </td>
+                                        <td >
 
-                                                <p onClick={() => {
-                                                    setShowBox(true);
-                                                    setDataToShow(process.CriticalAreas)
-                                                }} className={style.click}>View</p>
-                                            </td>
-                                            <td >
+                                            <p onClick={() => {
+                                                setShowOwner(true);
+                                                setOwnerInfo(process.ProcessOwner);
+                                                // setTab('processOwners');
+                                                // setIdToWatch(training._id);
+                                            }} className={style.orangeclick}>Click Here</p>
+                                        </td>
+                                        <td >
 
-                                                <p onClick={() => {
-                                                    setShowOwner(true);
-                                                    setOwnerInfo(process.ProcessOwner);
-                                                    // setTab('processOwners');
-                                                    // setIdToWatch(training._id);
-                                                }} className={style.orangeclick}>Click Here</p>
-                                            </td>
-                                            <td >
-
-                                                <p onClick={() => {
-                                                    dispatch(updateTabData({...tabData, Tab : 'assignTabsToOwner'}));
-                                                    dispatch(changeId(process.ProcessOwner._id));
-                                                }} className={'btn btn-outline-danger px-2 py-1  m-1'}>Assign Tabs</p>
-                                            </td>
+                                            <p onClick={() => {
+                                                dispatch(updateTabData({ ...tabData, Tab: 'assignTabsToOwner' }));
+                                                dispatch(changeId(process.ProcessOwner._id));
+                                            }} className={'btn btn-outline-danger px-2 py-1  m-1'}>Assign Tabs</p>
+                                        </td>
 
 
 
-                                        </tr>
+                                    </tr>
 
-                                    )
+                                )
 
-                                })
-                            }
-                        </table>
-                    )}
-                </div>
-                <div className={style.Btns}>
-                    {startIndex > 0 && (
+                            })
+                        }
+                    </table>
+                )}
+            </div>
+            <div className={style.Btns}>
+                {startIndex > 0 && (
 
-                        <button onClick={backPage}>
-                            {'<< '}Back
-                        </button>
-                    )}
-                    {allDataArr?.length > endIndex && (
+                    <button onClick={backPage}>
+                        {'<< '}Back
+                    </button>
+                )}
+                {allDataArr?.length > endIndex && (
 
-                        <button onClick={nextPage}>
-                            next{'>> '}
-                        </button>
-                    )}
-                </div>
-     
+                    <button onClick={nextPage}>
+                        next{'>> '}
+                    </button>
+                )}
+            </div>
+
 
 
             {
                 showOwner ?
-                    <div class={`${style.alertparent} ${style.addOwnerBox}`}>
-                        <div className={`${style.addOwnerForm} `}>
+                    <div class={`${style.alertparent} `}>
+                        <div className={`${style.addOwnerForm} mb-4 `}>
                             <div className={style.headers2}>
                                 <div className={style.spans}>
                                     <span></span>
@@ -220,25 +217,25 @@ function Processes() {
                             <div className='p-lg-5 p-3 d-flex justify-content-center flex-column'>
                                 <div className={`mx-auto my-2 ${style.ownerInput}`}>
                                     <p>Name</p>
-                                    <input className={`p-2 w-100`} value={ownerInfo?.Name} readOnly />
+                                    <input autoComplete='off' className={`p-2 w-100`} value={ownerInfo?.Name} readOnly />
                                 </div>
                                 <div className={`mx-auto my-2 ${style.ownerInput}`}>
                                     <p>Designation</p>
-                                    <input value={ownerInfo.Designation} className={`p-2 w-100`} readOnly />
+                                    <input autoComplete='off' value={ownerInfo.Designation} className={`p-2 w-100`} readOnly />
                                 </div>
                                 <div className={`mx-auto my-2 ${style.ownerInput}`}>
                                     <p>Phone</p>
-                                    <input className={`p-2 w-100`} value={ownerInfo.PhoneNumber} readOnly />
+                                    <input autoComplete='off' className={`p-2 w-100`} value={ownerInfo.PhoneNumber} readOnly />
                                 </div>
 
                                 <div className={`mx-auto my-2 ${style.ownerInput}`}>
                                     <p>Email Address</p>
-                                    <input value={ownerInfo.Email} className={`p-2 w-100`} readOnly />
+                                    <input autoComplete='off' value={ownerInfo.Email} className={`p-2 w-100`} readOnly />
                                 </div>
                                 {/* <div className={`mx-auto my-2 ${style.ownerInput}`}>
                                     <p>Password</p>
                                     <div className='d-flex flex-row justify-content-start'>
-                                        <input value={ownerInfo.Password} className={`p-2 w-100`} readOnly />
+                                        <input autoComplete='off' value={ownerInfo.Password} className={`p-2 w-100`} readOnly />
                                     </div>
 
                                 </div> */}
@@ -270,7 +267,7 @@ function Processes() {
                                     }}>{emailTo}</p>
 
                                 </span>
-                                <input type='text' placeholder='Subject' />
+                                <input autoComplete='off' type='text' placeholder='Subject' />
 
                                 <textarea name="Reason" id="" cols="30" rows="10" placeholder='Comment here' required />
                                 <div className={`${style.alertbtns} mt-3 d-flex justify-content-center `}>
@@ -295,7 +292,10 @@ function Processes() {
 
                             <div className={style.alertbtns}>
 
-                                <button onClick={() => {
+                                <button style={{
+                                    marginLeft : '120px',
+                                    marginTop : '25px'
+                                }} onClick={() => {
                                     setShowBox(false);
 
                                 }} className={style.btn2}>OK</button>

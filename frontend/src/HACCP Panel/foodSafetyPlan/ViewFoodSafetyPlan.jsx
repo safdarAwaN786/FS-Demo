@@ -195,7 +195,7 @@ function ViewFoodSafetyPlan() {
                                         <div style={{
                                             border: '1px solid silver'
                                         }}>
-                                            <input value={dataToSend?.DocumentType} type='text' className='w-100 text-dark' readOnly />
+                                            <input autoComplete='off' value={dataToSend?.DocumentType} type='text' className='w-100 text-dark' readOnly />
 
                                         </div>
                                     </div>
@@ -210,7 +210,7 @@ function ViewFoodSafetyPlan() {
                                         <div style={{
                                             border: '1px solid silver'
                                         }}>
-                                            <input value={dataToSend?.Department.DepartmentName} type='text' className='w-100 text-dark' readOnly />
+                                            <input autoComplete='off' value={dataToSend?.Department.DepartmentName} type='text' className='w-100 text-dark' readOnly />
                                         </div>
                                     </div>
 
@@ -221,7 +221,7 @@ function ViewFoodSafetyPlan() {
                                         <div style={{
                                             border: '1px solid silver'
                                         }}>
-                                            <input value={dataToSend?.DecisionTree.ConductHaccp.Process.ProcessName} type='text' className='w-100 text-dark' readOnly />
+                                            <input autoComplete='off' value={dataToSend?.DecisionTree.ConductHaccp.Process.ProcessName} type='text' className='w-100 text-dark' readOnly />
 
 
                                         </div>

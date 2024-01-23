@@ -109,7 +109,7 @@ export default function Suppliers() {
             <div className={style.searchbar}>
                 <div className={style.sec1}>
                     <img src={Search} alt="" />
-                    <input onChange={search} type="text" placeholder='Search by Name or Code ' />
+                    <input autoComplete='off' onChange={search} type="text" placeholder='Search by Name or Code ' />
                 </div>
                 {tabData?.Creation && (
 
@@ -153,6 +153,8 @@ export default function Suppliers() {
                             <td>Reason</td>
                             <td>Approved By</td>
                             <td>Approval Date</td>
+                            <td>DisApproved By</td>
+                            <td>DisApproval Date</td>
                         </tr>
                         {
                             suppliers?.map((supplier, i) => {
@@ -222,6 +224,12 @@ export default function Suppliers() {
                                         ) : (
                                             <td>- -</td>
                                         )}
+                                        <td>{supplier.DisapprovedBy || '--'}</td>
+                                        {supplier.DisapprovalDate ? (
+                                            <td>{supplier.DisapprovalDate?.slice(0, 10).split('-')[2]}/{supplier.DisapprovalDate?.slice(0, 10).split('-')[1]}/{supplier.DisapprovalDate?.slice(0, 10).split('-')[0]}</td>
+                                        ) : (
+                                            <td>- -</td>
+                                        )}
 
                                     </tr>
                                 )
@@ -254,7 +262,7 @@ export default function Suppliers() {
                             <form onSubmit={(e) => {
                                 e.preventDefault();
                                 dispatch(setSmallLoading(true))
-                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/disapprove-supplier`, {...dataToSend, disapprovedBy : user.Name}).then(() => {
+                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/disapprove-supplier`, { ...dataToSend, disapprovedBy: user.Name }).then(() => {
                                     dispatch(setSmallLoading(false))
                                     Swal.fire({
                                         title: 'Success',
@@ -298,7 +306,7 @@ export default function Suppliers() {
                             <div className={style.alertbtns}>
                                 <button onClick={() => {
                                     dispatch(setSmallLoading(true))
-                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/approve-supplier`, {...dataToSend, approvedBy : user.Name}).then(() => {
+                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/approve-supplier`, { ...dataToSend, approvedBy: user.Name }).then(() => {
                                         statusUpdated()
                                         Swal.fire({
                                             title: 'Success',
@@ -329,7 +337,10 @@ export default function Suppliers() {
                         <p>{popUpData}</p>
                         <div className={style.alertbtns}>
 
-                            <button onClick={() => {
+                            <button style={{
+                                    marginLeft : '120px',
+                                    marginTop : '25px'
+                                }}  onClick={() => {
                                 setShowBox(false);
                             }} className={style.btn2}>Ok.</button>
                         </div>

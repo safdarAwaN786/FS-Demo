@@ -92,7 +92,7 @@ function ViewChecklist() {
                                             <p>Document Type</p>
                                         </div>
                                         <div className='border border-dark-subtle'>
-                                            <input value={dataToSend?.DocumentType} className='w-100' type="text" readOnly />
+                                            <input autoComplete='off' value={dataToSend?.DocumentType} className='w-100' type="text" readOnly />
                                         </div>
                                     </div>
                                 </div>
@@ -102,7 +102,7 @@ function ViewChecklist() {
                                             <p>Department</p>
                                         </div>
                                         <div className='border border-dark-subtle'>
-                                            <input value={dataToSend?.Department?.DepartmentName} className='w-100' name='FormDescription' type="text" readOnly />
+                                            <input autoComplete='off' value={dataToSend?.Department?.DepartmentName} className='w-100' name='FormDescription' type="text" readOnly />
                                         </div>
                                     </div>
                                 </div>
@@ -119,7 +119,7 @@ function ViewChecklist() {
                                                 <div style={{
                                                     width: '100%'
                                                 }} className=' me-3 d-flex flex-column'>
-                                                    <input value={question.questionText} onChange={(e) => {
+                                                    <input autoComplete='off' value={question.questionText} onChange={(e) => {
                                                         const updatedQuestions = [...questions];
                                                         updatedQuestions[index][e.target.name] = e.target.value;
                                                         setQuestions(updatedQuestions);
@@ -145,7 +145,7 @@ function ViewChecklist() {
                                                         color: 'black'
                                                     }}>Required</p>
                                                     <label className={style.switch}>
-                                                        <input checked={question?.Required} className='ms-3' name='Required' type="checkbox" onChange={(event) => {
+                                                        <input autoComplete='off' checked={question?.Required} className='ms-3' name='Required' type="checkbox" onChange={(event) => {
                                                             const updatedQuestions = [...questions];
                                                             updatedQuestions[index].Required = event.target.checked;
 

@@ -222,7 +222,7 @@ function AddHACCPRiskAssessment() {
                                                         return (
                                                             <div className='d-flex flex-row '>
 
-                                                                <input checked={dataToSend?.Members?.includes(member._id)} onChange={(e) => {
+                                                                <input autoComplete='off' checked={dataToSend?.Members?.includes(member._id)} onChange={(e) => {
                                                                     const updatedMembers = dataToSend?.Members || [];
 
 
@@ -345,7 +345,7 @@ function AddHACCPRiskAssessment() {
                                                             updatedHazards[index][e.target.name] = e.target.value;
                                                             setDataToSend({ ...dataToSend, Hazards: updatedHazards })
                                                         }} rows={3} type='text' name='Description' className='w-100 p-2 my-3  border-0' placeholder='Description' required />
-                                                        <input onChange={(e) => {
+                                                        <input autoComplete='off' onChange={(e) => {
                                                             const updatedHazards = [...dataToSend.Hazards]
                                                             updatedHazards[index][e.target.name] = e.target.value;
                                                             setDataToSend({ ...dataToSend, Hazards: updatedHazards })
@@ -390,7 +390,7 @@ function AddHACCPRiskAssessment() {
                                                             <option value={5}>5</option>
 
                                                         </select>
-                                                        <input type='number' value={dataToSend?.Hazards[index].SignificanceLevel} placeholder='Significance Score (Occurence x Severity)' className='w-100 p-2 my-3  border-0' readOnly />
+                                                        <input autoComplete='off' type='number' value={dataToSend?.Hazards[index].SignificanceLevel} placeholder='Significance Score (Occurence x Severity)' className='w-100 p-2 my-3  border-0' readOnly />
 
                                                     </div>
 

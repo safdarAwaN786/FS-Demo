@@ -10,7 +10,7 @@ const template = emailTemplates.registrationConfirmation;
 const authMiddleware = require('../../middleware/auth');
 const CryptoJS = require('crypto-js');
 
-router.use(authMiddleware);
+// router.use(authMiddleware);
 
 const transporter = nodemailer.createTransport(smtpTransport({
     host: process.env.host,
@@ -135,7 +135,7 @@ router.get('/readProcess', async (req, res) => {
     console.log("request made for process")
     try {
 
-        const processOwner = await ProcessOwner.find({isProcessOwner : true, UserDepartment : req.header('Authorization')}).populate('Department User ProcessOwner');
+        const processOwner = await ProcessOwner.find({isProcessOwner : true, UserDepartment : req.header('Authorization')}).populate('Department UserDepartment ProcessOwner');
 
         
 

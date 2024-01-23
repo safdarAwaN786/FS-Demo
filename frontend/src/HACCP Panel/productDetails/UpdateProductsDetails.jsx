@@ -107,7 +107,7 @@ function UpdateProductDetails() {
                             <span></span>
                         </div>
                         <div className={`${style.heading} ms-3 `}>
-                            Add Product Description
+                            Update Product Description
                         </div>
                     </div>
                     <form encType='multipart/form-data' onSubmit={(event) => {
@@ -116,51 +116,16 @@ function UpdateProductDetails() {
                     }}>
                         <div className={`${style.myBox} bg-light pb-3`}>
                             <div className={style.formDivider}>
-                                <div className={style.sec1}>
-                                    <div className={style.inputParent}>
-                                        <div className={style.para}>
-                                            <p>Document Type</p>
-                                        </div>
-                                        <div className='border border-dark-subtle'>
-                                            <select className='form-select  form-select-lg' value={dataToSend?.DocumentType} name='DocumentType' onChange={(e) => {
-                                                setDataToSend({ ...dataToSend, [e.target.name]: e.target.value })
-                                            }} style={{ width: "100%" }} required >
-                                                <option value="" selected disabled>Choose Type</option>
-                                                <option value="Manuals">Manuals</option>
-                                                <option value="Procedures">Procedures</option>
-                                                <option value="SOPs">SOPs</option>
-                                                <option value="Forms">Forms</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className={style.sec2}>
-                                    <div className={style.inputParent}>
-                                        <div className={style.para}>
-                                            <p>Department</p>
-                                        </div>
-                                        <div className='border border-dark-subtle'>
-                                            <select className='form-select  form-select-lg' value={dataToSend?.Department} onChange={(e) => {
-                                                setDataToSend({ ...dataToSend, [e.target.name]: e.target.value })
-                                            }} name='Department' style={{ width: "100%" }} required>
-                                                <option value="" selected disabled>Choose Department</option>
-                                                {departmentsToShow?.map((depObj) => {
-                                                    return (
-                                                        <option value={depObj._id}>{depObj.DepartmentName}</option>
-                                                    )
-                                                })}
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
+                                
+                                
                             </div>
                             <div className='bg-white   m-lg-5 m-2 p-3 '>
                                 <div className='row'>
                                     <div className='col-lg-6 col-md-12 p-2'>
-                                        <input name='Name' onChange={(event) => {
+                                        <input autoComplete='off' name='Name' onChange={(event) => {
                                             updateProduct(event)
                                         }} value={product.Name} type='text' className='p-3 bg-light  my-3 w-100 border-0' placeholder='Name' required />
-                                        <input name='RawMaterial' onChange={(event) => {
+                                        <input autoComplete='off' name='RawMaterial' onChange={(event) => {
                                             updateProduct(event)
                                         }} value={product.RawMaterial} type='text' className='p-3 bg-light  my-3 w-100 border-0' placeholder='Raw Material' required />
                                         <textarea onChange={(event) => {
@@ -180,10 +145,10 @@ function UpdateProductDetails() {
                                         }} name='Transportation' value={product.Transportation} type='text' className='p-3 bg-light  my-3  w-100 border-0' placeholder='Transportation' required />
                                     </div>
                                     <div className='col-lg-6 col-md-12 p-2'>
-                                        <input onChange={(event) => {
+                                        <input autoComplete='off' onChange={(event) => {
                                             updateProduct(event)
                                         }} name='Origin' value={product.Origin} type='text' className='p-3 bg-light  my-3  w-100 border-0' placeholder='Origin' required />
-                                        <input onChange={(event) => {
+                                        <input autoComplete='off' onChange={(event) => {
                                             updateProduct(event)
                                         }} name='PackingMaterial' value={product.PackingMaterial} type='text' className='p-3 bg-light  my-3  w-100 border-0' placeholder='Packing Material' required />
                                         <textarea onChange={(event) => {

@@ -99,7 +99,7 @@ function Checklist() {
                 <div className={style.searchbar}>
                     <div className={style.sec1}>
                         <img src={Search} alt="" />
-                        <input onChange={search} type="text" placeholder='Search document by name' />
+                        <input autoComplete='off' onChange={search} type="text" placeholder='Search document by name' />
                     </div>
                     {tabData?.Creation && (
 
@@ -268,7 +268,10 @@ function Checklist() {
 
                             <div className={style.alertbtns}>
 
-                                <button onClick={() => {
+                                <button style={{
+                                    marginLeft : '120px',
+                                    marginTop : '25px'
+                                }}  onClick={() => {
                                     setShowBox(false);
                                     setDataToShow(null)
 

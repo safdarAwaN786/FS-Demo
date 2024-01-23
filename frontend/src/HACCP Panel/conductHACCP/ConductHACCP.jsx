@@ -94,7 +94,7 @@ function ConductHACCP() {
                 <div className={style.searchbar}>
                     <div className={style.sec1}>
                         <img src={Search} alt="" />
-                        <input onChange={search} type="text" placeholder='Search Document by name' />
+                        <input autoComplete='off' onChange={search} type="text" placeholder='Search Document by name' />
                     </div>
                     {tabData?.Creation && (
                         <div className={style.sec2} onClick={() => {
@@ -273,7 +273,10 @@ function ConductHACCP() {
 
                             <div className={style.alertbtns}>
 
-                                <button onClick={() => {
+                                <button style={{
+                                    marginLeft : '120px',
+                                    marginTop : '25px'
+                                }}  onClick={() => {
                                     setShowBox(false);
 
                                 }} className={style.btn2}>OK</button>
@@ -374,22 +377,22 @@ function ConductHACCP() {
                                             <p style={{
                                                 fontFamily: 'Inter'
                                             }}>Control Measures</p>
-                                            <input value={hazardData.ControlMeasures} className='w-100 p-2 my-3  border-0' readOnly />
+                                            <input autoComplete='off' value={hazardData.ControlMeasures} className='w-100 p-2 my-3  border-0' readOnly />
 
                                         </div>
                                         <div className='col-lg-6 col-md-12 p-2'>
                                             <p style={{
                                                 fontFamily: 'Inter'
                                             }}>Occurence</p>
-                                            <input value={hazardData.Occurence} className='w-100 p-2 my-3  border-0' readOnly />
+                                            <input autoComplete='off' value={hazardData.Occurence} className='w-100 p-2 my-3  border-0' readOnly />
                                             <p style={{
                                                 fontFamily: 'Inter'
                                             }}>Severity</p>
-                                            <input value={hazardData.Severity} className='w-100 p-2 my-3  border-0' readOnly />
+                                            <input autoComplete='off' value={hazardData.Severity} className='w-100 p-2 my-3  border-0' readOnly />
                                             <p style={{
                                                 fontFamily: 'Inter'
                                             }}>Significance Score</p>
-                                            <input value={hazardData.SignificanceLevel} className='w-100 p-2 my-3  border-0' readOnly />
+                                            <input autoComplete='off' value={hazardData.SignificanceLevel} className='w-100 p-2 my-3  border-0' readOnly />
                                         </div>
 
                                     </div>

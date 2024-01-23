@@ -95,6 +95,9 @@ const ProductSchema = new mongoose.Schema({
         ShelfLife: {
             type: String
         },
+        Consumer: {
+            type: String
+        },
 
         TargtMarket: {
             type: String

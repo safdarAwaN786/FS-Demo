@@ -154,7 +154,7 @@ function AssignTrainings() {
             <div className={style.searchbar}>
                 <div className={style.sec1}>
                     <img src={search} alt="" />
-                    <input type="text" placeholder='Search Training by name' />
+                    <input autoComplete='off' type="text" placeholder='Search Training by name' />
                 </div>
                 {reqIds.employeeIds?.length !== 0 && (
 
@@ -185,7 +185,7 @@ function AssignTrainings() {
                             employeesToShow?.map((employee, i) => {
                                 return (
                                     <tr className={style.tablebody} key={i}>
-                                        <td><input type="checkbox" onChange={() => {
+                                        <td><input autoComplete='off' type="checkbox" onChange={() => {
                                             updateReqIds(employee._id)
                                         }} /></td>
                                         <td className={style.textStyle1}>

@@ -93,29 +93,29 @@ function CallibrationRect() {
                     <div className={style.sec1}>
                         <div>
                             <p>Device Id</p>
-                            <input value={equipmentToShow?.equipmentCode} type="text" />
+                            <input autoComplete='off' value={equipmentToShow?.equipmentCode} type="text" />
                         </div>
                         <div>
                             <p>Device name</p>
-                            <input value={equipmentToShow?.equipmentName} type="text" />
+                            <input autoComplete='off' value={equipmentToShow?.equipmentName} type="text" />
                         </div>
                         <div>
                             <p>Date type</p>
-                            <input value={dateType} type="text" />
+                            <input autoComplete='off' value={dateType} type="text" />
                         </div>
                     </div>
                     <div className={style.sec2}>
                         <div>
                             <p>Device location</p>
-                            <input type="text" value={equipmentToShow?.equipmentLocation} />
+                            <input autoComplete='off' type="text" value={equipmentToShow?.equipmentLocation} />
                         </div>
                         <div>
                             <p>Device Range</p>
-                            <input value={equipmentToShow?.Range} type="text" />
+                            <input autoComplete='off' value={equipmentToShow?.Range} type="text" />
                         </div>
                         <div>
                             <p>Callibration type</p>
-                            <input value={callibrationType} type="text" />
+                            <input autoComplete='off' value={callibrationType} type="text" />
                         </div>
                     </div>
                 </div>
@@ -170,7 +170,10 @@ function CallibrationRect() {
                         <div class={style.alert}>
                             <p class={style.msg}>{popUpData}</p>
                             <div className={style.alertbtns}>
-                                <button onClick={alertManager} className={style.btn2}>OK.</button>
+                                <button style={{
+                                    marginLeft : '120px',
+                                    marginTop : '25px'
+                                }}  onClick={alertManager} className={style.btn2}>OK.</button>
                             </div>
                         </div>
                     </div> : null

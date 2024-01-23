@@ -84,9 +84,9 @@ router.get('/get-department/:companyId', async (req, res) => {
 });
 
 // * Delete a Department document by ID
-router.delete('/delete-department', async (req, res) => {
+router.delete('/delete-department/:departmentId', async (req, res) => {
   try {
-    const departmentId = req.body.id;
+    const departmentId = req.params.departmentId;
     const deletedDepartment = await Department.findByIdAndDelete(departmentId);
 
     if (!deletedDepartment) {

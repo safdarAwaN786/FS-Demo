@@ -60,33 +60,33 @@ function AuditsHistory() {
                     <div className={style.sec1}>
                         <div>
                             <p>Checklist Id</p>
-                            <input value={checklistData?.ChecklistId} type="text" readOnly />
+                            <input autoComplete='off' value={checklistData?.ChecklistId} type="text" readOnly />
                         </div>
                         <div>
                             <p>Created By</p>
-                            <input value={checklistData?.CreatedBy} type="text" readOnly />
+                            <input autoComplete='off' value={checklistData?.CreatedBy} type="text" readOnly />
                         </div>
                         <div>
                             <p>Creation Date</p>
                             {checklistData?.CreationDate ? (
-                                <input value={`${checklistData?.CreationDate?.slice(0, 10).split('-')[2]}/${checklistData?.CreationDate?.slice(0, 10).split('-')[1]}/${checklistData?.CreationDate?.slice(0, 10).split('-')[0]}`} type="text" readOnly />
+                                <input autoComplete='off' value={`${checklistData?.CreationDate?.slice(0, 10).split('-')[2]}/${checklistData?.CreationDate?.slice(0, 10).split('-')[1]}/${checklistData?.CreationDate?.slice(0, 10).split('-')[0]}`} type="text" readOnly />
                             ) : (
-                                <input value='- - -' />
+                                <input autoComplete='off' value='- - -' />
                             )}
                         </div>
                     </div>
                     <div className={style.sec2}>
                         <div>
                             <p>Approved By</p>
-                            <input value={checklistData?.ApprovedBy || '- - -'} type="text" readOnly />
+                            <input autoComplete='off' value={checklistData?.ApprovedBy || '- - -'} type="text" readOnly />
                         </div>
                         <div>
                             <p>Approval Date</p>
                             {checklistData?.ApprovalDate !== undefined ? (
 
-                                <input type="text" value={`${checklistData?.ApprovalDate?.slice(0, 10).split('-')[2]}/${checklistData?.ApprovalDate?.slice(0, 10).split('-')[1]}/${checklistData?.ApprovalDate?.slice(0, 10).split('-')[0]}`} />
+                                <input autoComplete='off' type="text" value={`${checklistData?.ApprovalDate?.slice(0, 10).split('-')[2]}/${checklistData?.ApprovalDate?.slice(0, 10).split('-')[1]}/${checklistData?.ApprovalDate?.slice(0, 10).split('-')[0]}`} />
                             ) : (
-                                <input type="text" value={`- - -`} />
+                                <input autoComplete='off' type="text" value={`- - -`} />
                             )}
                         </div>
                     </div>
@@ -98,7 +98,6 @@ function AuditsHistory() {
                             <th>TargetDate</th>
                             <th>Audit By</th>
                             <th>Department</th>
-                            <th>Designation</th>
                             <th>Action</th>
                         </tr>
                         {
@@ -108,8 +107,8 @@ function AuditsHistory() {
                                         <td>{result.AuditDate}</td>
                                         <td>{result?.TargetDate?.slice(0, 10).split('-')[2]}/{result?.TargetDate?.slice(0, 10).split('-')[1]}/{result?.TargetDate?.slice(0, 10).split('-')[0]}</td>
                                         <td>{result.AuditBy}</td>
-                                        <td>{result.User.Department.DepartmentName}</td>
-                                        <td>{result.User.Designation}</td>
+                                        <td>{result.UserDepartment.DepartmentName}</td>
+                                        
                                         <td><button className={style.btn} onClick={() => {
                                             dispatch(updateTabData({...tabData, Tab : 'viewAuditAnswers'}))
                                             dispatch(changeId(result._id));
@@ -129,7 +128,10 @@ function AuditsHistory() {
                         <div class={style.alert}>
                             <p class={style.msg}>{popUpData}</p>
                             <div className={style.alertbtns}>
-                                <button onClick={alertManager} className={style.btn2}>OK.</button>
+                                <button style={{
+                                    marginLeft : '120px',
+                                    marginTop : '25px'
+                                }}  onClick={alertManager} className={style.btn2}>OK.</button>
                             </div>
                         </div>
                     </div> : null

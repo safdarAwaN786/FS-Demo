@@ -99,11 +99,8 @@ router.post('/addMonthlyPlan', async (req, res) => {
       CreationDate: new Date()
     });
     await monthlyPlan.save();
-
-    console.log(new Date().toLocaleString() + ' ' + 'Loading MonthlyPlan...');
     res.status(200).send({ Status: true, message: "The MonthlyPlan is added!", data: monthlyPlan });
-    console.log(new Date().toLocaleString() + ' ' + 'ADD MonthlyPlan Successfully!');
-
+   
   } catch (e) {
     console.log(e);
     res.status(400).json({ message: e.message });
@@ -114,14 +111,10 @@ router.post('/addMonthlyPlan', async (req, res) => {
 router.get('/readMonthlyPlan', async (req, res) => {
   try {
 
-    const monthlyPlan = await MonthlyPlan.find({UserDepartment : req.header('Authorization')}).populate("Training Trainer Employee YearlyTrainingPlan User");
-
-   
-
+    const monthlyPlan = await MonthlyPlan.find({UserDepartment : req.header('Authorization')}).populate("Training Trainer Employee YearlyTrainingPlan UserDepartment");
 
     res.status(201).send({ status: true, message: "The Following are Monthlyplans!", data: monthlyPlan });
-    console.log(new Date().toLocaleString() + ' ' + 'GET MonthlyPlans Successfully!')
-
+   
   } catch (e) {
     console.log(e);
     res.status(500).json({ message: e.message });

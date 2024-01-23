@@ -66,7 +66,7 @@ function ViewChangeRequest() {
                                             <p>Document Title</p>
                                         </div>
                                         <div>
-                                            <input value={requestData?.Document?.DocumentTitle || requestData?.Document?.DocumentName} className='p-2' type='text' readOnly />
+                                            <input autoComplete='off' value={requestData?.Document?.DocumentTitle || requestData?.Document?.DocumentName} className='p-2' type='text' readOnly />
                                         </div>
                                     </div>
                                     <div className={style.inputParent}>
@@ -74,7 +74,7 @@ function ViewChangeRequest() {
                                             <p>Line no</p>
                                         </div>
                                         <div>
-                                            <input value={requestData?.LineNo} className='p-2' type='text' readOnly />
+                                            <input autoComplete='off' value={requestData?.LineNo} className='p-2' type='text' readOnly />
                                         </div>
                                     </div>
                                     <div className={style.inputParent}>
@@ -82,7 +82,7 @@ function ViewChangeRequest() {
                                             <p>Paragraph No</p>
                                         </div>
                                         <div>
-                                            <input value={requestData?.ParagraphNo} className='p-2' type='number' readOnly />
+                                            <input autoComplete='off' value={requestData?.ParagraphNo} className='p-2' type='number' readOnly />
                                         </div>
                                     </div>
                                 </div>
@@ -92,7 +92,7 @@ function ViewChangeRequest() {
                                             <p>Department</p>
                                         </div>
                                         <div>
-                                            <input value={requestData?.Department.DepartmentName} className='p-2'  readOnly />
+                                            <input autoComplete='off' value={requestData?.Department.DepartmentName} className='p-2'  readOnly />
                                         </div>
                                     </div>
                                     <div className={style.inputParent}>
@@ -100,7 +100,7 @@ function ViewChangeRequest() {
                                             <p>Page No</p>
                                         </div>
                                         <div>
-                                            <input value={requestData?.PageNo} className='p-2' type='number' readOnly />
+                                            <input autoComplete='off' value={requestData?.PageNo} className='p-2' type='number' readOnly />
                                         </div>
                                     </div>
                                 </div>

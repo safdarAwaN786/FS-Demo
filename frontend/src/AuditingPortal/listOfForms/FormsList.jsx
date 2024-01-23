@@ -125,7 +125,7 @@ function FormsList() {
                 <div className={style.searchbar}>
                     <div className={style.sec1}>
                         <img src={Search} alt="" />
-                        <input onChange={search} type="text" placeholder='Search form by name' />
+                        <input autoComplete='off' onChange={search} type="text" placeholder='Search form by name' />
                     </div>
                     {tabData?.Creation && (
 
@@ -359,7 +359,10 @@ function FormsList() {
 
                             <div className={style.alertbtns}>
 
-                                <button onClick={() => {
+                                <button style={{
+                                    marginLeft : '120px',
+                                    marginTop : '25px'
+                                }}  onClick={() => {
                                     setShowBox(false);
 
                                 }} className={style.btn2}>OK</button>
@@ -577,7 +580,7 @@ function FormsList() {
                                 {departmentsToShow.map((depObj) => {
                                     return (
                                         <div className='mx-4 my-4 d-inline'>
-                                            <input type='checkbox' onChange={(e) => {
+                                            <input autoComplete='off' type='checkbox' onChange={(e) => {
                                                 const updatedForm = { ...formToProcess }
                                                 if (!updatedForm.SendToDepartments) {
                                                     updatedForm.SendToDepartments = []

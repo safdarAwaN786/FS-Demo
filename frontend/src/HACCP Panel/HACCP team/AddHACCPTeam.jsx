@@ -229,43 +229,43 @@ function AddHACCPTeam() {
                                     <div className='bg-white   m-lg-5 m-2 p-3 '>
                                         <div className='row'>
                                             <div className='col-lg-6 col-md-12 p-2'>
-                                                <input onChange={(event) => {
+                                                <input autoComplete='off' onChange={(event) => {
                                                     updateMembers(event, index)
                                                 }} value={member.Name} name='Name' type='text' className='p-3 bg-light my-3 w-100 border-0' placeholder='Name' required />
-                                                <input onChange={(event) => {
+                                                <input autoComplete='off' onChange={(event) => {
                                                     updateMembers(event, index)
                                                 }} value={member.Designation} name='Designation' type='text' className='p-3 bg-light my-3 w-100 border-0' placeholder='Designation' required />
-                                                <input onChange={(event) => {
+                                                <input autoComplete='off' onChange={(event) => {
                                                     updateMembers(event, index)
                                                 }} value={member.Department} name='Department' type='text' className='p-3 bg-light my-3 w-100 border-0' placeholder='Department' required />
-                                                <input onChange={(event) => {
+                                                <input autoComplete='off' onChange={(event) => {
                                                     updateMembers(event, index)
                                                 }} value={member.TrainingsAttended} name='TrainingsAttended' type='text' className='p-3 bg-light my-3 w-100 border-0' placeholder='Training Attended' required />
-                                                <input onChange={(event) => {
+                                                <input autoComplete='off' onChange={(event) => {
                                                     updateMembers(event, index)
                                                 }} value={member.Email} name='Email' type='email' className='p-3 bg-light my-3 w-100 border-0' placeholder='Email' required />
-                                                <input onChange={(event) => {
+                                                <input autoComplete='off' onChange={(event) => {
                                                     updateMembers(event, index)
                                                 }} value={member.userName} name='UserName' type='text' className='p-3 bg-light my-3 w-100 border-0' placeholder='User Name' required />
                                             </div>
                                             <div className='col-lg-6 col-md-12 p-2'>
-                                                <input onChange={(event) => {
+                                                <input autoComplete='off' onChange={(event) => {
                                                     updateMembers(event, index)
                                                 }} value={member.Education} name='Education' type='text' className='p-3 bg-light my-3 w-100 border-0' placeholder='Education' required />
-                                                <input onChange={(event) => {
+                                                <input autoComplete='off' onChange={(event) => {
                                                     updateMembers(event, index)
                                                 }} value={member.Experience} name='Experience' type='text' className='p-3 bg-light my-3 w-100 border-0' placeholder='Experience' required />
-                                                <input onChange={(event) => {
+                                                <input autoComplete='off' onChange={(event) => {
                                                     updateMembers(event, index)
                                                 }} value={member.RoleInTeam} name='RoleInTeam' type='text' className='p-3 bg-light my-3 w-100 border-0' placeholder='Role in Team' required />
                                                 <div className='p-3 d-flex justify-content-between flex-row  bg-light my-3 w-100 border-0'>
                                                     <p className='text-secondary'>Training Date</p>
-                                                    <input onChange={(event) => {
+                                                    <input autoComplete='off' onChange={(event) => {
                                                         updateMembers(event, index)
                                                     }} value={member.TrainingDate} name='TrainingDate' className='bg-light border-0' type='date' placeholder='Training Date' required />
                                                 </div>
                                                 <div className='d-flex flex-row'>
-                                                    <input onChange={(event) => {
+                                                    <input autoComplete='off' onChange={(event) => {
                                                         updateMembers(event, index);
                                                         CheckPassword(member.Password, index);
                                                     }} value={member.Password} name='Password' type='text' className='p-3 bg-light mt-3 mb-1 w-100 border-0' placeholder='Password' required />
@@ -284,7 +284,7 @@ function AddHACCPTeam() {
                                         </div>
                                         <div className='d-flex w-100 justify-content-center align-items-center'>
                                             <p><b>Upload Document :</b></p>
-                                            <input name={`Document-${index}`} type='file' accept='.pdf' className='p-2 m-2 btn btn-danger ' />
+                                            <input autoComplete='off' name={`Document-${index}`} type='file' accept='.pdf' className='p-2 m-2 btn btn-danger ' />
                                         </div>
                                     </div>
                                 )

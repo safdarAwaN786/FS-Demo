@@ -77,7 +77,7 @@ function CorrectiveActions() {
                 <div className={style.searchbar}>
                     <div className={style.sec1}>
                         <img src={Search} alt="" />
-                        <input onChange={search} type="text" placeholder='Search document by name' />
+                        <input autoComplete='off' onChange={search} type="text" placeholder='Search document by name' />
                     </div>
 
                 </div>
@@ -162,7 +162,10 @@ function CorrectiveActions() {
 
                             <div className={style.alertbtns}>
 
-                                <button onClick={() => {
+                                <button style={{
+                                    marginLeft : '120px',
+                                    marginTop : '25px'
+                                }}  onClick={() => {
                                     setShowBox(false);
 
                                 }} className={style.btn2}>OK</button>
@@ -181,19 +184,19 @@ function CorrectiveActions() {
                             }}>
                                 <div className='mx-4 my-4 d-inline'>
 
-                                    <input type='checkbox' className='mx-3 my-2 p-2' /><span>Department 1</span>
+                                    <input autoComplete='off' type='checkbox' className='mx-3 my-2 p-2' /><span>Department 1</span>
                                 </div>
                                 <div className='mx-4 my-4 d-inline'>
 
-                                    <input type='checkbox' className='mx-3 my-2 p-2' /><span>Department 2</span>
+                                    <input autoComplete='off' type='checkbox' className='mx-3 my-2 p-2' /><span>Department 2</span>
                                 </div>
                                 <div className='mx-4 my-4 d-inline'>
 
-                                    <input type='checkbox' className='mx-3 my-2 p-2' /><span>Department 3</span>
+                                    <input autoComplete='off' type='checkbox' className='mx-3 my-2 p-2' /><span>Department 3</span>
                                 </div>
                                 <div className='mx-4 my-4 d-inline'>
 
-                                    <input type='checkbox' className='mx-3 my-2 p-2' /><span>Department 4</span>
+                                    <input autoComplete='off' type='checkbox' className='mx-3 my-2 p-2' /><span>Department 4</span>
                                 </div>
 
 

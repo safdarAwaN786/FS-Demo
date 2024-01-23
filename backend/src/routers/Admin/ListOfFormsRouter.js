@@ -63,7 +63,7 @@ router.get('/get-form-by-id/:formId', async (req, res) => {
 router.get('/get-all-forms', async (req, res) => {
   try {
     const departmentId = req.header('Authrization')
-    const forms = await Form.find({UserDepartment : departmentId}).populate('Department UserDepartment').populate({
+    const forms = await Form.find({ UserDepartment: departmentId }).populate('Department UserDepartment').populate({
       path: 'questions',
       model: 'Question'
     })
@@ -84,7 +84,7 @@ router.get('/get-all-forms', async (req, res) => {
 router.get('/get-forms-to-fill', async (req, res) => {
   try {
     const departmentId = req.header('Authorization')
-    const forms = await Form.find({Status : 'Approved'}).populate('Department UserDepartment').populate({
+    const forms = await Form.find({ Status: 'Approved' }).populate('Department UserDepartment').populate({
       path: 'questions',
       model: 'Question'
     })
@@ -124,7 +124,10 @@ router.put('/update-form', async (req, res) => {
     if (form.Status !== 'Pending' && form.Status !== 'Rejected' && form.Status !== 'Disapproved') {
       return res.status(403).json({ status: false, message: 'Form cannot be updated because of its current status' });
     }
-    const createdQuestions = await QuestionModel.create(req.body.questions);
+    const createdQuestions = await QuestionModel.create(req.body.questions.map(question => {
+      const { _id, ...updatedQuestion } = question;
+      return updatedQuestion;
+    }));
     const questionsArr = Object.values(createdQuestions);
     const questionsIds = questionsArr.map(questionObj => questionObj._id);
     console.log(questionsIds);

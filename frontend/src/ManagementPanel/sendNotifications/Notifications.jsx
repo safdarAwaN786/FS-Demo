@@ -94,7 +94,7 @@ function Notifications() {
                 <div className={style.searchbar}>
                     <div className={style.sec1}>
                         <img src={Search} alt="" />
-                        <input onChange={search} type="text" placeholder='Search Notification by MRM no' />
+                        <input autoComplete='off' onChange={search} type="text" placeholder='Search Notification by MRM no' />
                     </div>
                     {tabData?.Creation && (
 
@@ -207,7 +207,10 @@ function Notifications() {
 
                             <div className={style.alertbtns}>
 
-                                <button onClick={() => {
+                                <button style={{
+                                    marginLeft : '120px',
+                                    marginTop : '25px'
+                                }}  onClick={() => {
                                     setShowBox(false);
 
                                 }} className={style.btn2}>OK</button>
@@ -230,7 +233,10 @@ function Notifications() {
 
                             <div className={style.alertbtns}>
 
-                                <button onClick={() => {
+                                <button  style={{
+                                    marginLeft : '120px',
+                                    marginTop : '25px'
+                                }}  onClick={() => {
                                     setShowParticipants(false);
 
                                 }} className={style.btn2}>OK</button>

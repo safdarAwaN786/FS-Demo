@@ -233,7 +233,7 @@ function EditForm() {
                                 <p className='text-black'>Form Name</p>
                                 <div>
 
-                                    <input value={dataToSend?.FormName} onChange={(e) => {
+                                    <input autoComplete='off' value={dataToSend?.FormName} onChange={(e) => {
                                         setDataToSend({ ...dataToSend, [e.target.name]: e.target.value })
                                     }} className='w-100' name='FormName' type="text" required />
                                 </div>
@@ -242,7 +242,7 @@ function EditForm() {
                                 <p className='text-black'>Form Description</p>
                                 <div>
 
-                                    <input onChange={(e) => {
+                                    <input autoComplete='off' onChange={(e) => {
                                         setDataToSend({ ...dataToSend, [e.target.name]: e.target.value })
                                     }} value={dataToSend?.FormDescription} className='w-100' name='FormDescription' type="text" required />
                                 </div>
@@ -258,7 +258,7 @@ function EditForm() {
                                             <div style={{
                                                 width: '60%'
                                             }} className=' me-3 d-flex flex-column'>
-                                                <input value={dataToSend?.questions[index]?.questionText} onChange={(e) => {
+                                                <input autoComplete='off' value={dataToSend?.questions[index]?.questionText} onChange={(e) => {
                                                     const updatedQuestions = [...questions];
                                                     updatedQuestions[index][e.target.name] = e.target.value;
                                                     setQuestions(updatedQuestions);
@@ -313,7 +313,7 @@ function EditForm() {
                                                                         <th style={{
                                                                             minWidth: '80px'
                                                                         }}>
-                                                                            <input value={dataToSend?.questions[index].columns[colIndex].colTitle} onChange={(e) => {
+                                                                            <input autoComplete='off' value={dataToSend?.questions[index].columns[colIndex].colTitle} onChange={(e) => {
                                                                                 const updatedQuestions = [...questions];
                                                                                 updatedQuestions[index].columns[colIndex].colTitle = e.target.value;
                                                                                 setQuestions(updatedQuestions);
@@ -330,7 +330,7 @@ function EditForm() {
                                                                     <tr>
                                                                         <td>
                                                                             <span>{rowIndex + 1}.</span>
-                                                                            <input value={dataToSend?.questions[index].rows[rowIndex].rowTitle} onChange={(e) => {
+                                                                            <input autoComplete='off' value={dataToSend?.questions[index].rows[rowIndex].rowTitle} onChange={(e) => {
                                                                                 const updatedQuestions = [...questions];
                                                                                 updatedQuestions[index].rows[rowIndex].rowTitle = e.target.value;
                                                                                 setQuestions(updatedQuestions);
@@ -341,7 +341,7 @@ function EditForm() {
                                                                         {questions[index]?.columns.map((colnum, colIndex) => {
                                                                             return (
                                                                                 <td>
-                                                                                    <input className='mx-2' style={{
+                                                                                    <input autoComplete='off' className='mx-2' style={{
                                                                                         width: '20px',
                                                                                         height: '20px'
                                                                                     }} name={`R${rowIndex}`} type='radio' />
@@ -432,7 +432,7 @@ function EditForm() {
                                                                         <th style={{
                                                                             minWidth: '80px'
                                                                         }}>
-                                                                            <input value={dataToSend?.questions[index].columns[colIndex].colTitle} onChange={(e) => {
+                                                                            <input autoComplete='off' value={dataToSend?.questions[index].columns[colIndex].colTitle} onChange={(e) => {
                                                                                 const updatedQuestions = [...questions];
                                                                                 updatedQuestions[index].columns[colIndex].colTitle = e.target.value;
                                                                                 setQuestions(updatedQuestions);
@@ -449,7 +449,7 @@ function EditForm() {
                                                                     <tr>
                                                                         <td>
                                                                             <span>{rowIndex + 1}.</span>
-                                                                            <input value={dataToSend?.questions[index].rows[rowIndex].rowTitle} onChange={(e) => {
+                                                                            <input autoComplete='off' value={dataToSend?.questions[index].rows[rowIndex].rowTitle} onChange={(e) => {
                                                                                 const updatedQuestions = [...questions];
                                                                                 updatedQuestions[index].rows[rowIndex].rowTitle = e.target.value;
                                                                                 setQuestions(updatedQuestions);
@@ -460,7 +460,7 @@ function EditForm() {
                                                                         {questions[index]?.columns.map((colnum, colIndex) => {
                                                                             return (
                                                                                 <td>
-                                                                                    <input className='mx-2' style={{
+                                                                                    <input autoComplete='off' className='mx-2' style={{
                                                                                         width: '20px',
                                                                                         height: '20px'
                                                                                     }} type='checkbox' />
@@ -539,7 +539,7 @@ function EditForm() {
 
                                                             <span>{optindex + 1}.</span>
 
-                                                            <input onChange={(e) => {
+                                                            <input autoComplete='off' onChange={(e) => {
                                                                 const updatedQuestions = [...questions];
                                                                 updatedQuestions[index].options[optindex][e.target.name] = e.target.value;
                                                                 setQuestions(updatedQuestions);
@@ -649,7 +649,7 @@ function EditForm() {
                                                 color: 'black'
                                             }}>Required</p>
                                             <label className={style.switch}>
-                                                <input className='ms-3' name='IsPass' checked={dataToSend?.questions[index]?.Required} type="checkbox" onChange={(event) => {
+                                                <input autoComplete='off' className='ms-3' name='IsPass' checked={dataToSend?.questions[index]?.Required} type="checkbox" onChange={(event) => {
                                                     const updatedQuestions = [...questions];
                                                     updatedQuestions[index].Required = event.target.checked;
 

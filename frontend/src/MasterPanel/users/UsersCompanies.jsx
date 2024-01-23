@@ -88,7 +88,7 @@ function UsersCompanies() {
                 <div className={style.searchbar}>
                     <div className={style.sec1}>
                         <img src={Search} alt="" />
-                        <input onChange={search} type="text" placeholder='Search Company by name or Id' />
+                        <input autoComplete='off' onChange={search} type="text" placeholder='Search Company by name or Id' />
                     </div>
                     {tabData?.Creation && (
                         <div className={style.sec2} style={{
@@ -193,7 +193,10 @@ function UsersCompanies() {
 
                             <div className={style.alertbtns}>
 
-                                <button onClick={() => {
+                                <button style={{
+                                    marginLeft : '120px',
+                                    marginTop : '25px'
+                                }}  onClick={() => {
                                     setShowBox(false);
 
                                 }} className={style.btn2}>OK</button>

@@ -204,7 +204,7 @@ function CreateChecklist() {
                                                 <div style={{
                                                     width: '100%'
                                                 }} className=' me-3 d-flex flex-column'>
-                                                    <input value={dataToSend?.ChecklistQuestions[index]?.questionText} onChange={(e) => {
+                                                    <input autoComplete='off' value={dataToSend?.ChecklistQuestions[index]?.questionText} onChange={(e) => {
                                                         const updatedQuestions = [...questions];
                                                         updatedQuestions[index][e.target.name] = e.target.value;
                                                         setQuestions(updatedQuestions);
@@ -230,7 +230,7 @@ function CreateChecklist() {
                                                         color: 'black'
                                                     }}>Required</p>
                                                     <label className={style.switch}>
-                                                        <input className='ms-3' name='IsPass' type="checkbox" onChange={(event) => {
+                                                        <input autoComplete='off' className='ms-3' name='IsPass' type="checkbox" onChange={(event) => {
                                                             const updatedQuestions = [...questions];
                                                             updatedQuestions[index].Required = event.target.checked;
                                                             setQuestions(updatedQuestions);

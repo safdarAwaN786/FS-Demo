@@ -167,7 +167,7 @@ function AddProcessDetails() {
                                             }} className='fw-bold'>Process Name</p></p>
                                         </div>
                                         <div className='border border-dark-subtle'>
-                                            <input onChange={(e) => {
+                                            <input autoComplete='off' onChange={(e) => {
                                                 setDataToSend({ ...dataToSend, [e.target.name]: e.target.value })
                                             }} style={{
                                                 fontFamily: 'Poppins'
@@ -213,7 +213,7 @@ function AddProcessDetails() {
                                         <div className='d-flex justify-content-center'>
                                             <div className='mx-lg-4 mx-md-3 mx-2'>
                                                 <p className='text-center fw-bold'>({process.ProcessNum})</p>
-                                                <input value={process.Name} onChange={(event) => {
+                                                <input autoComplete='off' value={process.Name} onChange={(event) => {
                                                     updateProcesses(event, index)
                                                 }} name='Name' type='text' className='p-3 bg-light my-3 w-100 border-0' placeholder='Process Name' required />
                                                 <textarea value={process.Description} onChange={(event) => {
@@ -226,7 +226,7 @@ function AddProcessDetails() {
                                                 <div className='d-flex justify-content-center'>
                                                     <div className='mx-lg-4 mx-md-3 mx-2'>
                                                         <p className='text-center fw-bold'>({subProcess.ProcessNum})</p>
-                                                        <input value={subProcess.Name} onChange={(event) => {
+                                                        <input autoComplete='off' value={subProcess.Name} onChange={(event) => {
                                                             const updatedProcesses = [...processes];
                                                             // Update the existing object at the specified index
                                                             updatedProcesses[index].subProcesses[i][event.target.name] = event.target.value;
