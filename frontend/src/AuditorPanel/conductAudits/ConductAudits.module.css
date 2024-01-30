@@ -159,7 +159,7 @@
     width: 130px;
   }
   .headers > td:nth-child(2) {
-    width: 300px;
+    width: 200px;
   }
   .headers > td:nth-child(3) {
     width: 200px;
@@ -172,7 +172,7 @@
     width: 130px;
   }
   .tablebody > td:nth-child(2) {
-    width: 300px;
+    width: 200px;
   }
   .tablebody > td:nth-child(3) {
     width: 200px;

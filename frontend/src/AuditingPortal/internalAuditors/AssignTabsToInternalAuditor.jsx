@@ -18,6 +18,7 @@ function AssignTabsToInternalAuditor() {
     const [tabsArr4, setTabsArr4] = useState([]);
     const [tabsArr5, setTabsArr5] = useState([]);
     const [tabsArr6, setTabsArr6] = useState([]);
+    const [tabsArr7, setTabsArr7] = useState([]);
     const alertManager = () => {
         setalert(!alert)
     }
@@ -27,28 +28,64 @@ function AssignTabsToInternalAuditor() {
     const user = useSelector(state => state.auth?.user)
     // Tabs from where no functionality will be choosen..
     const tabsList1 = [
-        { Tab: 'Process Records' },
-        { Tab: 'Monthly Plan A' },
+        // Monthly Plan A
+        { Tab: 'Audit Plan (Monthly)' },
+        { Tab: 'Conduct Audit' },
+        // Reports Records
+        { Tab: 'Non-Conformity Report' },
+        // Corrective Action
+        { Tab: 'Corrective Action Plan' },
     ]
+
     // Tabs from where only  Creation functionality willl be choosen..
+
     const tabsList2 = [
-        { Tab: 'Processes' },
+        // Processes
+        { Tab: 'Define Process' },
+        // Internal Auditors
         { Tab: 'Internal Auditor Management' },
-        { Tab: 'Yearly Plan A' },
+        // Yearly Plan A
+        { Tab: 'Audit Program (Yearly Plan)' },
+
     ]
     // Tabs where Creation and Approval functionality will be choosen
-    const tabsList3 = []
+
+    const tabsList3 = [
+
+    ]
+
+
     // Tabs from where Creation, Approval, Review functionality willl be choosen..
-    const tabsList4 = []
+
+    const tabsList4 = [
+
+    ]
+
+
     // Tabs from where   Creation, Approval and Edit functionality willl be choosen..
-    const tabsList5 = []
+    const tabsList5 = [
+
+        // Checklist
+        { Tab: 'Internal Audit Check List' },
+
+    ]
+
     // Tabs from where   Creation, Approval, Review and Edit functionality willl be choosen..
-    const tabsList6 = []
+
+    const tabsList6 = [
+
+
+    ]
+    // Tabs from where   Creation, Approval, Review, Edit and Verification of form answers functionality willl be choosen..
+    const tabsList7 = [
+
+    ]
+
     useEffect(() => {
         setSelectedTabsArr([...tabsArr1, ...tabsArr2, ...tabsArr3, ...tabsArr4, ...tabsArr5, ...tabsArr6]);
     }, [tabsArr1, tabsArr2, tabsArr3, tabsArr4, tabsArr5, tabsArr6])
     useEffect(() => {
-        setDataToSend({  Tabs: selectedTabsArr })
+        setDataToSend({ Tabs: selectedTabsArr })
     }, [selectedTabsArr])
     const makeRequest = () => {
         if (dataToSend.Tabs.length > 0) {
@@ -63,15 +100,15 @@ function AssignTabsToInternalAuditor() {
                     confirmButtonText: 'Go!',
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        dispatch(updateTabData({...tabData, Tab : 'Users Details'}))
+                        dispatch(updateTabData({ ...tabData, Tab: 'Users Details' }))
                     }
                 })
             }).catch(err => {
                 dispatch(setSmallLoading(false));
                 Swal.fire({
-                    icon : 'error',
-                    title : 'OOps..',
-                    text : 'Something went wrong, Try Again!'
+                    icon: 'error',
+                    title: 'OOps..',
+                    text: 'Something went wrong, Try Again!'
                 })
             })
         } else {
@@ -448,6 +485,111 @@ function AssignTabsToInternalAuditor() {
                                                     </div>
                                                 </div>
                                             )}
+                                            {tabsList7.map((tab) => {
+                                    return (
+                                        <>
+                                            <div className='d-flex flex-row my-2'>
+                                                <input autoComplete='off' onChange={(e) => {
+                                                    var updatedTabsArr7;
+
+                                                    if (e.target.checked) {
+                                                        updatedTabsArr7 = [...tabsArr7];
+                                                        updatedTabsArr7.push(tab)
+                                                    } else {
+                                                        updatedTabsArr7 = tabsArr7.filter((tabObj) => {
+                                                            return (
+                                                                tabObj.Tab !== tab.Tab
+                                                            )
+                                                        })
+                                                    }
+                                                    setTabsArr7(updatedTabsArr7)
+                                                }} type='checkbox' className='mx-2' />
+                                                <p style={{
+                                                    fontFamily: 'Poppins'
+                                                }}>{tab.Tab}</p>
+                                            </div>
+                                            {tabsArr7.some(obj => obj.Tab === tab.Tab) && (
+
+                                                <div className='d-flex flex-row ps-3 mb-5 mt-2' >
+                                                    <div className='mx-2'>
+                                                        <input autoComplete='off' onChange={(e) => {
+                                                            const updatedTabsArr7 = [...tabsArr7];
+                                                            const foundObj = updatedTabsArr7.find(obj => obj.Tab === tab.Tab);
+                                                            if (e.target.checked) {
+                                                                foundObj[e.target.name] = true;
+                                                            } else {
+                                                                foundObj[e.target.name] = false;
+                                                            }
+
+                                                            setTabsArr7(updatedTabsArr7);
+                                                        }} type="checkbox" className="btn-check" id={`${tab.Tab}-C`} name='Creation' autocomplete="off" />
+                                                        <label className="btn btn-outline-danger" for={`${tab.Tab}-C`}>Creation</label>
+                                                    </div>
+                                                    <div className='mx-2'>
+
+                                                        <input autoComplete='off' onChange={(e) => {
+                                                            const updatedTabsArr7 = [...tabsArr7];
+                                                            const foundObj = updatedTabsArr7.find(obj => obj.Tab === tab.Tab);
+                                                            if (e.target.checked) {
+                                                                foundObj[e.target.name] = true;
+                                                            } else {
+                                                                foundObj[e.target.name] = false;
+                                                            }
+
+                                                            setTabsArr7(updatedTabsArr7);
+                                                        }} type="checkbox" className="btn-check" id={`${tab.Tab}-A`} name='Approval' autocomplete="off" />
+                                                        <label className="btn btn-outline-success" for={`${tab.Tab}-A`}>Approval</label>
+                                                    </div>
+                                                    <div className='mx-2'>
+
+                                                        <input autoComplete='off' onChange={(e) => {
+                                                            const updatedTabsArr7 = [...tabsArr7];
+                                                            const foundObj = updatedTabsArr7.find(obj => obj.Tab === tab.Tab);
+                                                            if (e.target.checked) {
+                                                                foundObj[e.target.name] = true;
+                                                            } else {
+                                                                foundObj[e.target.name] = false;
+                                                            }
+
+                                                            setTabsArr7(updatedTabsArr7);
+                                                        }} type="checkbox" className="btn-check" id={`${tab.Tab}-R`} name='Review' autocomplete="off" />
+                                                        <label className="btn btn-outline-primary" for={`${tab.Tab}-R`}>Review</label>
+                                                    </div>
+                                                    <div className='mx-2'>
+
+                                                        <input autoComplete='off' onChange={(e) => {
+                                                            const updatedTabsArr7 = [...tabsArr7];
+                                                            const foundObj = updatedTabsArr7.find(obj => obj.Tab === tab.Tab);
+                                                            if (e.target.checked) {
+                                                                foundObj[e.target.name] = true;
+                                                            } else {
+                                                                foundObj[e.target.name] = false;
+                                                            }
+
+                                                            setTabsArr7(updatedTabsArr7);
+                                                        }} type="checkbox" className="btn-check" id={`${tab.Tab}-E`} name='Edit' autocomplete="off" />
+                                                        <label className="btn btn-outline-warning" for={`${tab.Tab}-E`}>Edit</label>
+                                                    </div>
+                                                    <div className='mx-2'>
+                                                        <input autoComplete='off' onChange={(e) => {
+                                                            const updatedTabsArr7 = [...tabsArr7];
+                                                            const foundObj = updatedTabsArr7.find(obj => obj.Tab === tab.Tab);
+                                                            if (e.target.checked) {
+                                                                foundObj[e.target.name] = true;
+                                                            } else {
+                                                                foundObj[e.target.name] = false;
+                                                            }
+
+                                                            setTabsArr7(updatedTabsArr7);
+                                                        }} type="checkbox" className="btn-check" id={`${tab.Tab}-V`} name='Verification' autocomplete="off" />
+                                                        <label className="btn btn-outline-success" for={`${tab.Tab}-V`}>Verification</label>
+                                                    </div>
+
+                                                </div>
+                                            )}
+                                        </>
+                                    )
+                                })}
                                         </>
                                     )
                                 })}

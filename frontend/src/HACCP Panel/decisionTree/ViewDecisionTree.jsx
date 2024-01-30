@@ -195,7 +195,6 @@ function ViewDecisionTree() {
                                 </div>
                             </div>
                             {dataToSend?.Decisions?.map((decision, index) => {
-                                console.log(decision.Q1)
                                 return (
                                     <>
                                         <div className={`bg-danger row mx-lg-4 mx-md-3 mx-1 mt-4 py-3  `}>

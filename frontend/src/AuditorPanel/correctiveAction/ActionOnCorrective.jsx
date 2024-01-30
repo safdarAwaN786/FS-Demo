@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import Slider from 'rc-slider';
 import { setSmallLoading } from '../../redux/slices/loading';
+import dayjs from 'dayjs';
 
 function ActionOnCorrective() {
 
@@ -186,7 +187,7 @@ function ActionOnCorrective() {
 
                     }}>
 
-
+                        {console.log(answers)}
                         {answers?.map((answer, index) => {
                             return (
                                 <div style={{
@@ -311,7 +312,6 @@ function ActionOnCorrective() {
                                                 width: '80%'
                                             }}>
                                                 {answer.Answer.EvidenceDoc && (
-
                                                     <div className='d-flex flex-column w-50'>
                                                         <label>Evidence Document :</label>
                                                         <a onClick={() => {
@@ -330,7 +330,10 @@ function ActionOnCorrective() {
                                             </label>
                                         </div>
                                         <div className='row p-3 mt-4'>
-
+                                            <div className='col-lg-6 col-md-12'>
+                                                <p className='fw-bold'>Target Date : </p>
+                                                <input placeholder='write here..' value={dayjs(answer.Answer?.TargetDate).format('DD/MM/YYYY')}  rows={4} className='w-100 border-0 p-2 m-2' type='text' required />
+                                            </div>
                                             <div className='col-lg-6 col-md-12'>
                                                 <p className='fw-bold'>Correction : </p>
                                                 <textarea placeholder='write here..' name='Correction' value={correctiveAnswers[index]?.Correction} rows={4} onChange={(e) => {
@@ -367,6 +370,7 @@ function ActionOnCorrective() {
                                                     setCorrectiveAnswers(updatedAnswers)
                                                 }} rows={4} className='w-100 border-0 p-2 m-2' type='text' required />
                                             </div>
+
                                             <div className='col-lg-6 col-md-12'>
                                                 <p><b>Upload Document : </b></p>
                                                 <input autoComplete='off' name={`CorrectiveDoc-${index}`} className='btn btn-danger py-2 mt-3 mx-2 w-100' accept='.pdf' type='file' />
@@ -389,9 +393,9 @@ function ActionOnCorrective() {
                             <p class={style.msg}>{dataToShow}</p>
                             <div className={style.alertbtns}>
                                 <button style={{
-                                    marginLeft : '120px',
-                                    marginTop : '25px'
-                                }}  onClick={() => {
+                                    marginLeft: '120px',
+                                    marginTop: '25px'
+                                }} onClick={() => {
                                     setShowBox(false)
 
                                 }} className={style.btn1}>Ok.</button>

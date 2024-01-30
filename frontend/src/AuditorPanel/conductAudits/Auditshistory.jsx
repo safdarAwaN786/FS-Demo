@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { changeId } from '../../redux/slices/idToProcessSlice';
 import { setSmallLoading } from '../../redux/slices/loading';
+import dayjs from 'dayjs'
 
 function AuditsHistory() {
 
@@ -104,11 +105,10 @@ function AuditsHistory() {
                             checklistResults?.map((result, index) => {
                                 return (
                                     <tr key={index}>
-                                        <td>{result.AuditDate}</td>
-                                        <td>{result?.TargetDate?.slice(0, 10).split('-')[2]}/{result?.TargetDate?.slice(0, 10).split('-')[1]}/{result?.TargetDate?.slice(0, 10).split('-')[0]}</td>
+                                        <td>{dayjs(result.AuditDate).format('DD/MM/YYYY')}</td>
+                                        <td>{dayjs(result.TargetDate).format('DD/MM/YYYY')}</td>
                                         <td>{result.AuditBy}</td>
                                         <td>{result.UserDepartment.DepartmentName}</td>
-                                        
                                         <td><button className={style.btn} onClick={() => {
                                             dispatch(updateTabData({...tabData, Tab : 'viewAuditAnswers'}))
                                             dispatch(changeId(result._id));

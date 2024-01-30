@@ -109,7 +109,7 @@ function AddProcess() {
     const makeRequest = () => {
         if (processInfo) {
             dispatch(setSmallLoading(true))
-            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addProcess`, {...processInfo, user : user}).then(() => {
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addProcess`, { ...processInfo, user: user }).then(() => {
                 setProcessInfo(null);
                 dispatch(setSmallLoading(false))
                 Swal.fire({
@@ -140,8 +140,6 @@ function AddProcess() {
             })
         }
     }
-
-
     return (
         <>
 
@@ -169,9 +167,8 @@ function AddProcess() {
                     </div>
                     <div className={`${style.sec1} px-lg-5 px-3`}>
                         <form encType='multipart/form-data' onSubmit={(event) => {
-                            event.preventDefault();
-
-
+                            event.preventDefault()
+                            console.log(processInfo)
                             if (processInfo?.ProcessOwner === null) {
                                 setOwnerError(true);
                             } else if (validationMessage !== 'Password is valid!') {
@@ -179,6 +176,12 @@ function AddProcess() {
                                     icon: 'error',
                                     title: 'OOps..',
                                     text: validationMessage
+                                })
+                            } else if (processInfo.ProcessOwner.PhoneNumber.length !== 11) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'OOps..',
+                                    text: 'Please provide 11 digits for phone Number'
                                 })
                             } else {
                                 alertManager();
@@ -313,11 +316,20 @@ function AddProcess() {
                                 )}
                             </div>
                             <div className={`mx-auto my-3 gap-2 d-flex flex-row`}>
-                                <input autoComplete='off' className='mt-1' value={ownerDetail?.UserName} name='UserName' onChange={(event) => {
+                                <input autoComplete='off' className='mt-1' onChange={(event) => {
                                     setOwnerDetail({ ...ownerDetail, deputyOwner: event.target.checked })
                                 }} type='checkbox' />
                                 <p>Deputy Process Owner</p>
                             </div>
+                            {/* {ownerDetail?.deputyOwner && (
+                                <div className={`mx-auto my-3 gap-2 d-flex flex-row`}>
+                                    <p>Deputy Process Owner</p>
+                                    <input autoComplete='off' className='mt-1' onChange={(event) => {
+                                        setOwnerDetail({ ...ownerDetail, deputyOwner: event.target.checked })
+                                    }} type='file' />
+                                </div>
+                            )} */}
+
                             <div className={style.btns}>
                                 <button onClick={() => {
                                     if (validationMessage == 'Password is valid!') {

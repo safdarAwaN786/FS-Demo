@@ -167,7 +167,6 @@ function MainPage() {
     const [redTab, setRedTab] = useState(null);
     const dispatch = useDispatch()
     const Tab = useSelector(state => state.tab?.Tab)
-    console.log(Tab);
     const loggedIn = useSelector(state => state.auth.loggedIn)
     const user = useSelector(state => state.auth.user)
     const navigate = useNavigate();
@@ -536,38 +535,29 @@ function MainPage() {
                                 <Devices />
                             )}
                             {Tab === 'addDevice' && (
-
                                 <AddDevices />
                             )}
                             {Tab === 'Generate MWR Corrective' && (
-
                                 <TechMWR />
                             )}
                             {Tab === 'generateMWR' && (
-
                                 <GenerateMWR />
                             )}
                             {Tab === 'MWRDetails' && (
-
                                 <GenerateMWR2 />
                             )}
                             {Tab === 'Pending Tasks' && (
-
                                 <PendingTasks />
                             )}
                             {Tab === 'viewTrainingInfo' && (
-
                                 <Info />
                             )}
                             {Tab === 'conductTraining' && (
-
                                 <MainForTrainerPortal />
                             )}
                             {Tab === 'Completed Tasks' && (
-
                                 <CompletedTasks />
                             )}
-
                             {Tab === 'Generate Food Safety Plan' && (
                                 <FoodSafetyPlan />
                             )}
@@ -581,40 +571,31 @@ function MainPage() {
                                 <FoodSafetyPlanMembers />
                             )}
                             {Tab === 'addFoodSafetyPlan' && (
-
                                 <AddFoodSafetyPlan />
                             )}
                             {Tab === 'addDecisionTree' && (
-
                                 <AddDecisionTree />
                             )}
                             {Tab === 'viewDecisionTree' && (
-
                                 <ViewDecisionTree />
                             )}
 
                             {Tab === 'Identify CCP/OPRP' && (
-
                                 <DecisionTree />
                             )}
                             {Tab === 'updateDecisionTree' && (
-
                                 <UpdateDecisionTree />
                             )}
                             {Tab === 'decisionTreeMembers' && (
-
                                 <DecisionTreeMembers />
                             )}
                             {Tab === 'Describe Product' && (
-
                                 <ProductDetails />
                             )}
                             {Tab === 'Construct Flow Diagram' && (
-
                                 <ProcessDetails />
                             )}
                             {Tab === 'viewProductDetails' && (
-
                                 <ViewProductDetails />
                             )}
                             {Tab === 'viewProcessDetails' && (

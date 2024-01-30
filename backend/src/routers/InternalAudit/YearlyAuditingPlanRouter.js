@@ -10,12 +10,11 @@ const router = new express.Router();
 router.post('/addYearlyAuditPlan',  async (req, res) => {
     console.log(req.body);
     try {
-
-        const yearlyAuditPlan = await YearlyAuditPlan.find({
+        const yearlyAuditPlan = await YearlyAuditPlan.findOne({
             Year: req.body.Year,
             UserDepartment : req.header('Authorization')
         }).populate('UserDepartment');
-
+        console.log(yearlyAuditPlan);
         if (yearlyAuditPlan) {
             return res.status(303).send({
                 status: false,
@@ -105,16 +104,11 @@ router.get('/readYearlyAuditPlan',  async (req, res) => {
             }
         }).populate('UserDepartment');
 
-        
-       
-
         res.status(200).json({
             status: true,
             message: 'Yearly Audit Plans retrieved successfully',
             data: yearlyAuditPlans
         });
-
-        console.log(new Date().toLocaleString() + ' GET YearlyAuditPlan Successfully!');
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Internal Server Error' });

@@ -18,6 +18,7 @@ function AddAuditor() {
     const letterRef = useRef(null);
     const [alert, setalert] = useState(false)
     const [auditorData, setAuditorData] = useState(null);
+    const [phoneNumber, setPhoneNumber] = useState(null);
     const alertManager = () => {
         setalert(!alert)
     }
@@ -96,9 +97,9 @@ function AddAuditor() {
         }).catch(err => {
             dispatch(setSmallLoading(false));
             Swal.fire({
-                icon : 'error',
-                title : 'OOps..',
-                text : 'Something went wrong, Try Again!'
+                icon: 'error',
+                title: 'OOps..',
+                text: 'Something went wrong, Try Again!'
             })
         })
     }, [])
@@ -115,7 +116,7 @@ function AddAuditor() {
     const makeRequest = () => {
         if (auditorData !== null) {
             dispatch(setSmallLoading(true))
-            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addAuditor`, auditorData, { headers: { Authorization: `${user._id}` } } ).then(() => {
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addAuditor`, auditorData, { headers: { Authorization: `${user._id}` } }).then(() => {
                 setAuditorData(null);
                 dispatch(setSmallLoading(false))
                 Swal.fire({
@@ -131,9 +132,9 @@ function AddAuditor() {
             }).catch(err => {
                 dispatch(setSmallLoading(false));
                 Swal.fire({
-                    icon : 'error',
-                    title : 'OOps..',
-                    text : 'Something went wrong, Try Again!'
+                    icon: 'error',
+                    title: 'OOps..',
+                    text: 'Something went wrong, Try Again!'
                 })
             })
         } else {
@@ -182,9 +183,29 @@ function AddAuditor() {
                     </div>
                     <form className='px-lg-5 px-3' encType='multipart/form-data' onSubmit={(event) => {
                         event.preventDefault();
-                        const data = new FormData(event.target);
-                        setAuditorData(data)
-                        alertManager();
+                        if (validationMessage !== 'Password is valid!') {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'OOps..',
+                                text: validationMessage
+                            })
+                        } else if (phoneNumber.length != 11) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'OOps..',
+                                text: 'Provide 11 digits for phone Number'
+                            })
+                        } else if (!documentRef.current.value || !letterRef.current.value) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'OOps..',
+                                text: 'Kindly Upload Each Document!'
+                            })
+                        } else {
+                            const data = new FormData(event.target);
+                            setAuditorData(data)
+                            alertManager();
+                        }
                     }}>
                         <div className={style.profile}>
                             <img style={{
@@ -236,7 +257,9 @@ function AddAuditor() {
                                 <img style={{ width: '20px', height: '20px', cursor: 'pointer' }} src={profile} alt="" />
                             </div>
                             <div>
-                                <input autoComplete='off' name='PhoneNumber' type="number" placeholder='Phone Number' required />
+                                <input autoComplete='off' onChange={(e) => {
+                                    setPhoneNumber(e.target.value);
+                                }} name='PhoneNumber' type="number" placeholder='Phone Number' required />
                                 <img style={{ width: '20px', height: '20px', cursor: 'pointer' }} src={profile} alt="" />
                             </div>
                             <div>
@@ -269,7 +292,7 @@ function AddAuditor() {
                                 <img style={{ width: '20px', height: '20px', cursor: 'pointer' }} src={Office} alt="" />
                             </div>
                             <select name='Department' class="form-select fs-6 form-select-lg mb-3" aria-label="Large select example" required>
-                                <option selected> Department</option>
+                                <option disabled selected> Department</option>
                                 {departmentsToShow?.map((depObj) => {
                                     return (
                                         <option value={depObj._id}>{depObj.DepartmentName}</option>

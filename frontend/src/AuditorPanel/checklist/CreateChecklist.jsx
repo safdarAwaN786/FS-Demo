@@ -249,7 +249,7 @@ function CreateChecklist() {
                                             borderRadius: '100px',
                                             width: '40px',
                                             height: '40px',
-                                        }} onClick={clearLastQuestion} className='btn  btn-outline-danger mx-4 my-auto pt-1  '><FaMinus /></a>
+                                        }} onClick={clearLastQuestion} className='btn  btn-outline-danger mx-4 my-auto pt-1'><FaMinus /></a>
                                     )}
                                 </div>
                             </div>

@@ -198,7 +198,7 @@
   width: 150px;
 }
 .headers > td:nth-child(2) {
-  width: 300px;
+  width: 200px;
 }
 .headers > td:nth-child(3) {
   width: 150px;
@@ -228,7 +228,7 @@
   width: 150px;
 }
 .tablebody > td:nth-child(2) {
-  width: 300px;
+  width: 200px;
 }
 .tablebody > td:nth-child(3) {
   width: 150px;
@@ -278,6 +278,34 @@
   align-items: center;
   background: rgba(217, 217, 217, 0.7);
 }
+.greenStatus{
+  background-color: #c9ffc2c5;
+  color: rgb(78, 143, 78);
+  font-size: 13px;
+  border-radius: 100px;
+  width: 70%;
+  font-weight: bold;
+  padding: 6px 0px;
+  }
+.redStatus{
+  background-color: #ffcecec5;
+  color: rgb(196, 34, 34);
+  font-size: 13px;
+  border-radius: 100px;
+  width: 70%;
+  font-weight: bold;
+  padding: 6px 0px;
+  }
+.yellowStatus{
+  background-color: #fffbc9c5;
+  color: rgb(212, 164, 4);
+  font-size: 13px;
+  border-radius: 100px;
+  width: 70%;
+  font-weight: bold;
+  padding: 6px 0px;
+  }
+
 .alertemail {
   width: 438px;
   height: 70%;

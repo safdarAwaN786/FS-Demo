@@ -90,8 +90,8 @@ function CorrectiveActions() {
 
                         <table className={style.table}>
                             <tr className={style.headers}>
-                                <td>Document ID</td>
-                                <td>Department</td>
+                                <td className='me-5'>Document ID</td>
+                                <td className='ms-5'>Department</td>
                                 <td>Actual Date</td>
                                 <td>Checklist Status</td>
                                 <td>Non Conformance Report</td>
@@ -100,7 +100,7 @@ function CorrectiveActions() {
                                 reportsList?.map((report, i) => {
                                     return (
                                         <tr className={style.tablebody} key={i}>
-                                            <td ><p style={{
+                                            <td className='me-5'><p style={{
                                                 backgroundColor: "#f0f5f0",
                                                 padding: "2px 5px",
                                                 borderRadius: "10px",
@@ -110,7 +110,7 @@ function CorrectiveActions() {
                                                 fontWeight: "400",
                                                 lineHeight: "20px",
                                             }}>{report.ConductAudit.Checklist.ChecklistId}</p></td>
-                                            <td className={style.simpleContent}>{report.ConductAudit.Checklist.Department.DepartmentName}</td>
+                                            <td className={`${style.simpleContent} ms-5`}>{report.ConductAudit.Checklist.Department.DepartmentName}</td>
                                             
                                             {report.ReportDate ? (
                                                 <td>{report.ReportDate?.slice(0, 10).split('-')[2]}/{report.ReportDate?.slice(0, 10).split('-')[1]}/{report.ReportDate?.slice(0, 10).split('-')[0]}</td>

@@ -102,7 +102,7 @@ function Processes() {
                             <td>Department</td>
                             <td>Risk Assesment</td>
                             <td>Activities</td>
-                            <td >Special Instructions</td>
+                            <td>Special Instructions</td>
                             <td>Shift Breaks</td>
                             <td>Critical Areas</td>
                             <td>Process Owner</td>
@@ -124,38 +124,32 @@ function Processes() {
                                         }}>{process.ProcessCode}</p></td>
                                         <td className={style.simpleContent}>{process.ProcessName}</td>
                                         <td>{process.Department.DepartmentName}</td>
-                                        <td>{process.ProcessRiskAssessment}</td>
-
-                                        <td >
-
+                                        <td><div className={`text-center ${process.ProcessRiskAssessment === 'Low' && style.greenStatus} ${process.ProcessRiskAssessment === 'High' && style.redStatus} ${process.ProcessRiskAssessment === 'Medium' && style.yellowStatus}  `}><p>{process.ProcessRiskAssessment}</p></div></td>
+                                        <td>
                                             <p onClick={() => {
                                                 setShowBox(true);
                                                 setDataToShow(process.Activities)
                                             }} className={style.click}>View</p>
                                         </td>
-                                        <td >
-
+                                        <td>
                                             <p onClick={() => {
                                                 setShowBox(true);
                                                 setDataToShow(process.SpecialInstructions)
                                             }} className={style.click}>View</p>
                                         </td>
-                                        <td >
-
+                                        <td>
                                             <p onClick={() => {
                                                 setShowBox(true);
                                                 setDataToShow(process.ShiftBreaks)
                                             }} className={style.click}>View</p>
                                         </td>
-                                        <td >
-
+                                        <td>
                                             <p onClick={() => {
                                                 setShowBox(true);
                                                 setDataToShow(process.CriticalAreas)
                                             }} className={style.click}>View</p>
                                         </td>
-                                        <td >
-
+                                        <td>
                                             <p onClick={() => {
                                                 setShowOwner(true);
                                                 setOwnerInfo(process.ProcessOwner);
@@ -163,20 +157,14 @@ function Processes() {
                                                 // setIdToWatch(training._id);
                                             }} className={style.orangeclick}>Click Here</p>
                                         </td>
-                                        <td >
-
+                                        <td>
                                             <p onClick={() => {
                                                 dispatch(updateTabData({ ...tabData, Tab: 'assignTabsToOwner' }));
                                                 dispatch(changeId(process.ProcessOwner._id));
                                             }} className={'btn btn-outline-danger px-2 py-1  m-1'}>Assign Tabs</p>
                                         </td>
-
-
-
                                     </tr>
-
                                 )
-
                             })
                         }
                     </table>
@@ -184,21 +172,16 @@ function Processes() {
             </div>
             <div className={style.Btns}>
                 {startIndex > 0 && (
-
                     <button onClick={backPage}>
                         {'<< '}Back
                     </button>
                 )}
                 {allDataArr?.length > endIndex && (
-
                     <button onClick={nextPage}>
                         next{'>> '}
                     </button>
                 )}
             </div>
-
-
-
             {
                 showOwner ?
                     <div class={`${style.alertparent} `}>
@@ -213,7 +196,6 @@ function Processes() {
                                     Process Owner Details
                                 </div>
                             </div>
-
                             <div className='p-lg-5 p-3 d-flex justify-content-center flex-column'>
                                 <div className={`mx-auto my-2 ${style.ownerInput}`}>
                                     <p>Name</p>
@@ -227,7 +209,6 @@ function Processes() {
                                     <p>Phone</p>
                                     <input autoComplete='off' className={`p-2 w-100`} value={ownerInfo.PhoneNumber} readOnly />
                                 </div>
-
                                 <div className={`mx-auto my-2 ${style.ownerInput}`}>
                                     <p>Email Address</p>
                                     <input autoComplete='off' value={ownerInfo.Email} className={`p-2 w-100`} readOnly />

@@ -83,18 +83,17 @@ function ReportsRecords() {
 
                         <table className={style.table}>
                             <tr className={style.headers}>
-                                <td>Document ID</td>
-                                <td>Department</td>
+                                <td className='me-5'>Document ID</td>
+                                <td className='ms-5'>Department</td>
                                 <td>Actual Date</td>
-                                <td>Status</td>
+                                <td className='ps-5'>Status</td>
                                 <td>Non Conformance Report</td>
-
                             </tr>
                             {
                                 auditsList?.map((audit, index) => {
                                     return (
                                         <tr className={style.tablebody} key={index}>
-                                            <td ><p style={{
+                                            <td className='me-5' ><p style={{
                                                 backgroundColor: "#f0f5f0",
                                                 padding: "2px 5px",
                                                 borderRadius: "10px",
@@ -104,7 +103,7 @@ function ReportsRecords() {
                                                 fontWeight: "400",
                                                 lineHeight: "20px",
                                             }}>{audit.Checklist.ChecklistId}</p></td>
-                                            <td className={style.simpleContent}>{audit.Checklist.Department.DepartmentName}</td>
+                                            <td className={`${style.simpleContent} ms-5`}>{audit.Checklist.Department.DepartmentName}</td>
                                             
                                             {audit.AuditDate ? (
 

@@ -14,14 +14,12 @@ export default function LoginPage() {
 
     const [credentials, setCredentials] = useState(null);
     const [showPassword, setShowPassword] = useState(false); // State variable to toggle password visibility
-    console.log(process.env.REACT_APP_BACKEND_URL);
     const loggedIn = useSelector(state => state.auth.loggedIn)
     const dispatch = useDispatch();
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword);
     };
     const loading = useSelector(state => state.loading)
-
     const navigate = useNavigate()
     useEffect(() => {
         const userToken = Cookies.get('userToken');

@@ -31,9 +31,9 @@ function ConductAudits() {
         }).catch(err => {
             dispatch(setSmallLoading(false));
             Swal.fire({
-                icon : 'error',
-                title : 'OOps..',
-                text : 'Something went wrong, Try Again!'
+                icon: 'error',
+                title: 'OOps..',
+                text: 'Something went wrong, Try Again!'
             })
         })
     }, [])
@@ -69,80 +69,76 @@ function ConductAudits() {
         }
     }
 
-    
+
 
     return (
         <>
-                <div className={style.searchbar}>
-                    <div className={style.sec1}>
-                        <img src={Search} alt="" />
-                        <input autoComplete='off' onChange={search} type="text" placeholder='Search document by name' />
+            <div className={style.searchbar}>
+                <div className={style.sec1}>
+                    <img src={Search} alt="" />
+                    <input autoComplete='off' onChange={search} type="text" placeholder='Search document by name' />
+                </div>
+            </div>
+            <div className={style.tableParent}>
+                {!checklists || checklists?.length === 0 ? (
+                    <div className='w-100 d-flex align-items-center justify-content-center'>
+                        <p className='text-center'>No any Records Available here.</p>
                     </div>
-                </div>
-                <div className={style.tableParent}>
-                    {!checklists || checklists?.length === 0 ? (
-                        <div className='w-100 d-flex align-items-center justify-content-center'>
-                            <p className='text-center'>No any Records Available here.</p>
-                        </div>
-                    ) : (
+                ) : (
 
-                        <table className={style.table}>
-                            <tr className={style.headers}>
-                                <td>Document ID</td>
-                                <td>Department</td>
-                                <td>Conduct Audit</td>
+                    <table className={style.table}>
+                        <tr className={style.headers}>
+                            <td className='me-5'>Document ID</td>
+                            <td className='ms-5'>Department</td>
+                            <td>Conduct Audit</td>
+                            <td className='ps-5'>Status</td>
+                        </tr>
+                        {
+                            checklists?.map((checklist, i) => {
+                                return (
+                                    <tr className={style.tablebody} key={i}>
+                                        <td className='me-5'><p style={{
+                                            backgroundColor: "#f0f5f0",
+                                            padding: "2px 5px",
+                                            borderRadius: "10px",
+                                            fontFamily: "Inter",
+                                            fontSize: "12px",
+                                            fontStyle: "normal",
+                                            fontWeight: "400",
+                                            lineHeight: "20px",
+                                        }}>{checklist.ChecklistId}</p></td>
+                                        <td className={`${style.simpleContent} ms-5`}>{checklist.Department.DepartmentName}</td>
+                                        <td>
+                                            <p onClick={() => {
+                                                dispatch(updateTabData({ ...tabData, Tab: 'auditConduction' }))
+                                                dispatch(changeId(checklist._id))
+                                            }} className='btn btn-outline-success p-1 m-0'>Conduct</p>
+                                            <p onClick={() => {
+                                                dispatch(updateTabData({ ...tabData, Tab: 'viewAuditsHistory' }))
+                                                dispatch(changeId(checklist._id))
+                                            }} className={style.redclick}>View</p>
+                                        </td>
+                                        <td><div className={`text-center ${checklist.Status === 'Approved' && style.greenStatus} ${checklist.Status === 'Disapproved' && style.redStatus} ${checklist.Status === 'Pending' && style.yellowStatus}  `}><p>{checklist.Status}</p></div></td>
 
-                                <td>Status</td>
-
-                            </tr>
-                            {
-                                checklists?.map((checklist, i) => {
-                                    return (
-                                        <tr className={style.tablebody} key={i}>
-                                            <td ><p style={{
-                                                backgroundColor: "#f0f5f0",
-                                                padding: "2px 5px",
-                                                borderRadius: "10px",
-                                                fontFamily: "Inter",
-                                                fontSize: "12px",
-                                                fontStyle: "normal",
-                                                fontWeight: "400",
-                                                lineHeight: "20px",
-                                            }}>{checklist.ChecklistId}</p></td>
-                                            <td className={style.simpleContent}>{checklist.Department.DepartmentName}</td>
-
-
-                                            <td>
-                                                <p onClick={() => {
-                                                    dispatch(updateTabData({...tabData, Tab : 'auditConduction'}))
-                                                    dispatch(changeId(checklist._id))
-                                                }} className='btn btn-outline-success p-1 m-0'>Conduct</p>
-                                                <p onClick={() => {
-                                                    dispatch(updateTabData({...tabData, Tab : 'viewAuditsHistory'}))
-                                                    dispatch(changeId(checklist._id))
-                                                    
-                                                }} className={style.redclick}>View</p>
-                                            </td>
-                                            <td><div className={`text-center ${checklist.Status === 'Approved' && style.greenStatus} ${checklist.Status === 'Disapproved' && style.redStatus} ${checklist.Status === 'Pending' && style.yellowStatus}  `}><p>{checklist.Status}</p></div></td>
-                                        </tr>
-                                    )
-                                })
-                            }
-                        </table>
-                    )}
-                </div>
-                <div className={style.Btns}>
-                    {startIndex > 0 && (
-                        <button onClick={backPage}>
-                            {'<< '}Back
-                        </button>
-                    )}
-                    {allDataArr?.length > endIndex && (
-                        <button onClick={nextPage}>
-                            next{'>> '}
-                        </button>
-                    )}
-                </div>
+                                    </tr>
+                                )
+                            })
+                        }
+                    </table>
+                )}
+            </div>
+            <div className={style.Btns}>
+                {startIndex > 0 && (
+                    <button onClick={backPage}>
+                        {'<< '}Back
+                    </button>
+                )}
+                {allDataArr?.length > endIndex && (
+                    <button onClick={nextPage}>
+                        next{'>> '}
+                    </button>
+                )}
+            </div>
             {
                 showBox && (
                     <div class={style.alertparent}>
@@ -153,9 +149,9 @@ function ConductAudits() {
                             <div className={style.alertbtns}>
 
                                 <button style={{
-                                    marginLeft : '120px',
-                                    marginTop : '25px'
-                                }}  onClick={() => {
+                                    marginLeft: '120px',
+                                    marginTop: '25px'
+                                }} onClick={() => {
                                     setShowBox(false);
 
                                 }} className={style.btn2}>OK</button>

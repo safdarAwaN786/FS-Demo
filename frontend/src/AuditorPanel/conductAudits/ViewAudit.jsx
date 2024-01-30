@@ -11,16 +11,7 @@ import { updateTabData } from '../../redux/slices/tabSlice';
 import Slider from 'rc-slider';
 import { setSmallLoading } from '../../redux/slices/loading';
 import html2pdf from 'html2pdf.js';
-
-const formatDate = (date) => {
-    const newDate = new Date(date);
-    const formatDate = newDate.toLocaleDateString('en-GB', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-    });
-    return formatDate;
-}
+import dayjs from 'dayjs'
 
 
 function ViewAudit() {
@@ -32,12 +23,9 @@ function ViewAudit() {
     const [answers, setAnswers] = useState([]);
     const [auditData, setAuditData] = useState(null);
     const user = useSelector(state => state.auth?.user);
-    const userToken = Cookies.get('userToken');
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
     const idToWatch = useSelector(state => state.idToProcess);
-
-
 
     const alertManager = () => {
         setalert(!alert)
@@ -64,8 +52,6 @@ function ViewAudit() {
     useEffect(() => {
         setAuditData({ ...auditData, Answers: answers });
     }, [answers])
-
-    
     const handleDownloadImage = async (imageURL) => {
         try {
             if (imageURL) {
@@ -152,35 +138,20 @@ function ViewAudit() {
                         // get the data URL of the canvas
                         const dataURL = canvas.toDataURL('image/jpeg');
                         // pass the data URL to the pdf.addImage method
-                        pdf.addImage(dataURL, 'JPEG', (pdf.internal.pageSize.getWidth() / 2) - 1.5, 2.5, 3, 3);
-                        pdf.setFontSize(25);
-                        pdf.text(`${user.Company.CompanyName}`, (pdf.internal.pageSize.getWidth() / 2) - 1.5, (pdf.internal.pageSize.getHeight() / 2));
-                        pdf.text(`${user.Company.Address}`, (pdf.internal.pageSize.getWidth() / 2) - 1.5, (pdf.internal.pageSize.getHeight() / 2) + 0.5);
+                        pdf.addImage(dataURL, 'JPEG', 1, 2.5, 3, 3);
+                        pdf.setFontSize(20);
+                        pdf.text(`Company : ${user.Company.CompanyName}`, (1), (pdf.internal.pageSize.getHeight() / 2));
+                        pdf.setFontSize(15)
+                        pdf.text(`Address : ${user.Company.Address}`, (1), (pdf.internal.pageSize.getHeight() / 2) + 0.5);
                         pdf.setFontSize(15);
                         pdf.setLineWidth(0.1); // Example line width
                         pdf.line(0.1, (pdf.internal.pageSize.getHeight() / 2) + 1, pdf.internal.pageSize.getWidth() - 0.2, (pdf.internal.pageSize.getHeight() / 2) + 1)
-                        pdf.text("Document Id", 1, (pdf.internal.pageSize.getHeight() / 2) + 1.5);
-                        pdf.text(`${dataToSend.DocumentId}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 1.5);
-                        pdf.text("Created By", 1, (pdf.internal.pageSize.getHeight() / 2) + 1.8);
-                        pdf.text(`${dataToSend.CreatedBy}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 1.8);
-                        pdf.text("Creation Date", 1, (pdf.internal.pageSize.getHeight() / 2) + 2.1);
-                        pdf.text(`${formatDate(dataToSend.CreationDate)}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 2.1);
-                        pdf.text("Revision Number", 1, (pdf.internal.pageSize.getHeight() / 2) + 2.4);
-                        pdf.text(`${dataToSend.RevisionNo}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 2.4);
-                        if (dataToSend.Status == 'Approved') {
-
-                            pdf.text("Approved By", 1, (pdf.internal.pageSize.getHeight() / 2) + 2.7);
-                            pdf.text(`${dataToSend.ApprovedBy}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 2.7);
-                            pdf.text("Approval Date", 1, (pdf.internal.pageSize.getHeight() / 2) + 3.0);
-                            pdf.text(`${formatDate(dataToSend.ApprovalDate)}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 3.0);
-                        }
-                        if (dataToSend.ReviewedBy) {
-
-                            pdf.text("Reviewed By", 1, (pdf.internal.pageSize.getHeight() / 2) + 3.3);
-                            pdf.text(`${dataToSend.ReviewedBy}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 3.3);
-                            pdf.text("Reviewed Date", 1, (pdf.internal.pageSize.getHeight() / 2) + 3.6);
-                            pdf.text(`${formatDate(dataToSend.ReviewDate)}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 3.6);
-                        }
+                        pdf.text("Checklist Id", 1, (pdf.internal.pageSize.getHeight() / 2) + 1.5);
+                        pdf.text(`${dataToSend.Checklist.ChecklistId}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 1.5);
+                        pdf.text("Audit By", 1, (pdf.internal.pageSize.getHeight() / 2) + 1.8);
+                        pdf.text(`${dataToSend.AuditBy}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 1.8);
+                        pdf.text("Audit Date", 1, (pdf.internal.pageSize.getHeight() / 2) + 2.1);
+                        pdf.text(`${dayjs(dataToSend.AuditDate).format('DD/MM/YYYY')}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 2.1);
                     } catch (error) {
                         console.log(error);
                     }
@@ -190,9 +161,9 @@ function ViewAudit() {
                     pdf.setFontSize(10);
                     pdf.text(`${user.Company.CompanyName}`, pdf.internal.pageSize.getWidth() - 2, 0.3);
                     pdf.text('Audit', pdf.internal.pageSize.getWidth() - 2, 0.5);
-                    pdf.text(`${dataToSend.DocumentId}`, pdf.internal.pageSize.getWidth() - 2, 0.7);
-                    pdf.text(`Revision No :${dataToSend.RevisionNo}`, pdf.internal.pageSize.getWidth() - 2, 0.9);
-                    pdf.text(`Creation : ${formatDate(dataToSend.CreationDate)}`, pdf.internal.pageSize.getWidth() - 2, 1.1);
+                    pdf.text(`${dataToSend.Checklist.ChecklistId}`, pdf.internal.pageSize.getWidth() - 2, 0.7);
+                    pdf.text(`Revision No :${dataToSend.Checklist.RevisionNo}`, pdf.internal.pageSize.getWidth() - 2, 0.9);
+                    pdf.text(`Checklist Creation : ${dayjs(dataToSend.Checklist.CreationDate).format('DD/MM/YYYY')}`, pdf.internal.pageSize.getWidth() - 2, 1.1);
                 }
             }
         }).save();

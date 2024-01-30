@@ -94,189 +94,188 @@ function Checklist() {
 
 
     return (
-        <>   
+        <>
 
-                <div className={style.searchbar}>
-                    <div className={style.sec1}>
-                        <img src={Search} alt="" />
-                        <input autoComplete='off' onChange={search} type="text" placeholder='Search document by name' />
-                    </div>
-                    {tabData?.Creation && (
-
-                        <div className={style.sec2} onClick={() => {
-                            dispatch(updateTabData({ ...tabData, Tab: 'createChecklist' }))
-                        }}>
-                            <img src={add} alt="" />
-                            <p>Create Checklist</p>
-                        </div>
-                    )}
+            <div className={style.searchbar}>
+                <div className={style.sec1}>
+                    <img src={Search} alt="" />
+                    <input autoComplete='off' onChange={search} type="text" placeholder='Search document by name' />
                 </div>
-                <div className={style.tableParent}>
-                    {!checkists || checkists?.length === 0 ? (
-                        <div className='w-100 d-flex align-items-center justify-content-center'>
-                            <p className='text-center'>No any Records Available here.</p>
-                        </div>
-                    ) : (
+                {tabData?.Creation && (
 
-                        <table className={style.table}>
-                            <tr className={style.headers}>
-                                <td>Document ID</td>
-                                <td>Document Type</td>
-                                <td>Department</td>
-                                <td>Reason</td>
-                                <td>Action</td>
-                                {tabData?.Approval && (
+                    <div className={style.sec2} onClick={() => {
+                        dispatch(updateTabData({ ...tabData, Tab: 'createChecklist' }))
+                    }}>
+                        <img src={add} alt="" />
+                        <p>Create Checklist</p>
+                    </div>
+                )}
+            </div>
+            <div className={style.tableParent}>
+                {!checkists || checkists?.length === 0 ? (
+                    <div className='w-100 d-flex align-items-center justify-content-center'>
+                        <p className='text-center'>No any Records Available here.</p>
+                    </div>
+                ) : (
 
-                                    <td></td>
-                                )}
+                    <table className={style.table}>
+                        <tr className={style.headers}>
+                            <td className='me-5'>Document ID</td>
+                            <td className='ms-3'>Document Type</td>
+                            <td>Department</td>
+                            <td className='ps-5'>Status</td>
+                            <td>Revision No.</td>
+                            <td>Disapproval Reason</td>
+                            <td>Action</td>
+                            {tabData?.Approval && (
                                 <td></td>
-                                <td>Status</td>
-                                <td>Revision No.</td>
-                                <td>Created By</td>
-                                <td>Creation Date</td>
-                                <td>Approved By</td>
-                                <td>Approval Date</td>
+                            )}
+                            <td></td>
+                            <td>Created By</td>
+                            <td>Creation Date</td>
+                            <td>Approved By</td>
+                            <td>Approval Date</td>
+                            <td>Disapproved By</td>
+                            <td>Disapproval Date</td>
 
-                            </tr>
-                            {
-                                checkists?.map((checklist, i) => {
-                                    return (
-                                        <tr className={style.tablebody} key={i}>
-                                            <td ><p style={{
-                                                backgroundColor: "#f0f5f0",
-                                                padding: "2px 5px",
-                                                borderRadius: "10px",
-                                                fontFamily: "Inter",
-                                                fontSize: "12px",
-                                                fontStyle: "normal",
-                                                fontWeight: "400",
-                                                lineHeight: "20px",
-                                            }}>{checklist.ChecklistId}</p></td>
-                                            <td className={style.simpleContent}>{checklist.DocumentType}</td>
-                                            <td>{checklist.Department.DepartmentName}</td>
-                                            <td >
+                        </tr>
+                        {
+                            checkists?.map((checklist, i) => {
+                                return (
+                                    <tr className={style.tablebody} key={i}>
+                                        <td className='me-5'><p style={{
+                                            backgroundColor: "#f0f5f0",
+                                            padding: "2px 5px",
+                                            borderRadius: "10px",
+                                            fontFamily: "Inter",
+                                            fontSize: "12px",
+                                            fontStyle: "normal",
+                                            fontWeight: "400",
+                                            lineHeight: "20px",
+                                        }}>{checklist.ChecklistId}</p></td>
+                                        <td className={`${style.simpleContent} ms-3`}>{checklist.DocumentType}</td>
+                                        <td>{checklist.Department.DepartmentName}</td>
+                                        <td><div className={`text-center ${checklist.Status === 'Approved' && style.greenStatus} ${checklist.Status === 'Disapproved' && style.redStatus} ${checklist.Status === 'Pending' && style.yellowStatus}  `}><p>{checklist.Status}</p></div></td>
+                                        <td className='ps-5'>{checklist.RevisionNo}</td>
+                                        <td>
+                                            <p onClick={() => {
+                                                setShowBox(true);
+                                                if (checklist.Status !== 'Disapproved') {
+                                                    setDataToShow('Checklist is not DisApproved')
+                                                } else {
+                                                    setDataToShow(checklist.Reason)
+                                                }
+                                            }} className={style.redclick}>View</p>
+                                        </td>
+                                        <td >
+                                            {tabData?.Edit && (
 
                                                 <p onClick={() => {
-                                                    setShowBox(true);
-                                                    if (checklist.Status !== 'Disapproved') {
-                                                        setDataToShow('Checklist is not DisApproved')
-                                                    } else {
-
-                                                        setDataToShow(checklist.Reason)
-                                                    }
-                                                }} className={style.redclick}>View</p>
-                                            </td>
-                                            <td >
-                                                {tabData?.Edit && (
-
-                                                    <p onClick={() => {
-                                                        dispatch(changeId(checklist._id))
-
-                                                        dispatch(updateTabData({ ...tabData, Tab: 'editChecklist' }))
-
-                                                    }} style={{
-                                                        height: '28px'
-
-                                                    }} className={`btn btn-outline-primary pt-0`}>Edit</p>
-                                                )}
-                                                <p onClick={() => {
-                                                    dispatch(updateTabData({ ...tabData, Tab: 'viewChecklist' }))
                                                     dispatch(changeId(checklist._id))
+
+                                                    dispatch(updateTabData({ ...tabData, Tab: 'editChecklist' }))
+
                                                 }} style={{
                                                     height: '28px'
 
-                                                }} className={`btn btn-outline-danger pt-0`}>View</p>
+                                                }} className={`btn btn-outline-primary pt-0`}>Edit</p>
+                                            )}
+                                            <p onClick={() => {
+                                                dispatch(updateTabData({ ...tabData, Tab: 'viewChecklist' }))
+                                                dispatch(changeId(checklist._id))
+                                            }} style={{
+                                                height: '28px'
+
+                                            }} className={`btn btn-outline-danger pt-0`}>View</p>
+                                        </td>
+                                        {tabData?.Approval && (
+
+                                            <td >
+
+                                                <p onClick={() => {
+                                                    if (checklist.Status === 'Pending') {
+                                                        setApprove(true);
+                                                        setChecklistIdForAction(checklist._id);
+                                                    } else {
+
+                                                        setDataToShow(`Checklist is already ${checklist.Status}`);
+                                                        setShowBox(true);
+
+                                                    }
+                                                }} style={{
+                                                    height: '28px'
+
+                                                }} className={`btn btn-outline-primary pt-0 px-1`}>Approve</p>
+                                                <p onClick={() => {
+                                                    if (checklist.Status === 'Pending') {
+
+                                                        setReject(true);
+                                                        setChecklistIdForAction(checklist._id);
+
+
+                                                    } else {
+
+                                                        setDataToShow(`Sorry, Checklist is ${checklist.Status}`);
+                                                        setShowBox(true);
+                                                    }
+                                                }} style={{
+                                                    height: '28px'
+
+                                                }} className={`btn btn-outline-danger pt-0 px-1`}>Disapprove</p>
                                             </td>
-                                            {tabData?.Approval && (
+                                        )}
+                                        <td></td>
+                                        <td>{checklist.CreatedBy}</td>
+                                        <td>{checklist.CreationDate?.slice(0, 10).split('-')[2]}/{checklist.CreationDate?.slice(0, 10).split('-')[1]}/{checklist.CreationDate?.slice(0, 10).split('-')[0]}</td>
+                                        <td>{checklist.ApprovedBy || '--'}</td>
+                                        {checklist.ApprovalDate ? (
+                                            <td>{checklist.ApprovalDate?.slice(0, 10).split('-')[2]}/{checklist.ApprovalDate?.slice(0, 10).split('-')[1]}/{checklist.ApprovalDate?.slice(0, 10).split('-')[0]}</td>
+                                        ) : (
+                                            <td>- -</td>
+                                        )}
+                                        <td>{checklist.DisapprovedBy || '--'}</td>
+                                        {checklist.DisapprovalDate ? (
+                                            <td>{checklist.DisapprovalDate?.slice(0, 10).split('-')[2]}/{checklist.DisapprovalDate?.slice(0, 10).split('-')[1]}/{checklist.DisapprovalDate?.slice(0, 10).split('-')[0]}</td>
+                                        ) : (
+                                            <td>- -</td>
+                                        )}
+                                    </tr>
 
-                                                <td >
+                                )
 
-                                                    <p onClick={() => {
-                                                        if (checklist.Status === 'Pending') {
-                                                            setApprove(true);
-                                                            setChecklistIdForAction(checklist._id);
-                                                        } else {
+                            })
+                        }
+                    </table>
+                )}
+            </div>
+            <div className={style.Btns}>
+                {startIndex > 0 && (
 
-                                                            setDataToShow(`Checklist is already ${checklist.Status}`);
-                                                            setShowBox(true);
+                    <button onClick={backPage}>
+                        {'<< '}Back
+                    </button>
+                )}
+                {allDataArr?.length > endIndex && (
 
-                                                        }
-                                                    }} style={{
-                                                        height: '28px'
-
-                                                    }} className={`btn btn-outline-primary pt-0 px-1`}>Approve</p>
-                                                    <p onClick={() => {
-                                                        if (checklist.Status === 'Pending') {
-
-                                                            setReject(true);
-                                                            setChecklistIdForAction(checklist._id);
-
-
-                                                        } else {
-
-                                                            setDataToShow(`Sorry, Checklist is ${checklist.Status}`);
-                                                            setShowBox(true);
-                                                        }
-                                                    }} style={{
-                                                        height: '28px'
-
-                                                    }} className={`btn btn-outline-danger pt-0 px-1`}>Disaprrove</p>
-                                                </td>
-                                            )}
-                                            <td></td>
-                                            <td><div className={`text-center ${checklist.Status === 'Approved' && style.greenStatus} ${checklist.Status === 'Disapproved' && style.redStatus} ${checklist.Status === 'Pending' && style.yellowStatus}  `}><p>{checklist.Status}</p></div></td>
-                                            <td>{checklist.RevisionNo}</td>
-                                            <td>{checklist.CreatedBy}</td>
-                                            <td>{checklist.CreationDate?.slice(0, 10).split('-')[2]}/{checklist.CreationDate?.slice(0, 10).split('-')[1]}/{checklist.CreationDate?.slice(0, 10).split('-')[0]}</td>
-                                            <td>{checklist.ApprovedBy || '--'}</td>
-                                            {checklist.ApprovalDate ? (
-                                                <td>{checklist.ApprovalDate?.slice(0, 10).split('-')[2]}/{checklist.ApprovalDate?.slice(0, 10).split('-')[1]}/{checklist.ApprovalDate?.slice(0, 10).split('-')[0]}</td>
-                                            ) : (
-                                                <td>- -</td>
-                                            )}
-                                        </tr>
-
-                                    )
-
-                                })
-                            }
-                        </table>
-                    )}
-                </div>
-                <div className={style.Btns}>
-                    {startIndex > 0 && (
-
-                        <button onClick={backPage}>
-                            {'<< '}Back
-                        </button>
-                    )}
-                    {allDataArr?.length > endIndex && (
-
-                        <button onClick={nextPage}>
-                            next{'>> '}
-                        </button>
-                    )}
-                </div>
+                    <button onClick={nextPage}>
+                        next{'>> '}
+                    </button>
+                )}
+            </div>
 
             {
                 showBox && (
-
                     <div class={style.alertparent}>
                         <div class={style.alert}>
-
                             <p class={style.msg}>{dataToShow}</p>
-
                             <div className={style.alertbtns}>
-
                                 <button style={{
-                                    marginLeft : '120px',
-                                    marginTop : '25px'
-                                }}  onClick={() => {
+                                    marginLeft: '120px',
+                                    marginTop: '25px'
+                                }} onClick={() => {
                                     setShowBox(false);
                                     setDataToShow(null)
-
                                 }} className={style.btn2}>OK</button>
-
                             </div>
                         </div>
                     </div>
@@ -290,7 +289,7 @@ function Checklist() {
                             <div className={style.alertbtns}>
                                 <button onClick={() => {
                                     dispatch(setSmallLoading(true))
-                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/approveChecklist`, { id: checklistIdForAction, approvedBy : user.Name }).then(() => {
+                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/approveChecklist`, { id: checklistIdForAction, approvedBy: user.Name }).then(() => {
                                         dispatch(setSmallLoading(false))
                                         statusChange();
                                         Swal.fire({
@@ -310,12 +309,9 @@ function Checklist() {
                                     })
                                     setApprove(false)
                                 }} className={style.btn1}>Approve</button>
-
-
                                 <button onClick={() => {
                                     setApprove(false);
                                 }} className={style.btn2}>Cancel</button>
-
                             </div>
                         </div>
                     </div> : null
@@ -328,7 +324,7 @@ function Checklist() {
                             <div className={style.alertbtns}>
                                 <button onClick={() => {
                                     dispatch(setSmallLoading(true))
-                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/disapproveChecklist`, { id: checklistIdForAction, Reason: Reason, disapprovedBy : user.Name }).then(() => {
+                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/disapproveChecklist`, { id: checklistIdForAction, Reason: Reason, disapprovedBy: user.Name }).then(() => {
                                         dispatch(setSmallLoading(false))
                                         statusChange();
                                         Swal.fire({
@@ -347,16 +343,10 @@ function Checklist() {
                                         })
                                     })
                                     setDisapprove(false)
-
-
-                                }
-                                } className={style.btn1}>Approve</button>
-
-
+                                }} className={style.btn1}>Disapprove</button>
                                 <button onClick={() => {
                                     setDisapprove(false);
                                 }} className={style.btn2}>Cancel</button>
-
                             </div>
                         </div>
                     </div> : null
@@ -375,8 +365,6 @@ function Checklist() {
                                 <textarea onChange={(e) => {
                                     setReason(e.target.value)
                                 }} name="Reason" value={Reason} id="" cols="30" rows="10" placeholder='Comment here' required />
-
-
                                 <div className={`$ mt-3 d-flex justify-content-end `}>
                                     <button type='submit' className='btn btn-danger px-3 py-2 m-3'>Submit</button>
                                     <button onClick={() => {
@@ -388,7 +376,6 @@ function Checklist() {
                     </div>
                 )
             }
-
         </>
     )
 }

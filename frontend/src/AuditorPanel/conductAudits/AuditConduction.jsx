@@ -180,13 +180,11 @@ function AuditConduction() {
                                                             setAnswers(updatedAnswers);
                                                         }} type="radio" class="btn-check" name={question._id} id={`Yes-${index}`} autocomplete="off" {...question.Required ? { required: true } : {}} />
                                                         <label class="btn btn-outline-success m-2" for={`Yes-${index}`}>Yes</label>
-
                                                         <input autoComplete='off' onChange={(e) => {
                                                             const updatedAnswers = [...answers]
                                                             if (!updatedAnswers[index]) {
                                                                 updatedAnswers[index] = {};
                                                             }
-
                                                             updatedAnswers[index].question = question._id;
                                                             updatedAnswers[index].YesNoAnswer = 'No';
                                                             setAnswers(updatedAnswers);
@@ -207,13 +205,11 @@ function AuditConduction() {
                                                 )}
                                                 {question.ComplianceType === 'Safe/AtRisk' && (
                                                     <div className='d-flex flex-row flex-wrap'>
-
                                                         <input autoComplete='off' onChange={(e) => {
                                                             const updatedAnswers = [...answers]
                                                             if (!updatedAnswers[index]) {
                                                                 updatedAnswers[index] = {};
                                                             }
-
                                                             updatedAnswers[index].question = question._id;
                                                             updatedAnswers[index].SafeAtRiskAnswer = 'Safe';
                                                             setAnswers(updatedAnswers);

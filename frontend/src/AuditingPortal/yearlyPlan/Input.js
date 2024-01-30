@@ -54,7 +54,6 @@ function AddAuditingYearlyPlan() {
                 const emptyProcessIndex = processesArray.indexOf(processesArray[index]);
                 processesArray.splice(emptyProcessIndex, 1);
             }
-
         }
         setYearlyPlanData({ ...yearlyPlanData, Selected: processesArray })
     }
@@ -77,7 +76,7 @@ function AddAuditingYearlyPlan() {
     const makeRequest = () => {
         if (dataToSend.Year !== '' && dataToSend.Selected.lenght !== 0) {
             dispatch(setSmallLoading(true))
-            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addYearlyAuditPlan`, {...dataToSend, createdBy : user.Name}, { headers: { Authorization: `${user.Department._id}` } }).then(() => {
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addYearlyAuditPlan`, { ...dataToSend, createdBy: user.Name }, { headers: { Authorization: `${user.Department._id}` } }).then(() => {
                 setDataToSend(null);
                 dispatch(setSmallLoading(false))
                 Swal.fire({
@@ -100,7 +99,6 @@ function AddAuditingYearlyPlan() {
                         confirmButtonText: 'OK.'
                     })
                 } else {
-
                     Swal.fire({
                         icon: 'error',
                         title: 'OOps..',
@@ -120,99 +118,98 @@ function AddAuditingYearlyPlan() {
 
     return (
         <>
-           
-                <form onSubmit={(event) => {
-                    event.preventDefault();
-                    console.log(yearlyPlanData)
-                    if (yearlyPlanData.Selected.length !== 0) {
-                        let hasError = false; // Initialize a variable to track errors
-                        for (let i = 0; i < yearlyPlanData.Selected.length; i++) {
-                            if (yearlyPlanData.Selected[i].Risk === 'High' && yearlyPlanData.Selected[i].monthNames.length < 3) {
-                                hasError = true; // Set the error flag to true
-                            } else if (yearlyPlanData.Selected[i].Risk === 'Medium' && yearlyPlanData.Selected[i].monthNames.length < 2) {
-                                hasError = true; // Set the error flag to true
-                            } else if (yearlyPlanData.Selected[i].Risk === 'Low' && yearlyPlanData.Selected[i].monthNames.length < 1) {
-                                hasError = true; // Set the error flag to true
-                            }
+            <form onSubmit={(event) => {
+                event.preventDefault();
+                console.log(yearlyPlanData)
+                if (yearlyPlanData.Selected.length !== 0) {
+                    let hasError = false; // Initialize a variable to track errors
+                    for (let i = 0; i < yearlyPlanData.Selected.length; i++) {
+                        if (yearlyPlanData.Selected[i].Risk === 'High' && yearlyPlanData.Selected[i].monthNames.length < 3) {
+                            hasError = true; // Set the error flag to true
+                        } else if (yearlyPlanData.Selected[i].Risk === 'Medium' && yearlyPlanData.Selected[i].monthNames.length < 2) {
+                            hasError = true; // Set the error flag to true
+                        } else if (yearlyPlanData.Selected[i].Risk === 'Low' && yearlyPlanData.Selected[i].monthNames.length < 1) {
+                            hasError = true; // Set the error flag to true
                         }
-                        if (!hasError) {
-                            // No errors, proceed with your logic
-                            alertManager();
-                            setDataToSend(yearlyPlanData)
-                        } else {
-                            // There are errors
-                            setSelectionError(true);
-                        }
-                    } else {
-                        setPopUpData("No week selected. Kindly select some weeks.!")
-                        setShowBox(true);
                     }
-                }}>
-                    <div className='d-flex flex-row px-lg-5  px-2 mx-2 my-2'>
-                        <BsArrowLeftCircle role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
-                            {
-                                dispatch(updateTabData({ ...tabData, Tab: 'Audit Program (Yearly Plan)' }))
-                            }
-                        }} />
+                    if (!hasError) {
+                        // No errors, proceed with your logic
+                        alertManager();
+                        setDataToSend(yearlyPlanData)
+                    } else {
+                        // There are errors
+                        setSelectionError(true);
+                    }
+                } else {
+                    setPopUpData("No week selected. Kindly select some weeks.!")
+                    setShowBox(true);
+                }
+            }}>
+                <div className='d-flex flex-row px-lg-5  px-2 mx-2 my-2'>
+                    <BsArrowLeftCircle role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
+                        {
+                            dispatch(updateTabData({ ...tabData, Tab: 'Audit Program (Yearly Plan)' }))
+                        }
+                    }} />
+                </div>
+                <div className={`${style.searchbar} mt-1 `}>
+                    <div className={style.sec1}>
+                        <select className='bg-body-secondary px-2' onChange={(event) => {
+                            console.log(event.target.value)
+                            setYearlyPlanData({ ...yearlyPlanData, Year: event.target.value });
+                        }} style={{
+                            width: "200px",
+                            border: 'none',
+                            borderRadius: '50px'
+                        }} name='Year' required>
+                            <option value="" disabled selected>Select Year</option>
+                            <option value="2023">2023</option>
+                            <option value="2024">2024</option>
+                            <option value="2025">2025</option>
+                        </select>
                     </div>
-                    <div className={`${style.searchbar} mt-1 `}>
-                        <div className={style.sec1}>
-                            <select className='bg-body-secondary px-2' onChange={(event) => {
-                                console.log(event.target.value)
-                                setYearlyPlanData({ ...yearlyPlanData, Year: event.target.value });
-                            }} style={{
-                                width: "200px",
-                                border: 'none',
-                                borderRadius: '50px'
-                            }} name='Year' required>
-                                <option value="" disabled selected>Select Year</option>
-                                <option value="2023">2023</option>
-                                <option value="2024">2024</option>
-                                <option value="2025">2025</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div className={style.tableParent2}>
-                        <table className={style.table}>
-                            <tr className={style.headers}>
-                                <td>Process Name</td>
-                                {months.map((month) => {
-                                    return (
-                                        <td>{month}</td>
-                                    )
-                                })}
-                            </tr>
-                            {
-                                processes?.map((process, i) => {
-                                    return (
-                                        <tr className={style.tablebody} key={i}>
-                                            <td>
-                                                <p>{process.ProcessName} ( {process.ProcessRiskAssessment} ) </p>
-                                            </td>
-                                            {months.map((month) => {
-                                                return (
-                                                    <td>
-                                                        <input autoComplete='off' onChange={(event) => {
-                                                            handleCheckbox(event, process._id, process.ProcessRiskAssessment)
-                                                        }} value={month} type="checkbox" />
-                                                    </td>
-                                                )
-                                            })}
+                </div>
+                <div className={style.tableParent2}>
+                    <table className={style.table}>
+                        <tr className={style.headers}>
+                            <td>Process Name</td>
+                            {months.map((month) => {
+                                return (
+                                    <td>{month}</td>
+                                )
+                            })}
+                        </tr>
+                        {
+                            processes?.map((process, i) => {
+                                return (
+                                    <tr className={style.tablebody} key={i}>
+                                        <td>
+                                            <p>{process.ProcessName} ( {process.ProcessRiskAssessment} ) </p>
+                                        </td>
+                                        {months.map((month) => {
+                                            return (
+                                                <td>
+                                                    <input autoComplete='off' onChange={(event) => {
+                                                        handleCheckbox(event, process._id, process.ProcessRiskAssessment)
+                                                    }} value={month} type="checkbox" />
+                                                </td>
+                                            )
+                                        })}
 
-                                        </tr>
-                                    )
+                                    </tr>
+                                )
 
-                                })
-                            }
-                        </table>
-                    </div>
-                    <div className={`${style.btn} mb-3`}>
-                        <button onClick={() => {
-                            setDataToSend(yearlyPlanData);
-                        }} type='submit' className='mb-3' >Submit</button>
-                    </div>
-                </form>
-        
+                            })
+                        }
+                    </table>
+                </div>
+                <div className={`${style.btn} mb-3`}>
+                    <button onClick={() => {
+                        setDataToSend(yearlyPlanData);
+                    }} type='submit' className='mb-3' >Submit</button>
+                </div>
+            </form>
+
             {
                 alert ?
                     <div class={style.alertparent}>
@@ -235,9 +232,9 @@ function AddAuditingYearlyPlan() {
                             <p class={style.msg}>{popUpData}</p>
                             <div className={style.alertbtns}>
                                 <button style={{
-                                    marginLeft : '120px',
-                                    marginTop : '25px'
-                                }}  onClick={() => {
+                                    marginLeft: '120px',
+                                    marginTop: '25px'
+                                }} onClick={() => {
                                     setShowBox(false)
                                     setPopUpData(null);
                                 }} className={style.btn1}>Ok.</button>

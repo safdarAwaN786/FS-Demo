@@ -11,7 +11,7 @@ const CorrectiveActionSchema = new mongoose.Schema({
     },
     UserDepartment : {
         type : Schema.Types.ObjectId,
-        ref : 'UserDepartment'
+        ref : 'Department'
     },
 
     Answers: [{
@@ -39,11 +39,11 @@ const CorrectiveActionSchema = new mongoose.Schema({
         },
 
         EvidenceDoc: {
-            type: Object,
+            type: String,
         },
 
         CorrectiveDoc: {
-            type: Object,
+            type: String,
         },
 
         ComplianceLevelValue: {

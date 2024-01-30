@@ -9,6 +9,7 @@ import { updateTabData } from '../../redux/slices/tabSlice';
 import Slider from 'rc-slider';
 import { setSmallLoading } from '../../redux/slices/loading';
 import html2pdf from 'html2pdf.js';
+import dayjs from 'dayjs';
 
 const formatDate = (date) => {
     const newDate = new Date(date);
@@ -365,7 +366,10 @@ function ViewCorrectiveAction() {
                                             </label>
                                         </div>
                                         <div className='row p-3 mt-4'>
-
+                                        <div className='col-lg-6 col-md-12'>
+                                                <p className='fw-bold'>Target Date : </p>
+                                                <input placeholder='write here..' value={dayjs(correctiveAnswer?.TargetDate).format('DD/MM/YYYY')}  rows={4} className='w-100 border-0 p-2 m-2' type='text' required />
+                                            </div>
                                             <div className='col-lg-6 col-md-12'>
                                                 <p className='fw-bold'>Correction : </p>
                                                 <textarea placeholder='write here..' name='Correction' value={correctiveAnswer?.Correction} rows={4} className='w-100 border-0 p-2 m-2' type='text' required readOnly />
