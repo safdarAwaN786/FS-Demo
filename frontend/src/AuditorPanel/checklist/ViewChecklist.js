@@ -33,7 +33,7 @@ function ViewChecklist() {
             })
         })
     }, [])
-
+    console.log(dataToSend);
     const downloadPDF = async () => {
         var element = document.getElementById('printable');
         var opt = {
@@ -78,7 +78,7 @@ function ViewChecklist() {
                         pdf.setLineWidth(0.1); // Example line width
                         pdf.line(0.1, (pdf.internal.pageSize.getHeight() / 2) + 1, pdf.internal.pageSize.getWidth() - 0.2, (pdf.internal.pageSize.getHeight() / 2) + 1)
                         pdf.text("Document Id", 1, (pdf.internal.pageSize.getHeight() / 2) + 1.5);
-                        pdf.text(`${dataToSend.DocumentId}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 1.5);
+                        pdf.text(`${dataToSend.ChecklistId}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 1.5);
                         pdf.text("Created By", 1, (pdf.internal.pageSize.getHeight() / 2) + 1.8);
                         pdf.text(`${dataToSend.CreatedBy}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 1.8);
                         pdf.text("Creation Date", 1, (pdf.internal.pageSize.getHeight() / 2) + 2.1);

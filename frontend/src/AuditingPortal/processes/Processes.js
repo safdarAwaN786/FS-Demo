@@ -24,6 +24,9 @@ function Processes() {
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
     const user = useSelector(state => state.auth.user);
+    const [showTabs, setShowTabs] = useState(false);
+    const [userTabs, setUserTabs] = useState(null);
+
     useEffect(() => {
         dispatch(setSmallLoading(true))
         axios.get(`${process.env.REACT_APP_BACKEND_URL}/readProcess`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
@@ -106,6 +109,7 @@ function Processes() {
                             <td>Shift Breaks</td>
                             <td>Critical Areas</td>
                             <td>Process Owner</td>
+                            <td>Assigned Tabs</td>
                             <td>Action</td>
                         </tr>
                         {
@@ -156,6 +160,12 @@ function Processes() {
                                                 // setTab('processOwners');
                                                 // setIdToWatch(training._id);
                                             }} className={style.orangeclick}>Click Here</p>
+                                        </td>
+                                        <td>
+                                            <p onClick={() => {
+                                                setUserTabs(process.ProcessOwner.Tabs);
+                                                setShowTabs(true);
+                                            }} className={style.redclick}>View</p>
                                         </td>
                                         <td>
                                             <p onClick={() => {
@@ -274,13 +284,37 @@ function Processes() {
                             <div className={style.alertbtns}>
 
                                 <button style={{
-                                    marginLeft : '120px',
-                                    marginTop : '25px'
+                                    marginLeft: '120px',
+                                    marginTop: '25px'
                                 }} onClick={() => {
                                     setShowBox(false);
 
                                 }} className={style.btn2}>OK</button>
 
+                            </div>
+                        </div>
+                    </div>
+                )
+            }
+            {
+                showTabs && (
+                    <div class={style.alertparent}>
+                        <div style={{
+                            height: '80%',
+                            overflowY: 'scroll'
+                        }} class={`${style.alert} py-3 `}>
+                            {userTabs.map((tabObj) => {
+                                return (
+                                    <p class={style.msg}>{tabObj.Tab}</p>
+                                )
+                            })}
+                            <div className={style.alertbtns}>
+                                <button style={{
+                                    marginLeft: '120px',
+                                    marginTop: '25px'
+                                }} onClick={() => {
+                                    setShowTabs(false);
+                                }} className={style.btn2}>OK</button>
                             </div>
                         </div>
                     </div>

@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { updateTabData } from '../../redux/slices/tabSlice'
 import { setSmallLoading } from '../../redux/slices/loading'
 
-function AddAuditingYearlyPlan() {
+function EditAuditYearlyPlan() {
     const [dataToSend, setDataToSend] = useState(null)
     const months = ["January", "Febraury", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
     const [processes, setProcesses] = useState(null);
@@ -23,10 +23,33 @@ function AddAuditingYearlyPlan() {
     const dispatch = useDispatch();
     const [showBox, setShowBox] = useState(false)
     const [popUpData, setPopUpData] = useState(null);
-    const [alert, setalert] = useState(false)
+    const [alert, setalert] = useState(false);
     const alertManager = () => {
         setalert(!alert)
     }
+    const idToWatch = useSelector(state => state.idToProcess);
+
+    const planId = idToWatch;
+
+    useEffect(() => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readYearlyAuditPlanById/${planId}`).then((response) => {
+            // setPlanToShow(response.data.data);
+            response.data.data.Selected = response.data.data.Selected.map(obj => {
+                return {...obj, Process : obj.Process._id}
+            })
+            setYearlyPlanData(response.data.data);
+            dispatch(setSmallLoading(false))
+        }).catch(err => {
+            dispatch(setSmallLoading(false));
+            Swal.fire({
+                icon : 'error',
+                title : 'OOps..',
+                text : 'Something went wrong, Try Again!'
+            })
+        })
+    }, [])
+
     const handleCheckbox = (event, Process, Risk) => {
         const monthName = event.target.value;
         const processesArray = yearlyPlanData.Selected;
@@ -57,9 +80,11 @@ function AddAuditingYearlyPlan() {
         }
         setYearlyPlanData({ ...yearlyPlanData, Selected: processesArray })
     }
+    const [allDataArr, setAllDataArr] = useState(null);
     useEffect(() => {
         dispatch(setSmallLoading(true))
         axios.get(`${process.env.REACT_APP_BACKEND_URL}/readProcess`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
+            setAllDataArr(response.data.data)
             setProcesses(response.data.data.slice(startIndex, endIndex));
             dispatch(setSmallLoading(false))
         }).catch(err => {
@@ -74,7 +99,7 @@ function AddAuditingYearlyPlan() {
     const makeRequest = () => {
         if (dataToSend.Year !== '' && dataToSend.Selected.lenght !== 0) {
             dispatch(setSmallLoading(true))
-            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addYearlyAuditPlan`, { ...dataToSend, createdBy: user.Name }, { headers: { Authorization: `${user.Department._id}` } }).then(() => {
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/editYearlyAuditPlan`, { ...dataToSend, createdBy: user.Name }, { headers: { Authorization: `${user.Department._id}` } }).then(() => {
                 setDataToSend(null);
                 dispatch(setSmallLoading(false))
                 Swal.fire({
@@ -160,18 +185,12 @@ function AddAuditingYearlyPlan() {
                 </div>
                 <div className={`${style.searchbar} mt-1 `}>
                     <div className={style.sec1}>
-                        <select className='bg-body-secondary px-2' onChange={(event) => {
-                            console.log(event.target.value)
-                            setYearlyPlanData({ ...yearlyPlanData, Year: event.target.value });
-                        }} style={{
+                        <select className='bg-body-secondary px-2'  style={{
                             width: "200px",
                             border: 'none',
                             borderRadius: '50px'
-                        }} name='Year' required>
-                            <option value="" disabled selected>Select Year</option>
-                            <option value="2023">2023</option>
-                            <option value="2024">2024</option>
-                            <option value="2025">2025</option>
+                        }} name='Year'>
+                            <option value="" disabled selected>{yearlyPlanData.Year}</option>
                         </select>
                     </div>
                 </div>
@@ -195,12 +214,13 @@ function AddAuditingYearlyPlan() {
                                         {months.map((month) => {
                                             return (
                                                 <td>
-                                                    <input onChange={(event) => {
+                                                    <input autoComplete='off' onChange={(event) => {
                                                         handleCheckbox(event, process._id, process.ProcessRiskAssessment)
-                                                    }} value={month} checked={checkboxValue(process, month)} type="checkbox" />
+                                                    }} checked={checkboxValue(process, month)} value={month} type="checkbox" />
                                                 </td>
                                             )
                                         })}
+
                                     </tr>
                                 )
 
@@ -268,4 +288,4 @@ function AddAuditingYearlyPlan() {
     )
 }
 
-export default AddAuditingYearlyPlan
+export default EditAuditYearlyPlan

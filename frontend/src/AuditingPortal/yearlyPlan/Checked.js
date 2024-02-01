@@ -53,11 +53,8 @@ function AuditingChecked() {
 
     const search = (event) => {
         if (event.target.value !== "") {
-            console.log(event.target.value);
-
             const searchedList = planToShow?.Selected.filter((obj) => obj?.Process?.ProcessName?.includes(event.target.value)
             )
-
             setPlanProcesses(searchedList);
         } else {
             setPlanProcesses(planToShow?.Selected)

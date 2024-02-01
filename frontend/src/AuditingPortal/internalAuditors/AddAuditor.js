@@ -195,11 +195,11 @@ function AddAuditor() {
                                 title: 'OOps..',
                                 text: 'Provide 11 digits for phone Number'
                             })
-                        } else if (!documentRef.current.value || !letterRef.current.value) {
+                        } else if(approvedAuditor && !letterRef.current.value) {
                             Swal.fire({
                                 icon: 'error',
                                 title: 'OOps..',
-                                text: 'Kindly Upload Each Document!'
+                                text: 'Kindly Upload Approved Auditor Document!'
                             })
                         } else {
                             const data = new FormData(event.target);
@@ -342,7 +342,7 @@ function AddAuditor() {
                                     alertManager();
                                     makeRequest();
                                 }} className={style.btn1}>Submit</button>
-                                <button onClick={alertManager} className={style.btn2}>Cencel</button>
+                                <button onClick={alertManager} className={style.btn2}>Cancel</button>
                             </div>
                         </div>
                     </div> : null

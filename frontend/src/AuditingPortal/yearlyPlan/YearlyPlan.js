@@ -28,9 +28,9 @@ function YearlyPlanAuditing() {
         }).catch(err => {
             dispatch(setSmallLoading(false));
             Swal.fire({
-                icon : 'error',
-                title : 'OOps..',
-                text : 'Something went wrong, Try Again!'
+                icon: 'error',
+                title: 'OOps..',
+                text: 'Something went wrong, Try Again!'
             })
         })
     }, [])
@@ -77,7 +77,7 @@ function YearlyPlanAuditing() {
     return (
 
 
-  <>
+        <>
 
             <div className={style.searchbar}>
                 <div className={style.sec1}>
@@ -87,7 +87,7 @@ function YearlyPlanAuditing() {
                 {tabData?.Creation && (
 
                     <div onClick={() => {
-                        dispatch(updateTabData({...tabData, Tab : 'addAuditingYearlyPlan'}));
+                        dispatch(updateTabData({ ...tabData, Tab: 'addAuditingYearlyPlan' }));
                     }} className={style.sec2}>
                         <img src={add} alt="" />
                         <p>Add New</p>
@@ -114,11 +114,18 @@ function YearlyPlanAuditing() {
                                             <p>{yearlyPlan.Year}</p>
                                         </td>
                                         <td ><button onClick={() => {
-                                            dispatch(updateTabData({...tabData, Tab : 'auditingYearlyPlanChecked'}))
+                                            dispatch(updateTabData({ ...tabData, Tab: 'auditingYearlyPlanChecked' }))
                                             dispatch(changeId(yearlyPlan._id))
                                         }} className={`${style.view} btn btn-outline-primary`}>
                                             View
-                                        </button></td>
+                                        </button>
+                                            <button onClick={() => {
+                                                dispatch(updateTabData({ ...tabData, Tab: 'editAuditingYearlyPlanChecked' }))
+                                                dispatch(changeId(yearlyPlan._id))
+                                            }} className={`${style.view} btn btn-outline-primary`}>
+                                                Edit
+                                            </button>
+                                        </td>
                                     </tr>
                                 )
 
@@ -141,8 +148,8 @@ function YearlyPlanAuditing() {
                     </button>
                 )}
             </div>
-  </>
-        
+        </>
+
 
     )
 }

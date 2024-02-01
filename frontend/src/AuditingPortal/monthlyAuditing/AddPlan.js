@@ -33,9 +33,6 @@ function AddPlanAuditing() {
         dispatch(setSmallLoading(true))
         axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`).then((res) => {
             SetDepartmentsToShow(res.data.data);
-            if (yearlyPlans) {
-                dispatch(setSmallLoading(false))
-            }
         }).catch(err => {
             dispatch(setSmallLoading(false));
             Swal.fire({
@@ -45,6 +42,11 @@ function AddPlanAuditing() {
             })
         })
     }, [])
+    useEffect(()=>{
+        if(departmentsToShow != null && yearlyPlans != null){
+            dispatch(setSmallLoading(false));
+        }
+    }, [departmentsToShow, yearlyPlans])
 
     useEffect(() => {
         if (dataToSend?.Month === 'Febraury') {
@@ -66,11 +68,7 @@ function AddPlanAuditing() {
     useEffect(() => {
         dispatch(setSmallLoading(true))
         axios.get(`${process.env.REACT_APP_BACKEND_URL}/readYearlyAuditPlan`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
-            console.log(response.data);
             setYearlyPlans(response.data.data);
-            if (departmentsToShow) {
-                dispatch(setSmallLoading(false))
-            }
         }).catch(err => {
             dispatch(setSmallLoading(false));
             Swal.fire({

@@ -116,22 +116,11 @@
 .tablebody > td:nth-child(1) {
   width: 270px;
 }
-.headers > td:nth-child(2),
-.tablebody > td:nth-child(2) {
-  width: 207px;
+.headers > td:nth-child(n+2),
+.tablebody > td:nth-child(n+2) {
+  width: 200px;
 }
-.headers > td:nth-child(3),
-.tablebody > td:nth-child(3) {
-  width: 211px;
-}
-.headers > td:nth-child(4),
-.tablebody > td:nth-child(4) {
-  width: 214px;
-}
-.headers > td:nth-child(5),
-.tablebody > td:nth-child(5) {
-  width: 218px;
-}
+
 
 .tablebody > td {
   display: flex;

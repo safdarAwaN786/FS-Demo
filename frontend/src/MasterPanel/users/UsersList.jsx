@@ -15,10 +15,7 @@ function UsersList() {
     const [deleteUser, setDeleteUser] = useState(false);
     const [usersList, setUsersList] = useState(null);
     const [showBox, setShowBox] = useState(false);
-    const [passwordVisible, setPasswordVisible] = useState(false); // State to control password visibility
-    const [selectedUser, setSelectedUser] = useState(null); // State to keep track of the selected user
     const user = useSelector(state => state.auth.user);
-
     const alertManager = () => {
         setalert(!alert)
     }
@@ -160,7 +157,7 @@ function UsersList() {
                                         <td>{user.Email}</td>
                                         <td>{user.UserName}</td>
 
-                                        <td >
+                                        <td>
                                             <p onClick={() => {
                                                 setUserTabs(user.Tabs);
                                                 setShowBox(true);
@@ -168,19 +165,11 @@ function UsersList() {
                                         </td>
                                         <td>
                                             <p onClick={() => {
-                                                dispatch(updateTabData({ ...tabData, Tab: 'assignTabs' }))
-
-                                                dispatch(changeId(user._id))
-
-
-
+                                                dispatch(updateTabData({ ...tabData, Tab: 'assignTabs' }));
+                                                dispatch(changeId(user._id));
                                             }} className='btn btn-outline-success p-1 m-2'>Assign Tabs</p>
                                         </td>
-                                        {/* <td>
-                                            <p onClick={() => {
-
-                                            }} className='btn btn-outline-primary p-1 m-2'>Send Email</p>
-                                        </td> */}
+                                        
                                         <td>
                                             {user.isSuspended ? (
                                                 <button onClick={() => {
@@ -241,9 +230,9 @@ function UsersList() {
                             <div className={style.alertbtns}>
 
                                 <button style={{
-                                    marginLeft : '120px',
-                                    marginTop : '25px'
-                                }}  onClick={() => {
+                                    marginLeft: '120px',
+                                    marginTop: '25px'
+                                }} onClick={() => {
                                     setShowBox(false);
 
                                 }} className={style.btn2}>OK</button>

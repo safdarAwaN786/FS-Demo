@@ -83,7 +83,6 @@ const uploadToCloudinary = (buffer) => {
                     }
                 }
             );
-
             uploadStream.end(buffer);
         });
     } catch (error) {
@@ -208,13 +207,13 @@ router.post("/addAuditor", upload.fields([{ name: 'AuditorImage' }, { name: 'Aud
                     });
                     // Save the modified PDF
                     const modifiedPdfBuffer = await pdfDoc.save();
-
+                    console.log('going to uplaod doc.');
                     auditorDocumentUrl = await uploadToCloudinary(modifiedPdfBuffer).then((result) => {
                         return (result.secure_url)
                     }).catch((err) => {
+                        console.log('error in uploading auditor doc');
                         console.log(err);
                     });
-                    console.log(auditorDocumentUrl);
                 }
 
 

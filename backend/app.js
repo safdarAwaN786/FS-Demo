@@ -136,8 +136,12 @@ app.get('/download-image', async (req, res) => {
     // const fileExtension = imageURL.substring(imageURL.lastIndexOf('.'));
     var imageResponse;
     var imageBuffer;
-    imageResponse = await axios.get(imageURL, { responseType: 'arraybuffer' });
-    imageBuffer = Buffer.from(imageResponse.data, 'binary');
+    console.log(imageURL);
+    imageResponse = await axios.get(imageURL, { responseType: 'arraybuffer' }).catch(err => {
+      console.log(err);
+    });
+    console.log(imageResponse);
+    imageBuffer = Buffer.from(imageResponse?.data, 'binary');
     const { fileTypeFromBuffer } = await import('file-type');
     const fileTypeResult = await fileTypeFromBuffer(imageBuffer);
     if (!fileTypeResult) {

@@ -154,6 +154,7 @@ import ReportsList from './AuditorPanel/reportsrecords/ReportsList'
 import ReportActionsList from './AuditorPanel/reportsrecords/ReportActionsList'
 import ViewActionInReport from './AuditorPanel/reportsrecords/ViewActionInReport'
 import { setSmallLoading } from './redux/slices/loading'
+import EditAuditYearlyPlan from './AuditingPortal/yearlyPlan/EditAuditYearlyPlan'
 
 
 
@@ -661,6 +662,10 @@ function MainPage() {
                             {Tab === 'auditingYearlyPlanChecked' && (
 
                                 <AuditingChecked />
+                            )}
+                            {Tab === 'editAuditingYearlyPlanChecked' && (
+
+                                <EditAuditYearlyPlan />
                             )}
                             {Tab === 'addAuditingYearlyPlan' && (
 
