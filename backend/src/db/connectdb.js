@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 // * This is the mongodb Atlas connection link
-const dbConnect = 'mongodb+srv://taskeen_haider:dNToWTe3lv4HGmW2@cluster0.yq6p685.mongodb.net/?retryWrites=true&w=majority';
+const dbConnect = 'mongodb+srv://trainingtuvsw:hgwdh$@56!#34@656776DFGFSggg@feat.ugpjggg.mongodb.net/?retryWrites=true&w=majority';
 
 // * Theses are the parameters
 const connectionParams = {
