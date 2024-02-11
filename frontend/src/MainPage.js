@@ -189,7 +189,6 @@ function MainPage() {
             setIsOpen(true);
         }
     };
-    console.log(smallLoading);
 
     return (
         <>

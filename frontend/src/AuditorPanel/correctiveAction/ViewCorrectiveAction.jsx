@@ -31,7 +31,7 @@ function ViewCorrectiveAction() {
     const dispatch = useDispatch();
     const idToWatch = useSelector(state => state.idToProcess);
 
-  
+
 
     const [correctiveAnswers, setCorrectiveAnswers] = useState([]);
     const [dataToSend, setDataToSend] = useState(null);
@@ -73,35 +73,35 @@ function ViewCorrectiveAction() {
                         // get the data URL of the canvas
                         const dataURL = canvas.toDataURL('image/jpeg');
                         // pass the data URL to the pdf.addImage method
-                        pdf.addImage(dataURL, 'JPEG', (pdf.internal.pageSize.getWidth() / 2) - 1.5, 2.5, 3, 3);
-                        pdf.setFontSize(25);
-                        pdf.text(`${user.Company.CompanyName}`, (pdf.internal.pageSize.getWidth() / 2) - 1.5, (pdf.internal.pageSize.getHeight() / 2));
-                        pdf.text(`${user.Company.Address}`, (pdf.internal.pageSize.getWidth() / 2) - 1.5, (pdf.internal.pageSize.getHeight() / 2) + 0.5);
+                        pdf.addImage(dataURL, 'JPEG', 1, 2.5, 3, 3);
+                        pdf.setFontSize(20);
+                        pdf.text(`Company : ${user.Company.CompanyName}`, (1), (pdf.internal.pageSize.getHeight() / 2));
                         pdf.setFontSize(15);
+                        pdf.text(`Address : ${user.Company.Address}`, (1), (pdf.internal.pageSize.getHeight() / 2) + 0.5);
                         pdf.setLineWidth(0.1); // Example line width
                         pdf.line(0.1, (pdf.internal.pageSize.getHeight() / 2) + 1, pdf.internal.pageSize.getWidth() - 0.2, (pdf.internal.pageSize.getHeight() / 2) + 1)
-                        pdf.text("Document Id", 1, (pdf.internal.pageSize.getHeight() / 2) + 1.5);
-                        pdf.text(`${dataToSend.DocumentId}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 1.5);
-                        pdf.text("Created By", 1, (pdf.internal.pageSize.getHeight() / 2) + 1.8);
-                        pdf.text(`${dataToSend.CreatedBy}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 1.8);
-                        pdf.text("Creation Date", 1, (pdf.internal.pageSize.getHeight() / 2) + 2.1);
-                        pdf.text(`${formatDate(dataToSend.CreationDate)}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 2.1);
+                        pdf.text("Checklist ID", 1, (pdf.internal.pageSize.getHeight() / 2) + 1.5);
+                        pdf.text(`${dataToSend?.Report?.ConductAudit?.Checklist?.ChecklistId}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 1.5);
+                        pdf.text("Corrective Action By", 1, (pdf.internal.pageSize.getHeight() / 2) + 1.8);
+                        pdf.text(`${dataToSend.CorrectionBy}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 1.8);
+                        pdf.text("Corrective Action Date", 1, (pdf.internal.pageSize.getHeight() / 2) + 2.1);
+                        pdf.text(`${formatDate(dataToSend.CorrectionDate)}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 2.1);
                         pdf.text("Revision Number", 1, (pdf.internal.pageSize.getHeight() / 2) + 2.4);
-                        pdf.text(`${dataToSend.RevisionNo}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 2.4);
-                        if (dataToSend.Status == 'Approved') {
+                        pdf.text(`${dataToSend.Report?.ConductAudit?.Checklist?.RevisionNo}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 2.4);
+                        // if (dataToSend.Report?.ConductAudit?.Checklist?.Status == 'Approved') {
 
-                            pdf.text("Approved By", 1, (pdf.internal.pageSize.getHeight() / 2) + 2.7);
-                            pdf.text(`${dataToSend.ApprovedBy}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 2.7);
-                            pdf.text("Approval Date", 1, (pdf.internal.pageSize.getHeight() / 2) + 3.0);
-                            pdf.text(`${formatDate(dataToSend.ApprovalDate)}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 3.0);
-                        }
-                        if (dataToSend.ReviewedBy) {
+                        //     pdf.text("Checklist Approved By", 1, (pdf.internal.pageSize.getHeight() / 2) + 2.7);
+                        //     pdf.text(`${dataToSend.Report?.ConductAudit?.Checklist?.ApprovedBy}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 2.7);
+                        //     pdf.text("Approval Date", 1, (pdf.internal.pageSize.getHeight() / 2) + 3.0);
+                        //     pdf.text(`${formatDate(dataToSend.Report?.ConductAudit?.Checklist?.ApprovalDate)}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 3.0);
+                        // }
+                        // if (dataToSend.ReviewedBy) {
 
-                            pdf.text("Reviewed By", 1, (pdf.internal.pageSize.getHeight() / 2) + 3.3);
-                            pdf.text(`${dataToSend.ReviewedBy}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 3.3);
-                            pdf.text("Reviewed Date", 1, (pdf.internal.pageSize.getHeight() / 2) + 3.6);
-                            pdf.text(`${formatDate(dataToSend.ReviewDate)}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 3.6);
-                        }
+                        //     pdf.text("Reviewed By", 1, (pdf.internal.pageSize.getHeight() / 2) + 3.3);
+                        //     pdf.text(`${dataToSend.ReviewedBy}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 3.3);
+                        //     pdf.text("Reviewed Date", 1, (pdf.internal.pageSize.getHeight() / 2) + 3.6);
+                        //     pdf.text(`${formatDate(dataToSend.ReviewDate)}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 3.6);
+                        // }
                     } catch (error) {
                         console.log(error);
                     }
@@ -110,10 +110,9 @@ function ViewCorrectiveAction() {
                     pdf.text('Powered By Feat Technology', (pdf.internal.pageSize.getWidth() / 2) - 1.3, 0.5);
                     pdf.setFontSize(10);
                     pdf.text(`${user.Company.CompanyName}`, pdf.internal.pageSize.getWidth() - 2, 0.3);
-                    pdf.text('Corrective Action', pdf.internal.pageSize.getWidth() - 2, 0.5);
-                    pdf.text(`${dataToSend.DocumentId}`, pdf.internal.pageSize.getWidth() - 2, 0.7);
-                    pdf.text(`Revision No :${dataToSend.RevisionNo}`, pdf.internal.pageSize.getWidth() - 2, 0.9);
-                    pdf.text(`Creation : ${formatDate(dataToSend.CreationDate)}`, pdf.internal.pageSize.getWidth() - 2, 1.1);
+                    pdf.text(`Action By : ${dataToSend.CorrectionBy}`, pdf.internal.pageSize.getWidth() - 2, 0.5);
+                    pdf.text(`Checklist Revision No :${dataToSend.Report?.ConductAudit?.Checklist?.RevisionNo}`, pdf.internal.pageSize.getWidth() - 2, 0.7);
+                    pdf.text(`Action Date : ${formatDate(dataToSend.CorrectionDate)}`, pdf.internal.pageSize.getWidth() - 2, 0.9);
                 }
             }
         }).save();
@@ -168,7 +167,7 @@ function ViewCorrectiveAction() {
         }
 
     };
-
+    console.log(dataToSend);
 
     useEffect(() => {
         dispatch(setSmallLoading(true))
@@ -366,9 +365,9 @@ function ViewCorrectiveAction() {
                                             </label>
                                         </div>
                                         <div className='row p-3 mt-4'>
-                                        <div className='col-lg-6 col-md-12'>
+                                            <div className='col-lg-6 col-md-12'>
                                                 <p className='fw-bold'>Target Date : </p>
-                                                <input placeholder='write here..' value={dayjs(correctiveAnswer?.TargetDate).format('DD/MM/YYYY')}  rows={4} className='w-100 border-0 p-2 m-2' type='text' required />
+                                                <input placeholder='write here..' value={dayjs(correctiveAnswer?.TargetDate).format('DD/MM/YYYY')} rows={4} className='w-100 border-0 p-2 m-2' type='text' required />
                                             </div>
                                             <div className='col-lg-6 col-md-12'>
                                                 <p className='fw-bold'>Correction : </p>
@@ -408,9 +407,9 @@ function ViewCorrectiveAction() {
                             <p class={style.msg}>{dataToShow}</p>
                             <div className={style.alertbtns}>
                                 <button style={{
-                                    marginLeft : '120px',
-                                    marginTop : '25px'
-                                }}  onClick={() => {
+                                    marginLeft: '120px',
+                                    marginTop: '25px'
+                                }} onClick={() => {
                                     setShowBox(false)
 
                                 }} className={style.btn1}>Ok.</button>

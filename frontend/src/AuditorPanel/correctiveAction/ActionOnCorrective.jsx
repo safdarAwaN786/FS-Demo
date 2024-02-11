@@ -332,7 +332,7 @@ function ActionOnCorrective() {
                                         <div className='row p-3 mt-4'>
                                             <div className='col-lg-6 col-md-12'>
                                                 <p className='fw-bold'>Target Date : </p>
-                                                <input placeholder='write here..' value={dayjs(answer.Answer?.TargetDate).format('DD/MM/YYYY')}  rows={4} className='w-100 border-0 p-2 m-2' type='text' required />
+                                                <input placeholder='write here..' value={dayjs(answer?.TargetDate).format('DD/MM/YYYY')}  rows={4} className='w-100 border-0 p-2 m-2' type='text' required />
                                             </div>
                                             <div className='col-lg-6 col-md-12'>
                                                 <p className='fw-bold'>Correction : </p>

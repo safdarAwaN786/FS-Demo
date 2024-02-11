@@ -53,7 +53,7 @@ router.post('/addMonthlyAuditingPlan',  async (req, res) => {
         const selectedDepartment = req.body.Department;
 
         // Check if the YearlyAuditingPlan exists for the selected year
-        const yearlyPlan = await YearlyAuditingPlan.find({ Year: selectedYear, UserDepartment : req.header('Authorization') }).populate('UserDepartment');
+        const yearlyPlan = await YearlyAuditingPlan.findOne({ Year: selectedYear, UserDepartment : req.header('Authorization') }).populate('UserDepartment');
 
         
 
@@ -64,7 +64,7 @@ router.post('/addMonthlyAuditingPlan',  async (req, res) => {
                 message: `YearlyAuditPlan for the year ${selectedYear} does not exist.`,
             });
         }
-
+        console.log(yearlyPlan);
         // Check if the selected month exists in the yearly plan for the selected year
         const monthExists = yearlyPlan.Selected.filter(selected => selected.monthNames.some(month => month === selectedMonth));
 
