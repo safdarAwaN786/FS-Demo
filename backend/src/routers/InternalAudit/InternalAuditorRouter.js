@@ -33,7 +33,7 @@ const formatDate = (date) => {
         year: 'numeric',
     });
     return formatDate;
-}
+  }
 // Function to add the company logo and information to the first page
 const addFirstPage = async (page, logoImage, Company, user) => {
     const { width, height } = page.getSize();
@@ -134,7 +134,7 @@ router.post('/send-email-to-auditor', async (req, res) => {
 // * POST Auditor Data To MongooDB Database
 router.post("/addAuditor", upload.fields([{ name: 'AuditorImage' }, { name: 'AuditorDocument' }, { name: 'ApprovedAuditorLetter' }]), async (req, res) => {
     try {
-        const requestUser = await User.findById(req.header('Authorization')).populate('Company Department')
+    const requestUser = await User.findById(req.header('Authorization')).populate('Company Department')
 
         const userNameExist = await User.findOne({ UserName: req.body.UserName });
         if (userNameExist) {
@@ -208,13 +208,8 @@ router.post("/addAuditor", upload.fields([{ name: 'AuditorImage' }, { name: 'Aud
                     // Save the modified PDF
                     const modifiedPdfBuffer = await pdfDoc.save();
                     console.log('going to uplaod doc.');
-                    auditorDocumentUrl = await uploadToCloudinary(modifiedPdfBuffer).then(async (result) => {
-                        await axios.get(result.secure_url, { responseType: 'arraybuffer' }).then((res)=> {
-                            console.log(res)
-                        }).catch(err => {
-                            console.log(err);
-                        });
-                        // return (result.secure_url)
+                    auditorDocumentUrl = await uploadToCloudinary(modifiedPdfBuffer).then((result) => {
+                        return (result.secure_url)
                     }).catch((err) => {
                         console.log('error in uploading auditor doc');
                         console.log(err);
@@ -280,8 +275,8 @@ router.post("/addAuditor", upload.fields([{ name: 'AuditorImage' }, { name: 'Aud
                 ...req.body,
                 ApprovedInternalAuditor: approvedAuditor,
                 AuditorImage: auditorImageUrl,
-                Company: requestUser.Company._id,
-                Department: requestUser.Department._id,
+                Company : requestUser.Company._id,
+                Department : requestUser.Department._id,
                 AuditorDocument: auditorDocumentUrl,
                 ApprovedAuditorLetter: approvedAuditorDocumentUrl,
                 CreatedBy: createdBy,
