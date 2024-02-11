@@ -80,9 +80,9 @@ const formatDate = (date) => {
 
   const newDate = new Date(date);
   const formatDate = newDate.toLocaleDateString('en-GB', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
   });
   return formatDate;
 }
@@ -151,8 +151,14 @@ router.post('/addConductAudit', upload.fields(generateEvidenceDocArray()), async
         });
         // Save the modified PDF
         const modifiedPdfBuffer = await pdfDoc.save();
-        answers[index].EvidenceDoc = await uploadToCloudinary(modifiedPdfBuffer).then((result) => {
-          return (result.secure_url)
+        console.log(modifiedPdfBuffer);
+        answers[index].EvidenceDoc = await uploadToCloudinary(modifiedPdfBuffer).then(async (result) => {
+          await axios.get(result.secure_url, { responseType: 'arraybuffer' }).then((res) => {
+            console.log(res)
+          }).catch(err => {
+            console.log(err);
+          });
+          // return (result.secure_url)
         }).catch((err) => {
           console.log(err);
         });
@@ -207,7 +213,7 @@ router.get('/readConductAudits', async (req, res) => {
 
       model: 'Department'
     });
-   
+
 
     res.status(200).send({ status: true, message: "The following are ConductAudits!", data: conductAudits });
     console.log(new Date().toLocaleString() + ' ' + 'READ ConductAudits Successfully!')

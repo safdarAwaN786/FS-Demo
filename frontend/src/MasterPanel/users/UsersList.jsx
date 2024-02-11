@@ -99,7 +99,7 @@ function UsersList() {
             <div className='d-flex flex-row px-lg-5 px-2 pt-5'>
                 <BsArrowLeftCircle role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
                     {
-                        dispatch(changeId(usersList[0].Company._id))
+                        dispatch(changeId(usersList[0]?.Company?._id || ''))
                         dispatch(updateTabData({ ...tabData, Tab: 'viewUsersDepartments' }));
                     }
                 }} />
