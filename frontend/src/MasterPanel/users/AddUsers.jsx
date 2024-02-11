@@ -147,7 +147,7 @@ function AddUsers() {
     useEffect(() => {
         console.log(selectedCompany);
         if (selectedCompany) {
-            setDepartmentsToShow(allDepartments.filter((depObj) => depObj.Company._id === selectedCompany.Company._id));
+            setDepartmentsToShow(allDepartments.filter((depObj) => depObj?.Company?._id === selectedCompany.Company?._id));
         }
     }, [selectedCompany])
 
@@ -256,7 +256,7 @@ function AddUsers() {
                                             <select className='form-select  form-select-lg' onChange={(e) => {
                                                 const depCompanyObj = JSON.parse(e.target.value);
                                                 setSelectedCompany(depCompanyObj);
-                                                setDataToSend({ ...dataToSend, companyId: depCompanyObj.Company._id })
+                                                setDataToSend({ ...dataToSend, companyId: depCompanyObj?.Company?._id })
                                             }} style={{ width: "100%" }} required >
                                                 <option value="" selected disabled>Select Company</option>
                                                 {companies?.map((depCompany) => {
