@@ -489,7 +489,7 @@ function MainPage() {
 
                                 <Input />
                             )}
-                            {Tab === 'Craete Monthly Training Plan' && (
+                            {Tab === 'Create Monthly Training Plan' && (
 
                                 <AddPlan />
                             )}

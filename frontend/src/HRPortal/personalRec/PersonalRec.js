@@ -270,7 +270,7 @@ function PersonalRec() {
                                         <p>Others</p>
                                     </div>
                                     <div>
-                                        <input autoComplete='off' onChange={(event) => {
+                                        <input className='text-black' autoComplete='off' onChange={(event) => {
                                             dispatch(updatePersonFormData({ ...personFormData, [event.target.name]: event.target.value }))
                                         }} value={personFormData?.others} name='others' type="text" />
                                     </div>
@@ -280,7 +280,7 @@ function PersonalRec() {
                                         <p>Request Initiated by</p>
                                     </div>
                                     <div>
-                                        <input autoComplete='off' onChange={(event) => {
+                                        <input className='text-black' autoComplete='off' onChange={(event) => {
                                             dispatch(updatePersonFormData({ ...personFormData, [event.target.name]: event.target.value }))
                                         }} value={personFormData?.RequestInitiatedBy} name='RequestInitiatedBy' type="text" />
                                     </div>

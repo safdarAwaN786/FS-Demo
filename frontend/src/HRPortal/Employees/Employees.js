@@ -157,7 +157,6 @@ function Employees() {
                                 <td>CNIC</td>
                                 <td>Phone Number</td>
                                 <td>Email</td>
-                                <td>Username</td>
                                 <td>Department</td>
                                 <td>Training Status</td>
                                 <td>Profile</td>
@@ -197,7 +196,6 @@ function Employees() {
                                             <td className={style.txtStyle4}>{employee.CNIC}</td>
                                             <td className={style.txtStyle4}>{employee.PhoneNumber}</td>
                                             <td className={style.txtStyle3}>{employee.Email}</td>
-                                            <td className={style.txtStyle3}>{employee.UserName}</td>
                                             <td className={style.txtStyle4}>{employee.DepartmentText}</td>
                                             <td className={employee.TrainingStatus === 'Trained' ? style.txtStyle5 : style.txtStyle6}> <div className={`text-center ${employee.TrainingStatus === 'Trained' ? style.greenStatus : style.redStatus} `}><p>{employee.TrainingStatus}</p></div></td>
                                             <td>

@@ -115,17 +115,17 @@ function AddTrainer() {
 
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        dispatch(updateTabData({...tabData, Tab : 'Add Trainers'}))
-                        
+                        dispatch(updateTabData({ ...tabData, Tab: 'Add Trainers' }))
+
                     }
                 })
 
             }).catch(err => {
                 dispatch(setSmallLoading(false));
                 Swal.fire({
-                    icon : 'error',
-                    title : 'OOps..',
-                    text : 'Something went wrong, Try Again!'
+                    icon: 'error',
+                    title: 'OOps..',
+                    text: 'Something went wrong, Try Again!'
                 })
             })
         } else {
@@ -148,13 +148,11 @@ function AddTrainer() {
 
     return (
         <>
-            <div style={{
-                marginBottom: '20px'
-            }} className={`${style.form}`}>
+            <div style={{height : '100%'}} className={`${style.form} mt-5`}>
                 <div className='d-flex flex-row bg-white px-lg-3  px-2 py-2'>
                     <BsArrowLeftCircle role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
                         {
-                            dispatch(updateTabData({...tabData, Tab : 'Add Trainers'}))
+                            dispatch(updateTabData({ ...tabData, Tab: 'Add Trainers' }))
                         }
                     }} />
                 </div>
@@ -168,100 +166,102 @@ function AddTrainer() {
                         Add Trainer
                     </div>
                 </div>
-                <form className='py-4' encType='multipart/form-data' onSubmit={(event) => {
-                    event.preventDefault();
-                    const data = new FormData(event.target);
-                    setTrainerData(data)
-                    alertManager();
-                }}>
+                <div className={style.sec1}>
+                    <form className='py-4' encType='multipart/form-data' onSubmit={(event) => {
+                        event.preventDefault();
+                        const data = new FormData(event.target);
+                        setTrainerData(data)
+                        alertManager();
+                    }}>
 
-                    <div className={style.profile}>
-                        <img style={{
-                            width: "200px",
-                            height: "200px",
-                            borderRadius: "360px",
-                        }} src={selectedImage || profile} onClick={handleImageClick} alt="" />
-                        <div>
-                            <img src={edit} onClick={handleImageClick} alt="" />
+                        <div className={style.profile}>
+                            <img style={{
+                                width: "200px",
+                                height: "200px",
+                                borderRadius: "360px",
+                            }} src={selectedImage || profile} onClick={handleImageClick} alt="" />
+                            <div>
+                                <img src={edit} onClick={handleImageClick} alt="" />
+                            </div>
+                            <input
+                                type="file"
+                                id="file-input"
+                                name='TrainerImage'
+                                accept='.png, .jpg, .jpeg'
+                                style={{ display: 'none' }}
+                                ref={fileInputRef}
+                                onChange={handleImageChange}
+                            />
                         </div>
-                        <input
-                            type="file"
-                            id="file-input"
-                            name='TrainerImage'
-                            accept='.png, .jpg, .jpeg'
-                            style={{ display: 'none' }}
-                            ref={fileInputRef}
-                            onChange={handleImageChange}
-                        />
-                    </div>
-                    <div className={`${style.sec1} pb-3`}>
-                        <div>
-                            <input autoComplete='off' name='Name' type="text" placeholder='Name here' required />
-                            <img style={{ width: '20px', height: '20px', cursor: 'pointer' }} src={profile} alt="" />
-                        </div>
-                        <div>
-                            <input autoComplete='off' name='Age' type="number" placeholder='Age here' required />
-                            <img style={{ width: '20px', height: '20px', cursor: 'pointer' }} src={profile} alt="" />
-                        </div>
-                        <div>
-                            <input autoComplete='off' name='Email' type="email" placeholder='Email here' required />
-                            <img style={{ width: '20px', height: '20px', cursor: 'pointer' }} src={msg} alt="" />
-                        </div>
-                        <div>
-                            <input autoComplete='off' name='UserName' type="text" placeholder='username (for login)' required />
-                            <img style={{ width: '20px', height: '20px', cursor: 'pointer' }} src={msg} alt="" />
-                        </div>
-                        <div className='d-flex align-items-center justify-content-between'>
-                            <input autoComplete='off' value={password} onChange={(event) => {
-                                setPassword(event.target.value);
-                                CheckPassword(event.target.value);
-                            }} name='Password' type="text" placeholder='Password here' required />
-                            <a onClick={handleGenerateClick} className='btn btn-outline-primary px-2 me-2' >Generate</a>
-                        </div>
-                        <div className='bg-light'>
+                        
+                            <div>
+                                <input autoComplete='off' name='Name' type="text" placeholder='Name here' required />
+                                <img style={{ width: '20px', height: '20px', cursor: 'pointer' }} src={profile} alt="" />
+                            </div>
+                            <div>
+                                <input autoComplete='off' name='Age' type="number" placeholder='Age here' required />
+                                <img style={{ width: '20px', height: '20px', cursor: 'pointer' }} src={profile} alt="" />
+                            </div>
+                            <div>
+                                <input autoComplete='off' name='Email' type="email" placeholder='Email here' required />
+                                <img style={{ width: '20px', height: '20px', cursor: 'pointer' }} src={msg} alt="" />
+                            </div>
+                            <div>
+                                <input autoComplete='off' name='UserName' type="text" placeholder='username (for login)' required />
+                                <img style={{ width: '20px', height: '20px', cursor: 'pointer' }} src={msg} alt="" />
+                            </div>
+                            <div className='d-flex align-items-center justify-content-between'>
+                                <input autoComplete='off' value={password} onChange={(event) => {
+                                    setPassword(event.target.value);
+                                    CheckPassword(event.target.value);
+                                }} name='Password' type="text" placeholder='Password here' required />
+                                <a onClick={handleGenerateClick} className='btn btn-outline-primary px-2 me-2' >Generate</a>
+                            </div>
+                            <div className='bg-light'>
 
-                            {validationMessage && (
-                                <p className={`${validationMessage === 'Password is valid!' ? 'text-success' : 'text-danger'} `}>{validationMessage}</p>
-                            )}
-                        </div>
-                        <div>
-                            <input autoComplete='off'  name='Experience' type="text" placeholder='Experience here' required />
-                            <img style={{ width: '20px', height: '20px', cursor: 'pointer' }} src={Office} alt="" />
-                        </div>
-                        <div>
-                            <input autoComplete='off' name='Qualification' type="text" placeholder='Qualification Here' required />
-                            <img style={{ width: '20px', height: '20px', cursor: 'pointer' }} src={Office} alt="" />
-                        </div>
-                        <div className={style.spec}>
-                            <input autoComplete='off' name='Specialities' type="text" placeholder='Speciality here' />
-                            <img style={{ width: '20px', height: '20px', cursor: 'pointer' }} src={copyP} alt="" />
-                        </div>
-                        <input autoComplete='off' onChange={handleDocumentChange} name='TrainerDocument' type='file' accept='.pdf' ref={documentRef} style={{ display: 'none' }} />
-                        <div className={`${style.btns}`}>
-                            <p style={{
-                                padding: "13px 20px",
-                                cursor: 'pointer',
-                                width: "246px",
-                                height: "58px",
-                                flexShrink: "0",
-                                borderRadius: "10px",
-                                border: "1px solid #ee6a5f",
-                                color: "#ee6a5f",
-                                fontSize: "17px",
-                                fontFamily: "Poppins",
-                                fontStyle: "normal",
-                                fontWeight: "400",
-                                lineHeight: "normal",
-                                background: "#fff",
-                            }} onClick={() => {
-                                setalert(false);
-                                handleDocumentClick();
-                            }}
-                            >{selectedDocument?.slice(0, 15) || "Upload Documents"}</p>
-                            <button type='submit'>Submit</button>
-                        </div>
-                    </div>
-                </form>
+                                {validationMessage && (
+                                    <p className={`${validationMessage === 'Password is valid!' ? 'text-success' : 'text-danger'} `}>{validationMessage}</p>
+                                )}
+                            </div>
+                            <div>
+                                <input autoComplete='off' name='Experience' type="text" placeholder='Experience here' required />
+                                <img style={{ width: '20px', height: '20px', cursor: 'pointer' }} src={Office} alt="" />
+                            </div>
+                            <div>
+                                <input autoComplete='off' name='Qualification' type="text" placeholder='Qualification Here' required />
+                                <img style={{ width: '20px', height: '20px', cursor: 'pointer' }} src={Office} alt="" />
+                            </div>
+                            <div className={style.spec}>
+                                <input autoComplete='off' name='Specialities' type="text" placeholder='Speciality here' />
+                                <img style={{ width: '20px', height: '20px', cursor: 'pointer' }} src={copyP} alt="" />
+                            </div>
+                            <input autoComplete='off' onChange={handleDocumentChange} name='TrainerDocument' type='file' accept='.pdf' ref={documentRef} style={{ display: 'none' }} />
+                            <div className={`${style.btns}`}>
+                                <p style={{
+                                    padding: "13px 20px",
+                                    cursor: 'pointer',
+                                    width: "246px",
+                                    height: "58px",
+                                    flexShrink: "0",
+                                    borderRadius: "10px",
+                                    border: "1px solid #ee6a5f",
+                                    color: "#ee6a5f",
+                                    fontSize: "17px",
+                                    fontFamily: "Poppins",
+                                    fontStyle: "normal",
+                                    fontWeight: "400",
+                                    lineHeight: "normal",
+                                    background: "#fff",
+                                }} onClick={() => {
+                                    setalert(false);
+                                    handleDocumentClick();
+                                }}
+                                >{selectedDocument?.slice(0, 15) || "Upload Documents"}</p>
+                                <button type='submit'>Submit</button>
+                            </div>
+                        
+                    </form>
+                </div>
             </div>
 
             {

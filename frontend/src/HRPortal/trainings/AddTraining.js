@@ -94,7 +94,6 @@ function AddTraining() {
                     <div className={style.para}>
                         Add Training
                     </div>
-
                 </div>
                 <div className={style.sec1}>
                     <form encType='multipart/form-data' onSubmit={(event) => {
@@ -128,7 +127,7 @@ function AddTraining() {
                         <input autoComplete='off' onChange={handleDocumentChange} name='TrainingMaterial' type='file' accept='.pdf' ref={documentRef} style={{ display: 'none' }} />
                         <div className={style.btns}>
                             <p style={{
-                                padding: "13px 20px",
+                                padding: "15px 10px",
                                 cursor: 'pointer',
                                 width: "246px",
                                 height: "58px",
@@ -142,7 +141,7 @@ function AddTraining() {
                                 fontWeight: "400",
                                 lineHeight: "normal",
                                 background: "#fff",
-                            }} onClick={handleDocumentClick}>{selectedDocument?.slice(0, 15) || "Training Material"}</p>
+                            }} onClick={handleDocumentClick}>{selectedDocument?.slice(0, 15) || "Upload Training Material"}</p>
                             <button type='submit'>Submit</button>
                         </div>
                     </form>

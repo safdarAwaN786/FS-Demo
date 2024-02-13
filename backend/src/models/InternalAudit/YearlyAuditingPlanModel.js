@@ -17,6 +17,9 @@ const yearlyAuditingPlanSchema = new Schema({
       type: Schema.Types.ObjectId,
       ref: 'ProcessOwner'
     },
+    Risk : {
+      type : String
+    },
     monthNames: []
   }],
 

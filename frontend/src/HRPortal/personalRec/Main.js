@@ -102,128 +102,116 @@ function Main() {
 
     return (
         <>
-
-
-
-                <div className={style.searchbar}>
-                    <div className={style.sec1}>
-                        <img src={Search} alt="" />
-                        <input autoComplete='off' onChange={search} type="text" placeholder='Search by Department ' />
+            <div className={style.searchbar}>
+                <div className={style.sec1}>
+                    <img src={Search} alt="" />
+                    <input autoComplete='off' onChange={search} type="text" placeholder='Search by Department ' />
+                </div>
+                {tabData?.Creation && (
+                    <div className='d-flex'>
+                        <div onClick={() => {
+                            dispatch(updateTabData({ ...tabData, Tab: 'addPersonalRec' }));
+                        }} className={style.sec2}>
+                            <img src={add} alt="" />
+                            <p>Add New</p>
+                        </div>
                     </div>
-                    {tabData?.Creation && (
+                )}
+            </div>
+            <div className={style.tableParent}>
 
-                        <div className='d-flex'>
-                            <div onClick={() => {
-                                dispatch(updateTabData({ ...tabData, Tab: 'addPersonalRec' }));
-                            }} className={style.sec2}>
-                                <img src={add} alt="" />
-                                <p>Add New</p>
-                            </div>
-                        </div>
-                    )}
-                </div>
-                <div className={style.tableParent}>
-
-                    {!personReqList || personReqList?.length === 0 ? (
-                        <div className='w-100 d-flex align-items-center justify-content-center'>
-                            <p className='text-center'>No any Records Available here.</p>
-                        </div>
-                    ) : (
+                {!personReqList || personReqList?.length === 0 ? (
+                    <div className='w-100 d-flex align-items-center justify-content-center'>
+                        <p className='text-center'>No any Records Available here.</p>
+                    </div>
+                ) : (
 
 
-                        <table className={style.table}>
-                            <tr className={style.headers}>
-                                <td>Station</td>
-                                <td>job title</td>
-                                <td>Supervisor</td>
-                                <td>Department</td>
+                    <table className={style.table}>
+                        <tr className={style.headers}>
+                            <td>Station</td>
+                            <td>job title</td>
+                            <td>Supervisor</td>
+                            <td>Department</td>
+                            <td>Action</td>
+                            {tabData?.Approval && (
                                 <td>Action</td>
-                                {tabData?.Approval && (
-
-                                    <td>Action</td>
-                                )}
-                                <td></td>
-                                <td>Status</td>
-                                <td>Reason</td>
-                            </tr>
-                            {
-                                personReqList?.map((reqPerson, i) => {
-                                    return (
-                                        <tr className={style.tablebody} key={i}>
-                                            <td className={style.textStyle2}>{reqPerson.Station}</td>
-                                            <td className={style.textStyle3}>{reqPerson.JobTitle}</td>
-                                            <td className={style.textStyle3}>{reqPerson.Supervisor}</td>
-                                            <td className={style.textStyle3}>{reqPerson.DepartmentText}</td>
-                                            <td ><button onClick={() => {
-                                                dispatch(changeId(reqPerson._id));
-                                                dispatch(updateTabData({ ...tabData, Tab: 'showPersonalRec' }));
+                            )}
+                            <td></td>
+                            <td>Status</td>
+                            <td>Reason</td>
+                        </tr>
+                        {
+                            personReqList?.map((reqPerson, i) => {
+                                return (
+                                    <tr className={style.tablebody} key={i}>
+                                        <td className={style.textStyle2}>{reqPerson.Station}</td>
+                                        <td className={style.textStyle3}>{reqPerson.JobTitle}</td>
+                                        <td className={style.textStyle3}>{reqPerson.Supervisor}</td>
+                                        <td className={style.textStyle3}>{reqPerson.DepartmentText}</td>
+                                        <td ><button onClick={() => {
+                                            dispatch(changeId(reqPerson._id));
+                                            dispatch(updateTabData({ ...tabData, Tab: 'showPersonalRec' }));
 
 
-                                            }} className={style.viewBtn}>View</button>
+                                        }} className={style.viewBtn}>View</button>
+                                        </td>
+                                        {tabData?.Approval && (
+                                            <td>
+                                                <button onClick={() => {
+                                                    setDataToSend({
+                                                        personId: reqPerson._id,
+                                                        status: "Approved"
+                                                    });
+                                                    alertManager2();
+                                                }} className={style.viewBtn2}>Approve</button>
+                                                <button onClick={() => {
+                                                    setDataToSend({
+                                                        personId: reqPerson._id,
+                                                        status: "Disapproved"
+                                                    });
+                                                    alertManager();
+                                                }} className={style.orangebtn}>Disapprove</button>
                                             </td>
-                                            {tabData?.Approval && (
+                                        )}
+                                        <td className={style.textStyle3}></td>
+                                        <td><div className={` text-center ${reqPerson.Status === 'Pending' && (style.yellowStatus)} ${reqPerson.Status === 'Approved' && (style.greenStatus)} ${reqPerson.Status === 'Disapproved' && (style.redStatus)}`}><p>{reqPerson.Status}</p></div></td>
+                                        <td ><button onClick={() => {
+                                            if (reqPerson.Status === "Approved") {
+                                                setPopUpData("This Application is Approved.");
 
-                                                <td>
+                                            } else if (reqPerson.Status === "Disapproved") {
+                                                setPopUpData(reqPerson.Reason);
+                                            } else {
+                                                setPopUpData("Application is pending still.")
+                                            }
+                                            setShowBox(true);
+                                        }} className={style.viewBtn}>View</button>
+                                        </td>
+                                    </tr>
+                                )
 
+                            })
+                        }
 
+                    </table>
+                )}
+            </div>
+            <div className={style.Btns}>
+                {startIndex > 0 && (
 
-                                                    <button onClick={() => {
-                                                        setDataToSend({
-                                                            personId: reqPerson._id,
-                                                            status: "Approved"
-                                                        });
-                                                        alertManager2();
-                                                    }} className={style.viewBtn2}>Approve</button>
-                                                    <button onClick={() => {
-                                                        setDataToSend({
-                                                            personId: reqPerson._id,
-                                                            status: "Disapproved"
-                                                        });
-                                                        alertManager();
-                                                    }} className={style.orangebtn}>Disapprove</button>
+                    <button onClick={backPage}>
+                        {'<< '}Back
+                    </button>
+                )}
+                {allDataArr?.length > endIndex && (
 
+                    <button onClick={nextPage}>
+                        next{'>> '}
+                    </button>
+                )}
+            </div>
 
-
-                                                </td>
-                                            )}
-                                            <td className={style.textStyle3}></td>
-                                            <td><div className={` text-center ${reqPerson.Status === 'Pending' && (style.yellowStatus)} ${reqPerson.Status === 'Approved' && (style.greenStatus)} ${reqPerson.Status === 'Disapproved' && (style.redStatus)}`}><p>{reqPerson.Status}</p></div></td>
-                                            <td ><button onClick={() => {
-                                                if (reqPerson.Status === "Approved") {
-                                                    setPopUpData("This Application is Approved.");
-
-                                                } else if (reqPerson.Status === "Disapproved") {
-                                                    setPopUpData(reqPerson.Reason);
-                                                } else {
-                                                    setPopUpData("Application is pending still.")
-                                                }
-                                                setShowBox(true);
-                                            }} className={style.viewBtn}>View</button>
-                                            </td>
-                                        </tr>
-                                    )
-
-                                })
-                            }
-
-                        </table>
-                    )}
-                </div>
-                <div className={style.Btns}>
-                    {startIndex > 0 && (
-
-                        <button onClick={backPage}>
-                            {'<< '}Back
-                        </button>
-                    )}
-                    {allDataArr?.length > endIndex && (
-
-                        <button onClick={nextPage}>
-                            next{'>> '}
-                        </button>
-                    )}
-                </div>
-    
 
             {
                 alert ?
@@ -231,7 +219,7 @@ function Main() {
                         <div class={style.alert}>
                             <form onSubmit={() => {
                                 dispatch(setSmallLoading(true))
-                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/updatePersonStatus`, {...dataToSend, updatedBy : user.Name}).then(() => {
+                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/updatePersonStatus`, { ...dataToSend, updatedBy: user.Name }).then(() => {
                                     statusUpdated();
                                     Swal.fire({
                                         title: 'Success',
@@ -271,7 +259,7 @@ function Main() {
                             <div className={style.alertbtns}>
                                 <button onClick={() => {
                                     dispatch(setSmallLoading(true))
-                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/updatePersonStatus`, {...dataToSend, updatedBy : user.Name}).then(() => {
+                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/updatePersonStatus`, { ...dataToSend, updatedBy: user.Name }).then(() => {
                                         statusUpdated()
                                         Swal.fire({
                                             title: 'Success',
@@ -290,7 +278,7 @@ function Main() {
 
                                     alertManager2();
                                 }} className={style.btn3}>Submit</button>
-                                <button onClick={alertManager2} className={style.btn2}>Cencel</button>
+                                <button onClick={alertManager2} className={style.btn2}>Cancel</button>
                             </div>
                         </div>
                     </div> : null
@@ -303,9 +291,9 @@ function Main() {
                         <div className={style.alertbtns}>
 
                             <button style={{
-                                    marginLeft : '120px',
-                                    marginTop : '25px'
-                                }}  onClick={() => {
+                                marginLeft: '120px',
+                                marginTop: '25px'
+                            }} onClick={() => {
                                 setShowBox(false);
                             }} className={style.btn2}>Ok.</button>
                         </div>

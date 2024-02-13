@@ -15,7 +15,7 @@ router.post('/addYearlyAuditPlan',  async (req, res) => {
         if (yearlyAuditPlan) {
             return res.status(303).send({
                 status: false,
-                message: "YearlyAuditPlan for this year already exists. You can't update it directly. Please create a new one."
+                message: "YearlyAuditPlan for this year already exists. You can't create new one directly. Please edit the added plan."
             });
         }
 
