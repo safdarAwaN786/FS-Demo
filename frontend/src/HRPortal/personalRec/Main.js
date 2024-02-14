@@ -21,33 +21,65 @@ function Main() {
 
     useEffect(() => {
         dispatch(setSmallLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readPersonalRecuisition`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
-            dispatch(setSmallLoading(false))
-            setAllDataArr(response.data.data);
-            setPersonReqList(response.data.data.slice(startIndex, endIndex));
-        }).catch(err => {
-            dispatch(setSmallLoading(false));
-            Swal.fire({
-                icon: 'error',
-                title: 'OOps..',
-                text: 'Something went wrong, Try Again!'
+        if (tabData?.Approval) {
+            axios.get(`${process.env.REACT_APP_BACKEND_URL}/readAllPersonalRecuisition`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
+                dispatch(setSmallLoading(false))
+                setAllDataArr(response.data.data);
+                setPersonReqList(response.data.data.slice(startIndex, endIndex));
+            }).catch(err => {
+                dispatch(setSmallLoading(false));
+                Swal.fire({
+                    icon: 'error',
+                    title: 'OOps..',
+                    text: 'Something went wrong, Try Again!'
+                })
             })
-        })
+        } else {
+            axios.get(`${process.env.REACT_APP_BACKEND_URL}/readPersonalRecuisition`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
+                dispatch(setSmallLoading(false))
+                setAllDataArr(response.data.data);
+                setPersonReqList(response.data.data.slice(startIndex, endIndex));
+            }).catch(err => {
+                dispatch(setSmallLoading(false));
+                Swal.fire({
+                    icon: 'error',
+                    title: 'OOps..',
+                    text: 'Something went wrong, Try Again!'
+                })
+            })
+        }
+
     }, [])
 
     const statusUpdated = () => {
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readPersonalRecuisition`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
-            dispatch(setSmallLoading(false))
-            setAllDataArr(response.data.data);
-            setPersonReqList(response.data.data.slice(startIndex, endIndex));
-        }).catch(err => {
-            dispatch(setSmallLoading(false));
-            Swal.fire({
-                icon: 'error',
-                title: 'OOps..',
-                text: 'Something went wrong, Try Again!'
+        if (tabData?.Approval) {
+            axios.get(`${process.env.REACT_APP_BACKEND_URL}/readAllPersonalRecuisition`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
+                dispatch(setSmallLoading(false))
+                setAllDataArr(response.data.data);
+                setPersonReqList(response.data.data.slice(startIndex, endIndex));
+            }).catch(err => {
+                dispatch(setSmallLoading(false));
+                Swal.fire({
+                    icon: 'error',
+                    title: 'OOps..',
+                    text: 'Something went wrong, Try Again!'
+                })
             })
-        })
+        } else {
+            axios.get(`${process.env.REACT_APP_BACKEND_URL}/readPersonalRecuisition`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
+                dispatch(setSmallLoading(false))
+                setAllDataArr(response.data.data);
+                setPersonReqList(response.data.data.slice(startIndex, endIndex));
+            }).catch(err => {
+                dispatch(setSmallLoading(false));
+                Swal.fire({
+                    icon: 'error',
+                    title: 'OOps..',
+                    text: 'Something went wrong, Try Again!'
+                })
+            })
+        }
+
     }
 
     const nextPage = () => {

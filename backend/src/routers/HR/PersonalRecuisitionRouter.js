@@ -45,6 +45,19 @@ router.get('/readPersonalRecuisition', async (req, res) => {
   }
 });
 
+router.get('/readAllPersonalRecuisition', async (req, res) => {
+  try {
+    const personalRecuisition = await PersonalRecuisition.find().populate('UserDepartment');
+   
+
+    res.status(201).send({ status: true, message: "The following are Required Person!", data: personalRecuisition, });
+    console.log(new Date().toLocaleString() + ' ' + 'GET Required Person Successfully!')
+
+  } catch (e) {
+    res.status(500).json({ message: e.message });
+  }
+});
+
 // * Update The Status of Person's Data From Mon MongooDB Database
 router.patch('/updatePersonStatus', async (req, res) => {
   try {
