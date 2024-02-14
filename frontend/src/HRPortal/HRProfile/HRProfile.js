@@ -38,7 +38,7 @@ function HRProfile() {
         if (newPassword === confirmPassword) {
             if (validationMessage === 'Password is valid!') {
                 dispatch(setSmallLoading(true))
-                axios.put(`${process.env.REACT_APP_BACKEND_URL}/change-password`, { newPassword: newPassword }, { headers: { Authorization: `${user._id}` } }).then(() => {
+                axios.put(`${process.env.REACT_APP_BACKEND_URL}/change-password`, {...user, Password: newPassword }, { headers: { Authorization: `${user._id}` } }).then(() => {
                     dispatch(setSmallLoading(false));
                     setNewPassword(null);
                     setConfirmPassword(null);

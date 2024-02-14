@@ -384,13 +384,13 @@ router.put('/change-password', async (req, res) => {
   console.log(req.body);
   try {
 
-    const updatedUser = req.user
+    const updatedUser = req.body
     if (!updatedUser) {
       console.log(`User document with  not found`);
       return res.status(404).json({ message: `User document with not found` });
     }
 
-    updatedUser.Password = CryptoJS.AES.encrypt(req.body.newPassword, process.env.PASS_CODE).toString()
+    updatedUser.Password = CryptoJS.AES.encrypt(req.body.Password, process.env.PASS_CODE).toString()
 
 
     console.log(updatedUser);
