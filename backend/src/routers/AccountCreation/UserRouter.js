@@ -395,7 +395,7 @@ router.put('/change-password', async (req, res) => {
 
     console.log(updatedUser);
 
-    await updatedUser.save();
+    await User.findByIdAndUpdate(updatedUser._id, updatedUser);
 
     console.log(`User document updated successfully`);
     res.status(200).json({ status: true, message: 'User document updated successfully', data: updatedUser });
