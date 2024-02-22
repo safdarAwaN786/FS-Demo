@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Company = require('../../models/AccountCreation/CompanyModel'); // Replace with the actual path to your Company model
 const Department = require('../../models/AccountCreation/DepartmentModel'); // Replace with the actual path to your Company model
+const UserModel = require('../../models/AccountCreation/UserModel');
 require('dotenv').config()
 const cloudinary = require('cloudinary').v2;
 const multer = require('multer');
@@ -44,11 +45,11 @@ const uploadToCloudinary = (buffer) => {
 router.post('/create-company',upload.single('CompanyLogo'), async (req, res) => {
   try {
 
-    const result = await uploadToCloudinary(req.file.buffer);
+    const result = await uploadToCloudinary(req.file?.buffer);
     const companyData = req.body; 
     const createdCompany = new Company({
       ...companyData,
-      CompanyLogo : result.secure_url
+      CompanyLogo : result?.secure_url
     });
 
     await createdCompany.save();
@@ -108,6 +109,10 @@ router.delete('/delete-company/:companyId',  async (req, res) => {
     try {
       const companyId = req.params.companyId;
       const deletedCompany = await Company.findByIdAndDelete(companyId);
+      const deletedDepartments = await Department.deleteMany({Company : companyId});
+      const deletedUsers = await UserModel.deleteMany({Company : companyId});
+      console.log(deletedDepartments);
+      console.log(deletedUsers);
   
       if (!deletedCompany) {
         console.log(`Company document with ID: ${companyId} not found`);

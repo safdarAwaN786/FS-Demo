@@ -12,7 +12,6 @@ const template = emailTemplates.registrationConfirmation;
 require('dotenv').config();
 const CryptoJS = require('crypto-js')
 const jwt = require('jsonwebtoken');
-const authMiddleware = require('../../middleware/auth');
 // router.use(authMiddleware);
 
 
@@ -233,20 +232,7 @@ router.delete('/delete-user/:userId', async (req, res) => {
   }
 });
 
-// * Delete all User documents
-router.delete('/delete-all-users', async (req, res) => {
-  try {
-    const result = await User.deleteMany({});
-    if (result.deletedCount === 0) {
-      return res.status(404).send({ status: false, message: "No User documents found to delete!" });
-    }
-    res.status(200).send({ status: true, message: "All User documents have been deleted!", data: result });
-    console.log(new Date().toLocaleString() + ' ' + 'DELETE All User documents Successfully!');
-  } catch (e) {
-    console.error(e.message);
-    res.status(500).json({ message: e.message });
-  }
-});
+
 
 // * Update a User document by ID
 router.patch('/update-user', async (req, res) => {

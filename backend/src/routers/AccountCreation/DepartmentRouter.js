@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Department = require('../../models/AccountCreation/DepartmentModel'); // Replace with the actual path to your Department model
 const Company = require('../../models/AccountCreation/CompanyModel');
+const UserModel = require('../../models/AccountCreation/UserModel')
 // router.use(authMiddleware)
 // * Create a new Department document
 router.post('/create-department',  async (req, res) => {
@@ -88,6 +89,8 @@ router.delete('/delete-department/:departmentId', async (req, res) => {
   try {
     const departmentId = req.params.departmentId;
     const deletedDepartment = await Department.findByIdAndDelete(departmentId);
+    const deletedUsers = await UserModel.deleteMany({Department : departmentId});
+    console.log('deleted Users :' + deletedUsers);
 
     if (!deletedDepartment) {
       console.log(`Department document with ID: ${departmentId} not found`);
