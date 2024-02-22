@@ -58,8 +58,6 @@ import axios from "axios";
 import { setLoading } from "./redux/slices/loading";
 import BlankScreen from "./BlankWhite";
 
-
-
 function App() {
 
   const dispatch = useDispatch();
@@ -74,7 +72,6 @@ function App() {
     const userToken = Cookies.get('userToken');
     if (userToken) {
       dispatch(setLoading(true));
-      console.log(userToken);
       axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-user`, { headers: { Authorization: `Bearer ${userToken}` } })
         .then(response => {
           dispatch(logInUser(response.data.data));
