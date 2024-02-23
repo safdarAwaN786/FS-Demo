@@ -20,9 +20,9 @@ const formatDate = (date) => {
 
   const newDate = new Date(date);
   const formatDate = newDate.toLocaleDateString('en-GB', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
   });
   return formatDate;
 }
@@ -127,9 +127,8 @@ router.post('/addCalibration/:EquipmentId', upload.fields([{ name: 'Image' }, { 
       const response = await axios.get(req.body.user.Company.CompanyLogo, { responseType: 'arraybuffer' });
       const pdfDoc = await PDFDocument.load(fileBuffers);
       const logoImage = Buffer.from(response.data);
-      const logoImageDataUrl = `data:image/jpeg;base64,${logoImage.toString('base64')}`;
-      const isJpg = logoImageDataUrl.includes('data:image/jpeg') || logoImageDataUrl.includes('data:image/jpg');
-      const isPng = logoImageDataUrl.includes('data:image/png');
+      const isJpg = requestUser.Company.CompanyLogo.includes('.jpeg') || requestUser.Company.CompanyLogo.includes('.jpg');
+      const isPng = requestUser.Company.CompanyLogo.includes('.png');
       let pdfLogoImage;
       if (isJpg) {
         pdfLogoImage = await pdfDoc.embedJpg(logoImage);
@@ -160,7 +159,7 @@ router.post('/addCalibration/:EquipmentId', upload.fields([{ name: 'Image' }, { 
         const centerDateTextX = width - dateTextWidth - 20;
         const centerDateTextY = height - 30;
         page.drawText(dateText, { x: centerDateTextX, y: centerDateTextY, size: dateTextFontSize, color: rgb(0, 0, 0) });
-    });
+      });
       // Save the modified PDF
       const modifiedPdfBuffer = await pdfDoc.save();
 
@@ -177,9 +176,8 @@ router.post('/addCalibration/:EquipmentId', upload.fields([{ name: 'Image' }, { 
       const response = await axios.get(req.body.user.Company.CompanyLogo, { responseType: 'arraybuffer' });
       const pdfDoc = await PDFDocument.load(fileBuffers);
       const logoImage = Buffer.from(response.data);
-      const logoImageDataUrl = `data:image/jpeg;base64,${logoImage.toString('base64')}`;
-      const isJpg = logoImageDataUrl.includes('data:image/jpeg') || logoImageDataUrl.includes('data:image/jpg');
-      const isPng = logoImageDataUrl.includes('data:image/png');
+      const isJpg = requestUser.Company.CompanyLogo.includes('.jpeg') || requestUser.Company.CompanyLogo.includes('.jpg');
+      const isPng = requestUser.Company.CompanyLogo.includes('.png');
       let pdfLogoImage;
       if (isJpg) {
         pdfLogoImage = await pdfDoc.embedJpg(logoImage);
@@ -210,7 +208,7 @@ router.post('/addCalibration/:EquipmentId', upload.fields([{ name: 'Image' }, { 
         const centerDateTextX = width - dateTextWidth - 20;
         const centerDateTextY = height - 30;
         page.drawText(dateText, { x: centerDateTextX, y: centerDateTextY, size: dateTextFontSize, color: rgb(0, 0, 0) });
-    });
+      });
       // Save the modified PDF
       const modifiedPdfBuffer = await pdfDoc.save();
 
@@ -227,9 +225,8 @@ router.post('/addCalibration/:EquipmentId', upload.fields([{ name: 'Image' }, { 
       const response = await axios.get(req.body.user.Company.CompanyLogo, { responseType: 'arraybuffer' });
       const pdfDoc = await PDFDocument.load(fileBuffers);
       const logoImage = Buffer.from(response.data);
-      const logoImageDataUrl = `data:image/jpeg;base64,${logoImage.toString('base64')}`;
-      const isJpg = logoImageDataUrl.includes('data:image/jpeg') || logoImageDataUrl.includes('data:image/jpg');
-      const isPng = logoImageDataUrl.includes('data:image/png');
+      const isJpg = requestUser.Company.CompanyLogo.includes('.jpeg') || requestUser.Company.CompanyLogo.includes('.jpg');
+      const isPng = requestUser.Company.CompanyLogo.includes('.png');
       let pdfLogoImage;
       if (isJpg) {
         pdfLogoImage = await pdfDoc.embedJpg(logoImage);
@@ -260,7 +257,7 @@ router.post('/addCalibration/:EquipmentId', upload.fields([{ name: 'Image' }, { 
         const centerDateTextX = width - dateTextWidth - 20;
         const centerDateTextY = height - 30;
         page.drawText(dateText, { x: centerDateTextX, y: centerDateTextY, size: dateTextFontSize, color: rgb(0, 0, 0) });
-    });
+      });
       // Save the modified PDF
       const modifiedPdfBuffer = await pdfDoc.save();
 
@@ -322,7 +319,7 @@ router.post('/addCalibration/:EquipmentId', upload.fields([{ name: 'Image' }, { 
 router.get('/readAllCalibration', async (req, res) => {
   try {
 
-    const callibration = await Calibration.find({UserDepartment : req.header('Authorization')}).populate('Equipment').populate('User');
+    const callibration = await Calibration.find({ UserDepartment: req.header('Authorization') }).populate('Equipment').populate('User');
 
     const callibrationsToSend = callibration.filter((Obj) => {
       if (Obj.User.Department.equals(req.user.Department)) {
@@ -347,7 +344,7 @@ router.get('/readCalibrationByEquipmentId/:equipmentId', async (req, res) => {
       return res.status(404).json({ error: 'Please Provide Machine ID' });
     }
 
-    const calibration = await Calibration.find({ equipment: equipmentId, UserDepartment : req.header('Authorization') }).populate('Equipment');
+    const calibration = await Calibration.find({ equipment: equipmentId, UserDepartment: req.header('Authorization') }).populate('Equipment');
     if (!calibration) {
       return res.status(404).json({ error: 'calibration not found' });
     }

@@ -96,174 +96,183 @@ function FoodSafetyPlan() {
         <>
 
 
-                <div className={style.searchbar}>
-                    <div className={style.sec1}>
-                        <img src={Search} alt="" />
-                        <input autoComplete='off' onChange={search} type="text" placeholder='Search Document by name' />
+            <div className={style.searchbar}>
+                <div className={style.sec1}>
+                    <img src={Search} alt="" />
+                    <input autoComplete='off' onChange={search} type="text" placeholder='Search Document by name' />
+                </div>
+                {tabData?.Creation && (
+                    <div className={style.sec2} onClick={() => {
+                        dispatch(updateTabData({ ...tabData, Tab: 'addFoodSafetyPlan' }))
+                    }}>
+                        <img src={add} alt="" />
+                        <p>Add Plan</p>
                     </div>
-                    {tabData?.Creation && (
-                        <div className={style.sec2} onClick={() => {
-                            dispatch(updateTabData({ ...tabData, Tab: 'addFoodSafetyPlan' }))
-                        }}>
-                            <img src={add} alt="" />
-                            <p>Add Plan</p>
-                        </div>
-                    )}
-                </div>
-                <div className={style.tableParent}>
-                    {!safetyPlansList || safetyPlansList?.length === 0 ? (
-                        <div className='w-100 d-flex align-items-center justify-content-center'>
-                            <p className='text-center'>No any Records Available here.</p>
-                        </div>
-                    ) : (
+                )}
+            </div>
+            <div className={style.tableParent}>
+                {!safetyPlansList || safetyPlansList?.length === 0 ? (
+                    <div className='w-100 d-flex align-items-center justify-content-center'>
+                        <p className='text-center'>No any Records Available here.</p>
+                    </div>
+                ) : (
 
-                        <table className={style.table}>
-                            <tr className={style.headers}>
-                                <td>Document ID</td>
-                                <td>Document Type</td>
-                                <td>Department</td>
-                                <td>Revision No.</td>
-                                <td>Created By</td>
-                                <td>Creation Date</td>
-                                <td>Process Name</td>
-                                {tabData?.Edit && (
-                                    <td>Action</td>
-                                )}
-                                <td>Plan Details</td>
-                                <td>Reason</td>
-                                {tabData?.Approval && (
-                                    <td></td>
-                                )}
+                    <table className={style.table}>
+                        <tr className={style.headers}>
+                            <td>Document ID</td>
+                            <td>Document Type</td>
+                            <td>Department</td>
+                            <td>Revision No.</td>
+                            <td className='ps-5'>Status</td>
+                            <td>Created By</td>
+                            <td>Creation Date</td>
+                            <td>Process Name</td>
+                            {tabData?.Edit && (
+                                <td>Action</td>
+                            )}
+                            <td>Plan Details</td>
+                            <td>Reason</td>
+                            {tabData?.Approval && (
                                 <td></td>
-                                <td>Team Members</td>
-                                <td>Approved By</td>
-                                <td>Approval Date</td>
-                                <td>Status</td>
+                            )}
+                            <td></td>
+                            <td>Team Members</td>
+                            <td>Approved By</td>
+                            <td>Approval Date</td>
+                            <td>Disapproved By</td>
+                            <td>Disapproval Date</td>
 
-                            </tr>
-                            {
-                                safetyPlansList?.map((plan, i) => {
-                                    return (
-                                        <tr className={style.tablebody} key={i}>
-                                            <td ><p style={{
-                                                backgroundColor: "#f0f5f0",
-                                                padding: "2px 5px",
-                                                borderRadius: "10px",
-                                                fontFamily: "Inter",
-                                                fontSize: "12px",
-                                                fontStyle: "normal",
-                                                fontWeight: "400",
-                                                lineHeight: "20px",
-                                            }}>{plan.DocumentId}</p></td>
-                                            <td className={style.simpleContent}>{plan.DocumentType}</td>
-                                            <td>{plan.Department.DepartmentName}</td>
-                                            <td>{plan.RevisionNo}</td>
-                                            <td>{plan.CreatedBy}</td>
-                                            <td>{plan.CreationDate?.slice(0, 10).split('-')[2]}/{plan.CreationDate?.slice(0, 10).split('-')[1]}/{plan.CreationDate?.slice(0, 10).split('-')[0]}</td>
-                                            <td>{plan?.DecisionTree?.ConductHaccp?.Process?.ProcessName}</td>
-                                            {tabData?.Edit && (
-                                                <td>
-                                                    <p onClick={() => {
-                                                        dispatch(changeId(plan._id));
-                                                        dispatch(updateTabData({ ...tabData, Tab: 'updateFoodSafetyPlan' }))
-                                                    }} className={style.greenclick}>Update</p>
-                                                </td>
-                                            )}
-
-
-
-
-                                            <td >
+                        </tr>
+                        {
+                            safetyPlansList?.map((plan, i) => {
+                                return (
+                                    <tr className={style.tablebody} key={i}>
+                                        <td ><p style={{
+                                            backgroundColor: "#f0f5f0",
+                                            padding: "2px 5px",
+                                            borderRadius: "10px",
+                                            fontFamily: "Inter",
+                                            fontSize: "12px",
+                                            fontStyle: "normal",
+                                            fontWeight: "400",
+                                            lineHeight: "20px",
+                                        }}>{plan.DocumentId}</p></td>
+                                        <td className={style.simpleContent}>{plan.DocumentType}</td>
+                                        <td>{plan.Department.DepartmentName}</td>
+                                        <td>{plan.RevisionNo}</td>
+                                        <td><div className={`text-center ${plan.Status === 'Approved' && style.greenStatus} ${plan.Status === 'Disapproved' && style.redStatus} ${plan.Status === 'Pending' && style.yellowStatus}  `}><p>{plan.Status}</p></div></td>
+                                        <td>{plan.CreatedBy}</td>
+                                        <td>{plan.CreationDate?.slice(0, 10).split('-')[2]}/{plan.CreationDate?.slice(0, 10).split('-')[1]}/{plan.CreationDate?.slice(0, 10).split('-')[0]}</td>
+                                        <td>{plan?.DecisionTree?.ConductHaccp?.Process?.ProcessName}</td>
+                                        {tabData?.Edit && (
+                                            <td>
                                                 <p onClick={() => {
-                                                    dispatch(updateTabData({ ...tabData, Tab: 'viewFoodSafetyPlan' }));
                                                     dispatch(changeId(plan._id));
-                                                }} className='btn btn-outline-danger'>View</p>
+                                                    dispatch(updateTabData({ ...tabData, Tab: 'updateFoodSafetyPlan' }))
+                                                }} className={style.greenclick}>Update</p>
                                             </td>
-                                            <td >
+                                        )}
+
+
+
+
+                                        <td >
+                                            <p onClick={() => {
+                                                dispatch(updateTabData({ ...tabData, Tab: 'viewFoodSafetyPlan' }));
+                                                dispatch(changeId(plan._id));
+                                            }} className='btn btn-outline-danger'>View</p>
+                                        </td>
+                                        <td >
+                                            <p onClick={() => {
+                                                if (plan.Status === 'Disapproved') {
+                                                    setDataToShow(plan.Reason)
+                                                } else {
+                                                    setDataToShow('Process is not DisApproved.')
+                                                }
+                                                setShowBox(true);
+                                            }} className='btn btn-outline-danger'>View</p>
+
+                                        </td>
+                                        {tabData?.Approval && (
+
+                                            <td>
+
                                                 <p onClick={() => {
-                                                    if (plan.Status === 'Disapproved') {
-                                                        setDataToShow(plan.Reason)
+                                                    setIdForAction(plan._id);
+                                                    setApprove(true);
+                                                }} style={{
+                                                    height: '28px'
+
+                                                }} className={`btn btn-outline-primary pt-0 px-1`}>Approve</p>
+                                                <p onClick={() => {
+                                                    if (plan.Status === 'Approved') {
+                                                        setDataToShow('Sorry, Team is already Approved');
+                                                        setShowBox(true);
                                                     } else {
-                                                        setDataToShow('Process is not DisApproved.')
-                                                    }
-                                                    setShowBox(true);
-                                                }} className='btn btn-outline-danger'>View</p>
 
-                                            </td>
-                                            {tabData?.Approval && (
-
-                                                <td>
-
-                                                    <p onClick={() => {
                                                         setIdForAction(plan._id);
-                                                        setApprove(true);
-                                                    }} style={{
-                                                        height: '28px'
+                                                        setReject(true);
+                                                    }
+                                                }} style={{
+                                                    height: '28px'
 
-                                                    }} className={`btn btn-outline-primary pt-0 px-1`}>Approve</p>
-                                                    <p onClick={() => {
-                                                        if (plan.Status === 'Approved') {
-                                                            setDataToShow('Sorry, Team is already Approved');
-                                                            setShowBox(true);
-                                                        } else {
-
-                                                            setIdForAction(plan._id);
-                                                            setReject(true);
-                                                        }
-                                                    }} style={{
-                                                        height: '28px'
-
-                                                    }} className={`btn btn-outline-danger pt-0 px-1`}>Disapprove</p>
-                                                </td>
-                                            )}
-                                            <td></td>
-                                            <td >
-
-                                                <p onClick={() => {
-                                                    dispatch(changeId(plan._id))
-                                                    dispatch(updateTabData({ ...tabData, Tab: 'foodSafetyPlanMembers' }))
-                                                }} className='btn btn-outline-warning'>Click Here</p>
+                                                }} className={`btn btn-outline-danger pt-0 px-1`}>Disapprove</p>
                                             </td>
+                                        )}
+                                        <td></td>
+                                        <td >
 
-                                            {plan.ApprovedBy ? (
+                                            <p onClick={() => {
+                                                dispatch(changeId(plan._id))
+                                                dispatch(updateTabData({ ...tabData, Tab: 'foodSafetyPlanMembers' }))
+                                            }} className='btn btn-outline-warning'>Click Here</p>
+                                        </td>
 
-                                                <td>{plan.ApprovedBy}</td>
-                                            ) : (
-                                                <td>- - -</td>
+                                        {plan.ApprovedBy ? (
+                                            <td>{plan.ApprovedBy}</td>
+                                        ) : (
+                                            <td>- - -</td>
+                                        )}
+                                        {plan.ApprovalDate ? (
+                                            <td>{plan.ApprovalDate?.slice(0, 10).split('-')[2]}/{plan.ApprovalDate?.slice(0, 10).split('-')[1]}/{plan.ApprovalDate?.slice(0, 10).split('-')[0]}</td>
+                                        ) : (
+                                            <td>- - -</td>
+                                        )}
+                                        {plan.DisapprovedBy ? (
+                                            <td>{plan.DisapprovedBy}</td>
+                                        ) : (
+                                            <td>- - -</td>
+                                        )}
+                                        {plan.DisapprovalDate ? (
+                                            <td>{plan.DisapprovalDate?.slice(0, 10).split('-')[2]}/{plan.DisapprovalDate?.slice(0, 10).split('-')[1]}/{plan.DisapprovalDate?.slice(0, 10).split('-')[0]}</td>
+                                        ) : (
+                                            <td>- - -</td>
+                                        )}
 
-                                            )}
-                                            {plan.ApprovalDate ? (
 
+                                    </tr>
 
-                                                <td>{plan.ApprovalDate?.slice(0, 10).split('-')[2]}/{plan.ApprovalDate?.slice(0, 10).split('-')[1]}/{plan.ApprovalDate?.slice(0, 10).split('-')[0]}</td>
-                                            ) : (
-                                                <td>- - -</td>
-                                            )}
-                                            <td><div className={`text-center ${plan.Status === 'Approved' && style.greenStatus} ${plan.Status === 'Disapproved' && style.redStatus} ${plan.Status === 'Pending' && style.yellowStatus}  `}><p>{plan.Status}</p></div></td>
+                                )
 
-                                        </tr>
+                            })
+                        }
+                    </table>
+                )}
+            </div>
+            <div className={style.Btns}>
+                {startIndex > 0 && (
 
-                                    )
+                    <button onClick={backPage}>
+                        {'<< '}Back
+                    </button>
+                )}
+                {allDataArr?.length > endIndex && (
 
-                                })
-                            }
-                        </table>
-                    )}
-                </div>
-                <div className={style.Btns}>
-                    {startIndex > 0 && (
-
-                        <button onClick={backPage}>
-                            {'<< '}Back
-                        </button>
-                    )}
-                    {allDataArr?.length > endIndex && (
-
-                        <button onClick={nextPage}>
-                            next{'>> '}
-                        </button>
-                    )}
-                </div>
+                    <button onClick={nextPage}>
+                        next{'>> '}
+                    </button>
+                )}
+            </div>
 
             {
                 showBox && (
@@ -294,7 +303,7 @@ function FoodSafetyPlan() {
                                 e.preventDefault();
                                 setReject(false);
                                 dispatch(setSmallLoading(true))
-                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/disapprove-food-safety`, { id: idForAction, Reason: reason, disapprovedBy : user.Name }).then(() => {
+                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/disapprove-food-safety`, { id: idForAction, Reason: reason, disapprovedBy: user.Name }).then(() => {
                                     dispatch(setSmallLoading(false))
                                     Swal.fire({
                                         title: 'Success',
@@ -337,7 +346,7 @@ function FoodSafetyPlan() {
                                 <button onClick={() => {
                                     setApprove(false)
                                     dispatch(setSmallLoading(true))
-                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/approve-food-safety`, { id: idForAction, approvedBy : user.Name }).then(() => {
+                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/approve-food-safety`, { id: idForAction, approvedBy: user.Name }).then(() => {
                                         dispatch(setSmallLoading(false))
                                         Swal.fire({
                                             title: 'Success',

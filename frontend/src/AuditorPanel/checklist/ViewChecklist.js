@@ -105,7 +105,7 @@ function ViewChecklist() {
                     pdf.text('Powered By Feat Technology', (pdf.internal.pageSize.getWidth() / 2) - 1.3, 0.5);
                     pdf.setFontSize(10);
                     pdf.text(`${user.Company.CompanyName}`, pdf.internal.pageSize.getWidth() - 2, 0.3);
-                    pdf.text('Decision Tree', pdf.internal.pageSize.getWidth() - 2, 0.5);
+                    pdf.text('Checklist', pdf.internal.pageSize.getWidth() - 2, 0.5);
                     pdf.text(`${dataToSend.DocumentId}`, pdf.internal.pageSize.getWidth() - 2, 0.7);
                     pdf.text(`Revision No :${dataToSend.RevisionNo}`, pdf.internal.pageSize.getWidth() - 2, 0.9);
                     pdf.text(`Creation : ${dayjs(dataToSend.CreationDate).format('DD/MM/YYYY')}`, pdf.internal.pageSize.getWidth() - 2, 1.1);

@@ -82,11 +82,11 @@ function ViewFoodSafetyPlan() {
                         // get the data URL of the canvas
                         const dataURL = canvas.toDataURL('image/jpeg');
                         // pass the data URL to the pdf.addImage method
-                        pdf.addImage(dataURL, 'JPEG', (pdf.internal.pageSize.getWidth() / 2) - 1.5, 2.5, 3, 3);
-                        pdf.setFontSize(25);
-                        pdf.text(`${user.Company.CompanyName}`, (pdf.internal.pageSize.getWidth() / 2) - 1.5, (pdf.internal.pageSize.getHeight() / 2));
-                        pdf.text(`${user.Company.Address}`, (pdf.internal.pageSize.getWidth() / 2) - 1.5, (pdf.internal.pageSize.getHeight() / 2) + 0.5);
-                        pdf.setFontSize(15);
+                        pdf.addImage(dataURL, 'JPEG', 1, 2.5, 3, 3);
+                        pdf.setFontSize(20);
+                        pdf.text(`Company : ${user.Company.CompanyName}`, (1), (pdf.internal.pageSize.getHeight() / 2));
+                        pdf.setFontSize(15)
+                        pdf.text(`Address : ${user.Company.Address}`, (1), (pdf.internal.pageSize.getHeight() / 2) + 0.5);
                         pdf.setLineWidth(0.1); // Example line width
                         pdf.line(0.1, (pdf.internal.pageSize.getHeight() / 2) + 1, pdf.internal.pageSize.getWidth() - 0.2, (pdf.internal.pageSize.getHeight() / 2) + 1)
                         pdf.text("Document Id", 1, (pdf.internal.pageSize.getHeight() / 2) + 1.5);
@@ -152,7 +152,7 @@ function ViewFoodSafetyPlan() {
         }
     }, [selectedDecisionTree])
 
-   
+
 
 
 

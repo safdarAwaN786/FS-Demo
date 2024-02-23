@@ -96,7 +96,7 @@ function UpdateProductDetails() {
                         <BsArrowLeftCircle
                             role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
                                 {
-                                    dispatch({ ...tabData, Tab: 'Describe Product' })
+                                    dispatch(updateTabData({ ...tabData, Tab: 'Describe Product' }))
                                 }
                             }} />
                     </div>

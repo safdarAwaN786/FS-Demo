@@ -43,7 +43,7 @@ function UpdateConductHACCP() {
 
     useEffect(() => {
         dispatch(setSmallLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-haccp-teams`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-approved-haccp-teams`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
             setTeamsToShow(response.data.data);
             if(processesToShow, departmentsToShow){
                 dispatch(setSmallLoading(false))

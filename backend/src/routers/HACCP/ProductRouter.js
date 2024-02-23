@@ -194,7 +194,7 @@ router.patch('/approve-product', async (req, res) => {
     product.ApprovalDate = new Date();
     product.Status = 'Approved';
     product.DisapprovalDate = null; // Set disapproval date to null
-    product.DisapproveBy = null;
+    product.DisapprovedBy = null;
     product.ApprovedBy = approvedBy
 
     // Save the updated Product
@@ -237,7 +237,7 @@ router.patch('/disapprove-product', async (req, res) => {
     product.Status = 'Disapproved';
     product.Reason = Reason;
     product.ApprovalDate = null; // Set approval date to null
-    product.DisapproveBy = disapprovedBy;
+    product.DisapprovedBy = disapprovedBy;
     product.ApprovedBy = 'Pending'
 
     // Save the updated Product

@@ -100,7 +100,7 @@ function ProcessDetails() {
                 <div className={style.searchbar}>
                     <div className={style.sec1}>
                         <img src={Search} alt="" />
-                        <input autoComplete='off' onChange={search} type="text" placeholder='Search product by name' />
+                        <input autoComplete='off' onChange={search} type="text" placeholder='Search Process by name' />
                     </div>
                     {tabData?.Creation && (
 
@@ -125,25 +125,22 @@ function ProcessDetails() {
                                 <td>Process Name</td>
                                 <td>Document Type</td>
                                 <td>Department</td>
+                                <td className='ps-5'>Status</td>
                                 <td>Revision No</td>
                                 <td>Created By</td>
                                 <td>Creation Date</td>
                                 <td>Reason</td>
                                 {tabData?.Edit && (
-
                                     <td>Action</td>
                                 )}
                                 {tabData?.Approval && (
-
-
                                     <td></td>
-
                                 )}
                                 <td>Flow Diagram</td>
                                 <td>Approved By</td>
                                 <td>Approval Date</td>
-                                <td>Status</td>
-
+                                <td>Disapproved By</td>
+                                <td>Dispproval Date</td>
                             </tr>
                             {
                                 processesList?.map((process, i) => {
@@ -162,11 +159,11 @@ function ProcessDetails() {
                                             <td>{process.ProcessName}</td>
                                             <td className={style.simpleContent}>{process.DocumentType}</td>
                                             <td>{process.Department.DepartmentName}</td>
+                                            <td><div className={`text-center ${process.Status === 'Approved' && style.greenStatus} ${process.Status === 'Disapproved' && style.redStatus} ${process.Status === 'Pending' && style.yellowStatus}  `}><p>{process.Status}</p></div></td>
                                             <td>{process.RevisionNo}</td>
                                             <td>{process.CreatedBy}</td>
                                             <td>{process.CreationDate?.slice(0, 10).split('-')[2]}/{process.CreationDate?.slice(0, 10).split('-')[1]}/{process.CreationDate?.slice(0, 10).split('-')[0]}</td>
-                                            <td >
-
+                                            <td>
                                                 <p onClick={() => {
                                                     if (process.Status === 'Disapproved') {
                                                         setDataToShow(process.Reason)
@@ -177,33 +174,26 @@ function ProcessDetails() {
                                                 }} className={style.redclick}>View</p>
                                             </td>
                                             {tabData?.Edit && (
-
                                                 <td>
                                                     <p onClick={() => {
                                                         dispatch(updateTabData({ ...tabData, Tab: 'updateProcessDetails' }))
                                                         dispatch(changeId(process._id))
-
                                                     }} className='btn btn-outline-success p-1 m-2'>Update</p>
                                                 </td>
                                             )}
                                             {tabData?.Approval && (
-
                                                 <td className='ps-0'>
-
                                                     <p onClick={() => {
                                                         setIdForAction(process._id);
                                                         setApprove(true);
                                                     }} style={{
                                                         height: '28px'
-
                                                     }} className={`btn btn-outline-primary pt-0 px-1`}>Approve</p>
                                                     <p onClick={() => {
                                                         if(process.Status === 'Approved'){
                                                             setDataToShow('Process is already Approved!');
                                                             setShowBox(true)
                                                         } else {
-
-
                                                         setIdForAction(process._id);
                                                         setReject(true);
                                                         }
@@ -213,43 +203,36 @@ function ProcessDetails() {
                                                     }} className={`btn btn-outline-danger pt-0 px-1`}>Disaprrove</p>
                                                 </td>
                                             )}
-                                            <td >
-
+                                            <td>
                                                 <p onClick={() => {
                                                     dispatch(updateTabData({ ...tabData, Tab: 'viewProcessDetails' }))
                                                     dispatch(changeId(process._id))
                                                 }} style={{
                                                     height: '28px'
-
                                                 }} className={`btn btn-outline-warning pt-0 px-1`}>Click Here</p>
-
                                             </td>
                                             {process.ApprovedBy ? (
-
                                                 <td>{process.ApprovedBy}</td>
                                             ) : (
                                                 <td>- - -</td>
-
                                             )}
                                             {process.ApprovalDate ? (
-
-
                                                 <td>{process.ApprovalDate?.slice(0, 10).split('-')[2]}/{process.ApprovalDate?.slice(0, 10).split('-')[1]}/{process.ApprovalDate?.slice(0, 10).split('-')[0]}</td>
                                             ) : (
                                                 <td>- - -</td>
                                             )}
-                                            <td><div className={`text-center ${process.Status === 'Approved' && style.greenStatus} ${process.Status === 'Disapproved' && style.redStatus} ${process.Status === 'Pending' && style.yellowStatus}  `}><p>{process.Status}</p></div></td>
-
-
-
-
-
-
-
+                                            {process.DisapprovedBy ? (
+                                                <td>{process.DisapprovedBy}</td>
+                                            ) : (
+                                                <td>- - -</td>
+                                            )}
+                                            {process.DisapprovalDate ? (
+                                                <td>{process.DisapprovalDate?.slice(0, 10).split('-')[2]}/{process.DisapprovalDate?.slice(0, 10).split('-')[1]}/{process.DisapprovalDate?.slice(0, 10).split('-')[0]}</td>
+                                            ) : (
+                                                <td>- - -</td>
+                                            )}
                                         </tr>
-
                                     )
-
                                 })
                             }
                         </table>

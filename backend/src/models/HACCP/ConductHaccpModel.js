@@ -119,7 +119,7 @@ const ConductHaccpSchema = new mongoose.Schema({
 
     },
 
-    DisapproveBy: {
+    DisapprovedBy: {
         type: String,
     },
 

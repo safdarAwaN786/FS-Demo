@@ -80,9 +80,9 @@ const formatDate = (date) => {
 
   const newDate = new Date(date);
   const formatDate = newDate.toLocaleDateString('en-GB', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
   });
   return formatDate;
 }
@@ -115,9 +115,8 @@ router.post('/addConductAudit', upload.fields(generateEvidenceDocArray()), async
         const response = await axios.get(requestUser.Company.CompanyLogo, { responseType: 'arraybuffer' });
         const pdfDoc = await PDFDocument.load(fileData.buffer);
         const logoImage = Buffer.from(response.data);
-        const logoImageDataUrl = `data:image/jpeg;base64,${logoImage.toString('base64')}`;
-        const isJpg = logoImageDataUrl.includes('data:image/jpeg') || logoImageDataUrl.includes('data:image/jpg');
-        const isPng = logoImageDataUrl.includes('data:image/png');
+        const isJpg = requestUser.Company.CompanyLogo.includes('.jpeg') || requestUser.Company.CompanyLogo.includes('.jpg');
+        const isPng = requestUser.Company.CompanyLogo.includes('.png');
         let pdfLogoImage;
         if (isJpg) {
           pdfLogoImage = await pdfDoc.embedJpg(logoImage);
@@ -207,7 +206,7 @@ router.get('/readConductAudits', async (req, res) => {
 
       model: 'Department'
     });
-   
+
 
     res.status(200).send({ status: true, message: "The following are ConductAudits!", data: conductAudits });
     console.log(new Date().toLocaleString() + ' ' + 'READ ConductAudits Successfully!')

@@ -60,7 +60,7 @@ function AddHACCPRiskAssessment() {
 
     useEffect(() => {
         dispatch(setSmallLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-haccp-teams`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-approved-haccp-teams`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
             setTeamsToShow(response.data.data);
         }).catch(err => {
             dispatch(setSmallLoading(false));
@@ -71,7 +71,7 @@ function AddHACCPRiskAssessment() {
             })
         })
 
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-processes`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-approved-processes`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
             setProcessesToShow(response.data.data);
         }).catch(err => {
             dispatch(setSmallLoading(false));

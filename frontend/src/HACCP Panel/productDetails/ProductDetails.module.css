@@ -175,20 +175,20 @@
   
   
   .headers > td:nth-child(1) {
-    width: 130px;
+    width:200px;
   }
   .headers > td:nth-child(2) {
-    width: 300px;
+    width: 200px;
   }
   .headers > td:nth-child(n + 3) {
     width: 200px;
   }
   
   .tablebody > td:nth-child(1) {
-    width: 130px;
+    width: 200px;
   }
   .tablebody > td:nth-child(2) {
-    width: 300px;
+    width: 200px;
   }
   .tablebody > td:nth-child(n + 3) {
     width: 200px;

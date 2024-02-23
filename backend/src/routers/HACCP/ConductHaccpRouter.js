@@ -69,6 +69,37 @@ router.get('/get-all-conduct-haccp', async (req, res) => {
     }
 });
 
+router.get('/get-approved-conduct-haccp', async (req, res) => {
+    try {
+
+        const conductHaccps = await ConductHaccp.find({UserDepartment : req.header('Authorization'), Status : 'Approved'}).populate('Department Process UserDepartment').populate({
+            path: 'Hazards',
+            populate: {
+                path: 'Process',
+                model: 'ProcessDetail'
+            }
+        }).populate({
+            path: 'Members',
+            populate: {
+                path: 'Department',
+                model: 'Department'
+            }
+        });
+        if (!conductHaccps) {
+            console.log('ConductHaccp documents not found');
+            return res.status(404).json({ message: 'ConductHaccp documents not found' });
+        }
+
+        
+        console.log('ConductHaccp documents retrieved successfully');
+        res.status(200).json({ status: true, data: conductHaccps });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error getting ConductHaccp documents', error: error.message });
+    }
+});
+
 // * Get a ConductHaccp document by ID
 router.get('/get-conduct-haccp/:haccpId', async (req, res) => {
     try {
@@ -217,7 +248,7 @@ router.patch('/approve-conduct-haccp', async (req, res) => {
         conductHaccp.ApprovalDate = new Date();  // Set approval date to current time
         conductHaccp.Status = 'Approved';
         conductHaccp.DisapprovalDate = null;
-        conductHaccp.DisapproveBy = null;
+        conductHaccp.DisapprovedBy = null;
         conductHaccp.ApprovedBy = approvedBy;
 
         // Save the updated ConductHaccp
@@ -261,7 +292,7 @@ router.patch('/disapprove-conduct-haccp', async (req, res) => {
         conductHaccp.Status = 'Disapproved';
         conductHaccp.Reason = Reason;
         conductHaccp.ApprovalDate = null; // Set approval date to null
-        conductHaccp.DisapproveBy = disapproveBy
+        conductHaccp.DisapprovedBy = disapproveBy
         conductHaccp.ApprovedBy = 'Pending'
 
         // Save the updated ConductHaccp

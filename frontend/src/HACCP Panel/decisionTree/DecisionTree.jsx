@@ -93,162 +93,171 @@ function DecisionTree() {
     return (
         <>
 
-                <div className={style.searchbar}>
-                    <div className={style.sec1}>
-                        <img src={Search} alt="" />
-                        <input autoComplete='off' onChange={search} type="text" placeholder='Search Document by name' />
+            <div className={style.searchbar}>
+                <div className={style.sec1}>
+                    <img src={Search} alt="" />
+                    <input autoComplete='off' onChange={search} type="text" placeholder='Search Document by name' />
+                </div>
+                {tabData?.Creation && (
+
+                    <div className={style.sec2} onClick={() => {
+                        dispatch(updateTabData({ ...tabData, Tab: 'addDecisionTree' }))
+                    }}>
+                        <img src={add} alt="" />
+                        <p>Add Decision Tree</p>
                     </div>
-                    {tabData?.Creation && (
+                )}
+            </div>
+            <div className={style.tableParent}>
+                {!decisionTreesList || decisionTreesList?.length === 0 ? (
+                    <div className='w-100 d-flex align-items-center justify-content-center'>
+                        <p className='text-center'>No any Records Available here.</p>
+                    </div>
+                ) : (
 
-                        <div className={style.sec2} onClick={() => {
-                            dispatch(updateTabData({ ...tabData, Tab: 'addDecisionTree' }))
-                        }}>
-                            <img src={add} alt="" />
-                            <p>Add Decision Tree</p>
-                        </div>
-                    )}
-                </div>
-                <div className={style.tableParent}>
-                    {!decisionTreesList || decisionTreesList?.length === 0 ? (
-                        <div className='w-100 d-flex align-items-center justify-content-center'>
-                            <p className='text-center'>No any Records Available here.</p>
-                        </div>
-                    ) : (
-
-                        <table className={style.table}>
-                            <tr className={style.headers}>
-                                <td>Document ID</td>
-                                <td>Document Type</td>
-                                <td>Department</td>
-                                <td>Revision No.</td>
-                                <td>Created By</td>
-                                <td>Creation Date</td>
-                                <td>Process Name</td>
-                                {tabData?.Edit && (
-                                    <td>Action</td>
-                                )}
-                                <td>Decision Tree</td>
-                                <td>Reason</td>
-                                {tabData?.Approval && (
-                                    <td></td>
-                                )}
+                    <table className={style.table}>
+                        <tr className={style.headers}>
+                            <td>Document ID</td>
+                            <td>Document Type</td>
+                            <td>Department</td>
+                            <td>Revision No.</td>
+                            <td className='ps-5'>Status</td>
+                            <td>Created By</td>
+                            <td>Creation Date</td>
+                            <td>Process Name</td>
+                            {tabData?.Edit && (
+                                <td>Action</td>
+                            )}
+                            <td>Decision Tree</td>
+                            <td>Reason</td>
+                            {tabData?.Approval && (
                                 <td></td>
-                                <td>Team Members</td>
-                                <td>Approved By</td>
-                                <td>Approval Date</td>
-                                <td>Status</td>
-                            </tr>
-                            {
-                                decisionTreesList?.map((tree, i) => {
-                                    return (
-                                        <tr className={style.tablebody} key={i}>
-                                            <td ><p style={{
-                                                backgroundColor: "#f0f5f0",
-                                                padding: "2px 5px",
-                                                borderRadius: "10px",
-                                                fontFamily: "Inter",
-                                                fontSize: "12px",
-                                                fontStyle: "normal",
-                                                fontWeight: "400",
-                                                lineHeight: "20px",
-                                            }}>{tree.DocumentId}</p></td>
-                                            <td className={style.simpleContent}>{tree.DocumentType}</td>
-                                            <td>{tree.Department.DepartmentName}</td>
-                                            <td>{tree.RevisionNo}</td>
-                                            <td>{tree.CreatedBy}</td>
-                                            <td>{tree.CreationDate?.slice(0, 10).split('-')[2]}/{tree.CreationDate?.slice(0, 10).split('-')[1]}/{tree.CreationDate?.slice(0, 10).split('-')[0]}</td>
-                                            <td>{tree.ConductHaccp.Process.ProcessName}</td>
-                                            {tabData?.Edit && (
-                                                <td>
-                                                    <p onClick={() => {
-                                                        dispatch(changeId(tree._id))
-                                                        dispatch(updateTabData({ ...tabData, Tab: 'updateDecisionTree' }))
-                                                    }} className={style.greenclick}>Update</p>
-                                                </td>
-                                            )}
-                                            <td >
+                            )}
+                            <td></td>
+                            <td>Team Members</td>
+                            <td>Approved By</td>
+                            <td>Approval Date</td>
+                            <td>Disapproved By</td>
+                            <td>Disapproval Date</td>
+                        </tr>
+                        {
+                            decisionTreesList?.map((tree, i) => {
+                                return (
+                                    <tr className={style.tablebody} key={i}>
+                                        <td ><p style={{
+                                            backgroundColor: "#f0f5f0",
+                                            padding: "2px 5px",
+                                            borderRadius: "10px",
+                                            fontFamily: "Inter",
+                                            fontSize: "12px",
+                                            fontStyle: "normal",
+                                            fontWeight: "400",
+                                            lineHeight: "20px",
+                                        }}>{tree.DocumentId}</p></td>
+                                        <td className={style.simpleContent}>{tree.DocumentType}</td>
+                                        <td>{tree.Department.DepartmentName}</td>
+                                        <td>{tree.RevisionNo}</td>
+                                        <td><div className={`text-center ${tree.Status === 'Approved' && style.greenStatus} ${tree.Status === 'Disapproved' && style.redStatus} ${tree.Status === 'Pending' && style.yellowStatus}  `}><p>{tree.Status}</p></div></td>
+                                        <td>{tree.CreatedBy}</td>
+                                        <td>{tree.CreationDate?.slice(0, 10).split('-')[2]}/{tree.CreationDate?.slice(0, 10).split('-')[1]}/{tree.CreationDate?.slice(0, 10).split('-')[0]}</td>
+                                        <td>{tree.ConductHaccp.Process.ProcessName}</td>
+                                        {tabData?.Edit && (
+                                            <td>
                                                 <p onClick={() => {
-                                                    dispatch(updateTabData({ ...tabData, Tab: 'viewDecisionTree' }))
                                                     dispatch(changeId(tree._id))
-                                                }} className='btn btn-outline-danger'>View</p>
+                                                    dispatch(updateTabData({ ...tabData, Tab: 'updateDecisionTree' }))
+                                                }} className={style.greenclick}>Update</p>
                                             </td>
-                                            <td >
-                                                <p onClick={() => {
-                                                    setDataToShow(tree.Reason);
-                                                    setShowBox(true);
-                                                }} className='btn btn-outline-danger'>View</p>
-                                            </td>
+                                        )}
+                                        <td >
+                                            <p onClick={() => {
+                                                dispatch(updateTabData({ ...tabData, Tab: 'viewDecisionTree' }))
+                                                dispatch(changeId(tree._id))
+                                            }} className='btn btn-outline-danger'>View</p>
+                                        </td>
+                                        <td >
+                                            <p onClick={() => {
+                                                setDataToShow(tree.Reason);
+                                                setShowBox(true);
+                                            }} className='btn btn-outline-danger'>View</p>
+                                        </td>
 
-                                            {tabData?.Approval && (
-                                                <td>
-                                                    <p onClick={() => {
+                                        {tabData?.Approval && (
+                                            <td>
+                                                <p onClick={() => {
+                                                    setIdForAction(tree._id);
+                                                    setApprove(true);
+                                                }} style={{
+                                                    height: '28px'
+                                                }} className={`btn btn-outline-primary pt-0 px-1`}>Approve</p>
+                                                <p onClick={() => {
+                                                    if (tree.Status === 'Approved') {
+                                                        setDataToShow('Sorry, Team is already Approved');
+                                                        setShowBox(true);
+                                                    } else {
+
                                                         setIdForAction(tree._id);
-                                                        setApprove(true);
-                                                    }} style={{
-                                                        height: '28px'
-                                                    }} className={`btn btn-outline-primary pt-0 px-1`}>Approve</p>
-                                                    <p onClick={() => {
-                                                        if (tree.Status === 'Approved') {
-                                                            setDataToShow('Sorry, Team is already Approved');
-                                                            setShowBox(true);
-                                                        } else {
+                                                        setReject(true);
+                                                    }
+                                                }} style={{
+                                                    height: '28px'
 
-                                                            setIdForAction(tree._id);
-                                                            setReject(true);
-                                                        }
-                                                    }} style={{
-                                                        height: '28px'
-
-                                                    }} className={`btn btn-outline-danger pt-0 px-1`}>Disapprove</p>
-                                                </td>
-                                            )}
-                                            <td></td>
-                                            <td >
-
-                                                <p onClick={() => {
-                                                    dispatch(changeId(tree._id))
-                                                    dispatch(updateTabData({ ...tabData, Tab: 'decisionTreeMembers' }))
-                                                }} className='btn btn-outline-warning'>Click Here</p>
+                                                }} className={`btn btn-outline-danger pt-0 px-1`}>Disapprove</p>
                                             </td>
+                                        )}
+                                        <td></td>
+                                        <td >
 
-                                            {tree.ApprovedBy ? (
+                                            <p onClick={() => {
+                                                dispatch(changeId(tree._id))
+                                                dispatch(updateTabData({ ...tabData, Tab: 'decisionTreeMembers' }))
+                                            }} className='btn btn-outline-warning'>Click Here</p>
+                                        </td>
 
-                                                <td>{tree.ApprovedBy}</td>
-                                            ) : (
-                                                <td>- - -</td>
+                                        {tree.ApprovedBy ? (
+                                            <td>{tree.ApprovedBy}</td>
+                                        ) : (
+                                            <td>- - -</td>
+                                        )}
+                                        {tree.ApprovalDate ? (
+                                            <td>{tree.ApprovalDate?.slice(0, 10).split('-')[2]}/{tree.ApprovalDate?.slice(0, 10).split('-')[1]}/{tree.ApprovalDate?.slice(0, 10).split('-')[0]}</td>
+                                        ) : (
+                                            <td>- - -</td>
+                                        )}
+                                        {tree.DisapprovedBy ? (
+                                            <td>{tree.DispprovedBy}</td>
+                                        ) : (
+                                            <td>- - -</td>
+                                        )}
+                                        {tree.DisapprovalDate ? (
+                                            <td>{tree.DisapprovalDate?.slice(0, 10).split('-')[2]}/{tree.DisapprovalDate?.slice(0, 10).split('-')[1]}/{tree.DisapprovalDate?.slice(0, 10).split('-')[0]}</td>
+                                        ) : (
+                                            <td>- - -</td>
+                                        )}
 
-                                            )}
-                                            {tree.ApprovalDate ? (
+                                    </tr>
 
+                                )
 
-                                                <td>{tree.ApprovalDate?.slice(0, 10).split('-')[2]}/{tree.ApprovalDate?.slice(0, 10).split('-')[1]}/{tree.ApprovalDate?.slice(0, 10).split('-')[0]}</td>
-                                            ) : (
-                                                <td>- - -</td>
-                                            )}
-                                            <td><div className={`text-center ${tree.Status === 'Approved' && style.greenStatus} ${tree.Status === 'Disapproved' && style.redStatus} ${tree.Status === 'Pending' && style.yellowStatus}  `}><p>{tree.Status}</p></div></td>
-                                        </tr>
+                            })
+                        }
+                    </table>
+                )}
+            </div>
+            <div className={style.Btns}>
+                {startIndex > 0 && (
 
-                                    )
+                    <button onClick={backPage}>
+                        {'<< '}Back
+                    </button>
+                )}
+                {allDataArr?.length > endIndex && (
 
-                                })
-                            }
-                        </table>
-                    )}
-                </div>
-                <div className={style.Btns}>
-                    {startIndex > 0 && (
-
-                        <button onClick={backPage}>
-                            {'<< '}Back
-                        </button>
-                    )}
-                    {allDataArr?.length > endIndex && (
-
-                        <button onClick={nextPage}>
-                            next{'>> '}
-                        </button>
-                    )}
-                </div>
+                    <button onClick={nextPage}>
+                        next{'>> '}
+                    </button>
+                )}
+            </div>
 
             {
                 showBox && (
@@ -261,9 +270,9 @@ function DecisionTree() {
                             <div className={style.alertbtns}>
 
                                 <button style={{
-                                    marginLeft : '120px',
-                                    marginTop : '25px'
-                                }}  onClick={() => {
+                                    marginLeft: '120px',
+                                    marginTop: '25px'
+                                }} onClick={() => {
                                     setShowBox(false);
 
                                 }} className={style.btn2}>OK</button>
@@ -282,7 +291,7 @@ function DecisionTree() {
                                 e.preventDefault();
                                 setReject(false);
                                 dispatch(setSmallLoading(true))
-                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/disapprove-decision-tree`, { id: idForAction, Reason: reason, disapprovedBy : user.Name }).then(() => {
+                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/disapprove-decision-tree`, { id: idForAction, Reason: reason, disapprovedBy: user.Name }).then(() => {
                                     dispatch(setSmallLoading(false))
                                     Swal.fire({
                                         title: 'Success',
@@ -328,7 +337,7 @@ function DecisionTree() {
                                 <button onClick={() => {
                                     setApprove(false)
                                     dispatch(setSmallLoading(true))
-                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/approve-decision-tree`, { id: idForAction, approvedBy : user.Name }).then(() => {
+                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/approve-decision-tree`, { id: idForAction, approvedBy: user.Name }).then(() => {
                                         dispatch(setSmallLoading(false))
                                         Swal.fire({
                                             title: 'Success',

@@ -42,7 +42,7 @@ router.post('/create-decision-tree', async (req, res) => {
 router.get('/get-all-decision-trees', async (req, res) => {
   try {
 
-    const decisionTrees = await DecisionTree.find({UserDepartment : req.header('Authorization')}).populate("Department UserDepartment").populate({
+    const decisionTrees = await DecisionTree.find({ UserDepartment: req.header('Authorization') }).populate("Department UserDepartment").populate({
       path: 'ConductHaccp',
       model: 'ConductHaccp',
       populate: [
@@ -75,7 +75,53 @@ router.get('/get-all-decision-trees', async (req, res) => {
       return res.status(404).json({ message: 'DecisionTree documents not found' });
     }
 
-   
+
+    console.log('DecisionTree documents retrieved successfully');
+    res.status(200).json({ status: true, data: decisionTrees });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error getting DecisionTree documents', error: error.message });
+  }
+});
+
+router.get('/get-approved-decision-trees', async (req, res) => {
+  try {
+
+    const decisionTrees = await DecisionTree.find({ UserDepartment: req.header('Authorization'), Status : 'Approved' }).populate("Department UserDepartment").populate({
+      path: 'ConductHaccp',
+      model: 'ConductHaccp',
+      populate: [
+        {
+          path: 'Members',
+          populate: {
+            path: 'Department',
+            model: 'Department'
+          }
+        },
+        {
+          path: 'Process',
+          model: 'Processes'
+        }
+      ]
+    }).populate({
+      path: 'Decisions',
+      model: 'Decision',
+      populate: {
+        path: 'Hazard',
+        model: 'Hazard',
+        populate: {
+          path: 'Process',
+          model: 'ProcessDetail',
+        }
+      }
+    });
+    if (!decisionTrees) {
+      console.log('DecisionTree documents not found');
+      return res.status(404).json({ message: 'DecisionTree documents not found' });
+    }
+
+
     console.log('DecisionTree documents retrieved successfully');
     res.status(200).json({ status: true, data: decisionTrees });
 
@@ -192,14 +238,17 @@ router.patch('/update-decision-tree/:treeId', async (req, res) => {
       console.log(`DecisionTree document with ID: ${decisionTreeId} is already approved, cannot be updated.`);
       return res.status(400).json({ message: `DecisionTree document with ID: ${decisionTreeId} is already approved, cannot be updated.` });
     }
-    const createdDecisions = await DecisionModel.create(treeData.Decisions)
+    const createdDecisions = await DecisionModel.create(treeData.Decisions.map((decisionObj => {
+      const { _id, ...obj } = decisionObj;
+      return obj
+    })))
     const decisionsArr = Object.values(createdDecisions);
     const decisionIds = decisionsArr.map(decisionObj => decisionObj._id);
     console.log(decisionIds);
 
     const updates = {
       ...req.body,
-      Decisions : decisionIds
+      Decisions: decisionIds
     }
 
     // If status is 'Pending', do not increment revision number
@@ -245,8 +294,8 @@ router.patch('/approve-decision-tree', async (req, res) => {
     decisionTree.ApprovalDate = new Date(); // Set approval date to current time
     decisionTree.Status = 'Approved';
     decisionTree.ApprovedBy = approvedBy;
-    decisionTree.DisapproveDate = null; // Set disapproval date to null
-    decisionTree.DisapproveBy = null;
+    decisionTree.DisapprovalDate = null; // Set disapproval date to null
+    decisionTree.DisapprovedBy = null;
     // Save the updated DecisionTree
     await decisionTree.save();
 
@@ -295,8 +344,9 @@ router.patch('/disapprove-decision-tree', async (req, res) => {
     decisionTree.Status = 'Disapproved';
     decisionTree.Reason = Reason;
     decisionTree.ApprovalDate = null; // Set approval date to null
-    decisionTree.ApprovedBy = 'Pending';
-    decisionTree.DisapproveBy = disapproveBy
+    decisionTree.ApprovedBy = null;
+    decisionTree.DisapprovedBy = disapproveBy
+    decisionTree.DisapprovalDate = new Date()
 
     // Save the updated DecisionTree
     await decisionTree.save();

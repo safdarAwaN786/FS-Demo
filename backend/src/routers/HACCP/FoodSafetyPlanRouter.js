@@ -270,7 +270,7 @@ router.patch('/approve-food-safety', async (req, res) => {
     foodSafety.ApprovalDate = new Date();  // Set end time to current time
     foodSafety.Status = 'Approved';
     foodSafety.DisapprovalDate = null; // Set disapproval date to null
-    foodSafety.DisapprovalBy = null;
+    foodSafety.DisapprovedBy = null;
     foodSafety.ApprovedBy = approveBy
 
     // Save the updated FoodSafety
@@ -322,7 +322,7 @@ router.patch('/disapprove-food-safety', async (req, res) => {
     foodSafety.Reason = Reason;
     foodSafety.ApprovalDate = null; // Set approval date to null
     foodSafety.ApprovedBy = 'Pending';
-    foodSafety.DisapprovalBy = disapproveBy
+    foodSafety.DisapprovedBy = disapproveBy
 
     // Save the updated FoodSafety
     await foodSafety.save();

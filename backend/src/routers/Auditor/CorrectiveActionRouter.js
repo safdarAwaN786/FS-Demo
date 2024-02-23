@@ -53,7 +53,7 @@ const formatDate = (date) => {
         year: 'numeric',
     });
     return formatDate;
-  }
+}
 // Function to add the company logo and information to the first page
 const addFirstPage = async (page, logoImage, Company, user) => {
     const { width, height } = page.getSize();
@@ -133,9 +133,8 @@ router.post('/addCorrectiveAction', upload.fields(generateCorrectiveDocArray()),
                 const response = await axios.get(requestUser.Company.CompanyLogo, { responseType: 'arraybuffer' });
                 const pdfDoc = await PDFDocument.load(fileData.buffer);
                 const logoImage = Buffer.from(response.data);
-                const logoImageDataUrl = `data:image/jpeg;base64,${logoImage.toString('base64')}`;
-                const isJpg = logoImageDataUrl.includes('data:image/jpeg') || logoImageDataUrl.includes('data:image/jpg');
-                const isPng = logoImageDataUrl.includes('data:image/png');
+                const isJpg = requestUser.Company.CompanyLogo.includes('.jpeg') || requestUser.Company.CompanyLogo.includes('.jpg');
+                const isPng = requestUser.Company.CompanyLogo.includes('.png');
                 let pdfLogoImage;
                 if (isJpg) {
                     pdfLogoImage = await pdfDoc.embedJpg(logoImage);
@@ -200,7 +199,7 @@ router.post('/addCorrectiveAction', upload.fields(generateCorrectiveDocArray()),
 // * GET All CorrectiveAction Data From MongoDB Database
 router.get('/readCorrectiveActionByReportId/:reportId', async (req, res) => {
     try {
-        const correctiveActions = await CorrectiveAction.find({ Report: req.params.reportId, UserDepartment : req.header('Authorization') }).populate('UserDepartment').populate({
+        const correctiveActions = await CorrectiveAction.find({ Report: req.params.reportId, UserDepartment: req.header('Authorization') }).populate('UserDepartment').populate({
             path: 'Report',
             model: 'Reports',
             populate: {

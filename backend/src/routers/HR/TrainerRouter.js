@@ -128,9 +128,8 @@ router.post("/addTrainer", upload.fields([{ name: 'TrainerImage' }, { name: 'Tra
         const response = await axios.get(requestUser.Company.CompanyLogo, { responseType: 'arraybuffer' });
         const pdfDoc = await PDFDocument.load(documentFile.buffer);
         const logoImage = Buffer.from(response.data);
-        const logoImageDataUrl = `data:image/jpeg;base64,${logoImage.toString('base64')}`;
-        const isJpg = logoImageDataUrl.includes('data:image/jpeg') || logoImageDataUrl.includes('data:image/jpg');
-        const isPng = logoImageDataUrl.includes('data:image/png');
+        const isJpg = requestUser.Company.CompanyLogo.includes('.jpeg') || requestUser.Company.CompanyLogo.includes('.jpg');
+        const isPng = requestUser.Company.CompanyLogo.includes('.png');
         let pdfLogoImage;
         if (isJpg) {
           pdfLogoImage = await pdfDoc.embedJpg(logoImage);

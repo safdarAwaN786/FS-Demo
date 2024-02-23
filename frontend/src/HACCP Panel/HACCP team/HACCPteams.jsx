@@ -104,166 +104,157 @@ function HACCPteams() {
     return (
         <>
 
-                <div className={style.searchbar}>
-                    <div className={style.sec1}>
-                        <img src={Search} alt="" />
-                        <input autoComplete='off' onChange={search} type="text" placeholder='Search Document by name' />
-                    </div>
-                    {tabData?.Creation && (
-
-                        <div className={style.sec2} onClick={() => {
-                            dispatch(updateTabData({ ...tabData, Tab: 'addHACCPTeam' }))
-                        }}>
-                            <img src={add} alt="" />
-                            <p>Add Team</p>
-                        </div>
-                    )}
+            <div className={style.searchbar}>
+                <div className={style.sec1}>
+                    <img src={Search} alt="" />
+                    <input autoComplete='off' onChange={search} type="text" placeholder='Search Document by name' />
                 </div>
-                <div className={style.tableParent}>
-                    {!teamsList || teamsList?.length === 0 ? (
-                        <div className='w-100 d-flex align-items-center justify-content-center'>
-                            <p className='text-center'>No any Records Available here.</p>
-                        </div>
-                    ) : (
+                {tabData?.Creation && (
 
-                        <table className={style.table}>
-                            <tr className={style.headers}>
-                                <td>Document ID</td>
-                                <td>Document Type</td>
-                                <td>Department</td>
-                                <td>Revision No</td>
-                                <td>Created By</td>
-                                <td>Creation Date</td>
-                                <td>Approved By</td>
-                                <td>Approval Date</td>
-                                <td>Status</td>
-                                <td>Reason</td>
-                                {tabData?.Edit && (
+                    <div className={style.sec2} onClick={() => {
+                        dispatch(updateTabData({ ...tabData, Tab: 'addHACCPTeam' }))
+                    }}>
+                        <img src={add} alt="" />
+                        <p>Add Team</p>
+                    </div>
+                )}
+            </div>
+            <div className={style.tableParent}>
+                {!teamsList || teamsList?.length === 0 ? (
+                    <div className='w-100 d-flex align-items-center justify-content-center'>
+                        <p className='text-center'>No any Records Available here.</p>
+                    </div>
+                ) : (
 
-                                    <td>Action</td>
-
-                                )}
-                                {tabData?.Approval && (
-
-                                    <td></td>
-                                )}
-
-                                <td>HACCP Team Members</td>
-
-                            </tr>
-                            {
-                                teamsList?.map((team, i) => {
-                                    return (
-                                        <tr className={style.tablebody} key={i}>
-                                            <td ><p style={{
-                                                backgroundColor: "#f0f5f0",
-                                                padding: "2px 5px",
-                                                borderRadius: "10px",
-                                                fontFamily: "Inter",
-                                                fontSize: "12px",
-                                                fontStyle: "normal",
-                                                fontWeight: "400",
-                                                lineHeight: "20px",
-                                            }}>{team.DocumentId}</p></td>
-                                            <td className={style.simpleContent}>{team.DocumentType}</td>
-                                            <td>{team.Department.ShortName}</td>
-                                            <td>{team.RevisionNo}</td>
-                                            <td>{team.CreatedBy}</td>
-                                            <td>{formatDate(team.CreationDate)}</td>
-                                            {team.ApprovedBy ? (
-
-                                                <td>{team.ApprovedBy}</td>
-                                            ) : (
-                                                <td>- - -</td>
-
-                                            )}
-                                            {team.ApprovalDate ? (
-
-
-                                                <td>{formatDate(team.ApprovalDate)}</td>
-                                            ) : (
-                                                <td>- - -</td>
-                                            )}
-                                            <td><div className={`text-center ${team.Status === 'Approved' && style.greenStatus} ${team.Status === 'Disapproved' && style.redStatus} ${team.Status === 'Pending' && style.yellowStatus}  `}><p>{team.Status}</p></div></td>
-                                            <td >
-
-                                                <p onClick={() => {
-                                                    if (team.Status === 'Disapproved') {
-
-                                                        setDataToShow(team.Reason)
-                                                    } else {
-                                                        setDataToShow('This  team is Not DisApproved.')
-                                                    }
-                                                    setShowBox(true);
-                                                }} className={style.redclick}>View</p>
-                                            </td>
-                                            {tabData?.Edit && (
-
-                                                <td >
-
-                                                    <p onClick={() => {
-
-                                                        dispatch(changeId(team._id))
-                                                        dispatch(updateTabData({ ...tabData, Tab: 'updateHACCPTeam' }));
-                                                    }} className='btn btn-outline-success p-1 m-2'>Update</p>
-                                                </td>
-
-                                            )}
-
-                                            {tabData?.Approval && (
-
-
-                                                <td className='ps-0' >
-
-                                                    <p onClick={() => {
-                                                        setIdForAction(team._id)
-                                                        setApprove(true)
-                                                    }} style={{
-                                                        height: '28px'
-                                                    }} className={`btn btn-outline-primary pt-0 px-1`}>Approve</p>
-                                                    <p onClick={() => {
-                                                        if (team.Status === 'Approved') {
-                                                            setDataToShow('Sorry, Team is already Approved');
-                                                            setShowBox(true);
-                                                        } else {
-                                                            setIdForAction(team._id);
-                                                            setReject(true);
-                                                        }
-                                                    }} style={{
-                                                        height: '28px'
-                                                    }} className={`btn btn-outline-danger pt-0 px-1`}>Disaprrove</p>
-                                                </td>
-                                            )}
+                    <table className={style.table}>
+                        <tr className={style.headers}>
+                            <td>Document ID</td>
+                            <td>Document Type</td>
+                            <td>Department</td>
+                            <td>Revision No</td>
+                            <td className='ps-5'>Status</td>
+                            <td>Created By</td>
+                            <td>Creation Date</td>
+                            <td>Approved By</td>
+                            <td>Approval Date</td>
+                            <td>Disapproved By</td>
+                            <td>Disapproval Date</td>
+                            <td>Reason</td>
+                            {tabData?.Edit && (
+                                <td>Action</td>
+                            )}
+                            {tabData?.Approval && (
+                                <td></td>
+                            )}
+                            <td>HACCP Team Members</td>
+                        </tr>
+                        {
+                            teamsList?.map((team, i) => {
+                                return (
+                                    <tr className={style.tablebody} key={i}>
+                                        <td ><p style={{
+                                            backgroundColor: "#f0f5f0",
+                                            padding: "2px 5px",
+                                            borderRadius: "10px",
+                                            fontFamily: "Inter",
+                                            fontSize: "12px",
+                                            fontStyle: "normal",
+                                            fontWeight: "400",
+                                            lineHeight: "20px",
+                                        }}>{team.DocumentId}</p></td>
+                                        <td className={style.simpleContent}>{team.DocumentType}</td>
+                                        <td>{team.Department.ShortName}</td>
+                                        <td>{team.RevisionNo}</td>
+                                        <td><div className={`text-center ${team.Status === 'Approved' && style.greenStatus} ${team.Status === 'Disapproved' && style.redStatus} ${team.Status === 'Pending' && style.yellowStatus}  `}><p>{team.Status}</p></div></td>
+                                        <td>{team.CreatedBy}</td>
+                                        <td>{formatDate(team.CreationDate)}</td>
+                                        {team.ApprovedBy ? (
+                                            <td>{team.ApprovedBy}</td>
+                                        ) : (
+                                            <td>- - -</td>
+                                        )}
+                                        {team.ApprovalDate ? (
+                                            <td>{formatDate(team.ApprovalDate)}</td>
+                                        ) : (
+                                            <td>- - -</td>
+                                        )}
+                                        {team.DisapprovedBy ? (
+                                            <td>{team.DisapprovedBy}</td>
+                                        ) : (
+                                            <td>- - -</td>
+                                        )}
+                                        {team.DisapprovalDate ? (
+                                            <td>{formatDate(team.DisapprovalDate)}</td>
+                                        ) : (
+                                            <td>- - -</td>
+                                        )}
+                                        <td>
+                                            <p onClick={() => {
+                                                if (team.Status === 'Disapproved') {
+                                                    setDataToShow(team.Reason)
+                                                } else {
+                                                    setDataToShow('This  team is Not DisApproved.')
+                                                }
+                                                setShowBox(true);
+                                            }} className={style.redclick}>View</p>
+                                        </td>
+                                        {tabData?.Edit && (
                                             <td>
                                                 <p onClick={() => {
-                                                    dispatch(updateTabData({ ...tabData, Tab: 'HACCPTeamMembers' }))
                                                     dispatch(changeId(team._id))
+                                                    dispatch(updateTabData({ ...tabData, Tab: 'updateHACCPTeam' }));
+                                                }} className='btn btn-outline-success p-1 m-2'>Update</p>
+                                            </td>
+                                        )}
+                                        {tabData?.Approval && (
+                                            <td className='ps-0' >
+                                                <p onClick={() => {
+                                                    setIdForAction(team._id)
+                                                    setApprove(true)
                                                 }} style={{
                                                     height: '28px'
-
-                                                }} className={`btn btn-outline-warning pt-0 px-1`}>Click Here</p>
+                                                }} className={`btn btn-outline-primary pt-0 px-1`}>Approve</p>
+                                                <p onClick={() => {
+                                                    if (team.Status === 'Approved') {
+                                                        setDataToShow('Sorry, Team is already Approved');
+                                                        setShowBox(true);
+                                                    } else {
+                                                        setIdForAction(team._id);
+                                                        setReject(true);
+                                                    }
+                                                }} style={{
+                                                    height: '28px'
+                                                }} className={`btn btn-outline-danger pt-0 px-1`}>Disaprrove</p>
                                             </td>
-                                        </tr>
-                                    )
-                                })
-                            }
-                        </table>
-                    )}
-                </div>
-                <div className={style.Btns}>
-                    {startIndex > 0 && (
+                                        )}
+                                        <td>
+                                            <p onClick={() => {
+                                                dispatch(updateTabData({ ...tabData, Tab: 'HACCPTeamMembers' }))
+                                                dispatch(changeId(team._id))
+                                            }} style={{
+                                                height: '28px'
+                                            }} className={`btn btn-outline-warning pt-0 px-1`}>Click Here</p>
+                                        </td>
+                                    </tr>
+                                )
+                            })
+                        }
+                    </table>
+                )}
+            </div>
+            <div className={style.Btns}>
+                {startIndex > 0 && (
+                    <button onClick={backPage}>
+                        {'<< '}Back
+                    </button>
+                )}
+                {allDataArr?.length > endIndex && (
 
-                        <button onClick={backPage}>
-                            {'<< '}Back
-                        </button>
-                    )}
-                    {allDataArr?.length > endIndex && (
-
-                        <button onClick={nextPage}>
-                            next{'>> '}
-                        </button>
-                    )}
-                </div>
+                    <button onClick={nextPage}>
+                        next{'>> '}
+                    </button>
+                )}
+            </div>
 
             {
                 showBox && (
@@ -276,9 +267,9 @@ function HACCPteams() {
                             <div className={style.alertbtns}>
 
                                 <button style={{
-                                    marginLeft : '120px',
-                                    marginTop : '25px'
-                                }}  onClick={() => {
+                                    marginLeft: '120px',
+                                    marginTop: '25px'
+                                }} onClick={() => {
                                     setShowBox(false);
 
                                 }} className={style.btn2}>OK</button>
@@ -298,7 +289,7 @@ function HACCPteams() {
                                 <button onClick={() => {
                                     setApprove(false)
                                     dispatch(setSmallLoading(true))
-                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/approveHaccpTeam`, { id: idForAction, approvedBy : user.Name }).then(() => {
+                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/approveHaccpTeam`, { id: idForAction, approvedBy: user.Name }).then(() => {
                                         dispatch(setSmallLoading(false))
                                         Swal.fire({
                                             title: 'Success',
@@ -339,7 +330,7 @@ function HACCPteams() {
                                 e.preventDefault();
                                 setReject(false);
                                 dispatch(setSmallLoading(true))
-                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/disapproveHaccpTeam`, { id: idForAction, Reason: reason, disapprovedBy : user.Name }).then(() => {
+                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/disapproveHaccpTeam`, { id: idForAction, Reason: reason, disapprovedBy: user.Name }).then(() => {
                                     dispatch(setSmallLoading(false))
                                     Swal.fire({
                                         title: 'Success',

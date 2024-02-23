@@ -145,7 +145,7 @@ const ProductSchema = new mongoose.Schema({
         type: Date,
     },
 
-    DisapproveBy: {
+    DisapprovedBy: {
         type: String,
     },
 

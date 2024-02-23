@@ -91,177 +91,166 @@ function ConductHACCP() {
 
     return (
         <>
-                <div className={style.searchbar}>
-                    <div className={style.sec1}>
-                        <img src={Search} alt="" />
-                        <input autoComplete='off' onChange={search} type="text" placeholder='Search Document by name' />
-                    </div>
-                    {tabData?.Creation && (
-                        <div className={style.sec2} onClick={() => {
-                            dispatch(updateTabData({ ...tabData, Tab: 'addHACCPRiskAssessment' }))
-                        }}>
-                            <img src={add} alt="" />
-                            <p>Add Assesment</p>
-                        </div>
-                    )}
+            <div className={style.searchbar}>
+                <div className={style.sec1}>
+                    <img src={Search} alt="" />
+                    <input autoComplete='off' onChange={search} type="text" placeholder='Search Document by name' />
                 </div>
-                <div className={style.tableParent}>
-                    {!ConductHACCPsList || ConductHACCPsList?.length === 0 ? (
-                        <div className='w-100 d-flex align-items-center justify-content-center'>
-                            <p className='text-center'>No any Records Available here.</p>
-                        </div>
-                    ) : (
-                        <table className={style.table}>
-                            <tr className={style.headers}>
-                                <td>Document ID</td>
-                                <td>Document Type</td>
-                                <td>Department</td>
-                                <td>Revision No.</td>
-                                <td>Created By</td>
-                                <td>Creation Date</td>
-                                <td>Process Name</td>
-                                {tabData?.Edit && (
-                                    <td>Action</td>
-                                )}
-                                <td>Hazards Details</td>
-                                <td>Reason</td>
-                                {tabData?.Approval && (
-
-                                    <td></td>
-                                )}
+                {tabData?.Creation && (
+                    <div className={style.sec2} onClick={() => {
+                        dispatch(updateTabData({ ...tabData, Tab: 'addHACCPRiskAssessment' }))
+                    }}>
+                        <img src={add} alt="" />
+                        <p>Add Assesment</p>
+                    </div>
+                )}
+            </div>
+            <div className={style.tableParent}>
+                {!ConductHACCPsList || ConductHACCPsList?.length === 0 ? (
+                    <div className='w-100 d-flex align-items-center justify-content-center'>
+                        <p className='text-center'>No any Records Available here.</p>
+                    </div>
+                ) : (
+                    <table className={style.table}>
+                        <tr className={style.headers}>
+                            <td>Document ID</td>
+                            <td>Document Type</td>
+                            <td>Department</td>
+                            <td>Revision No.</td>
+                            <td className='ps-5'>Status</td>
+                            <td>Created By</td>
+                            <td>Creation Date</td>
+                            <td>Process Name</td>
+                            {tabData?.Edit && (
+                                <td>Action</td>
+                            )}
+                            <td>Hazards Details</td>
+                            <td>Reason</td>
+                            {tabData?.Approval && (
                                 <td></td>
-                                <td>Team Members</td>
-                                <td>Approved By</td>
-                                <td>Approval Date</td>
-                                <td>Status</td>
-
-                            </tr>
-                            {
-                                ConductHACCPsList?.map((HACCP, i) => {
-                                    return (
-                                        <tr className={style.tablebody} key={i}>
-                                            <td ><p style={{
-                                                backgroundColor: "#f0f5f0",
-                                                padding: "2px 5px",
-                                                borderRadius: "10px",
-                                                fontFamily: "Inter",
-                                                fontSize: "12px",
-                                                fontStyle: "normal",
-                                                fontWeight: "400",
-                                                lineHeight: "20px",
-                                            }}>{HACCP.DocumentId}</p></td>
-                                            <td className={style.simpleContent}>{HACCP.DocumentType}</td>
-                                            <td>{HACCP.Department.DepartmentName}</td>
-                                            <td>{HACCP.RevisionNo}</td>
-                                            <td>{HACCP.CreatedBy}</td>
-                                            <td>{HACCP.CreationDate?.slice(0, 10).split('-')[2]}/{HACCP.CreationDate?.slice(0, 10).split('-')[1]}/{HACCP.CreationDate?.slice(0, 10).split('-')[0]}</td>
-                                            <td>{HACCP.Process.ProcessName}</td>
-                                            {tabData?.Edit && (
-
-                                                <td >
-
-                                                    <p onClick={() => {
-                                                        dispatch(updateTabData({ ...tabData, Tab: 'updateConductHACCP' }));
-                                                        dispatch(changeId(HACCP._id))
-
-
-                                                    }} className={style.greenclick}>Update</p>
-                                                </td>
-                                            )}
+                            )}
+                            <td></td>
+                            <td>Team Members</td>
+                            <td>Approved By</td>
+                            <td>Approval Date</td>
+                            <td>Disapproved By</td>
+                            <td>Disapproval Date</td>
+                        </tr>
+                        {
+                            ConductHACCPsList?.map((HACCP, i) => {
+                                return (
+                                    <tr className={style.tablebody} key={i}>
+                                        <td ><p style={{
+                                            backgroundColor: "#f0f5f0",
+                                            padding: "2px 5px",
+                                            borderRadius: "10px",
+                                            fontFamily: "Inter",
+                                            fontSize: "12px",
+                                            fontStyle: "normal",
+                                            fontWeight: "400",
+                                            lineHeight: "20px",
+                                        }}>{HACCP.DocumentId}</p></td>
+                                        <td className={style.simpleContent}>{HACCP.DocumentType}</td>
+                                        <td>{HACCP.Department.DepartmentName}</td>
+                                        <td>{HACCP.RevisionNo}</td>
+                                        <td><div className={`text-center ${HACCP.Status === 'Approved' && style.greenStatus} ${HACCP.Status === 'Disapproved' && style.redStatus} ${HACCP.Status === 'Pending' && style.yellowStatus}  `}><p>{HACCP.Status}</p></div></td>
+                                        <td>{HACCP.CreatedBy}</td>
+                                        <td>{HACCP.CreationDate?.slice(0, 10).split('-')[2]}/{HACCP.CreationDate?.slice(0, 10).split('-')[1]}/{HACCP.CreationDate?.slice(0, 10).split('-')[0]}</td>
+                                        <td>{HACCP.Process.ProcessName}</td>
+                                        {tabData?.Edit && (
                                             <td>
                                                 <p onClick={() => {
-                                                    dispatch(updateTabData({ ...tabData, Tab: 'viewAllHazards' }));
-                                                    dispatch(changeId(HACCP._id));
-                                                }} className='btn btn-outline-danger'>View</p>
-
-                                            </td>
-
-
-
-
-                                            <td >
-                                                <p onClick={() => {
-                                                    if (HACCP.Status === 'Disapproved') {
-                                                        setDataToShow(HACCP.Reason)
-                                                    } else {
-                                                        setDataToShow('Process is not DisApproved.')
-                                                    }
-                                                    setShowBox(true);
-                                                }} className='btn btn-outline-danger'>View</p>
-
-                                            </td>
-                                            {tabData?.Approval && (
-
-                                                <td>
-
-                                                    <p onClick={() => {
-                                                        setIdForAction(HACCP._id);
-                                                        setApprove(true);
-                                                    }} style={{
-                                                        height: '28px'
-
-                                                    }} className={`btn btn-outline-primary pt-0 px-1`}>Approve</p>
-                                                    <p onClick={() => {
-                                                        if (HACCP.Status === 'Approved') {
-                                                            setDataToShow('Sorry, Team is already Approved');
-                                                            setShowBox(true);
-                                                        } else {
-
-                                                            setIdForAction(HACCP._id);
-                                                            setReject(true);
-                                                        }
-                                                    }} style={{
-                                                        height: '28px'
-
-                                                    }} className={`btn btn-outline-danger pt-0 px-1`}>Disapprove</p>
-                                                </td>
-                                            )}
-                                            <td></td>
-                                            <td >
-
-                                                <p onClick={() => {
+                                                    dispatch(updateTabData({ ...tabData, Tab: 'updateConductHACCP' }));
                                                     dispatch(changeId(HACCP._id))
-                                                    console.log(HACCP._id);
-                                                    dispatch(updateTabData({ ...tabData, Tab: 'conductHACCPTeamMembers' }))
-                                                }} className='btn btn-outline-warning'>Click Here</p>
+                                                }} className={style.greenclick}>Update</p>
                                             </td>
+                                        )}
+                                        <td>
+                                            <p onClick={() => {
+                                                dispatch(updateTabData({ ...tabData, Tab: 'viewAllHazards' }));
+                                                dispatch(changeId(HACCP._id));
+                                            }} className='btn btn-outline-danger'>View</p>
+                                        </td>
+                                        <td>
+                                            <p onClick={() => {
+                                                if (HACCP.Status === 'Disapproved') {
+                                                    setDataToShow(HACCP.Reason)
+                                                } else {
+                                                    setDataToShow('Process is not DisApproved.')
+                                                }
+                                                setShowBox(true);
+                                            }} className='btn btn-outline-danger'>View</p>
+                                        </td>
+                                        {tabData?.Approval && (
+                                            <td>
+                                                <p onClick={() => {
+                                                    setIdForAction(HACCP._id);
+                                                    setApprove(true);
+                                                }} style={{
+                                                    height: '28px'
+                                                }} className={`btn btn-outline-primary pt-0 px-1`}>Approve</p>
+                                                <p onClick={() => {
+                                                    if (HACCP.Status === 'Approved') {
+                                                        setDataToShow('Sorry, Team is already Approved');
+                                                        setShowBox(true);
+                                                    } else {
+                                                        setIdForAction(HACCP._id);
+                                                        setReject(true);
+                                                    }
+                                                }} style={{
+                                                    height: '28px'
+                                                }} className={`btn btn-outline-danger pt-0 px-1`}>Disapprove</p>
+                                            </td>
+                                        )}
+                                        <td></td>
+                                        <td>
+                                            <p onClick={() => {
+                                                dispatch(changeId(HACCP._id))
+                                                console.log(HACCP._id);
+                                                dispatch(updateTabData({ ...tabData, Tab: 'conductHACCPTeamMembers' }))
+                                            }} className='btn btn-outline-warning'>Click Here</p>
+                                        </td>
+                                        {HACCP.ApprovedBy ? (
+                                            <td>{HACCP.ApprovedBy}</td>
+                                        ) : (
+                                            <td>- - -</td>
+                                        )}
+                                        {HACCP.ApprovalDate ? (
+                                            <td>{HACCP.ApprovalDate?.slice(0, 10).split('-')[2]}/{HACCP.ApprovalDate?.slice(0, 10).split('-')[1]}/{HACCP.ApprovalDate?.slice(0, 10).split('-')[0]}</td>
+                                        ) : (
+                                            <td>- - -</td>
+                                        )}
+                                        {HACCP.DisapprovedBy ? (
+                                            <td>{HACCP.DisapprovedBy}</td>
+                                        ) : (
+                                            <td>- - -</td>
+                                        )}
+                                        {HACCP.DisapprovalDate ? (
+                                            <td>{HACCP.DisapprovalDate?.slice(0, 10).split('-')[2]}/{HACCP.DisapprovalDate?.slice(0, 10).split('-')[1]}/{HACCP.DisapprovalDate?.slice(0, 10).split('-')[0]}</td>
+                                        ) : (
+                                            <td>- - -</td>
+                                        )}
+                                    </tr>
+                                )
+                            })
+                        }
+                    </table>
+                )}
+            </div>
+            <div className={style.Btns}>
+                {startIndex > 0 && (
 
-                                            {HACCP.ApprovedBy ? (
+                    <button onClick={backPage}>
+                        {'<< '}Back
+                    </button>
+                )}
+                {allDataArr?.length > endIndex && (
 
-                                                <td>{HACCP.ApprovedBy}</td>
-                                            ) : (
-                                                <td>- - -</td>
-
-                                            )}
-                                            {HACCP.ApprovalDate ? (
-
-
-                                                <td>{HACCP.ApprovalDate?.slice(0, 10).split('-')[2]}/{HACCP.ApprovalDate?.slice(0, 10).split('-')[1]}/{HACCP.ApprovalDate?.slice(0, 10).split('-')[0]}</td>
-                                            ) : (
-                                                <td>- - -</td>
-                                            )}
-                                            <td><div className={`text-center ${HACCP.Status === 'Approved' && style.greenStatus} ${HACCP.Status === 'Disapproved' && style.redStatus} ${HACCP.Status === 'Pending' && style.yellowStatus}  `}><p>{HACCP.Status}</p></div></td>
-                                        </tr>
-                                    )
-                                })
-                            }
-                        </table>
-                    )}
-                </div>
-                <div className={style.Btns}>
-                    {startIndex > 0 && (
-
-                        <button onClick={backPage}>
-                            {'<< '}Back
-                        </button>
-                    )}
-                    {allDataArr?.length > endIndex && (
-
-                        <button onClick={nextPage}>
-                            next{'>> '}
-                        </button>
-                    )}
-                </div>
+                    <button onClick={nextPage}>
+                        next{'>> '}
+                    </button>
+                )}
+            </div>
 
             {
                 showBox && (
@@ -274,9 +263,9 @@ function ConductHACCP() {
                             <div className={style.alertbtns}>
 
                                 <button style={{
-                                    marginLeft : '120px',
-                                    marginTop : '25px'
-                                }}  onClick={() => {
+                                    marginLeft: '120px',
+                                    marginTop: '25px'
+                                }} onClick={() => {
                                     setShowBox(false);
 
                                 }} className={style.btn2}>OK</button>

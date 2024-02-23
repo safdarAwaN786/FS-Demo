@@ -103,7 +103,7 @@ const ProcessSchema = new mongoose.Schema({
         type: Date,
     },
 
-    DisapproveBy: {
+    DisapprovedBy: {
         type: String,
     },
 

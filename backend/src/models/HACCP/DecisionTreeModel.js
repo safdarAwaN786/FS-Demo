@@ -114,11 +114,11 @@ const DecisionTreeSchema = new mongoose.Schema({
         type: Date,
     },
 
-    DisapproveBy: {
+    DisapprovedBy: {
         type: String
     },
 
-    DisapproveDate: {
+    DisapprovalDate: {
         type: Date
     }
 

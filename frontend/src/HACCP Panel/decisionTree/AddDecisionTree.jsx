@@ -23,8 +23,15 @@ function AddDecisionTree() {
 
     useEffect(() => {
         dispatch(setSmallLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-conduct-haccp`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-approved-conduct-haccp`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
             setAllConductHaccps(response.data.data);
+            if(response.data.data.length === 0){
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'OOps..',
+                    text: 'No, Any Risk Assessment available!'
+                })
+            }
         }).catch(err => {
             dispatch(setSmallLoading(false));
             Swal.fire({

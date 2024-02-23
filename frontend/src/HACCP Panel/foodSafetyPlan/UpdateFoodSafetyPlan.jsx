@@ -70,7 +70,7 @@ function UpdateFoodSafetyPlan() {
     }, [])
     useEffect(() => {
         dispatch(setSmallLoading(true))
-        axios.get("/get-all-decision-trees", { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-approved-decision-trees`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
             setTreesToShow(response.data.data);
         }).catch(err => {
             dispatch(setSmallLoading(false));

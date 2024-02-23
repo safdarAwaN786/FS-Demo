@@ -88,18 +88,17 @@ const uploadToCloudinary = (buffer) => {
 
 // * Upload a New Document
 router.post('/uploadDocument', upload.single('file'), async (req, res) => {
-    
+
     try {
-    const requestUser = await user.findById(req.header('Authorization')).populate('Company Department')
+        const requestUser = await user.findById(req.header('Authorization')).populate('Company Department')
 
         const createdBy = requestUser.Name;
         const { Department, DocumentType, DocumentName } = req.body;
         const response = await axios.get(requestUser.Company.CompanyLogo, { responseType: 'arraybuffer' });
         const pdfDoc = await PDFDocument.load(req.file.buffer);
         const logoImage = Buffer.from(response.data);
-        const logoImageDataUrl = `data:image/jpeg;base64,${logoImage.toString('base64')}`;
-        const isJpg = logoImageDataUrl.includes('data:image/jpeg') || logoImageDataUrl.includes('data:image/jpg');
-        const isPng = logoImageDataUrl.includes('data:image/png');
+        const isJpg = requestUser.Company.CompanyLogo.includes('.jpeg') || requestUser.Company.CompanyLogo.includes('.jpg');
+        const isPng = requestUser.Company.CompanyLogo.includes('.png');
         let pdfLogoImage;
         if (isJpg) {
             pdfLogoImage = await pdfDoc.embedJpg(logoImage);
@@ -165,7 +164,7 @@ router.post('/uploadDocument', upload.single('file'), async (req, res) => {
 router.get('/readAllDocuments', async (req, res) => {
     try {
         const departmentId = req.header('Authorization')
-        const documents = await uploadDocument.find({UserDepartment : departmentId}).populate('Department UserDepartment');
+        const documents = await uploadDocument.find({ UserDepartment: departmentId }).populate('Department UserDepartment');
         res.status(200).send({ status: true, message: "The following are Documents!", data: documents });
         console.log('READ Documents Successfully!')
     } catch (e) {
@@ -367,30 +366,30 @@ router.patch('/disapprove-uploaded-document', async (req, res) => {
 // * Route to update a form by ID
 router.put('/send-document', async (req, res) => {
     try {
-  
-      const docId = req.body._id;
-  
-      const doc = await Document.findById(docId);
-  
-      if (!doc) {
-        console.log('Document not found');
-        return res.status(404).json({ message: 'Document not found' });
-      }
-      const updates = {
-        ...req.body,
-      };
-      // Update the form fields
-      Object.assign(doc, updates);
-      await doc.save();
-      console.log(doc);
-      console.log('Document Sended successfully');
-      res.status(200).json({ status: true, message: 'Form updated successfully', form });
-  
+
+        const docId = req.body._id;
+
+        const doc = await Document.findById(docId);
+
+        if (!doc) {
+            console.log('Document not found');
+            return res.status(404).json({ message: 'Document not found' });
+        }
+        const updates = {
+            ...req.body,
+        };
+        // Update the form fields
+        Object.assign(doc, updates);
+        await doc.save();
+        console.log(doc);
+        console.log('Document Sended successfully');
+        res.status(200).json({ status: true, message: 'Form updated successfully', form });
+
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: 'Error updating form', error: error.message });
+        console.error(error);
+        res.status(500).json({ message: 'Error updating form', error: error.message });
     }
-  });
+});
 
 // * Replace updated Document
 router.put('/replaceDocument/:documentId', upload.single('file'), async (req, res) => {
@@ -401,9 +400,8 @@ router.put('/replaceDocument/:documentId', upload.single('file'), async (req, re
         const response = await axios.get(req.body.user.Company.CompanyLogo, { responseType: 'arraybuffer' });
         const pdfDoc = await PDFDocument.load(req.file.buffer);
         const logoImage = Buffer.from(response.data);
-        const logoImageDataUrl = `data:image/jpeg;base64,${logoImage.toString('base64')}`;
-        const isJpg = logoImageDataUrl.includes('data:image/jpeg') || logoImageDataUrl.includes('data:image/jpg');
-        const isPng = logoImageDataUrl.includes('data:image/png');
+        const isJpg = requestUser.Company.CompanyLogo.includes('.jpeg') || requestUser.Company.CompanyLogo.includes('.jpg');
+        const isPng = requestUser.Company.CompanyLogo.includes('.png');
         let pdfLogoImage;
         if (isJpg) {
             pdfLogoImage = await pdfDoc.embedJpg(logoImage);

@@ -49,8 +49,15 @@ function AddFoodSafetyPlan() {
 
     useEffect(() => {
         dispatch(setSmallLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-decision-trees`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-approved-decision-trees`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
             setTreesToShow(response.data.data);
+            if(response.data.data.length === 0){
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'OOps..',
+                    text: 'No, Any Decision Tree available!'
+                })
+            }
             console.log(response.data.data);
         }).catch(err => {
             dispatch(setSmallLoading(false));
@@ -120,7 +127,7 @@ function AddFoodSafetyPlan() {
                         <BsArrowLeftCircle
                             role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
                                 {
-                                    dispatch(updateTabData({ ...tabData, Tab: 'Food Saffety Plan' }))
+                                    dispatch(updateTabData({ ...tabData, Tab: 'Generate Food Safety Plan' }))
                                 }
                             }} />
                     </div>
@@ -186,7 +193,7 @@ function AddFoodSafetyPlan() {
                                     {treesToShow?.length > 0 && (
                                         <div className={style.inputParent}>
                                             <div className={style.para}>
-                                                <p>Plan foe Decisoions of :</p>
+                                                <p>Plan for Decisoions of :</p>
                                             </div>
                                             <div style={{
                                                 border: '1px solid silver'
@@ -256,7 +263,7 @@ function AddFoodSafetyPlan() {
                                                             updatedCCPHazard[index].ProcessLimit[e.target.name] = e.target.value;
                                                             setDataToSend({ ...dataToSend, Plans: updatedCCPHazard })
 
-                                                        }} name='TargetRange' rows={3} type='text' className='w-100 p-2 my-3  border-0' placeholder='Traget Range' required/>
+                                                        }} name='TargetRange' rows={3} type='text' className='w-100 p-2 my-3  border-0' placeholder='Target Range' required/>
                                                         <textarea value={plan.ProcessLimit?.CriticalCtrlPoint} onChange={(e) => {
                                                             const updatedCCPHazard = dataToSend.Plans || [];
 

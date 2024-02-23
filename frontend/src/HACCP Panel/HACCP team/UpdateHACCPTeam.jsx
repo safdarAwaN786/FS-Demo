@@ -64,6 +64,7 @@ function UpdateHACCPTeam() {
         dispatch(setSmallLoading(true))
         axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-haccp-team/${idToWatch}`).then((res) => {
             setDataToSend(res.data.data);
+            console.log(res.data);
             setMembers(res.data.data.TeamMembers);
             if (departmentsToShow) {
                 dispatch(setSmallLoading(false))
@@ -87,7 +88,6 @@ function UpdateHACCPTeam() {
 
     const clearLastMember = () => {
         if (members.length > 0) {
-
             const updatedMembers = [...members]
             updatedMembers.pop();
             setMembers(updatedMembers)
@@ -166,7 +166,8 @@ function UpdateHACCPTeam() {
     const makeRequest = () => {
         if (finalFormData && dataToSend.TeamMembers.length !== 0) {
             dispatch(setSmallLoading(true))
-            axios.patch(`${process.env.REACT_APP_BACKEND_URL}/update-haccp-team/${idToWatch}`, {...finalFormData, user : user }, { headers: { Authorization: `${user.Department._id}` } }).then(() => {
+            console.log(finalFormData);
+            axios.patch(`${process.env.REACT_APP_BACKEND_URL}/update-haccp-team/${idToWatch}`, finalFormData, { headers: { Authorization: `${user._id}` } }).then(() => {
                 dispatch(setSmallLoading(false))
                 Swal.fire({
                     title: 'Success',
@@ -279,6 +280,7 @@ function UpdateHACCPTeam() {
                         // Create a new FormData object
                         const formData = new FormData(event.target);
                         // Append the data to the FormData object
+                        console.log(dataToSend)
                         formData.append('Data', JSON.stringify(dataToSend));
                         setFinalFormData(formData);
 
@@ -387,11 +389,10 @@ function UpdateHACCPTeam() {
 
                                                     <input autoComplete='off' onChange={(event) => {
                                                         updateMembers(event, index)
-                                                    }} value={member.TrainingDate} name='TrainingDate' className='bg-light border-0' type='date' placeholder='Training Date' required />
+                                                    }} value={member.TrainingDate} name='TrainingDate' className='bg-light border-0' type='date' placeholder='Training Date' />
 
                                                 </div>
                                                 <div className='d-flex flex-row'>
-
                                                     <input autoComplete='off' onChange={(event) => {
                                                         updateMembers(event, index);
                                                         CheckPassword(member.Password, index);
@@ -424,7 +425,7 @@ function UpdateHACCPTeam() {
                                 )
                             })}
 
-                            <div className='d-flex justify-content-center p-lg-5 py-4 px-2'>
+                            {/* <div className='d-flex justify-content-center p-lg-5 py-4 px-2'>
 
                                 <a onClick={addMember} className='btn btn-outline-danger py-2 fs-4 w-50'>Add Member</a>
                                 {members.length > 0 && (
@@ -436,7 +437,7 @@ function UpdateHACCPTeam() {
 
                                     }} onClick={clearLastMember} className='btn  btn-outline-danger mx-4 my-auto pt-1  '><FaMinus /></a>
                                 )}
-                            </div>
+                            </div> */}
                         </div>
 
 

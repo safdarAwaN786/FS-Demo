@@ -88,9 +88,9 @@ const formatDate = (date) => {
 
   const newDate = new Date(date);
   const formatDate = newDate.toLocaleDateString('en-GB', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
   });
   return formatDate;
 }
@@ -174,9 +174,8 @@ router.post('/create-haccp-team', upload.fields(generateMembersDocArray()), asyn
         const response = await axios.get(requestUser.Company.CompanyLogo, { responseType: 'arraybuffer' });
         const pdfDoc = await PDFDocument.load(fileData.buffer);
         const logoImage = Buffer.from(response.data);
-        const logoImageDataUrl = `data:image/jpeg;base64,${logoImage.toString('base64')}`;
-        const isJpg = logoImageDataUrl.includes('data:image/jpeg') || logoImageDataUrl.includes('data:image/jpg');
-        const isPng = logoImageDataUrl.includes('data:image/png');
+        const isJpg = requestUser.Company.CompanyLogo.includes('.jpeg') || requestUser.Company.CompanyLogo.includes('.jpg');
+        const isPng = requestUser.Company.CompanyLogo.includes('.png');
         let pdfLogoImage;
         if (isJpg) {
           pdfLogoImage = await pdfDoc.embedJpg(logoImage);
@@ -285,7 +284,7 @@ router.post('/create-haccp-team', upload.fields(generateMembersDocArray()), asyn
 router.get('/get-all-haccp-teams', async (req, res) => {
   try {
 
-    const teams = await HaccpTeam.find({UserDepartment : req.header('Authorization')}).populate('Department').populate({
+    const teams = await HaccpTeam.find({ UserDepartment: req.header('Authorization') }).populate('Department').populate({
       path: 'UserDepartment',
       model: 'Department'
     }).populate({
@@ -293,7 +292,33 @@ router.get('/get-all-haccp-teams', async (req, res) => {
       model: 'User'
     });
 
-    
+
+    if (!teams) {
+      console.log('HACCP Team documents not found');
+      return res.status(404).json({ message: 'HACCP Team documents not found' });
+    }
+
+    console.log('HACCP Team documents retrieved successfully');
+    res.status(200).json({ status: true, data: teams });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error getting HACCP Team documents', error: error.message });
+  }
+});
+
+router.get('/get-approved-haccp-teams', async (req, res) => {
+  try {
+
+    const teams = await HaccpTeam.find({ UserDepartment: req.header('Authorization'), Status : 'Approved' }).populate('Department').populate({
+      path: 'UserDepartment',
+      model: 'Department'
+    }).populate({
+      path: 'TeamMembers',
+      model: 'User'
+    });
+
+
     if (!teams) {
       console.log('HACCP Team documents not found');
       return res.status(404).json({ message: 'HACCP Team documents not found' });
@@ -377,8 +402,25 @@ router.patch('/update-haccp-team/:teamId', upload.fields(generateMembersDocArray
   try {
     const teamId = req.params.teamId;
     // The HACCP Team data sent in the request body
+    console.log(req.body);
     const teamData = JSON.parse(req.body.Data);
     const filesObj = req.files;
+    const requestUser = await user.findById(req.header('Authorization')).populate('Company Department');
+
+    // Retrieve the existing team document
+    const existingTeam = await HaccpTeam.findById(teamId);
+
+    if (!existingTeam) {
+      console.log(`HACCP Team document with ID: ${teamId} not found`);
+      return res.status(404).json({ message: `HACCP Team document with ID: ${teamId} not found` });
+    }
+
+    // Check the status and handle revisions accordingly
+    if (existingTeam.Status === 'Approved') {
+      // If status is 'Approved', deny the update
+      console.log(`HACCP Team document with ID: ${teamId} is already approved, cannot be updated.`);
+      return res.status(400).json({ message: `HACCP Team document with ID: ${teamId} is already approved, cannot be updated.` });
+    }
 
     if (filesObj && Object.keys(filesObj).length !== 0) {
       // If there are uploaded files, process each one
@@ -387,12 +429,11 @@ router.patch('/update-haccp-team/:teamId', upload.fields(generateMembersDocArray
         const index = fileData.fieldname.split('-')[1];
 
         try {
-          const response = await axios.get(req.body.user.Company.CompanyLogo, { responseType: 'arraybuffer' });
+          const response = await axios.get(requestUser.Company.CompanyLogo, { responseType: 'arraybuffer' });
           const pdfDoc = await PDFDocument.load(fileData.buffer);
           const logoImage = Buffer.from(response.data);
-          const logoImageDataUrl = `data:image/jpeg;base64,${logoImage.toString('base64')}`;
-          const isJpg = logoImageDataUrl.includes('data:image/jpeg') || logoImageDataUrl.includes('data:image/jpg');
-          const isPng = logoImageDataUrl.includes('data:image/png');
+          const isJpg = requestUser.Company.CompanyLogo.includes('.jpeg') || requestUser.Company.CompanyLogo.includes('.jpg');
+          const isPng = requestUser.Company.CompanyLogo.includes('.png');
           let pdfLogoImage;
           if (isJpg) {
             pdfLogoImage = await pdfDoc.embedJpg(logoImage);
@@ -400,7 +441,7 @@ router.patch('/update-haccp-team/:teamId', upload.fields(generateMembersDocArray
             pdfLogoImage = await pdfDoc.embedPng(logoImage);
           }
           const firstPage = pdfDoc.insertPage(0);
-          addFirstPage(firstPage, pdfLogoImage, req.body.user.Company, req.body.user);
+          addFirstPage(firstPage, pdfLogoImage, requestUser.Company, requestUser);
           const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
           pdfDoc.getPages().slice(1).forEach(async (page) => {
             page.translateContent(0, -30);
@@ -411,7 +452,7 @@ router.patch('/update-haccp-team/:teamId', upload.fields(generateMembersDocArray
             const centerWatermarkX = width / 2 - watermarkTextWidth / 2;
             const centerWatermarkY = height - 18;
             page.drawText(watermarkText, { x: centerWatermarkX, y: centerWatermarkY, size: watermarkFontSize, color: rgb(0, 0, 0) });
-            const companyText = `${req.body.user.Company.CompanyName}`;
+            const companyText = `${requestUser.Company.CompanyName}`;
             const companyTextFontSize = 10;
             const companyTextWidth = (helveticaFont.widthOfTextAtSize(companyText, companyTextFontSize));
             const centerCompanyTextX = width - companyTextWidth - 20;
@@ -442,7 +483,7 @@ router.patch('/update-haccp-team/:teamId', upload.fields(generateMembersDocArray
     const membersIds = await Promise.all(
       teamData.TeamMembers.map(async (member) => {
         try {
-          const updateduser = { ...member, Company: req.user.Company, Department: req.user.Department, DepartmentText: member.Department, Password: CryptoJS.AES.encrypt(member.Password, process.env.PASS_CODE).toString(), };
+          const updateduser = { ...member, Company: requestUser.Company, Department: requestUser.Department, DepartmentText: member.Department, Password: CryptoJS.AES.encrypt(member.Password, process.env.PASS_CODE).toString(), };
           await UserModel.findByIdAndUpdate(updateduser._id, updateduser, { new: true })
           console.log(updateduser);
           const emailBody = template.body
@@ -462,9 +503,7 @@ router.patch('/update-haccp-team/:teamId', upload.fields(generateMembersDocArray
               console.error('Error sending email:', error);
             } else {
               console.log('Email sent: ' + info.response);
-              await addedUser.save().then(() => {
-                console.log('userAdded');
-              })
+             
             }
           });
           return (updateduser._id);
@@ -474,20 +513,7 @@ router.patch('/update-haccp-team/:teamId', upload.fields(generateMembersDocArray
         }
       })
     );
-    // Retrieve the existing team document
-    const existingTeam = await HaccpTeam.findById(teamId);
 
-    if (!existingTeam) {
-      console.log(`HACCP Team document with ID: ${teamId} not found`);
-      return res.status(404).json({ message: `HACCP Team document with ID: ${teamId} not found` });
-    }
-
-    // Check the status and handle revisions accordingly
-    if (existingTeam.Status === 'Approved') {
-      // If status is 'Approved', deny the update
-      console.log(`HACCP Team document with ID: ${teamId} is already approved, cannot be updated.`);
-      return res.status(400).json({ message: `HACCP Team document with ID: ${teamId} is already approved, cannot be updated.` });
-    }
 
     // If status is 'Pending', do not increment revision number
     if (existingTeam.Status === 'Pending') {
@@ -503,7 +529,7 @@ router.patch('/update-haccp-team/:teamId', upload.fields(generateMembersDocArray
       {
         $set: {
           ...teamData,
-          UpdatedBy: req.user.Name,
+          UpdatedBy: requestUser.Name,
           UpdationDate: new Date(),
           Status: 'Pending',
           TeamMembers: membersIds
@@ -549,7 +575,7 @@ router.patch('/approveHaccpTeam', async (req, res) => {
     haccpTeam.Status = 'Approved';
     haccpTeam.ApprovedBy = approvedBy
     haccpTeam.DisapprovalDate = null;
-    haccpTeam.DisapproveBy = null;
+    haccpTeam.DisapprovedBy = null;
 
     // Save the updated HaccpTeam
     await haccpTeam.save();
@@ -591,7 +617,7 @@ router.patch('/disapproveHaccpTeam', async (req, res) => {
     haccpTeam.DisapprovalDate = new Date();  // Set end time to current time
     haccpTeam.Status = 'Disapproved';
     haccpTeam.Reason = Reason;
-    haccpTeam.DisapproveBy = disapproveBy;
+    haccpTeam.DisapprovedBy = disapproveBy;
     haccpTeam.ApprovalDate = null;
     haccpTeam.ApprovedBy = 'Pending'
 

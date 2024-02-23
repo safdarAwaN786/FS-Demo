@@ -192,26 +192,12 @@
     line-height: 18px;
   }
   
-  
-  
-  
-  .headers > td:nth-child(1) {
-    width: 130px;
-  }
-  .headers > td:nth-child(2) {
-    width: 300px;
-  }
-  .headers > td:nth-child(n + 3) {
+
+  .headers > td:nth-child(n) {
     width: 200px;
   }
-  
-  .tablebody > td:nth-child(1) {
-    width: 130px;
-  }
-  .tablebody > td:nth-child(2) {
-    width: 300px;
-  }
-  .tablebody > td:nth-child(n + 3) {
+
+  .tablebody > td:nth-child(n) {
     width: 200px;
   }
   

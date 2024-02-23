@@ -100,6 +100,32 @@ router.get('/get-all-processes', async (req, res) => {
     res.status(500).json({ message: 'Error getting Process documents', error: error.message });
   }
 });
+router.get('/get-approved-processes', async (req, res) => {
+  try {
+
+    const processes = await Processes.find({UserDepartment : req.header('Authorization'), Status : 'Approved'}).populate('Department').populate('UserDepartment').populate({
+      path: 'ProcessDetails',
+      populate: {
+        path: 'subProcesses', // Assuming 'subProcesses' is the field you want to populate inside 'ProcessDetails'
+        model: 'ProcessDetail' // Adjust the model name as per your schema
+      }
+    })
+
+
+    if (!processes) {
+      console.log('Process documents not found');
+      return res.status(404).json({ message: 'Process documents not found' });
+    }
+    
+
+    console.log('Process documents retrieved successfully');
+    res.status(200).json({ status: true, data: processes });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error getting Process documents', error: error.message });
+  }
+});
 
 // * Get a Process document by ID
 router.get('/get-process/:processId', async (req, res) => {
@@ -236,8 +262,9 @@ router.patch('/update-process/:processId', async (req, res) => {
             return res.status(500).json({ message: 'Error creating Process document', error: err.message });
           }
         } else {
+          const { _id, ...newProcess } = processObj;
           const createdProcessDetail = new ProcessDetailModel({
-            ...processObj
+            ...newProcess
           });
     
           try {
@@ -306,7 +333,7 @@ router.patch('/approve-process', async (req, res) => {
     process.Status = 'Approved';
     process.ApprovedBy = approvedBy;
     process.DisapprovalDate = null;
-    process.DisapproveBy = null;
+    process.DisapprovedBy = null;
 
     // Save the updated Process
     await process.save();
@@ -349,7 +376,7 @@ router.patch('/disapprove-process', async (req, res) => {
     process.Status = 'Disapproved';
     process.Reason = Reason;
     process.ApprovalDate = null;
-    process.DisapproveBy = disapprovedBy;
+    process.DisapprovedBy = disapprovedBy;
     process.ApprovedBy = 'Pending'
 
     // Save the updated Process

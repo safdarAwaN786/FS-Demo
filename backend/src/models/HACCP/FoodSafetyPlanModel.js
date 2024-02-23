@@ -166,7 +166,7 @@ const FoodSafetySchema = new mongoose.Schema({
 
     },
 
-    DisapprovalBy: {
+    DisapprovedBy: {
         type: String,
     },
 

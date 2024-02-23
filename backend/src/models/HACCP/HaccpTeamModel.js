@@ -72,7 +72,7 @@ const HaccpTeamSchema = new mongoose.Schema({
         type: Date,
 
     },
-    DisapproveBy: {
+    DisapprovedBy: {
         type: String,
     },
 
