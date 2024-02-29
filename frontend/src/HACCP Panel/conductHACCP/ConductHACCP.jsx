@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { changeId } from '../../redux/slices/idToProcessSlice';
 import { setSmallLoading } from '../../redux/slices/loading';
+import dayjs from 'dayjs';
 
 function ConductHACCP() {
 
@@ -87,8 +88,6 @@ function ConductHACCP() {
         }
     }
 
-
-
     return (
         <>
             <div className={style.searchbar}>
@@ -118,8 +117,6 @@ function ConductHACCP() {
                             <td>Department</td>
                             <td>Revision No.</td>
                             <td className='ps-5'>Status</td>
-                            <td>Created By</td>
-                            <td>Creation Date</td>
                             <td>Process Name</td>
                             {tabData?.Edit && (
                                 <td>Action</td>
@@ -130,7 +127,9 @@ function ConductHACCP() {
                                 <td></td>
                             )}
                             <td></td>
-                            <td>Team Members</td>
+                            <td>Teams</td>
+                            <td>Created By</td>
+                            <td>Creation Date</td>
                             <td>Approved By</td>
                             <td>Approval Date</td>
                             <td>Disapproved By</td>
@@ -154,8 +153,6 @@ function ConductHACCP() {
                                         <td>{HACCP.Department.DepartmentName}</td>
                                         <td>{HACCP.RevisionNo}</td>
                                         <td><div className={`text-center ${HACCP.Status === 'Approved' && style.greenStatus} ${HACCP.Status === 'Disapproved' && style.redStatus} ${HACCP.Status === 'Pending' && style.yellowStatus}  `}><p>{HACCP.Status}</p></div></td>
-                                        <td>{HACCP.CreatedBy}</td>
-                                        <td>{HACCP.CreationDate?.slice(0, 10).split('-')[2]}/{HACCP.CreationDate?.slice(0, 10).split('-')[1]}/{HACCP.CreationDate?.slice(0, 10).split('-')[0]}</td>
                                         <td>{HACCP.Process.ProcessName}</td>
                                         {tabData?.Edit && (
                                             <td>
@@ -184,14 +181,22 @@ function ConductHACCP() {
                                         {tabData?.Approval && (
                                             <td>
                                                 <p onClick={() => {
-                                                    setIdForAction(HACCP._id);
-                                                    setApprove(true);
+                                                    if (HACCP.Status === 'Approved') {
+                                                        setDataToShow('Sorry, Team is already Approved');
+                                                        setShowBox(true);
+                                                    } else {
+                                                        setIdForAction(HACCP._id);
+                                                        setApprove(true);
+                                                    }
                                                 }} style={{
                                                     height: '28px'
                                                 }} className={`btn btn-outline-primary pt-0 px-1`}>Approve</p>
                                                 <p onClick={() => {
                                                     if (HACCP.Status === 'Approved') {
                                                         setDataToShow('Sorry, Team is already Approved');
+                                                        setShowBox(true);
+                                                    } else if (HACCP.Status === 'Disapproved') {
+                                                        setDataToShow('Sorry, Team is already Disapproved');
                                                         setShowBox(true);
                                                     } else {
                                                         setIdForAction(HACCP._id);
@@ -206,17 +211,18 @@ function ConductHACCP() {
                                         <td>
                                             <p onClick={() => {
                                                 dispatch(changeId(HACCP._id))
-                                                console.log(HACCP._id);
-                                                dispatch(updateTabData({ ...tabData, Tab: 'conductHACCPTeamMembers' }))
+                                                dispatch(updateTabData({ ...tabData, Tab: 'conductHACCPTeams' }))
                                             }} className='btn btn-outline-warning'>Click Here</p>
                                         </td>
+                                        <td>{HACCP.CreatedBy}</td>
+                                        <td>{dayjs(HACCP.CreationDate).format('DD/MM/YYYY')}</td>
                                         {HACCP.ApprovedBy ? (
                                             <td>{HACCP.ApprovedBy}</td>
                                         ) : (
                                             <td>- - -</td>
                                         )}
                                         {HACCP.ApprovalDate ? (
-                                            <td>{HACCP.ApprovalDate?.slice(0, 10).split('-')[2]}/{HACCP.ApprovalDate?.slice(0, 10).split('-')[1]}/{HACCP.ApprovalDate?.slice(0, 10).split('-')[0]}</td>
+                                            <td>{dayjs(HACCP.ApprovalDate).format('DD/mm/YYYY')}</td>
                                         ) : (
                                             <td>- - -</td>
                                         )}
@@ -226,7 +232,7 @@ function ConductHACCP() {
                                             <td>- - -</td>
                                         )}
                                         {HACCP.DisapprovalDate ? (
-                                            <td>{HACCP.DisapprovalDate?.slice(0, 10).split('-')[2]}/{HACCP.DisapprovalDate?.slice(0, 10).split('-')[1]}/{HACCP.DisapprovalDate?.slice(0, 10).split('-')[0]}</td>
+                                            <td>{dayjs(HACCP.DisapprovalDate).format('DD/MM/YYYY')}</td>
                                         ) : (
                                             <td>- - -</td>
                                         )}
@@ -284,7 +290,7 @@ function ConductHACCP() {
                                 <button onClick={() => {
                                     setApprove(false)
                                     dispatch(setSmallLoading(true))
-                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/approve-conduct-haccp`, { id: idForAction }, { headers: { Authorization: `${user._id}` } }).then(() => {
+                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/approve-conduct-haccp`, { id: idForAction, ApprovedBy: user.Name }, { headers: { Authorization: `${user._id}` } }).then(() => {
                                         dispatch(setSmallLoading(false))
                                         Swal.fire({
                                             title: 'Success',
@@ -407,7 +413,7 @@ function ConductHACCP() {
                                 e.preventDefault();
                                 setReject(false);
                                 dispatch(setSmallLoading(true))
-                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/disapprove-conduct-haccp`, { id: idForAction, Reason: reason }, { headers: { Authorization: `${user._id}` } }).then(() => {
+                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/disapprove-conduct-haccp`, { id: idForAction, Reason: reason, DisapprovedBy: user.Name }, { headers: { Authorization: `${user._id}` } }).then(() => {
                                     dispatch(setSmallLoading(false))
                                     Swal.fire({
                                         title: 'Success',

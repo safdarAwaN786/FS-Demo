@@ -155,10 +155,11 @@ import ReportActionsList from './AuditorPanel/reportsrecords/ReportActionsList'
 import ViewActionInReport from './AuditorPanel/reportsrecords/ViewActionInReport'
 import { setSmallLoading } from './redux/slices/loading'
 import EditAuditYearlyPlan from './AuditingPortal/yearlyPlan/EditAuditYearlyPlan'
-
-
-
-
+import ConductHACCPTeams from './HACCP Panel/conductHACCP/ConductHaccpTeams'
+import DecisionTreeTeams from './HACCP Panel/decisionTree/DecisionTreeTeams'
+import DecisionTreeTeamMembers from './HACCP Panel/decisionTree/DecisionTreeMembers'
+import FoodSafetyPlanTeams from './HACCP Panel/foodSafetyPlan/FoodSafetyPlanTeams'
+import FoodSafetyPlanTeamMembers from './HACCP Panel/foodSafetyPlan/FoodSafetyPlanMembers'
 
 
 
@@ -189,7 +190,6 @@ function MainPage() {
             setIsOpen(true);
         }
     };
-
     return (
         <>
             {loading && (
@@ -567,8 +567,11 @@ function MainPage() {
                             {Tab === 'viewFoodSafetyPlan' && (
                                 <ViewFoodSafetyPlan />
                             )}
-                            {Tab === 'foodSafetyPlanMembers' && (
-                                <FoodSafetyPlanMembers />
+                            {Tab === 'foodSafetyPlanTeamMembers' && (
+                                <FoodSafetyPlanTeamMembers />
+                            )}
+                            {Tab === 'foodSafetyPlanTeams' && (
+                                <FoodSafetyPlanTeams />
                             )}
                             {Tab === 'addFoodSafetyPlan' && (
                                 <AddFoodSafetyPlan />
@@ -586,8 +589,11 @@ function MainPage() {
                             {Tab === 'updateDecisionTree' && (
                                 <UpdateDecisionTree />
                             )}
-                            {Tab === 'decisionTreeMembers' && (
-                                <DecisionTreeMembers />
+                            {Tab === 'decisionTreeTeamMembers' && (
+                                <DecisionTreeTeamMembers />
+                            )}
+                            {Tab === 'decisionTreeTeams' && (
+                                <DecisionTreeTeams />
                             )}
                             {Tab === 'Describe Product' && (
                                 <ProductDetails />
@@ -724,6 +730,9 @@ function MainPage() {
                                 <ConductHACCP />
                             )}
 
+                            {Tab === 'conductHACCPTeams' && (
+                                <ConductHACCPTeams />
+                            )}
                             {Tab === 'conductHACCPTeamMembers' && (
 
                                 <ConductHACCPTeamMembers />

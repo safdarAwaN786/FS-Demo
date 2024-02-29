@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const ConductHaccp = require('../../models/HACCP/ConductHaccpModel').ConductHaccp;
 const { HazardModel } = require('../../models/HACCP/ConductHaccpModel');
-const authMiddleware = require('../../middleware/auth');
 
 
 // router.use(authMiddleware);
@@ -10,9 +9,7 @@ const authMiddleware = require('../../middleware/auth');
 // * Create a new ConductHaccp document
 router.post('/create-conduct-haccp', async (req, res) => {
     try {
-
         const haccpData = req.body;
-
         const createdHazards = await HazardModel.create(haccpData.Hazards)
         const hazardsArr = Object.values(createdHazards);
         const hazardsIds = hazardsArr.map(hazardObj => hazardObj._id);
@@ -40,29 +37,22 @@ router.post('/create-conduct-haccp', async (req, res) => {
 // * Get all ConductHaccp documents
 router.get('/get-all-conduct-haccp', async (req, res) => {
     try {
-
-        const conductHaccps = await ConductHaccp.find({UserDepartment : req.header('Authorization')}).populate('Department Process UserDepartment').populate({
+        const conductHaccps = await ConductHaccp.find({ UserDepartment: req.header('Authorization') }).populate('Department Process UserDepartment').populate({
             path: 'Hazards',
             populate: {
                 path: 'Process',
                 model: 'ProcessDetail'
             }
         }).populate({
-            path: 'Members',
-            populate: {
-                path: 'Department',
-                model: 'Department'
-            }
+            path: 'Teams',
+            model: 'HaccpTeam',
         });
         if (!conductHaccps) {
             console.log('ConductHaccp documents not found');
             return res.status(404).json({ message: 'ConductHaccp documents not found' });
         }
-
-        
         console.log('ConductHaccp documents retrieved successfully');
         res.status(200).json({ status: true, data: conductHaccps });
-
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Error getting ConductHaccp documents', error: error.message });
@@ -72,25 +62,22 @@ router.get('/get-all-conduct-haccp', async (req, res) => {
 router.get('/get-approved-conduct-haccp', async (req, res) => {
     try {
 
-        const conductHaccps = await ConductHaccp.find({UserDepartment : req.header('Authorization'), Status : 'Approved'}).populate('Department Process UserDepartment').populate({
+        const conductHaccps = await ConductHaccp.find({ UserDepartment: req.header('Authorization'), Status: 'Approved' }).populate('Department Process UserDepartment').populate({
             path: 'Hazards',
             populate: {
                 path: 'Process',
                 model: 'ProcessDetail'
             }
         }).populate({
-            path: 'Members',
-            populate: {
-                path: 'Department',
-                model: 'Department'
-            }
+            path: 'Teams',
+            model: 'HaccpTeam',
         });
         if (!conductHaccps) {
             console.log('ConductHaccp documents not found');
             return res.status(404).json({ message: 'ConductHaccp documents not found' });
         }
 
-        
+
         console.log('ConductHaccp documents retrieved successfully');
         res.status(200).json({ status: true, data: conductHaccps });
 
@@ -112,11 +99,8 @@ router.get('/get-conduct-haccp/:haccpId', async (req, res) => {
                 model: 'ProcessDetail'
             }
         }).populate({
-            path: 'Members',
-            populate: {
-                path: 'Department',
-                model: 'Department'
-            }
+            path: 'Teams',
+            model: 'HaccpTeam',
         });
         if (!conductHaccp) {
             console.log(`ConductHaccp document with ID: ${conductHaccpId} not found`);
@@ -185,7 +169,7 @@ router.put('/update-conduct-haccp/:haccpId', async (req, res) => {
         // Check if the status is 'Approved', deny the update
         if (existingConductHaccp.Status === 'Approved') {
             console.log(`ConductHaccp document with ID: ${conductHaccpId} is already approved, cannot be updated.`);
-            return res.status(400).json({ message: `ConductHaccp document with ID: ${conductHaccpId} is already approved, cannot be updated.` });
+            return res.status(401).json({ message: `Conduct Haccp is already approved, cannot be updated.` });
         }
 
 
@@ -208,7 +192,7 @@ router.put('/update-conduct-haccp/:haccpId', async (req, res) => {
             ...req.body,
             UpdatedBy: req.body.updatedBy,
             UpdationDate: new Date(),
-            Hazards : hazardsIds,
+            Hazards: hazardsIds,
             Status: 'Pending'
         };
 
@@ -228,7 +212,7 @@ router.patch('/approve-conduct-haccp', async (req, res) => {
     try {
 
         const conductHaccpId = req.body.id;
-        const approvedBy = req.user.Name;
+        const approvedBy = req.body.ApprovedBy;
         // Find the ConductHaccp by ID
         const conductHaccp = await ConductHaccp.findById(conductHaccpId);
 
@@ -268,7 +252,7 @@ router.patch('/approve-conduct-haccp', async (req, res) => {
 router.patch('/disapprove-conduct-haccp', async (req, res) => {
     try {
 
-        const disapproveBy = req.user.Name
+        const disapproveBy = req.body.DisapprovedBy
         const conductHaccpId = req.body.id;
         const Reason = req.body.Reason;
 

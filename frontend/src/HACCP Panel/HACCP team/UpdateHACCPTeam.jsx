@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Cookies from 'js-cookie';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { setSmallLoading } from '../../redux/slices/loading';
+import dayjs from 'dayjs';
 
 function UpdateHACCPTeam() {
     const [departmentsToShow, SetDepartmentsToShow] = useState(null);
@@ -183,11 +184,20 @@ function UpdateHACCPTeam() {
 
             }).catch(err => {
                 dispatch(setSmallLoading(false));
-                Swal.fire({
-                    icon: 'error',
-                    title: 'OOps..',
-                    text: 'Something went wrong, Try Again!'
-                })
+                console.log(err);
+                if (err.response.status === 401) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'OOps..',
+                        text: err.response.data.message
+                    })
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'OOps..',
+                        text: 'Something went wrong, Try Again!'
+                    })
+                };
             })
         } else {
             Swal.fire({
@@ -252,8 +262,6 @@ function UpdateHACCPTeam() {
     return (
         <>
             <div className={`${style.parent} mx-auto`}>
-
-
                 <div className={`${style.subparent} mx-2 mx-sm-4 mt-5 mx-lg-5`}>
                     <div className='d-flex flex-row bg-white px-lg-5 mx-lg-5 mx-3 px-2 py-2'>
                         <BsArrowLeftCircle
@@ -263,7 +271,6 @@ function UpdateHACCPTeam() {
 
                                 }
                             }} />
-
                     </div>
                     <div className={`${style.headers} d-flex justify-content-start ps-3 align-items-center `}>
                         <div className={style.spans}>
@@ -283,65 +290,12 @@ function UpdateHACCPTeam() {
                         console.log(dataToSend)
                         formData.append('Data', JSON.stringify(dataToSend));
                         setFinalFormData(formData);
-
                         alertManager();
-
-
                     }}>
                         <div className={`${style.myBox} bg-light pb-3`}>
-
                             <div className={style.formDivider}>
-                                <div className={style.sec1}>
-                                    <div className={style.inputParent}>
-                                        <div className={style.para}>
-                                            <p></p>
-                                        </div>
-                                        <div className='border border-dark-subtle'>
-                                            <select className='form-select  form-select-lg' value={dataToSend?.DocumentType} onChange={(e) => {
-                                                setDataToSend({ ...dataToSend, [e.target.name]: e.target.value })
-                                            }} name='DocumentType' style={{ width: "100%" }} required >
-                                                <option value="" selected disabled>Choose Document Type</option>
-                                                <option value="Manuals">Manuals</option>
-                                                <option value="Procedures">Procedures</option>
-                                                <option value="SOPs">SOPs</option>
-                                                <option value="Forms">Forms</option>
 
-                                            </select>
-
-                                        </div>
-                                    </div>
-
-
-
-
-                                </div>
-                                <div className={style.sec2}>
-                                    <div className={style.inputParent}>
-                                        <div className={style.para}>
-                                            <p></p>
-
-                                        </div>
-                                        <div className='border border-dark-subtle'>
-                                            <select className='form-select  form-select-lg' value={dataToSend?.Department} onChange={(e) => {
-                                                setDataToSend({ ...dataToSend, [e.target.name]: e.target.value })
-                                            }} name='Department' style={{ width: "100%" }} required>
-                                                <option value="" selected disabled>Choose Department</option>
-                                                {departmentsToShow?.map((depObj) => {
-                                                    return (
-                                                        <option value={depObj._id}>{depObj.DepartmentName}</option>
-                                                    )
-                                                })}
-
-                                            </select>
-
-
-                                        </div>
-                                    </div>
-
-                                </div>
                             </div>
-
-
 
                             {members?.map((member, index) => {
                                 return (
@@ -358,7 +312,7 @@ function UpdateHACCPTeam() {
                                                 }} value={member.Designation} name='Designation' type='text' className='p-3 bg-light my-3 w-100 border-0' placeholder='Designation' required />
                                                 <input autoComplete='off' onChange={(event) => {
                                                     updateMembers(event, index)
-                                                }} value={member.Department} name='Department' type='text' className='p-3 bg-light my-3 w-100 border-0' placeholder='Department' required />
+                                                }} value={member.DepartmentText} name='DepartmentText' type='text' className='p-3 bg-light my-3 w-100 border-0' placeholder='Department' required />
                                                 <input autoComplete='off' onChange={(event) => {
                                                     updateMembers(event, index)
                                                 }} value={member.TrainingsAttended} name='TrainingsAttended' type='text' className='p-3 bg-light my-3 w-100 border-0' placeholder='Training Attended' required />
@@ -381,16 +335,13 @@ function UpdateHACCPTeam() {
                                                 }} value={member.RoleInTeam} name='RoleInTeam' type='text' className='p-3 bg-light my-3 w-100 border-0' placeholder='Role in Team' required />
                                                 <div className='p-3 d-flex justify-content-between flex-row  bg-light my-3 w-100 border-0'>
                                                     {member.TrainingDate ? (
-
-                                                        <p className='text-secondary'>{member.TrainingDate?.slice(0, 10).split('-')[2]}/{member.TrainingDate?.slice(0, 10).split('-')[1]}/{member.TrainingDate?.slice(0, 10).split('-')[0]}</p>
+                                                        <p className='text-secondary'>{dayjs(member.TrainingDate).format('DD/MM/YYYY')}</p>
                                                     ) : (
                                                         <p>Training Date</p>
                                                     )}
-
                                                     <input autoComplete='off' onChange={(event) => {
                                                         updateMembers(event, index)
                                                     }} value={member.TrainingDate} name='TrainingDate' className='bg-light border-0' type='date' placeholder='Training Date' />
-
                                                 </div>
                                                 <div className='d-flex flex-row'>
                                                     <input autoComplete='off' onChange={(event) => {
@@ -405,6 +356,7 @@ function UpdateHACCPTeam() {
                                                         setMembers(updatedMembers);
                                                     }} className='btn btn-outline-primary my-4'>Generate</a>
                                                 </div>
+                                                <span className='text-danger'>Password Updation required , for each already added Memeber.</span>
                                                 {member.validationMessage && (
                                                     <p className={`${member.validationMessage === 'Password is valid!' ? 'text-success' : 'text-danger'} ms-2`}>{user.validationMessage}</p>
                                                 )}
@@ -425,7 +377,7 @@ function UpdateHACCPTeam() {
                                 )
                             })}
 
-                            {/* <div className='d-flex justify-content-center p-lg-5 py-4 px-2'>
+                            <div className='d-flex justify-content-center p-lg-5 py-4 px-2'>
 
                                 <a onClick={addMember} className='btn btn-outline-danger py-2 fs-4 w-50'>Add Member</a>
                                 {members.length > 0 && (
@@ -437,7 +389,7 @@ function UpdateHACCPTeam() {
 
                                     }} onClick={clearLastMember} className='btn  btn-outline-danger mx-4 my-auto pt-1  '><FaMinus /></a>
                                 )}
-                            </div> */}
+                            </div>
                         </div>
 
 

@@ -2,16 +2,11 @@ const express = require('express');
 const router = express.Router();
 const FoodSafety = require('../../models/HACCP/FoodSafetyPlanModel').FoodSafety;
 const { PlanModel } = require('../../models/HACCP/FoodSafetyPlanModel');
-const authMiddleware = require('../../middleware/auth')
-
-router.use(authMiddleware)
 
 // * Create a new FoodSafety document
 router.post('/create-food-safety', async (req, res) => {
   try {
-
     const safetyPlanData = req.body;
-
     const createdPlans = await PlanModel.create(safetyPlanData.Plans);
     const plansArr = Object.values(createdPlans);
     const plansIds = plansArr.map(planObj => planObj._id);
@@ -42,7 +37,7 @@ router.post('/create-food-safety', async (req, res) => {
 router.get('/get-all-food-safety', async (req, res) => {
   try {
 
-    const foodSafetyDocs = await FoodSafety.find({UserDepartment : req.header('Authorization')}).populate('Department UserDepartment').populate({
+    const foodSafetyDocs = await FoodSafety.find({ UserDepartment: req.header('Authorization') }).populate('Department UserDepartment').populate({
       path: 'DecisionTree',
       model: 'DecisionTree',
       populate: {
@@ -50,10 +45,11 @@ router.get('/get-all-food-safety', async (req, res) => {
         model: 'ConductHaccp',
         populate: [
           {
-            path: 'Members',
+            path: 'Teams',
+            model: 'HaccpTeam',
             populate: {
-              path: 'Department',
-              model: 'Department'
+              path: 'TeamMembers',
+              model: 'User'
             }
           },
           {
@@ -63,17 +59,17 @@ router.get('/get-all-food-safety', async (req, res) => {
         ]
       }
     }).populate({
-      path : 'Plans',
-      model : 'Plan',
-      populate : {
-        path : 'Decision',
-        model : 'Decision',
-        populate : {
-          path : 'Hazard',
-          model : 'Hazard',
-          populate : {
-            path : 'Process',
-            model : 'ProcessDetail'
+      path: 'Plans',
+      model: 'Plan',
+      populate: {
+        path: 'Decision',
+        model: 'Decision',
+        populate: {
+          path: 'Hazard',
+          model: 'Hazard',
+          populate: {
+            path: 'Process',
+            model: 'ProcessDetail'
           }
         }
       }
@@ -84,7 +80,7 @@ router.get('/get-all-food-safety', async (req, res) => {
       return res.status(404).json({ message: 'FoodSafety documents not found' });
     }
 
-   
+
 
     console.log('FoodSafety documents retrieved successfully');
     res.status(200).json({ status: true, data: foodSafetyDocs });
@@ -108,10 +104,11 @@ router.get('/get-food-safety/:planId', async (req, res) => {
         model: 'ConductHaccp',
         populate: [
           {
-            path: 'Members',
+            path: 'Teams',
+            model: 'HaccpTeam',
             populate: {
-              path: 'Department',
-              model: 'Department'
+              path: 'TeamMembers',
+              model: 'User'
             }
           },
           {
@@ -121,17 +118,17 @@ router.get('/get-food-safety/:planId', async (req, res) => {
         ]
       }
     }).populate({
-      path : 'Plans',
-      model : 'Plan',
-      populate : {
-        path : 'Decision',
-        model : 'Decision',
-        populate : {
-          path : 'Hazard',
-          model : 'Hazard',
-          populate : {
-            path : 'Process',
-            model : 'ProcessDetail'
+      path: 'Plans',
+      model: 'Plan',
+      populate: {
+        path: 'Decision',
+        model: 'Decision',
+        populate: {
+          path: 'Hazard',
+          model: 'Hazard',
+          populate: {
+            path: 'Process',
+            model: 'ProcessDetail'
           }
         }
       }
@@ -214,11 +211,11 @@ router.patch('/update-food-safety/:planId', async (req, res) => {
     const plansArr = Object.values(createdPlans);
     const plansIds = plansArr.map(planObj => planObj._id);
     console.log(plansIds);
-    
+
     const updates = {
       ...req.body,
       UpdatedBy: req.body.updatedBy,
-      Plans : plansIds,
+      Plans: plansIds,
       UpdationDate: new Date(),
       Status: 'Pending'
     };

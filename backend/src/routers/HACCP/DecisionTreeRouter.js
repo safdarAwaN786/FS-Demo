@@ -47,10 +47,11 @@ router.get('/get-all-decision-trees', async (req, res) => {
       model: 'ConductHaccp',
       populate: [
         {
-          path: 'Members',
-          populate: {
-            path: 'Department',
-            model: 'Department'
+          path: 'Teams',
+          model : 'HaccpTeam',
+          populate : {
+            path : 'TeamMembers',
+            model : 'User'
           }
         },
         {
@@ -93,10 +94,11 @@ router.get('/get-approved-decision-trees', async (req, res) => {
       model: 'ConductHaccp',
       populate: [
         {
-          path: 'Members',
+          path: 'Teams',
+          model : 'HaccpTeam',
           populate: {
-            path: 'Department',
-            model: 'Department'
+            path: 'TeamMembers',
+            model: 'User'
           }
         },
         {
@@ -141,10 +143,11 @@ router.get('/get-decision-tree/:treeId', async (req, res) => {
       model: 'ConductHaccp',
       populate: [
         {
-          path: 'Members',
+          path: 'Teams',
+          model : 'HaccpTeam',
           populate: {
-            path: 'Department',
-            model: 'Department'
+            path: 'TeamMembers',
+            model: 'User'
           }
         },
         {

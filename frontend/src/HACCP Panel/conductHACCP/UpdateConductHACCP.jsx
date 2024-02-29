@@ -8,7 +8,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { setSmallLoading } from '../../redux/slices/loading';
 
-
 function UpdateConductHACCP() {
 
     const [dataToSend, setDataToSend] = useState(null);
@@ -28,15 +27,15 @@ function UpdateConductHACCP() {
         dispatch(setSmallLoading(true))
         axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`).then((res) => {
             SetDepartmentsToShow(res.data.data);
-            if(processesToShow && teamsToShow){
+            if (processesToShow && teamsToShow) {
                 dispatch(setSmallLoading(false))
             }
         }).catch(err => {
             dispatch(setSmallLoading(false));
             Swal.fire({
-                icon : 'error',
-                title : 'OOps..',
-                text : 'Something went wrong, Try Again!'
+                icon: 'error',
+                title: 'OOps..',
+                text: 'Something went wrong, Try Again!'
             })
         })
     }, [])
@@ -45,65 +44,59 @@ function UpdateConductHACCP() {
         dispatch(setSmallLoading(true))
         axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-approved-haccp-teams`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
             setTeamsToShow(response.data.data);
-            if(processesToShow, departmentsToShow){
-                dispatch(setSmallLoading(false))
-            }
+            dispatch(setSmallLoading(false))
         }).catch(err => {
             dispatch(setSmallLoading(false));
             Swal.fire({
-                icon : 'error',
-                title : 'OOps..',
-                text : 'Something went wrong, Try Again!'
+                icon: 'error',
+                title: 'OOps..',
+                text: 'Something went wrong, Try Again!'
             })
         })
 
         axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-processes`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
             setProcessesToShow(response.data.data);
-            if(teamsToShow && departmentsToShow){
-                dispatch(setSmallLoading(false))
-            }
+            dispatch(setSmallLoading(false))
         }).catch(err => {
             dispatch(setSmallLoading(false));
             Swal.fire({
-                icon : 'error',
-                title : 'OOps..',
-                text : 'Something went wrong, Try Again!'
+                icon: 'error',
+                title: 'OOps..',
+                text: 'Something went wrong, Try Again!'
             })
         })
     }, [])
 
     const idToWatch = useSelector(state => state.idToProcess);
-    useEffect(()=>{
-        if(teamsToShow?.length === 0){
+    useEffect(() => {
+        if (teamsToShow?.length === 0) {
             dispatch(setSmallLoading(false))
             Swal.fire({
-                icon : 'warning',
-                title : 'OOps..',
-                text : 'No, Any team available!'
+                icon: 'warning',
+                title: 'OOps..',
+                text: 'No, Any team available!'
             })
-        } else if(processesToShow?.length === 0){
+        } else if (processesToShow?.length === 0) {
             dispatch(setSmallLoading(false))
             Swal.fire({
-                icon : 'warning',
-                title : 'OOps..',
-                text : 'No, Any Process available!'
+                icon: 'warning',
+                title: 'OOps..',
+                text: 'No, Any Process available!'
             })
         }
     }, [teamsToShow, processesToShow])
 
-    useEffect(()=>{
+    useEffect(() => {
         dispatch(setSmallLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-conduct-haccp/${idToWatch}`).then((res)=>{
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-conduct-haccp/${idToWatch}`).then((res) => {
             setDataToSend(res.data.data);
-            if(processesToShow && departmentsToShow && processesToShow){
-                dispatch(setSmallLoading)
-            }
+            dispatch(setSmallLoading(false))
         }).catch(err => {
             dispatch(setSmallLoading(false));
             Swal.fire({
-                icon : 'error',
-                title : 'OOps..',
-                text : 'Something went wrong, Try Again!'
+                icon: 'error',
+                title: 'OOps..',
+                text: 'Something went wrong, Try Again!'
             })
         })
     }, [])
@@ -113,16 +106,16 @@ function UpdateConductHACCP() {
             let hazardsArray = []
             console.log(selectedProcess);
             selectedProcess.ProcessDetails?.map((processObj) => {
-                const { _id,subProcesses, ...rest } = processObj; // Extract _id property
+                const { _id, subProcesses, ...rest } = processObj; // Extract _id property
                 hazardsArray.push({ ...rest, type: 'Biological', Process: processObj._id });
                 hazardsArray.push({ ...rest, type: 'Chemical', Process: processObj._id });
                 hazardsArray.push({ ...rest, type: 'Physical', Process: processObj._id });
                 hazardsArray.push({ ...rest, type: 'Halal', Process: processObj._id });
-                hazardsArray.push({ ...rest, type: 'Allergen', Process: processObj._id });;
+                hazardsArray.push({ ...rest, type: 'Allergen', Process: processObj._id });
 
                 if (processObj.subProcesses?.length > 0) {
                     processObj.subProcesses.map((subProcess) => {
-                        const { _id,subProcesses, ...rest } = subProcess; // Extract _id property
+                        const { _id, subProcesses, ...rest } = subProcess; // Extract _id property
                         hazardsArray.push({ ...rest, type: 'Biological', Process: subProcess._id });
                         hazardsArray.push({ ...rest, type: 'Chemical', Process: subProcess._id });
                         hazardsArray.push({ ...rest, type: 'Physical', Process: subProcess._id });
@@ -143,7 +136,8 @@ function UpdateConductHACCP() {
 
     const makeRequest = () => {
         if (dataToSend) {
-            axios.put(`${process.env.REACT_APP_BACKEND_URL}/update-conduct-haccp/${idToWatch}`, {...dataToSend, updatedBy : user.Name}).then(() => {
+            dispatch(setSmallLoading(true))
+            axios.put(`${process.env.REACT_APP_BACKEND_URL}/update-conduct-haccp/${idToWatch}`, { ...dataToSend, updatedBy: user.Name }).then(() => {
                 setDataToSend(null);
                 Swal.fire({
                     title: 'Success',
@@ -155,14 +149,24 @@ function UpdateConductHACCP() {
                         dispatch(updateTabData({ ...tabData, Tab: 'Conduct Risk Assessment' }))
                     }
                 })
-
             }).catch((error) => {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Try filling data again',
-                    confirmButtonText: 'OK.'
-                })
+                if (error.response.status === 401) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: error.response.data.message,
+                        confirmButtonText: 'OK.'
+                    })
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Something went wrong!',
+                        confirmButtonText: 'OK.'
+                    })
+                }
+            }).finally(() => {
+                dispatch(setSmallLoading(false))
             })
         } else {
             Swal.fire({
@@ -213,7 +217,7 @@ function UpdateConductHACCP() {
                                         }}>
                                             <select className='form-select  form-select-lg' name='DocumentType' value={dataToSend?.DocumentType} onChange={(e) => {
                                                 setDataToSend({ ...dataToSend, [e.target.name]: e.target.value, });
-                                            }} style={{ width: "100%" }} required >          
+                                            }} style={{ width: "100%" }} required >
                                                 <option value="Manuals">Manuals</option>
                                                 <option value="Procedures">Procedures</option>
                                                 <option value="SOPs">SOPs</option>
@@ -223,39 +227,26 @@ function UpdateConductHACCP() {
                                     </div>
 
                                     {teamsToShow?.length > 0 && (
-
-
                                         <div className='w-75 mx-4 d-flex flex-column justify-content-start'>
                                             <div className={style.para}>
-                                                <p>Select Team Members</p>
+                                                <p>Select Teams</p>
                                             </div>
-
-
                                             {teamsToShow?.map((team) => {
                                                 return (
-
-                                                    team.TeamMembers.map((member) => {
-
-                                                        return (
-                                                            <div className='d-flex flex-row '>
-
-                                                                <input autoComplete='off' checked={dataToSend?.Members?.includes(member._id)} onChange={(e) => {
-                                                                    const updatedMembers = dataToSend?.Members || [];
-
-
-                                                                    if (e.target.checked) {
-                                                                        updatedMembers.push(member._id);
-                                                                        setDataToSend({ ...dataToSend, Members: updatedMembers })
-                                                                    } else {
-                                                                        setDataToSend({ ...dataToSend, Members: updatedMembers.filter((memberId) => memberId !== memberId) })
-                                                                    }
-                                                                }} className='m-1' type='checkbox' />
-                                                                <p style={{
-                                                                    fontFamily: 'Inter'
-                                                                }}>{member.Name}</p>
-                                                            </div>
-                                                        )
-                                                    })
+                                                    <div className='d-flex flex-row '>
+                                                        <input autoComplete='off' checked={dataToSend?.Teams?.includes(team._id)} onChange={(e) => {
+                                                            const updatedTeams = dataToSend?.Teams || [];
+                                                            if (e.target.checked) {
+                                                                updatedTeams.push(team._id);
+                                                                setDataToSend({ ...dataToSend, Teams: updatedTeams })
+                                                            } else {
+                                                                setDataToSend({ ...dataToSend, Teams: updatedTeams.filter((teamId) => teamId !== teamId) })
+                                                            }
+                                                        }} className='m-1' type='checkbox' />
+                                                        <p style={{
+                                                            fontFamily: 'Inter'
+                                                        }}>{team.DocumentId}</p>
+                                                    </div>
                                                 )
 
                                             })}
@@ -383,7 +374,7 @@ function UpdateConductHACCP() {
                                                             }
                                                             setDataToSend({ ...dataToSend, Hazards: updatedHazards });
                                                         }} className='p-2 my-2 w-100 border-0' name='Occurence' style={{ width: "100%" }} required>
-                                                            
+
 
 
                                                             <option value={1}>1</option>
@@ -402,7 +393,7 @@ function UpdateConductHACCP() {
                                                             }
                                                             setDataToSend({ ...dataToSend, ProcessHazards: updatedHazards })
                                                         }} className='p-2 my-3 w-100 border-0' name='Severity' style={{ width: "100%" }} required>
-                                                            
+
 
 
                                                             <option value={1}>1</option>
@@ -418,7 +409,7 @@ function UpdateConductHACCP() {
 
                                                 </div>
                                             </div>
-                                          
+
                                         </div>
                                     </>
                                 )

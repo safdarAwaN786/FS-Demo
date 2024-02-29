@@ -67,9 +67,9 @@ const ConductHaccpSchema = new mongoose.Schema({
         required: true
     },
 
-    Members: [{
+    Teams: [{
         type: Schema.Types.ObjectId,
-        ref: 'User',
+        ref: 'HaccpTeam',
         required: true
     }],
 

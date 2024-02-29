@@ -52,21 +52,17 @@ function HACCPTeamMembers() {
     const nextPage = () => {
         setStartIndex(startIndex + 8);
         setEndIndex(endIndex + 8);
-
     }
 
     const backPage = () => {
         setStartIndex(startIndex - 8);
         setEndIndex(endIndex - 8);
-
-
     }
 
     useEffect(() => {
         setMembersList(teamData?.TeamMembers.slice(startIndex, endIndex))
     }, [startIndex, endIndex])
     const formatDate = (date) => {
-
         const newDate = new Date(date);
         const formatDate = newDate.toLocaleDateString('en-GB', {
             day: '2-digit',
@@ -80,13 +76,9 @@ function HACCPTeamMembers() {
 
     const search = (event) => {
         if (event.target.value !== "") {
-            console.log(event.target.value);
-
             const searchedList = teamData?.TeamMembers.filter((obj) =>
-
                 obj.Name.includes(event.target.value)
             )
-            console.log(searchedList);
             setMembersList(searchedList);
         } else {
             setMembersList(teamData?.TeamMembers.slice(startIndex, endIndex))
@@ -96,7 +88,6 @@ function HACCPTeamMembers() {
     const handleDownloadImage = async (imageURL) => {
         try {
             if (imageURL) {
-
                 dispatch(setSmallLoading(true))
                 const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/download-image`, {
                     params: {
@@ -104,20 +95,13 @@ function HACCPTeamMembers() {
                     },
                     responseType: 'blob' // Specify the response type as 'blob' to handle binary data
                 });
-
-
                 let blob;
-
                 blob = new Blob([response.data]);
-                // }
-
                 // Create a temporary anchor element
                 const link = document.createElement('a');
                 link.href = window.URL.createObjectURL(blob);
-
                 // Set the download attribute and suggested filename for the downloaded image
                 link.download = `${user.Department.DepartmentName}-FSMS${imageURL.substring(imageURL.lastIndexOf('.'))}`;
-
                 // Append the anchor element to the document body and click it to trigger the download
                 document.body.appendChild(link);
                 dispatch(setSmallLoading(false))
@@ -139,27 +123,22 @@ function HACCPTeamMembers() {
                 text: 'Something went wrong, Try Again!'
             })
         }
-
     };
     return (
         <>
-
                 <div className='d-flex flex-row bg-white px-lg-5  px-2 py-2'>
                     <BsArrowLeftCircle
                         role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
                             {
                                 dispatch(updateTabData({ ...tabData, Tab: 'HACCP Team Management' }))
-
                             }
                         }} />
-
                 </div>
                 <div className={`${style.searchbar} mt-1 `}>
                     <div className={style.sec1}>
                         <img src={Search} alt="" />
                         <input autoComplete='off' onChange={search} type="text" placeholder='Search Member by name' />
                     </div>
-
                 </div>
                 <div className={style.tableParent}>
                     {!membersList || membersList?.length === 0 ? (
@@ -167,7 +146,6 @@ function HACCPTeamMembers() {
                             <p className='text-center'>No any Records Available here.</p>
                         </div>
                     ) : (
-
                         <table className={style.table}>
                             <tr className={style.headers}>
                                 <td>Name</td>
@@ -183,12 +161,9 @@ function HACCPTeamMembers() {
                                 {/* <td>Password</td> */}
                                 <td>Action</td>
                                 <td>Document</td>
-
-
                             </tr>
                             {
                                 membersList?.map((member, i) => {
-
                                     return (
                                         <tr className={style.tablebody} key={i}>
                                             <td ><p style={{
@@ -204,7 +179,7 @@ function HACCPTeamMembers() {
                                             <td className={style.simpleContent}>{member.Education}</td>
                                             <td>{member.Designation}</td>
                                             <td>{member.Experience}</td>
-                                            <td>{member.Department}</td>
+                                            <td>{member.Department.DepartmentName}</td>
                                             <td>{member.RoleInTeam}</td>
                                             <td>{member.TrainingsAttended}</td>
                                             <td>{formatDate(member.TrainingDate)}</td>
@@ -234,43 +209,33 @@ function HACCPTeamMembers() {
                 </div>
                 <div className={style.Btns}>
                     {startIndex > 0 && (
-
                         <button onClick={backPage}>
                             {'<< '}Back
                         </button>
                     )}
                     {teamData?.TeamMembers.length > endIndex && (
-
                         <button onClick={nextPage}>
                             next{'>> '}
                         </button>
                     )}
                 </div>
-
             {
                 showBox && (
-
                     <div class={style.alertparent}>
                         <div class={style.alert}>
-
                             <p class={style.msg}>{dataToShow}</p>
-
                             <div className={style.alertbtns}>
-
                                 <button style={{
                                     marginLeft : '120px',
                                     marginTop : '25px'
                                 }}  onClick={() => {
                                     setShowBox(false);
-
                                 }} className={style.btn2}>OK</button>
-
                             </div>
                         </div>
                     </div>
                 )
             }
-
         </>
     )
 }

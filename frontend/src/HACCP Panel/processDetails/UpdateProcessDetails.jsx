@@ -22,15 +22,15 @@ function UpdateProcessDetails() {
         dispatch(setSmallLoading(true))
         axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`).then((res) => {
             SetDepartmentsToShow(res.data.data);
-            if(processes){
+            if (processes) {
                 dispatch(setSmallLoading(false))
             }
         }).catch(err => {
             dispatch(setSmallLoading(false));
             Swal.fire({
-                icon : 'error',
-                title : 'OOps..',
-                text : 'Something went wrong, Try Again!'
+                icon: 'error',
+                title: 'OOps..',
+                text: 'Something went wrong, Try Again!'
             })
         })
     }, [])
@@ -40,22 +40,22 @@ function UpdateProcessDetails() {
         axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-process/${idToWatch}`).then((res) => {
             setDataToSend(res.data.data);
             setProcesses(res.data.data?.ProcessDetails);
-            if(departmentsToShow){
+            if (departmentsToShow) {
                 dispatch(setSmallLoading(false))
             }
         }).catch(err => {
             dispatch(setSmallLoading(false));
             Swal.fire({
-                icon : 'error',
-                title : 'OOps..',
-                text : 'Something went wrong, Try Again!'
+                icon: 'error',
+                title: 'OOps..',
+                text: 'Something went wrong, Try Again!'
             })
         })
     }, [])
 
     const addProcess = () => {
         const updatedProcesses = [...processes];
-        updatedProcesses.push({ subProcesses: [], ProcessNum : updatedProcesses.length + 1 });
+        updatedProcesses.push({ subProcesses: [], ProcessNum: updatedProcesses.length + 1 });
         setProcesses(updatedProcesses);
 
     };
@@ -96,8 +96,7 @@ function UpdateProcessDetails() {
     const makeRequest = () => {
         if (dataToSend.ProcessDetails.length !== 0) {
             dispatch(setSmallLoading(true))
-            axios.patch(`${process.env.REACT_APP_BACKEND_URL}/update-process/${idToWatch}`, {...dataToSend, updatedBy : user.Name}).then(() => {
-                console.log("request made !");
+            axios.patch(`${process.env.REACT_APP_BACKEND_URL}/update-process/${idToWatch}`, { ...dataToSend, updatedBy: user.Name }).then(() => {
                 setDataToSend(null);
 
                 dispatch(setSmallLoading(false))
@@ -114,11 +113,20 @@ function UpdateProcessDetails() {
 
             }).catch(err => {
                 dispatch(setSmallLoading(false));
-                Swal.fire({
-                    icon : 'error',
-                    title : 'OOps..',
-                    text : 'Something went wrong, Try Again!'
-                })
+                console.log(err);
+                if (err.response.status === 401) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'OOps..',
+                        text: err.response.data.message
+                    })
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'OOps..',
+                        text: 'Something went wrong, Try Again!'
+                    })
+                }
             })
         } else {
             Swal.fire({
@@ -276,7 +284,7 @@ function UpdateProcessDetails() {
                                         <div className='d-flex justify-content-center p-5'>
                                             <a onClick={() => {
                                                 const updatedProcesses = [...processes];
-                                                updatedProcesses[index].subProcesses.push({ProcessNum : `${index+1}.${updatedProcesses[index].subProcesses.length + 1}`});
+                                                updatedProcesses[index].subProcesses.push({ ProcessNum: `${index + 1}.${updatedProcesses[index].subProcesses.length + 1}` });
                                                 setProcesses(updatedProcesses);
                                             }} className='btn btn-outline-danger py-1 fs-5 w-50'>Add SubProcess</a>
                                             {process.subProcesses?.length > 0 && (

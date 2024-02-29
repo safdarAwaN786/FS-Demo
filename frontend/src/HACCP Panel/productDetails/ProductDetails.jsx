@@ -9,6 +9,7 @@ import { updateTabData } from '../../redux/slices/tabSlice'
 import { changeId } from '../../redux/slices/idToProcessSlice'
 import Cookies from 'js-cookie'
 import { setSmallLoading } from '../../redux/slices/loading'
+import dayjs from 'dayjs'
 
 function ProductDetails() {
 
@@ -119,8 +120,6 @@ function ProductDetails() {
                             <td>Department</td>
                             <td>Revision No</td>
                             <td className='ps-5'>Status</td>
-                            <td>Created By</td>
-                            <td>Creation Date</td>
                             <td>Reason</td>
                             {tabData?.Edit && (
                                 <td>Action</td>
@@ -129,6 +128,8 @@ function ProductDetails() {
                                 <td></td>
                             )}
                             <td>Product Details</td>
+                            <td>Created By</td>
+                            <td>Creation Date</td>
                             <td>Approved By</td>
                             <td>Approval Date</td>
                             <td>Disapproved By</td>
@@ -152,9 +153,7 @@ function ProductDetails() {
                                         <td>{product.Department?.DepartmentName}</td>
                                         <td>{product.RevisionNo}</td>
                                         <td><div className={`text-center ${product.Status === 'Approved' && style.greenStatus} ${product.Status === 'Disapproved' && style.redStatus} ${product.Status === 'Pending' && style.yellowStatus}  `}><p>{product.Status}</p></div></td>
-                                        <td>{product.CreatedBy}</td>
-                                        <td>{product.CreationDate?.slice(0, 10).split('-')[2]}/{product.CreationDate?.slice(0, 10).split('-')[1]}/{product.CreationDate?.slice(0, 10).split('-')[0]}</td>
-                                        <td >
+                                        <td>
                                             <p onClick={() => {
                                                 if (product.Status === 'Disapproved') {
                                                     setDataToShow(product.Reason)
@@ -175,8 +174,13 @@ function ProductDetails() {
                                         {tabData?.Approval && (
                                             <td className='ps-0'>
                                                 <p onClick={() => {
-                                                    setIdForAction(product._id);
-                                                    setApprove(true);
+                                                    if (product.Status === 'Approved') {
+                                                        setDataToShow('Sorry, Product is already Approved');
+                                                        setShowBox(true);
+                                                    } else {
+                                                        setIdForAction(product._id);
+                                                        setApprove(true);
+                                                    }
                                                 }} style={{
                                                     height: '28px'
                                                 }} className={`btn btn-outline-primary pt-0 px-1`}>Approve</p>
@@ -184,13 +188,16 @@ function ProductDetails() {
                                                     if (product.Status === 'Approved') {
                                                         setDataToShow('Sorry, Product is already Approved');
                                                         setShowBox(true);
+                                                    } else if (product.Status === 'Disapproved') {
+                                                        setDataToShow('Sorry, Product is already Disapproved');
+                                                        setShowBox(true);
                                                     } else {
                                                         setIdForAction(product._id);
                                                         setReject(true);
                                                     }
                                                 }} style={{
                                                     height: '28px'
-                                                }} className={`btn btn-outline-danger pt-0 px-1`}>Disaprrove</p>
+                                                }} className={`btn btn-outline-danger pt-0 px-1`}>Disapprove</p>
                                             </td>
                                         )}
                                         <td>
@@ -201,13 +208,15 @@ function ProductDetails() {
                                                 height: '28px'
                                             }} className={`btn btn-outline-warning pt-0 px-1`}>Click Here</p>
                                         </td>
+                                        <td>{product.CreatedBy}</td>
+                                        <td>{dayjs(product.CreationDate).format('DD/MM/YYYY')}</td>
                                         {product.ApprovedBy ? (
                                             <td>{product.ApprovedBy}</td>
                                         ) : (
                                             <td>- - -</td>
                                         )}
                                         {product.ApprovalDate ? (
-                                            <td>{product.ApprovalDate?.slice(0, 10).split('-')[2]}/{product.ApprovalDate?.slice(0, 10).split('-')[1]}/{product.ApprovalDate?.slice(0, 10).split('-')[0]}</td>
+                                            <td>{dayjs(product.ApprovalDate).format('DD/MM/YYYY')}</td>
                                         ) : (
                                             <td>- - -</td>
                                         )}
@@ -217,7 +226,7 @@ function ProductDetails() {
                                             <td>- - -</td>
                                         )}
                                         {product.DisapprovalDate ? (
-                                            <td>{product.DisapprovalDate?.slice(0, 10).split('-')[2]}/{product.DisapprovalDate?.slice(0, 10).split('-')[1]}/{product.DisapprovalDate?.slice(0, 10).split('-')[0]}</td>
+                                            <td>{dayjs(product.DisapprovalDate).format('DD/MM/YYYY')}</td>
                                         ) : (
                                             <td>- - -</td>
                                         )}

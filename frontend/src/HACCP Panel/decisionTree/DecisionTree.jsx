@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { changeId } from '../../redux/slices/idToProcessSlice';
 import { setSmallLoading } from '../../redux/slices/loading';
+import dayjs from 'dayjs';
 
 function DecisionTree() {
 
@@ -61,7 +62,6 @@ function DecisionTree() {
         })
     }, [])
 
-
     const nextPage = () => {
         setStartIndex(startIndex + 8);
         setEndIndex(endIndex + 8);
@@ -76,7 +76,6 @@ function DecisionTree() {
         setDecisionTreesList(allDataArr?.slice(startIndex, endIndex))
     }, [startIndex, endIndex])
 
-
     const search = (event) => {
         if (event.target.value !== "") {
             const searchedList = allDataArr.filter((obj) =>
@@ -88,18 +87,14 @@ function DecisionTree() {
         }
     }
 
-
-
     return (
         <>
-
             <div className={style.searchbar}>
                 <div className={style.sec1}>
                     <img src={Search} alt="" />
                     <input autoComplete='off' onChange={search} type="text" placeholder='Search Document by name' />
                 </div>
                 {tabData?.Creation && (
-
                     <div className={style.sec2} onClick={() => {
                         dispatch(updateTabData({ ...tabData, Tab: 'addDecisionTree' }))
                     }}>
@@ -114,7 +109,6 @@ function DecisionTree() {
                         <p className='text-center'>No any Records Available here.</p>
                     </div>
                 ) : (
-
                     <table className={style.table}>
                         <tr className={style.headers}>
                             <td>Document ID</td>
@@ -122,8 +116,6 @@ function DecisionTree() {
                             <td>Department</td>
                             <td>Revision No.</td>
                             <td className='ps-5'>Status</td>
-                            <td>Created By</td>
-                            <td>Creation Date</td>
                             <td>Process Name</td>
                             {tabData?.Edit && (
                                 <td>Action</td>
@@ -134,7 +126,9 @@ function DecisionTree() {
                                 <td></td>
                             )}
                             <td></td>
-                            <td>Team Members</td>
+                            <td>Teams</td>
+                            <td>Created By</td>
+                            <td>Creation Date</td>
                             <td>Approved By</td>
                             <td>Approval Date</td>
                             <td>Disapproved By</td>
@@ -158,8 +152,6 @@ function DecisionTree() {
                                         <td>{tree.Department.DepartmentName}</td>
                                         <td>{tree.RevisionNo}</td>
                                         <td><div className={`text-center ${tree.Status === 'Approved' && style.greenStatus} ${tree.Status === 'Disapproved' && style.redStatus} ${tree.Status === 'Pending' && style.yellowStatus}  `}><p>{tree.Status}</p></div></td>
-                                        <td>{tree.CreatedBy}</td>
-                                        <td>{tree.CreationDate?.slice(0, 10).split('-')[2]}/{tree.CreationDate?.slice(0, 10).split('-')[1]}/{tree.CreationDate?.slice(0, 10).split('-')[0]}</td>
                                         <td>{tree.ConductHaccp.Process.ProcessName}</td>
                                         {tabData?.Edit && (
                                             <td>
@@ -169,13 +161,13 @@ function DecisionTree() {
                                                 }} className={style.greenclick}>Update</p>
                                             </td>
                                         )}
-                                        <td >
+                                        <td>
                                             <p onClick={() => {
                                                 dispatch(updateTabData({ ...tabData, Tab: 'viewDecisionTree' }))
                                                 dispatch(changeId(tree._id))
                                             }} className='btn btn-outline-danger'>View</p>
                                         </td>
-                                        <td >
+                                        <td>
                                             <p onClick={() => {
                                                 setDataToShow(tree.Reason);
                                                 setShowBox(true);
@@ -185,8 +177,13 @@ function DecisionTree() {
                                         {tabData?.Approval && (
                                             <td>
                                                 <p onClick={() => {
-                                                    setIdForAction(tree._id);
-                                                    setApprove(true);
+                                                    if (tree.Status === 'Approved') {
+                                                        setDataToShow('Sorry, Team is already Approved');
+                                                        setShowBox(true);
+                                                    } else {
+                                                        setIdForAction(tree._id);
+                                                        setApprove(true);
+                                                    }
                                                 }} style={{
                                                     height: '28px'
                                                 }} className={`btn btn-outline-primary pt-0 px-1`}>Approve</p>
@@ -194,33 +191,34 @@ function DecisionTree() {
                                                     if (tree.Status === 'Approved') {
                                                         setDataToShow('Sorry, Team is already Approved');
                                                         setShowBox(true);
+                                                    } else if (tree.Status === 'Disapproved') {
+                                                        setDataToShow('Sorry, Team is already Disapproved');
+                                                        setShowBox(true);
                                                     } else {
-
                                                         setIdForAction(tree._id);
                                                         setReject(true);
                                                     }
                                                 }} style={{
                                                     height: '28px'
-
                                                 }} className={`btn btn-outline-danger pt-0 px-1`}>Disapprove</p>
                                             </td>
                                         )}
                                         <td></td>
-                                        <td >
-
+                                        <td>
                                             <p onClick={() => {
                                                 dispatch(changeId(tree._id))
-                                                dispatch(updateTabData({ ...tabData, Tab: 'decisionTreeMembers' }))
+                                                dispatch(updateTabData({ ...tabData, Tab: 'decisionTreeTeams' }))
                                             }} className='btn btn-outline-warning'>Click Here</p>
                                         </td>
-
+                                        <td>{tree.CreatedBy}</td>
+                                        <td>{dayjs(tree.CreationDate).format("DD/MM/YYYY")}</td>
                                         {tree.ApprovedBy ? (
                                             <td>{tree.ApprovedBy}</td>
                                         ) : (
                                             <td>- - -</td>
                                         )}
                                         {tree.ApprovalDate ? (
-                                            <td>{tree.ApprovalDate?.slice(0, 10).split('-')[2]}/{tree.ApprovalDate?.slice(0, 10).split('-')[1]}/{tree.ApprovalDate?.slice(0, 10).split('-')[0]}</td>
+                                            <td>{dayjs(tree.ApprovalDate).format("DD/MM/YYYY")}</td>
                                         ) : (
                                             <td>- - -</td>
                                         )}
@@ -230,15 +228,12 @@ function DecisionTree() {
                                             <td>- - -</td>
                                         )}
                                         {tree.DisapprovalDate ? (
-                                            <td>{tree.DisapprovalDate?.slice(0, 10).split('-')[2]}/{tree.DisapprovalDate?.slice(0, 10).split('-')[1]}/{tree.DisapprovalDate?.slice(0, 10).split('-')[0]}</td>
+                                            <td>{dayjs(tree.DisapprovalDate).format("DD/MM/YYYY")}</td>
                                         ) : (
                                             <td>- - -</td>
                                         )}
-
                                     </tr>
-
                                 )
-
                             })
                         }
                     </table>
@@ -246,7 +241,6 @@ function DecisionTree() {
             </div>
             <div className={style.Btns}>
                 {startIndex > 0 && (
-
                     <button onClick={backPage}>
                         {'<< '}Back
                     </button>
@@ -258,25 +252,18 @@ function DecisionTree() {
                     </button>
                 )}
             </div>
-
             {
                 showBox && (
-
                     <div class={style.alertparent}>
                         <div class={style.alert}>
-
                             <p class={style.msg}>{dataToShow}</p>
-
                             <div className={style.alertbtns}>
-
                                 <button style={{
                                     marginLeft: '120px',
                                     marginTop: '25px'
                                 }} onClick={() => {
                                     setShowBox(false);
-
                                 }} className={style.btn2}>OK</button>
-
                             </div>
                         </div>
                     </div>

@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { changeId } from '../../redux/slices/idToProcessSlice';
 import { setSmallLoading } from '../../redux/slices/loading';
+import dayjs from 'dayjs';
 
 function FoodSafetyPlan() {
     const [safetyPlansList, setSafetyPlansList] = useState(null);
@@ -124,8 +125,6 @@ function FoodSafetyPlan() {
                             <td>Department</td>
                             <td>Revision No.</td>
                             <td className='ps-5'>Status</td>
-                            <td>Created By</td>
-                            <td>Creation Date</td>
                             <td>Process Name</td>
                             {tabData?.Edit && (
                                 <td>Action</td>
@@ -136,12 +135,13 @@ function FoodSafetyPlan() {
                                 <td></td>
                             )}
                             <td></td>
-                            <td>Team Members</td>
+                            <td>Teams</td>
+                            <td>Created By</td>
+                            <td>Creation Date</td>
                             <td>Approved By</td>
                             <td>Approval Date</td>
                             <td>Disapproved By</td>
                             <td>Disapproval Date</td>
-
                         </tr>
                         {
                             safetyPlansList?.map((plan, i) => {
@@ -161,8 +161,6 @@ function FoodSafetyPlan() {
                                         <td>{plan.Department.DepartmentName}</td>
                                         <td>{plan.RevisionNo}</td>
                                         <td><div className={`text-center ${plan.Status === 'Approved' && style.greenStatus} ${plan.Status === 'Disapproved' && style.redStatus} ${plan.Status === 'Pending' && style.yellowStatus}  `}><p>{plan.Status}</p></div></td>
-                                        <td>{plan.CreatedBy}</td>
-                                        <td>{plan.CreationDate?.slice(0, 10).split('-')[2]}/{plan.CreationDate?.slice(0, 10).split('-')[1]}/{plan.CreationDate?.slice(0, 10).split('-')[0]}</td>
                                         <td>{plan?.DecisionTree?.ConductHaccp?.Process?.ProcessName}</td>
                                         {tabData?.Edit && (
                                             <td>
@@ -173,10 +171,7 @@ function FoodSafetyPlan() {
                                             </td>
                                         )}
 
-
-
-
-                                        <td >
+                                        <td>
                                             <p onClick={() => {
                                                 dispatch(updateTabData({ ...tabData, Tab: 'viewFoodSafetyPlan' }));
                                                 dispatch(changeId(plan._id));
@@ -191,50 +186,52 @@ function FoodSafetyPlan() {
                                                 }
                                                 setShowBox(true);
                                             }} className='btn btn-outline-danger'>View</p>
-
                                         </td>
                                         {tabData?.Approval && (
-
                                             <td>
-
                                                 <p onClick={() => {
-                                                    setIdForAction(plan._id);
-                                                    setApprove(true);
+                                                    if (plan.Status === 'Approved') {
+                                                        setDataToShow('Sorry, Plan is already Approved');
+                                                        setShowBox(true);
+                                                    } else {
+                                                        setIdForAction(plan._id);
+                                                        setApprove(true);
+                                                    }
                                                 }} style={{
                                                     height: '28px'
-
                                                 }} className={`btn btn-outline-primary pt-0 px-1`}>Approve</p>
                                                 <p onClick={() => {
                                                     if (plan.Status === 'Approved') {
-                                                        setDataToShow('Sorry, Team is already Approved');
+                                                        setDataToShow('Sorry, Plan is already Approved');
+                                                        setShowBox(true);
+                                                    } else if (plan.Status === 'Disapproved') {
+                                                        setDataToShow('Sorry, Plan is already Disapproved');
                                                         setShowBox(true);
                                                     } else {
-
                                                         setIdForAction(plan._id);
                                                         setReject(true);
                                                     }
                                                 }} style={{
                                                     height: '28px'
-
                                                 }} className={`btn btn-outline-danger pt-0 px-1`}>Disapprove</p>
                                             </td>
                                         )}
                                         <td></td>
-                                        <td >
-
+                                        <td>
                                             <p onClick={() => {
                                                 dispatch(changeId(plan._id))
-                                                dispatch(updateTabData({ ...tabData, Tab: 'foodSafetyPlanMembers' }))
+                                                dispatch(updateTabData({ ...tabData, Tab: 'foodSafetyPlanTeams' }))
                                             }} className='btn btn-outline-warning'>Click Here</p>
                                         </td>
-
+                                        <td>{plan.CreatedBy}</td>
+                                        <td>{dayjs(plan.CreationDate).format('DD/MM/YYYY')}</td>
                                         {plan.ApprovedBy ? (
                                             <td>{plan.ApprovedBy}</td>
                                         ) : (
                                             <td>- - -</td>
                                         )}
                                         {plan.ApprovalDate ? (
-                                            <td>{plan.ApprovalDate?.slice(0, 10).split('-')[2]}/{plan.ApprovalDate?.slice(0, 10).split('-')[1]}/{plan.ApprovalDate?.slice(0, 10).split('-')[0]}</td>
+                                            <td>{dayjs(plan.ApprovalDate).format('DD/MM/YYYY')}</td>
                                         ) : (
                                             <td>- - -</td>
                                         )}
@@ -244,16 +241,12 @@ function FoodSafetyPlan() {
                                             <td>- - -</td>
                                         )}
                                         {plan.DisapprovalDate ? (
-                                            <td>{plan.DisapprovalDate?.slice(0, 10).split('-')[2]}/{plan.DisapprovalDate?.slice(0, 10).split('-')[1]}/{plan.DisapprovalDate?.slice(0, 10).split('-')[0]}</td>
+                                            <td>{dayjs(plan.DisapprovalDate).format('DD/MM/YYYY')}</td>
                                         ) : (
                                             <td>- - -</td>
                                         )}
-
-
                                     </tr>
-
                                 )
-
                             })
                         }
                     </table>
@@ -261,13 +254,11 @@ function FoodSafetyPlan() {
             </div>
             <div className={style.Btns}>
                 {startIndex > 0 && (
-
                     <button onClick={backPage}>
                         {'<< '}Back
                     </button>
                 )}
                 {allDataArr?.length > endIndex && (
-
                     <button onClick={nextPage}>
                         next{'>> '}
                     </button>
@@ -276,19 +267,13 @@ function FoodSafetyPlan() {
 
             {
                 showBox && (
-
                     <div class={style.alertparent}>
                         <div class={style.alert}>
-
                             <p class={style.msg}>{dataToShow}</p>
-
                             <div className={style.alertbtns}>
-
                                 <button onClick={() => {
                                     setShowBox(false);
-
                                 }} className={style.btn2}>OK</button>
-
                             </div>
                         </div>
                     </div>

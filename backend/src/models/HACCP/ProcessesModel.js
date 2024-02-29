@@ -4,9 +4,6 @@ const Department = require('../../models/AccountCreation/DepartmentModel')
 const Company = require('../../models/AccountCreation/CompanyModel')
 const User = require('../../models/AccountCreation/UserModel');
 
-
-
-
 const ProcessDetailsSchema = new mongoose.Schema({
     Name: {
         type: String,

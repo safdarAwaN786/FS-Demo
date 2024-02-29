@@ -20,12 +20,12 @@ router.post('/create-process', async (req, res) => {
             const subProcessesArray = Object.values(createdSubProcesses);
             console.log(subProcessesArray);
             const subProcessesIds = subProcessesArray.map(item => item._id);
-    
+
             const createdProcessDetail = new ProcessDetailModel({
               ...processObj,
               subProcesses: subProcessesIds
             });
-    
+
             await createdProcessDetail.save();
             console.log('Saved ProcessDetail for :' + createdProcessDetail);
             return createdProcessDetail._id;
@@ -37,7 +37,7 @@ router.post('/create-process', async (req, res) => {
           const createdProcessDetail = new ProcessDetailModel({
             ...processObj
           });
-    
+
           try {
             await createdProcessDetail.save();
             console.log('Saved ProcessDetail for :' + createdProcessDetail);
@@ -49,7 +49,7 @@ router.post('/create-process', async (req, res) => {
         }
       })
     );
-    
+
 
     console.log(processDetailsIds);
     const mainProcessDoc = new Processes({
@@ -77,7 +77,7 @@ router.post('/create-process', async (req, res) => {
 router.get('/get-all-processes', async (req, res) => {
   try {
 
-    const processes = await Processes.find({UserDepartment : req.header('Authorization')}).populate('Department').populate('UserDepartment').populate({
+    const processes = await Processes.find({ UserDepartment: req.header('Authorization') }).populate('Department').populate('UserDepartment').populate({
       path: 'ProcessDetails',
       populate: {
         path: 'subProcesses', // Assuming 'subProcesses' is the field you want to populate inside 'ProcessDetails'
@@ -90,7 +90,7 @@ router.get('/get-all-processes', async (req, res) => {
       console.log('Process documents not found');
       return res.status(404).json({ message: 'Process documents not found' });
     }
-    
+
 
     console.log('Process documents retrieved successfully');
     res.status(200).json({ status: true, data: processes });
@@ -103,7 +103,7 @@ router.get('/get-all-processes', async (req, res) => {
 router.get('/get-approved-processes', async (req, res) => {
   try {
 
-    const processes = await Processes.find({UserDepartment : req.header('Authorization'), Status : 'Approved'}).populate('Department').populate('UserDepartment').populate({
+    const processes = await Processes.find({ UserDepartment: req.header('Authorization'), Status: 'Approved' }).populate('Department').populate('UserDepartment').populate({
       path: 'ProcessDetails',
       populate: {
         path: 'subProcesses', // Assuming 'subProcesses' is the field you want to populate inside 'ProcessDetails'
@@ -116,7 +116,7 @@ router.get('/get-approved-processes', async (req, res) => {
       console.log('Process documents not found');
       return res.status(404).json({ message: 'Process documents not found' });
     }
-    
+
 
     console.log('Process documents retrieved successfully');
     res.status(200).json({ status: true, data: processes });
@@ -159,8 +159,8 @@ router.get('/get-process-detail/:processId', async (req, res) => {
 
     const processId = req.params.processId;
     const process = await ProcessDetailModel.findById(processId).populate({
-      path : 'subProcesses',
-      model : 'ProcessDetail'
+      path: 'subProcesses',
+      model: 'ProcessDetail'
     })
 
     if (!process) {
@@ -232,7 +232,7 @@ router.patch('/update-process/:processId', async (req, res) => {
     // Check if the status is 'Approved', deny the update
     if (existingProcess.Status === 'Approved') {
       console.log(`Process document with ID: ${processId} is already approved, cannot be updated.`);
-      return res.status(400).json({ message: `Process document with ID: ${processId} is already approved, cannot be updated.` });
+      return res.status(401).json({ message: `Process is already approved, cannot be updated.` });
     }
 
     const processData = req.body; // The Process data sent in the request body
@@ -242,18 +242,18 @@ router.patch('/update-process/:processId', async (req, res) => {
           try {
             const createdSubProcesses = await ProcessDetailModel.create(processObj.subProcesses.map(process => {
               const { _id, ...newProcess } = process;
-            
+              console.log(newProcess)
               return newProcess;
             }));
             const subProcessesArray = Object.values(createdSubProcesses);
             console.log(subProcessesArray);
             const subProcessesIds = subProcessesArray.map(item => item._id);
-    
+            const {_id, ...newProcessObj} = processObj
             const createdProcessDetail = new ProcessDetailModel({
-              ...processObj,
+              ...newProcessObj,
               subProcesses: subProcessesIds
             });
-    
+
             await createdProcessDetail.save();
             console.log('Saved ProcessDetail for :' + createdProcessDetail);
             return createdProcessDetail._id;
@@ -266,7 +266,7 @@ router.patch('/update-process/:processId', async (req, res) => {
           const createdProcessDetail = new ProcessDetailModel({
             ...newProcess
           });
-    
+
           try {
             await createdProcessDetail.save();
             console.log('Saved ProcessDetail for :' + createdProcessDetail);
@@ -278,7 +278,7 @@ router.patch('/update-process/:processId', async (req, res) => {
         }
       })
     );
-    
+
 
     console.log(processDetailsIds);
 
@@ -292,9 +292,11 @@ router.patch('/update-process/:processId', async (req, res) => {
 
     const updates = {
       ...req.body,
-      ProcessDetails : processDetailsIds,
+      ProcessDetails: processDetailsIds,
       UpdatedBy: req.body.updatedBy,
       UpdationDate: new Date(),
+      DisapprovalDate: null,
+      DisapprovedBy: null,
       Status: 'Pending'
     };
 
@@ -377,7 +379,7 @@ router.patch('/disapprove-process', async (req, res) => {
     process.Reason = Reason;
     process.ApprovalDate = null;
     process.DisapprovedBy = disapprovedBy;
-    process.ApprovedBy = 'Pending'
+    process.ApprovedBy = null
 
     // Save the updated Process
     await process.save();

@@ -12,6 +12,7 @@ const template = emailTemplates.registrationConfirmation;
 require('dotenv').config();
 const CryptoJS = require('crypto-js')
 const jwt = require('jsonwebtoken');
+const authMiddleware = require('../../middleware/auth')
 // router.use(authMiddleware);
 
 
@@ -61,8 +62,8 @@ router.post('/create-user', async (req, res) => {
         const password = user.Password;
         // Create a new user
         const newUser = new User({
-          Department: department._id,
-          Company: company._id,
+          Department: department?._id,
+          Company: company?._id,
           ...user,
           Password: CryptoJS.AES.encrypt(password, process.env.PASS_CODE).toString()
         });
@@ -106,9 +107,9 @@ router.post('/create-user', async (req, res) => {
 });
 
 // * Get a User document by User ID
-router.get('/get-user', async (req, res) => {
+router.get('/get-user', authMiddleware, async (req, res) => {
   try {
-    const userId = req.user._id;
+    const userId = req.user?._id;
     const user = await User.findById(userId).populate({
       path: 'Department',
       model: 'Department'
@@ -308,7 +309,7 @@ router.post('/user/login', async (req, res) => {
 
     const accessToken = jwt.sign(
       {
-        id: user._id
+        id: user?._id
       },
       process.env.JWT_CODE,
       { expiresIn: '2d' }
@@ -328,9 +329,9 @@ router.patch('/reassign-access/:userId', async (req, res) => {
     const userId = req.params.userId;
 
 
-      updatedUser = await User.findByIdAndUpdate(userId, { $set: { isSuspended: false } });
+    updatedUser = await User.findByIdAndUpdate(userId, { $set: { isSuspended: false } });
 
-      
+
 
     if (!updatedUser) {
       console.log(`User with ID: ${userId} not found`);
@@ -381,7 +382,7 @@ router.put('/change-password', async (req, res) => {
 
     console.log(updatedUser);
 
-    await User.findByIdAndUpdate(updatedUser._id, updatedUser);
+    await User.findByIdAndUpdate(updatedUser?._id, updatedUser);
 
     console.log(`User document updated successfully`);
     res.status(200).json({ status: true, message: 'User document updated successfully', data: updatedUser });

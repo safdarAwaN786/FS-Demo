@@ -202,17 +202,17 @@ function ConductHACCPHazards() {
                                             <input autoComplete='off' value={dataToSend?.DocumentType} type='text' className='w-100 text-dark' readOnly />
                                         </div>
                                     </div>
-                                    {teamsToShow?.length > 0 && (
+                                    {dataToSend?.Teams?.length > 0 && (
                                         <div className='w-75 mx-4 d-flex flex-column justify-content-start'>
                                             <div className={style.para}>
-                                                <p>Selected Team Members</p>
+                                                <p>Selected Teams</p>
                                             </div>
-                                            {dataToSend?.Members.map((member) => {
+                                            {dataToSend?.Teams?.map((team, i) => {
                                                 return (
                                                     <div className='d-flex flex-row '>
                                                         <p style={{
                                                             fontFamily: 'Inter'
-                                                        }}>{member.Name}</p>
+                                                        }}> {i + 1} : {team.DocumentId}</p>
                                                     </div>
                                                 )
                                             })}
@@ -253,7 +253,7 @@ function ConductHACCPHazards() {
                                                 <span></span>
                                             </div>
                                             <div className={`${style.heading} ms-3 `}>
-                                                {hazard.Process.ProcessNum}) {hazard?.Process?.Name}
+                                                {hazard.Process.ProcessNum}: {hazard?.Process?.Name}
                                             </div>
                                         </div>
                                         <div className='bg-white p-1 mx-lg-5 mx-2'>

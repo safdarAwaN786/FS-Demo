@@ -1,12 +1,11 @@
 import style from './AddHACCPRiskAssessment.module.css'
-import { useEffect,  useState } from 'react'
+import { useEffect, useState } from 'react'
 import axios from "axios";
 import Swal from 'sweetalert2'
 import { BsArrowLeftCircle } from 'react-icons/bs';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { setSmallLoading } from '../../redux/slices/loading';
-
 
 function AddHACCPRiskAssessment() {
 
@@ -119,7 +118,7 @@ function AddHACCPRiskAssessment() {
     const makeRequest = () => {
         if (dataToSend) {
             dispatch(setSmallLoading(true))
-            axios.post(`${process.env.REACT_APP_BACKEND_URL}/create-conduct-haccp`, {...dataToSend, createdBy : user.Name}, { headers: { Authorization: `${user.Department._id}` } }).then(() => {
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/create-conduct-haccp`, { ...dataToSend, createdBy: user.Name }, { headers: { Authorization: `${user.Department._id}` } }).then(() => {
                 console.log("request made !");
                 setDataToSend(null);
                 dispatch(setSmallLoading(false))
@@ -156,8 +155,6 @@ function AddHACCPRiskAssessment() {
     return (
         <>
             <div className={`${style.parent} mx-auto`}>
-
-
                 <div className={`${style.subparent} mx-2 mx-sm-4 mt-5 mx-lg-5`}>
                     <div className='d-flex flex-row bg-white px-lg-5 mx-lg-5 mx-3 px-2 py-2'>
                         <BsArrowLeftCircle
@@ -166,7 +163,6 @@ function AddHACCPRiskAssessment() {
                                     dispatch(updateTabData({ ...tabData, Tab: 'Conduct Risk Assessment' }))
                                 }
                             }} />
-
                     </div>
                     <div className={`${style.headers} d-flex justify-content-start ps-3 align-items-center `}>
                         <div className={style.spans}>
@@ -201,60 +197,39 @@ function AddHACCPRiskAssessment() {
                                                 <option value="SOPs">SOPs</option>
                                                 <option value="Forms">Forms</option>
                                             </select>
-
                                         </div>
                                     </div>
 
                                     {teamsToShow?.length > 0 && (
-
-
                                         <div className='w-75 mx-4 d-flex flex-column justify-content-start'>
                                             <div className={style.para}>
-                                                <p>Select Team Members</p>
+                                                <p>Select Team</p>
                                             </div>
-
-
                                             {teamsToShow?.map((team) => {
                                                 return (
-
-                                                    team.TeamMembers.map((member) => {
-
-                                                        return (
-                                                            <div className='d-flex flex-row '>
-
-                                                                <input autoComplete='off' checked={dataToSend?.Members?.includes(member._id)} onChange={(e) => {
-                                                                    const updatedMembers = dataToSend?.Members || [];
-
-
-                                                                    if (e.target.checked) {
-                                                                        updatedMembers.push(member._id);
-                                                                        setDataToSend({ ...dataToSend, Members: updatedMembers })
-                                                                    } else {
-                                                                        setDataToSend({ ...dataToSend, Members: updatedMembers.filter((memberId) => memberId !== memberId) })
-                                                                    }
-                                                                }} className='m-1' type='checkbox' />
-                                                                <p style={{
-                                                                    fontFamily: 'Inter'
-                                                                }}>{member.Name}</p>
-                                                            </div>
-                                                        )
-                                                    })
+                                                    <div className='d-flex flex-row '>
+                                                        <input autoComplete='off' checked={dataToSend?.Teams?.includes(team._id)} onChange={(e) => {
+                                                            const updatedTeams = dataToSend?.Teams || [];
+                                                            if (e.target.checked) {
+                                                                updatedTeams.push(team._id);
+                                                                setDataToSend({ ...dataToSend, Teams: updatedTeams })
+                                                            } else {
+                                                                setDataToSend({ ...dataToSend, Teams: updatedTeams.filter((teamId) => teamId !== teamId) })
+                                                            }
+                                                        }} className='m-1' type='checkbox' />
+                                                        <p style={{
+                                                            fontFamily: 'Inter'
+                                                        }}>{team.DocumentId}</p>
+                                                    </div>
                                                 )
-
                                             })}
-
-
                                         </div>
                                     )}
                                 </div>
-
-
-
                                 <div className={style.sec2}>
                                     <div className={style.inputParent}>
                                         <div className={style.para}>
                                             <p>Department</p>
-
                                         </div>
                                         <div style={{
                                             border: '1px solid silver'
@@ -263,20 +238,15 @@ function AddHACCPRiskAssessment() {
                                                 setDataToSend({ ...dataToSend, [e.target.name]: e.target.value });
                                             }} style={{ width: "100%" }} required>
                                                 <option value="" selected disabled>Choose Department</option>
-
                                                 {departmentsToShow?.map((depObj) => {
                                                     return (
                                                         <option value={depObj._id}>{depObj.DepartmentName}</option>
                                                     )
                                                 })}
-
                                             </select>
-
-
                                         </div>
                                     </div>
                                     {processesToShow?.length > 0 && (
-
                                         <div className={style.inputParent}>
                                             <div className={style.para}>
                                                 <p>Product Flow Diagram</p>

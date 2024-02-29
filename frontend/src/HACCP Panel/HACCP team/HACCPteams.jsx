@@ -8,10 +8,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { changeId } from '../../redux/slices/idToProcessSlice';
 import { setSmallLoading } from '../../redux/slices/loading';
-
+import dayjs from 'dayjs';
 
 function HACCPteams() {
-
     const [teamsList, setTeamsList] = useState(null);
     const [showBox, setShowBox] = useState(false);
     const [send, setSend] = useState(false);
@@ -40,20 +39,6 @@ function HACCPteams() {
             })
         })
     }, []);
-    useEffect(() => {
-        console.log(teamsList);
-    }, [teamsList])
-    const formatDate = (date) => {
-
-        const newDate = new Date(date);
-        const formatDate = newDate.toLocaleDateString('en-GB', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric',
-        });
-        return formatDate;
-    }
-
     const refreshData = () => {
         dispatch(setSmallLoading(true))
         axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-haccp-teams`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
@@ -70,24 +55,18 @@ function HACCPteams() {
             })
         })
     }
-
     const [reason, setReason] = useState(null);
-
     const nextPage = () => {
         setStartIndex(startIndex + 8);
         setEndIndex(endIndex + 8);
     }
-
     const backPage = () => {
         setStartIndex(startIndex - 8);
         setEndIndex(endIndex - 8);
     }
-
     useEffect(() => {
         setTeamsList(allDataArr?.slice(startIndex, endIndex))
     }, [startIndex, endIndex])
-
-
     const search = (event) => {
         if (event.target.value !== "") {
             const searchedList = allDataArr.filter((obj) =>
@@ -98,19 +77,14 @@ function HACCPteams() {
             setTeamsList(allDataArr?.slice(startIndex, endIndex))
         }
     }
-
-
-
     return (
         <>
-
             <div className={style.searchbar}>
                 <div className={style.sec1}>
                     <img src={Search} alt="" />
                     <input autoComplete='off' onChange={search} type="text" placeholder='Search Document by name' />
                 </div>
                 {tabData?.Creation && (
-
                     <div className={style.sec2} onClick={() => {
                         dispatch(updateTabData({ ...tabData, Tab: 'addHACCPTeam' }))
                     }}>
@@ -125,7 +99,6 @@ function HACCPteams() {
                         <p className='text-center'>No any Records Available here.</p>
                     </div>
                 ) : (
-
                     <table className={style.table}>
                         <tr className={style.headers}>
                             <td>Document ID</td>
@@ -133,12 +106,6 @@ function HACCPteams() {
                             <td>Department</td>
                             <td>Revision No</td>
                             <td className='ps-5'>Status</td>
-                            <td>Created By</td>
-                            <td>Creation Date</td>
-                            <td>Approved By</td>
-                            <td>Approval Date</td>
-                            <td>Disapproved By</td>
-                            <td>Disapproval Date</td>
                             <td>Reason</td>
                             {tabData?.Edit && (
                                 <td>Action</td>
@@ -147,6 +114,12 @@ function HACCPteams() {
                                 <td></td>
                             )}
                             <td>HACCP Team Members</td>
+                            <td>Created By</td>
+                            <td>Creation Date</td>
+                            <td>Approved By</td>
+                            <td>Approval Date</td>
+                            <td>Disapproved By</td>
+                            <td>Disapproval Date</td>
                         </tr>
                         {
                             teamsList?.map((team, i) => {
@@ -166,28 +139,7 @@ function HACCPteams() {
                                         <td>{team.Department.ShortName}</td>
                                         <td>{team.RevisionNo}</td>
                                         <td><div className={`text-center ${team.Status === 'Approved' && style.greenStatus} ${team.Status === 'Disapproved' && style.redStatus} ${team.Status === 'Pending' && style.yellowStatus}  `}><p>{team.Status}</p></div></td>
-                                        <td>{team.CreatedBy}</td>
-                                        <td>{formatDate(team.CreationDate)}</td>
-                                        {team.ApprovedBy ? (
-                                            <td>{team.ApprovedBy}</td>
-                                        ) : (
-                                            <td>- - -</td>
-                                        )}
-                                        {team.ApprovalDate ? (
-                                            <td>{formatDate(team.ApprovalDate)}</td>
-                                        ) : (
-                                            <td>- - -</td>
-                                        )}
-                                        {team.DisapprovedBy ? (
-                                            <td>{team.DisapprovedBy}</td>
-                                        ) : (
-                                            <td>- - -</td>
-                                        )}
-                                        {team.DisapprovalDate ? (
-                                            <td>{formatDate(team.DisapprovalDate)}</td>
-                                        ) : (
-                                            <td>- - -</td>
-                                        )}
+
                                         <td>
                                             <p onClick={() => {
                                                 if (team.Status === 'Disapproved') {
@@ -209,8 +161,13 @@ function HACCPteams() {
                                         {tabData?.Approval && (
                                             <td className='ps-0' >
                                                 <p onClick={() => {
-                                                    setIdForAction(team._id)
-                                                    setApprove(true)
+                                                    if (team.Status === 'Approved') {
+                                                        setDataToShow('Sorry, Team is already Approved');
+                                                        setShowBox(true);
+                                                    } else {
+                                                        setIdForAction(team._id)
+                                                        setApprove(true)
+                                                    }
                                                 }} style={{
                                                     height: '28px'
                                                 }} className={`btn btn-outline-primary pt-0 px-1`}>Approve</p>
@@ -218,13 +175,16 @@ function HACCPteams() {
                                                     if (team.Status === 'Approved') {
                                                         setDataToShow('Sorry, Team is already Approved');
                                                         setShowBox(true);
-                                                    } else {
+                                                    } else if(team.Status === 'Disapproved'){
+                                                        setDataToShow('Sorry, Team is already DisApproved');
+                                                        setShowBox(true);
+                                                    }else {
                                                         setIdForAction(team._id);
                                                         setReject(true);
                                                     }
                                                 }} style={{
                                                     height: '28px'
-                                                }} className={`btn btn-outline-danger pt-0 px-1`}>Disaprrove</p>
+                                                }} className={`btn btn-outline-danger pt-0 px-1`}>Disapprove</p>
                                             </td>
                                         )}
                                         <td>
@@ -235,6 +195,28 @@ function HACCPteams() {
                                                 height: '28px'
                                             }} className={`btn btn-outline-warning pt-0 px-1`}>Click Here</p>
                                         </td>
+                                        <td>{team.CreatedBy}</td>
+                                        <td>{dayjs(team.CreationDate).format('DD/MM/YYYY')}</td>
+                                        {team.ApprovedBy ? (
+                                            <td>{team.ApprovedBy}</td>
+                                        ) : (
+                                            <td>- - -</td>
+                                        )}
+                                        {team.ApprovalDate ? (
+                                            <td>{dayjs(team.ApprovalDate).format('DD/MM/YYYY')}</td>
+                                        ) : (
+                                            <td>- - -</td>
+                                        )}
+                                        {team.DisapprovedBy ? (
+                                            <td>{team.DisapprovedBy}</td>
+                                        ) : (
+                                            <td>- - -</td>
+                                        )}
+                                        {team.DisapprovalDate ? (
+                                            <td>{dayjs(team.DisapprovalDate).format('DD/MM/YYYY')}</td>
+                                        ) : (
+                                            <td>- - -</td>
+                                        )}
                                     </tr>
                                 )
                             })
@@ -249,37 +231,28 @@ function HACCPteams() {
                     </button>
                 )}
                 {allDataArr?.length > endIndex && (
-
                     <button onClick={nextPage}>
                         next{'>> '}
                     </button>
                 )}
             </div>
-
             {
                 showBox && (
-
                     <div class={style.alertparent}>
                         <div class={style.alert}>
-
                             <p class={style.msg}>{dataToShow}</p>
-
                             <div className={style.alertbtns}>
-
                                 <button style={{
                                     marginLeft: '120px',
                                     marginTop: '25px'
                                 }} onClick={() => {
                                     setShowBox(false);
-
                                 }} className={style.btn2}>OK</button>
-
                             </div>
                         </div>
                     </div>
                 )
             }
-
             {
                 approve ?
                     <div class={style.alertparent}>
@@ -297,8 +270,6 @@ function HACCPteams() {
                                             icon: 'success',
                                             confirmButtonText: 'Go!',
                                         })
-
-
                                         refreshData();
                                     }).catch(err => {
                                         dispatch(setSmallLoading(false));
@@ -308,15 +279,10 @@ function HACCPteams() {
                                             text: 'Something went wrong, Try Again!'
                                         })
                                     })
-
-                                }
-                                } className={style.btn1}>Submit</button>
-
-
+                                }} className={style.btn1}>Submit</button>
                                 <button onClick={() => {
                                     setApprove(false);
                                 }} className={style.btn2}>Cancel</button>
-
                             </div>
                         </div>
                     </div> : null
@@ -362,7 +328,6 @@ function HACCPteams() {
                     </div>
                 )
             }
-
         </>
     )
 }
