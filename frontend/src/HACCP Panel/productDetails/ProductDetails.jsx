@@ -177,7 +177,10 @@ function ProductDetails() {
                                                     if (product.Status === 'Approved') {
                                                         setDataToShow('Sorry, Product is already Approved');
                                                         setShowBox(true);
-                                                    } else {
+                                                    } else if(product.Status === 'Disapproved') {
+                                                        setDataToShow('Sorry, Product is already Disapproved');
+                                                        setShowBox(true);
+                                                    }else {
                                                         setIdForAction(product._id);
                                                         setApprove(true);
                                                     }

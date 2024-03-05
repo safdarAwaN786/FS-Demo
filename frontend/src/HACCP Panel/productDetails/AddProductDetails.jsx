@@ -166,9 +166,9 @@ function AddProductDetails() {
                                         <textarea onChange={(event) => {
                                             updateProduct(event)
                                         }} name='ShelfLife' value={product.ShelfLife} type='text' className='p-3 bg-light  my-3  w-100 border-0' placeholder='Shelf Life' required />
-                                        <textarea onChange={(event) => {
+                                         <textarea onChange={(event) => {
                                             updateProduct(event)
-                                        }} name='Transportation' value={product.Transportation} type='text' className='p-3 bg-light  my-3  w-100 border-0' placeholder='Transportation' required />
+                                        }} name='Consumer' value={product.Consumer} type='text' className='p-3 bg-light  my-3  w-100 border-0' placeholder='Consumer' required />
 
                                     </div>
                                     <div className='col-lg-6 col-md-12 p-2'>
@@ -196,9 +196,7 @@ function AddProductDetails() {
                                         <textarea onChange={(event) => {
                                             updateProduct(event)
                                         }} name='TargetMarket' value={product.TargetMarket} type='text' className='p-3 bg-light  my-3  w-100 border-0' placeholder='Target Market' required />
-                                        <textarea onChange={(event) => {
-                                            updateProduct(event)
-                                        }} name='Consumer' value={product.Consumer} type='text' className='p-3 bg-light  my-3  w-100 border-0' placeholder='Consumer' required />
+                                       
                                     </div>
                                 </div>
                             </div>

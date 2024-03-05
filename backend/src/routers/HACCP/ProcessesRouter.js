@@ -226,15 +226,6 @@ router.patch('/update-process/:processId', async (req, res) => {
       console.log(`Process document with ID: ${processId} not found`);
       return res.status(404).json({ message: `Process document with ID: ${processId} not found` });
     }
-
-
-
-    // Check if the status is 'Approved', deny the update
-    if (existingProcess.Status === 'Approved') {
-      console.log(`Process document with ID: ${processId} is already approved, cannot be updated.`);
-      return res.status(401).json({ message: `Process is already approved, cannot be updated.` });
-    }
-
     const processData = req.body; // The Process data sent in the request body
     const processDetailsIds = await Promise.all(
       processData.ProcessDetails.map(async (processObj) => {

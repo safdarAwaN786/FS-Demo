@@ -92,9 +92,9 @@ function CorrectiveActions() {
                             <tr className={style.headers}>
                                 <td className='me-5'>Document ID</td>
                                 <td className='ms-5'>Department</td>
-                                <td>Actual Date</td>
+                                {/* <td>Actual Date</td> */}
                                 <td>Checklist Status</td>
-                                <td>Non Conformance Report</td>
+                                <td style={{width : '230px'}}>Non Conformance Report</td>
                             </tr>
                             {
                                 reportsList?.map((report, i) => {
@@ -112,15 +112,15 @@ function CorrectiveActions() {
                                             }}>{report.ConductAudit.Checklist.ChecklistId}</p></td>
                                             <td className={`${style.simpleContent} ms-5`}>{report.ConductAudit.Checklist.Department.DepartmentName}</td>
                                             
-                                            {report.ReportDate ? (
+                                            {/* {report.ReportDate ? (
                                                 <td>{report.ReportDate?.slice(0, 10).split('-')[2]}/{report.ReportDate?.slice(0, 10).split('-')[1]}/{report.ReportDate?.slice(0, 10).split('-')[0]}</td>
                                             ) : (
                                                 <td><div className={`text-center ${style.yellowStatus}  `}><p>Pending</p></div></td>
-                                            )}
+                                            )} */}
 
 
                                             <td><div className={`text-center ${style.greenStatus}  `}><p>{report.ConductAudit.Checklist.Status}</p></div></td>
-                                            <td>
+                                            <td style={{width : '230px'}}>
                                                 <p onClick={() => {
                                                     dispatch(updateTabData({...tabData, Tab : 'actionOnCorrective'}));
                                                     dispatch(changeId(report._id))

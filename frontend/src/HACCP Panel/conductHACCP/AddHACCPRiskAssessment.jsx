@@ -219,7 +219,7 @@ function AddHACCPRiskAssessment() {
                                                         }} className='m-1' type='checkbox' />
                                                         <p style={{
                                                             fontFamily: 'Inter'
-                                                        }}>{team.DocumentId}</p>
+                                                        }}>{team.DocumentId} : {team.teamName}</p>
                                                     </div>
                                                 )
                                             })}

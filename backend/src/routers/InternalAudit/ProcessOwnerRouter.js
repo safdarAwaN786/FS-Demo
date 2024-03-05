@@ -59,8 +59,6 @@ router.post('/send-email-to-process-owner', async (req, res) => {
 
 // * Post Process Data Into MongoDB Database
 router.post('/addProcess', async (req, res) => {
-    console.log("request made process..");
-    console.log(req.body);
     try {
         const userNameExist = await User.findOne({ UserName: req.body.ProcessOwner.UserName });
         if (userNameExist) {
@@ -73,7 +71,7 @@ router.post('/addProcess', async (req, res) => {
                 Department: req.body.user.Department._id,
                 Company: req.body.user.Company._id,
                 isProcessOwner: req.body.processOwner?.deputyOwner ? false : true,
-                isDeputyOwner : req.body.processOwner?.deputyOwner ? true : false,
+                isDeputyOwner: req.body.processOwner?.deputyOwner ? true : false,
                 CreatedBy: req.body.user.Name,
                 CreationDate: new Date(),
                 Password: CryptoJS.AES.encrypt(req.body.ProcessOwner.Password, process.env.PASS_CODE).toString(),
@@ -135,9 +133,9 @@ router.get('/readProcess', async (req, res) => {
     console.log("request made for process")
     try {
 
-        const processOwner = await ProcessOwner.find({isProcessOwner : true, UserDepartment : req.header('Authorization')}).populate('Department UserDepartment ProcessOwner');
+        const processOwner = await ProcessOwner.find({ isProcessOwner: true, UserDepartment: req.header('Authorization') }).populate('Department UserDepartment ProcessOwner');
 
-        
+
 
         res.status(201).send({ status: true, message: "The Following are ProcessOwner!", data: processOwner });
         console.log(new Date().toLocaleString() + ' ' + 'READ ProcessOwner Successfully!')
@@ -148,15 +146,16 @@ router.get('/readProcess', async (req, res) => {
 });
 
 // * DELETE Process Data By Id From MongooDB Database
-router.delete('/deleteProcess', async (req, res) => {
+router.delete('/deleteProcess/:processId', async (req, res) => {
     try {
 
-        const processOwner = await ProcessOwner.findOneAndDelete({ _id: req.body.id })
+        const processOwner = await ProcessOwner.findOneAndDelete({ _id: req.params.processId })
         console.log(new Date().toLocaleString() + ' ' + 'Checking ProcessOwner...')
 
         if (!processOwner) {
             res.status(404).send({ status: false, message: "This ProcessOwner is Not found!" })
         }
+        await User.findByIdAndDelete(processOwner.ProcessOwner)
 
         res.status(201).send({ status: true, message: "The Following ProcessOwner has been Deleted!", data: processOwner });
         console.log(new Date().toLocaleString() + ' ' + 'DELETE ProcessOwner Successfully!')

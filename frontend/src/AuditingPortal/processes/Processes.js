@@ -26,7 +26,8 @@ function Processes() {
     const user = useSelector(state => state.auth.user);
     const [showTabs, setShowTabs] = useState(false);
     const [userTabs, setUserTabs] = useState(null);
-
+    const [deleteUser, setDeleteUser] = useState(false)
+    const [userToDel, setUserToDel] = useState(null)
     useEffect(() => {
         dispatch(setSmallLoading(true))
         axios.get(`${process.env.REACT_APP_BACKEND_URL}/readProcess`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
@@ -43,7 +44,22 @@ function Processes() {
             })
         })
     }, [])
-
+    const refreshData = async () => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readProcess`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
+            setAllDataArr(response.data.data)
+            console.log(response.data);
+            setProcessesList(response.data.data.slice(startIndex, endIndex));
+            dispatch(setSmallLoading(false))
+        }).catch(err => {
+            dispatch(setSmallLoading(false));
+            Swal.fire({
+                icon: 'error',
+                title: 'OOps..',
+                text: 'Something went wrong, Try Again!'
+            })
+        })
+    }
 
     const nextPage = () => {
         setStartIndex(startIndex + 8);
@@ -100,7 +116,7 @@ function Processes() {
 
                     <table className={style.table}>
                         <tr className={style.headers}>
-                            <td>Process ID</td>
+                            {/* <td>Process ID</td> */}
                             <td>Process Name</td>
                             <td>Department</td>
                             <td>Risk Assesment</td>
@@ -111,12 +127,13 @@ function Processes() {
                             <td>Process Owner</td>
                             <td>Assigned Tabs</td>
                             <td>Action</td>
+                            <td>Action</td>
                         </tr>
                         {
                             processesList?.map((process, i) => {
                                 return (
                                     <tr className={style.tablebody} key={i}>
-                                        <td ><p style={{
+                                        {/* <td ><p style={{
                                             backgroundColor: "#f0f5f0",
                                             padding: "2px 5px",
                                             borderRadius: "10px",
@@ -125,7 +142,7 @@ function Processes() {
                                             fontStyle: "normal",
                                             fontWeight: "400",
                                             lineHeight: "20px",
-                                        }}>{process.ProcessCode}</p></td>
+                                        }}>{process.ProcessCode}</p></td> */}
                                         <td className={style.simpleContent}>{process.ProcessName}</td>
                                         <td>{process.Department.DepartmentName}</td>
                                         <td><div className={`text-center ${process.ProcessRiskAssessment === 'Low' && style.greenStatus} ${process.ProcessRiskAssessment === 'High' && style.redStatus} ${process.ProcessRiskAssessment === 'Medium' && style.yellowStatus}  `}><p>{process.ProcessRiskAssessment}</p></div></td>
@@ -172,6 +189,12 @@ function Processes() {
                                                 dispatch(updateTabData({ ...tabData, Tab: 'assignTabsToOwner' }));
                                                 dispatch(changeId(process.ProcessOwner._id));
                                             }} className={'btn btn-outline-danger px-2 py-1  m-1'}>Assign Tabs</p>
+                                        </td>
+                                        <td>
+                                            <p onClick={() => {
+                                                setUserToDel(process._id);
+                                                setDeleteUser(true)
+                                            }} className={'btn btn-outline-danger px-2 py-1  m-1'}>Delete</p>
                                         </td>
                                     </tr>
                                 )
@@ -223,6 +246,10 @@ function Processes() {
                                     <p>Email Address</p>
                                     <input autoComplete='off' value={ownerInfo.Email} className={`p-2 w-100`} readOnly />
                                 </div>
+                                <div className={`mx-auto my-2 ${style.ownerInput}`}>
+                                    <p>UserName</p>
+                                    <input autoComplete='off' value={ownerInfo.UserName} className={`p-2 w-100`} readOnly />
+                                </div>
                                 {/* <div className={`mx-auto my-2 ${style.ownerInput}`}>
                                     <p>Password</p>
                                     <div className='d-flex flex-row justify-content-start'>
@@ -244,7 +271,46 @@ function Processes() {
                         </div>
                     </div> : null
             }
+            {
+                deleteUser ?
+                    <div class={style.alertparent}>
+                        <div class={style.alert}>
+                            <p class={style.msg}>Do you want to delete this Process Owner?</p>
+                            <div className={style.alertbtns}>
+                                <button onClick={() => {
+                                    setDeleteUser(false)
+                                    dispatch(setSmallLoading(true))
+                                    axios.delete(`${process.env.REACT_APP_BACKEND_URL}/deleteProcess/${userToDel}`).then((response) => {
+                                        dispatch(setSmallLoading(false));
+                                        Swal.fire({
+                                            icon: 'success',
+                                            title: 'Deleted Successfully',
+                                            text: 'Process Owner Deleted Successfully!',
+                                            confirmButtonText: 'OK.'
+                                        }).then((result) => {
+                                            if (result.isConfirmed) {
+                                                refreshData()
+                                            }
+                                        })
 
+                                    }).catch(err => {
+                                        dispatch(setSmallLoading(false));
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'OOps..',
+                                            text: 'Something went wrong, Try Again!'
+                                        })
+
+                                    })
+                                }} className={style.btn1}>Submit</button>
+                                <button onClick={() => {
+                                    setDeleteUser(false);
+                                }} className={style.btn2}>Cancel</button>
+
+                            </div>
+                        </div>
+                    </div> : null
+            }
             {
                 sendEmail && (
                     <div class={style.alertparentemail}>

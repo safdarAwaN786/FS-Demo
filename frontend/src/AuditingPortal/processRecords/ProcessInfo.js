@@ -36,142 +36,143 @@ function ProcessInfo() {
         }).catch(err => {
             dispatch(setSmallLoading(false));
             Swal.fire({
-                icon : 'error',
-                title : 'OOps..',
-                text : 'Something went wrong, Try Again!'
+                icon: 'error',
+                title: 'OOps..',
+                text: 'Something went wrong, Try Again!'
             })
         })
     }, [])
 
-    
+
     return (
         <>
-           
-                <div className='d-flex flex-row px-4'>
-                    <BsArrowLeftCircle role='button' className='fs-4 mt-1 text-danger' onClick={(e)=>{{
-                        dispatch(updateTabData({...tabData, Tab : 'Process Records'}))
-                    }}} />
-                    <p className={`${style.headingtxt} mx-0 ms-3`}>{planData?.ProcessOwner?.ProcessName}</p>
-                </div>
-                <div className={`${style.cardParent} mb-4 pb-5`}>
-                    <div className={style.card1headers}>
-                        <div>
-                            <span></span>
-                            <span></span>
-                            <span></span>
-                        </div>
-                        <div>
-                            <p>Info</p>
-                        </div>
+
+            <div className='d-flex flex-row px-4'>
+                <BsArrowLeftCircle role='button' className='fs-4 mt-1 text-danger' onClick={(e) => {
+                    {
+                        dispatch(updateTabData({ ...tabData, Tab: 'Process Records' }))
+                    }
+                }} />
+            </div>
+            <div className={`${style.cardParent} mb-4 pb-5`}>
+                <div className={style.card1headers}>
+                    <div>
+                        <span></span>
+                        <span></span>
+                        <span></span>
                     </div>
-                    <div className={style.cardbody}>
-                        <div className={style.sec1} >
+                    <div>
+                        <p>{planData?.ProcessOwner?.ProcessName}</p>
+                    </div>
+                </div>
+                <div className={style.cardbody}>
+                    <div className={style.sec1} >
+                        <div>
+                            <img src={calender} alt="" />
                             <div>
-                                <img src={calender} alt="" />
-                                <div>
-                                    <p className={style.card1para}>Plan Year</p>
-                                    <p className={style.card1para2}>{planData?.Year}</p>
-                                </div>
-                            </div>
-                            <div>
-                                <img src={calender} alt="" />
-                                <div>
-                                    <p className={style.card1para}>Actual Date</p>
-                                    {planData?.AuditResultStatus == 'Conducted' ?
-                                        (
-                                            <p className={style.card1para2}>{planData?.ActualDate}</p>
-                                        ) : (
-                                            <p className={`${style.card1para2} text-primary`}>Pending</p>
-                                        )}
-                                </div>
-                            </div>
-                            <div>
-                                <img src={star} alt="" />
-                                <div>
-                                    <p className={style.card1para}>Month</p>
-                                    <p className={style.card1para2}>{planData?.Month}</p>
-                                </div>
-                            </div>
-                            <div>
-                                <img src={clock} alt="" />
-                                <div>
-                                    <p className={style.card1para}>Date</p>
-                                    <p className={style.card1para2}>{planData?.Date}</p>
-                                </div>
-                            </div>
-                            <div>
-                                <img src={copy} alt="" />
-                                <div>
-                                    <p className={style.card1para}>Risk assesment</p>
-                                    <p className={style.card1para2}>{planData?.ProcessOwner.ProcessRiskAssessment}</p>
-                                </div>
-                            </div>
-                            <div>
-                                <img src={cnic} alt="" />
-                                <div>
-                                    <p className={style.card1para}>Team Auditor</p>
-                                    <p className={style.card1para2}>{planData?.TeamAuditor?.Name}</p>
-                                </div>
+                                <p className={style.card1para}>Plan Year</p>
+                                <p className={style.card1para2}>{planData?.Year}</p>
                             </div>
                         </div>
-                        <div className={style.sec2} >
+                        <div>
+                            <img src={calender} alt="" />
                             <div>
-                                <img src={cnic} alt="" />
-                                <div>
-                                    <p className={style.card1para}>Special Instructions</p>
-                                    <p onClick={() => {
-                                        setPopUpData(planData?.ProcessOwner.SpecialInstructions);
-                                        alertManager();
-                                    }} className={style.redbtntxt}>View</p>
-                                </div>
+                                <p className={style.card1para}>Actual Date</p>
+                                {planData?.AuditResultStatus == 'Conducted' ?
+                                    (
+                                        <p className={style.card1para2}>{planData?.ActualDate}</p>
+                                    ) : (
+                                        <p className={`${style.card1para2} text-primary`}>Pending</p>
+                                    )}
                             </div>
+                        </div>
+                        <div>
+                            <img src={star} alt="" />
                             <div>
-                                <img src={cnic} alt="" />
-                                <div>
-                                    <p className={style.card1para}>Shift Breaks</p>
-                                    <p onClick={() => {
-                                        setPopUpData(planData?.ProcessOwner.ShiftBreaks);
-                                        alertManager();
-                                    }} className={style.redbtntxt}>View</p>
-                                </div>
+                                <p className={style.card1para}>Month</p>
+                                <p className={style.card1para2}>{planData?.Month}</p>
                             </div>
+                        </div>
+                        <div>
+                            <img src={clock} alt="" />
                             <div>
-                                <img src={cnic} alt="" />
-                                <div>
-                                    <p className={style.card1para}>Activities</p>
-                                    <p onClick={() => {
-                                        setPopUpData(planData?.ProcessOwner.Activities);
-                                        alertManager();
-                                    }} className={style.redbtntxt}>View</p>
-                                </div>
+                                <p className={style.card1para}>Date</p>
+                                <p className={style.card1para2}>{planData?.Date}</p>
                             </div>
+                        </div>
+                        <div>
+                            <img src={copy} alt="" />
                             <div>
-                                <img src={cnic} alt="" />
-                                <div>
-                                    <p className={style.card1para}>Critical Areas</p>
-                                    <p onClick={() => {
-                                        setPopUpData(planData?.ProcessOwner.CriticalAreas);
-                                        alertManager();
-                                    }} className={style.redbtntxt}>View</p>
-                                </div>
+                                <p className={style.card1para}>Risk assesment</p>
+                                <p className={style.card1para2}>{planData?.ProcessOwner.ProcessRiskAssessment}</p>
                             </div>
+                        </div>
+                        <div>
+                            <img src={cnic} alt="" />
                             <div>
-                                <img src={office} alt="" />
-                                <div>
-                                    <p className={style.card1para}>Process Owner</p>
-                                    <p className={style.card1para2}>{planData?.ProcessOwner?.ProcessOwner?.Name}</p>
-                                </div>
-                            </div>
-                            <div>
-                                <img src={office} alt="" />
-                                <div>
-                                    <p className={style.card1para}>Lead Auditor</p>
-                                    <p className={style.card1para2}>{planData?.LeadAuditor?.Name}</p>
-                                </div>
+                                <p className={style.card1para}>Team Auditor</p>
+                                <p className={style.card1para2}>{planData?.TeamAuditor?.Name}</p>
                             </div>
                         </div>
                     </div>
+                    <div className={style.sec2} >
+                        <div>
+                            <img src={cnic} alt="" />
+                            <div>
+                                <p className={style.card1para}>Special Instructions</p>
+                                <p onClick={() => {
+                                    setPopUpData(planData?.ProcessOwner.SpecialInstructions);
+                                    alertManager();
+                                }} className={style.redbtntxt}>View</p>
+                            </div>
+                        </div>
+                        <div>
+                            <img src={cnic} alt="" />
+                            <div>
+                                <p className={style.card1para}>Shift Breaks</p>
+                                <p onClick={() => {
+                                    setPopUpData(planData?.ProcessOwner.ShiftBreaks);
+                                    alertManager();
+                                }} className={style.redbtntxt}>View</p>
+                            </div>
+                        </div>
+                        <div>
+                            <img src={cnic} alt="" />
+                            <div>
+                                <p className={style.card1para}>Activities</p>
+                                <p onClick={() => {
+                                    setPopUpData(planData?.ProcessOwner.Activities);
+                                    alertManager();
+                                }} className={style.redbtntxt}>View</p>
+                            </div>
+                        </div>
+                        <div>
+                            <img src={cnic} alt="" />
+                            <div>
+                                <p className={style.card1para}>Critical Areas</p>
+                                <p onClick={() => {
+                                    setPopUpData(planData?.ProcessOwner.CriticalAreas);
+                                    alertManager();
+                                }} className={style.redbtntxt}>View</p>
+                            </div>
+                        </div>
+                        <div>
+                            <img src={office} alt="" />
+                            <div>
+                                <p className={style.card1para}>Process Owner</p>
+                                <p className={style.card1para2}>{planData?.ProcessOwner?.ProcessOwner?.Name}</p>
+                            </div>
+                        </div>
+                        <div>
+                            <img src={office} alt="" />
+                            <div>
+                                <p className={style.card1para}>Lead Auditor</p>
+                                <p className={style.card1para2}>{planData?.LeadAuditor?.Name}</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+            </div>
             {
                 alert ?
                     <div class={style.alertparent}>
@@ -179,9 +180,9 @@ function ProcessInfo() {
                             <p class={style.msg}>{popUpData}</p>
                             <div className={style.alertbtns}>
                                 <button style={{
-                                    marginLeft : '120px',
-                                    marginTop : '25px'
-                                }}  onClick={alertManager} className={style.btn2}>OK.</button>
+                                    marginLeft: '120px',
+                                    marginTop: '25px'
+                                }} onClick={alertManager} className={style.btn2}>OK.</button>
                             </div>
                         </div>
                     </div> : null

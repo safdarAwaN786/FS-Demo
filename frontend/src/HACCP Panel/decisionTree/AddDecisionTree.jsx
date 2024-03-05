@@ -215,7 +215,7 @@ function AddDecisionTree() {
                                         <div className={`bg-danger row mx-lg-4 mx-md-3 mx-1 mt-4 py-3  `}>
                                             <div className=' col-lg-6 col-md-6 col-12'>
                                                 <div className={`${style.heading} ms-3 `}>
-                                                    {decision.Process.ProcessNum}) {decision.Process.Name}
+                                                    {decision.Process.ProcessNum}: {decision.Process.Name}
                                                 </div>
                                             </div>
                                             <div className='col-lg-6 col-md-6 col-12 d-flex justify-content-end pe-3'>

@@ -193,6 +193,9 @@ function FoodSafetyPlan() {
                                                     if (plan.Status === 'Approved') {
                                                         setDataToShow('Sorry, Plan is already Approved');
                                                         setShowBox(true);
+                                                    } else if (plan.Status === 'Disapproved') {
+                                                        setDataToShow('Sorry, Plan is already Disapproved');
+                                                        setShowBox(true);
                                                     } else {
                                                         setIdForAction(plan._id);
                                                         setApprove(true);

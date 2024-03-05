@@ -22,8 +22,56 @@ function ViewActionInReport() {
     const idToWatch = useSelector(state => state.idToProcess);
     const [correctiveAnswers, setCorrectiveAnswers] = useState([]);
 
+    const handleDownloadImage = async (imageURL) => {
+        try {
+            if (imageURL) {
+
+                dispatch(setSmallLoading(true))
+                const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/download-image`, {
+                    params: {
+                        url: imageURL,
+                    },
+                    responseType: 'blob' // Specify the response type as 'blob' to handle binary data
+                });
+
+
+                let blob;
+
+                blob = new Blob([response.data]);
+                // }
+
+                // Create a temporary anchor element
+                const link = document.createElement('a');
+                link.href = window.URL.createObjectURL(blob);
+
+                // Set the download attribute and suggested filename for the downloaded image
+                link.download = `${user.Department.DepartmentName}-FSMS${imageURL.substring(imageURL.lastIndexOf('.'))}`;
+
+                // Append the anchor element to the document body and click it to trigger the download
+                document.body.appendChild(link);
+                dispatch(setSmallLoading(false))
+                link.click();
+                // Clean up by removing the temporary anchor element
+                document.body.removeChild(link);
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'OOps..',
+                    text: 'No any file uploaded here!'
+                })
+            }
+        } catch (error) {
+            dispatch(setSmallLoading(false))
+            Swal.fire({
+                icon: 'error',
+                title: 'OOps..',
+                text: 'Something went wrong, Try Again!'
+            })
+        }
+
+    };
+
     useEffect(() => {
-        
         dispatch(setSmallLoading(true))
         axios.get(`${process.env.REACT_APP_BACKEND_URL}/readCorrectiveActionById/${idToWatch}`).then((response) => {
             setActionData(response.data.data)
@@ -37,8 +85,8 @@ function ViewActionInReport() {
                     confirmButtonText: 'OK.'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        dispatch(updateTabData({...tabData, Tab : 'Corrective Action Plan'}))
-                        
+                        dispatch(updateTabData({ ...tabData, Tab: 'Corrective Action Plan' }))
+
                     }
                 })
             }
@@ -46,9 +94,9 @@ function ViewActionInReport() {
         }).catch(err => {
             dispatch(setSmallLoading(false));
             Swal.fire({
-                icon : 'error',
-                title : 'OOps..',
-                text : 'Something went wrong, Try Again!'
+                icon: 'error',
+                title: 'OOps..',
+                text: 'Something went wrong, Try Again!'
             })
         })
     }, [])
@@ -90,7 +138,6 @@ function ViewActionInReport() {
                                             <input autoComplete='off' value={correctiveAnswer.question.question.questionText} style={{
                                                 borderRadius: '0px'
                                             }} name='questionText' placeholder='Untitled Question' className='border-0  border-secondary bg-light mt-2 mb-3 w-100 p-3' required readOnly />
-
                                         </div>
                                         <div>
                                             {correctiveAnswer.question.question.ComplianceType === 'GradingSystem' && (
@@ -220,26 +267,24 @@ function ViewActionInReport() {
 
                                             <div className='col-lg-6 col-md-12'>
                                                 <p className='fw-bold'>Correction : </p>
-                                                <textarea placeholder='write here..' name='Correction' value={correctiveAnswer?.Correction} rows={4}  className='w-100 border-0 p-2 m-2' type='text' required readOnly/>
+                                                <textarea placeholder='write here..' name='Correction' value={correctiveAnswer?.Correction} rows={4} className='w-100 border-0 p-2 m-2' type='text' required readOnly />
                                             </div>
                                             <div className='col-lg-6 col-md-12'>
                                                 <p className='fw-bold'>Corrective Action : </p>
-                                                <textarea placeholder='write here..'  value={correctiveAnswer?.CorrectiveAction} rows={4} className='w-100 border-0 p-2 m-2' type='text' required readOnly/>
+                                                <textarea placeholder='write here..' value={correctiveAnswer?.CorrectiveAction} rows={4} className='w-100 border-0 p-2 m-2' type='text' required readOnly />
                                             </div>
                                             <div className='col-lg-6 col-md-12'>
                                                 <p className='fw-bold'>Root Cause : </p>
-                                                <textarea placeholder='write here..' value={correctiveAnswer?.RootCause}  rows={4} className='w-100 border-0 p-2 m-2' type='text' required readOnly/>
+                                                <textarea placeholder='write here..' value={correctiveAnswer?.RootCause} rows={4} className='w-100 border-0 p-2 m-2' type='text' required readOnly />
                                             </div>
                                             {correctiveAnswer?.CorrectiveDoc && (
-                                            <div className='col-lg-6 col-md-12'>
-                                                <p><b>Corrective Document : </b></p>
-                                                <a href={correctiveAnswer?.CorrectiveDoc} className='btn btn-danger py-2 mt-3 mx-2 w-100'  >Download</a>
-                                            </div>
+                                                <div className='col-lg-6 col-md-12'>
+                                                    <p><b>Corrective Document : </b></p>
+                                                    <a onClick={() => {
+                                                        handleDownloadImage(correctiveAnswer?.CorrectiveDoc)
+                                                    }} className='btn btn-danger py-2 mt-3 mx-2 w-100'  >Download</a>
+                                                </div>
                                             )}
-
-
-
-
                                         </div>
                                     </div>
                                 </div>
@@ -262,9 +307,9 @@ function ViewActionInReport() {
                             <p class={style.msg}>{dataToShow}</p>
                             <div className={style.alertbtns}>
                                 <button style={{
-                                    marginLeft : '120px',
-                                    marginTop : '25px'
-                                }}  onClick={() => {
+                                    marginLeft: '120px',
+                                    marginTop: '25px'
+                                }} onClick={() => {
                                     setShowBox(false)
 
                                 }} className={style.btn1}>Ok.</button>

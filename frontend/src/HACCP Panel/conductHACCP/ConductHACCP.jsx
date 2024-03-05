@@ -184,6 +184,9 @@ function ConductHACCP() {
                                                     if (HACCP.Status === 'Approved') {
                                                         setDataToShow('Sorry, Team is already Approved');
                                                         setShowBox(true);
+                                                    } else if (HACCP.Status === 'Disapproved') {
+                                                        setDataToShow('Sorry, Team is already Disapproved');
+                                                        setShowBox(true);
                                                     } else {
                                                         setIdForAction(HACCP._id);
                                                         setApprove(true);

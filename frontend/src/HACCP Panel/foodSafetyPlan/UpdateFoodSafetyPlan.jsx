@@ -35,9 +35,7 @@ function UpdateFoodSafetyPlan() {
     }, [])
 
 
-    useEffect(() => {
-        console.log(dataToSend);
-    }, [dataToSend])
+
     useEffect(() => {
         if (departmentsToShow && treesToShow) {
             dispatch(setSmallLoading(false))
@@ -56,9 +54,7 @@ function UpdateFoodSafetyPlan() {
         dispatch(setSmallLoading(true))
         axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-food-safety/${idToWatch}`).then((res) => {
             setDataToSend(res.data.data);
-            if(treesToShow && departmentsToShow){
-                dispatch(setSmallLoading(false))
-            }
+            dispatch(setSmallLoading(false))
         }).catch(err => {
             dispatch(setSmallLoading(false));
             Swal.fire({
@@ -100,7 +96,7 @@ function UpdateFoodSafetyPlan() {
     const makeRequest = () => {
         if (dataToSend.Plans?.length > 0) {
 
-            axios.patch(`${process.env.REACT_APP_BACKEND_URL}/update-food-safety/${idToWatch}`, {...dataToSend, updatedBy : user.Name}).then(() => {
+            axios.patch(`${process.env.REACT_APP_BACKEND_URL}/update-food-safety/${idToWatch}`, { ...dataToSend, updatedBy: user.Name }).then(() => {
                 setDataToSend(null);
                 Swal.fire({
                     title: 'Success',
@@ -159,7 +155,7 @@ function UpdateFoodSafetyPlan() {
                             <span></span>
                         </div>
                         <div className={`${style.heading} ms-3 `}>
-                            Generate Food Safety Plan
+                            Update Food Safety Plan
                         </div>
                     </div>
                     <form encType='multipart/form-data' onSubmit={(event) => {
@@ -169,7 +165,7 @@ function UpdateFoodSafetyPlan() {
                         <div className={`${style.myBox} bg-light pb-3`}>
                             <div className={style.formDivider}>
                                 <div className={style.sec1}>
-                                    <div className={style.inputParent}>
+                                    {/* <div className={style.inputParent}>
                                         <div className={style.para}>
                                             <p>Document Type</p>
                                         </div>
@@ -189,12 +185,10 @@ function UpdateFoodSafetyPlan() {
                                             </select>
 
                                         </div>
-                                    </div>
-
-
+                                    </div> */}
                                 </div>
                                 <div className={style.sec2}>
-                                    <div className={style.inputParent}>
+                                    {/* <div className={style.inputParent}>
                                         <div className={style.para}>
                                             <p>Department</p>
                                         </div>
@@ -212,8 +206,8 @@ function UpdateFoodSafetyPlan() {
                                                 })}
                                             </select>
                                         </div>
-                                    </div>
-                                    {treesToShow?.length > 0 && (
+                                    </div> */}
+                                    {/* {treesToShow?.length > 0 && (
                                         <div className={style.inputParent}>
                                             <div className={style.para}>
                                                 <p>Plan foe Decisoions of :</p>
@@ -233,7 +227,7 @@ function UpdateFoodSafetyPlan() {
                                                 </select>
                                             </div>
                                         </div>
-                                    )}
+                                    )} */}
                                 </div>
                             </div>
                             {dataToSend?.Plans?.map((plan, index) => {
@@ -268,9 +262,7 @@ function UpdateFoodSafetyPlan() {
                                                     }} name='ControlMeasures' rows={3} placeholder='Control Measures ' className='my-4 p-2 bg-light w-100 mx-2 border-0' required />
                                                 </div>
                                             </div>
-
                                             <div className='bg-light p-2 my-4'>
-
                                                 <h4 style={{
                                                     fontFamily: 'Inter'
                                                 }} className='text-center'>Process Limit</h4>

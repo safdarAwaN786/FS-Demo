@@ -199,15 +199,16 @@ router.patch('/update-food-safety/:planId', async (req, res) => {
       return res.status(404).json({ message: `FoodSafety document with ID: ${foodSafetyId} not found` });
     }
 
-    // Check the status and handle revisions accordingly
-    if (existingFoodSafety.Status === 'Approved') {
-      // If status is 'Approved', deny the update
-      console.log(`FoodSafety document with ID: ${foodSafetyId} is already approved, cannot be updated.`);
-      return res.status(400).json({ message: `FoodSafety document with ID: ${foodSafetyId} is already approved, cannot be updated.` });
-    }
     const safetyPlanData = req.body;
 
-    const createdPlans = await PlanModel.create(safetyPlanData.Plans);
+    const createdPlans = await PlanModel.create(safetyPlanData.Plans.map(plan => {
+      if(plan._id){
+        const {_id, ...newPlan} = plan;
+        return newPlan
+      }else {
+        return plan
+      }
+    }));
     const plansArr = Object.values(createdPlans);
     const plansIds = plansArr.map(planObj => planObj._id);
     console.log(plansIds);

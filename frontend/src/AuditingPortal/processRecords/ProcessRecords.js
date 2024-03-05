@@ -93,7 +93,7 @@ function ProcessRecords() {
 
                     <table className={style.table}>
                         <tr className={style.headers}>
-                            <td>Process ID</td>
+                            {/* <td>Process ID</td> */}
                             <td>Process Name</td>
                             <td>Risk assesment</td>
                             <td>Year</td>
@@ -105,7 +105,7 @@ function ProcessRecords() {
                             planProcesses?.map((plan, i) => {
                                 return (
                                     <tr className={style.tablebody} key={i}>
-                                        <td ><p style={{
+                                        {/* <td ><p style={{
                                             backgroundColor: "#f0f5f0",
                                             padding: "2px 5px",
                                             borderRadius: "10px",
@@ -114,7 +114,7 @@ function ProcessRecords() {
                                             fontStyle: "normal",
                                             fontWeight: "400",
                                             lineHeight: "20px",
-                                        }}>{plan?.ProcessOwner?.ProcessCode}</p></td>
+                                        }}>{plan?.ProcessOwner?.ProcessCode}</p></td> */}
                                         <td className={style.textStyle1}>{plan?.ProcessOwner?.ProcessName}</td>
                                        
                                         <td > <div className={`text-center ${style.greenStatus} `}><p>{plan?.ProcessOwner?.ProcessRiskAssessment}</p></div></td>

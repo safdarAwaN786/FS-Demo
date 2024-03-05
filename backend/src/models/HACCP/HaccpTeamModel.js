@@ -15,6 +15,10 @@ const HaccpTeamSchema = new mongoose.Schema({
         type: String,
         unique: true,
     },
+    teamName : {
+        type : String,
+        required : true
+    },
 
     Department: {
         type: Schema.Types.ObjectId,

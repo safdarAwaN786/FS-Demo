@@ -40,22 +40,23 @@ function AssignTabsToMember() {
     // Tabs from where only  Creation functionality willl be choosen..
 
     const tabsList2 = [
-        
-       
-       
        
     ]
     // Tabs where Creation and Approval functionality will be choosen
 
     const tabsList3 = [
-       
+        // Personal Rec
+        {Tab : 'Employee Requisition'},
+        // MWR Requests 
+        {Tab : 'Generate MWR Corrective'}
     ]
 
 
     // Tabs from where Creation, Approval, Review functionality willl be choosen..
 
     const tabsList4 = [
-        
+        // Change Requests
+        { Tab: 'Document Change Creation' },
     ]
 
 
@@ -114,14 +115,11 @@ function AssignTabsToMember() {
                     text: 'Submitted Successfully',
                     icon: 'success',
                     confirmButtonText: 'Go!',
-
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        dispatch(updateTabData({...tabData, Tab : 'Users Details'}))
-                       
+                        dispatch(updateTabData({...tabData, Tab : 'HACCP Team Management'}))
                     }
                 })
-
             }).catch(err => {
                 dispatch(setSmallLoading(false));
                 Swal.fire({
@@ -130,7 +128,6 @@ function AssignTabsToMember() {
                     text : 'Something went wrong, Try Again!'
                 })
             })
-
         } else {
             Swal.fire({
                 icon: 'error',
@@ -141,16 +138,9 @@ function AssignTabsToMember() {
         }
     }
 
-
-
-
-
-
     return (
         <>
             <div className={`${style.parent} mx-auto`}>
-
-
                 <div className={`${style.subparent} mx-2 mx-sm-4  mx-lg-5`}>
                     <div className={`${style.headers} d-flex justify-content-start ps-3 align-items-center `}>
                         <div className={style.spans}>
@@ -164,11 +154,7 @@ function AssignTabsToMember() {
                     </div>
                     <form encType='multipart/form-data' onSubmit={(event) => {
                         event.preventDefault();
-
-
                         alertManager();
-
-
                     }}>
                         <div className={`${style.myBox} bg-light py-5 px-lg-5 px-3`}>
                             <div className={`${style.headers} d-flex justify-content-start ps-3 align-items-center `}>

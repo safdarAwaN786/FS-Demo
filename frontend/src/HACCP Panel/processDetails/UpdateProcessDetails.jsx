@@ -165,21 +165,17 @@ function UpdateProcessDetails() {
                             <span></span>
                         </div>
                         <div className={`${style.heading} ms-3 `}>
-                            Add Process Description
+                            Update Flow Diagram
                         </div>
                     </div>
                     <form encType='multipart/form-data' onSubmit={(event) => {
                         event.preventDefault();
-
                         alertManager();
-
-
                     }}>
                         <div className={`${style.myBox} bg-light pb-3`}>
-
                             <div className={style.formDivider}>
                                 <div className={style.sec1}>
-                                    <div className={style.inputParent}>
+                                    {/* <div className={style.inputParent}>
                                         <div className={style.para}>
                                             <p>Document Type</p>
                                         </div>
@@ -196,7 +192,7 @@ function UpdateProcessDetails() {
                                             </select>
 
                                         </div>
-                                    </div>
+                                    </div> */}
                                     <div className={style.inputParent}>
                                         <div className={style.para}>
                                             <p><p style={{
@@ -211,16 +207,11 @@ function UpdateProcessDetails() {
                                             }} rows={4} value={dataToSend?.ProcessName} name='ProcessName' className='text-dark w-100 border-0 p-2' placeholder='Process Name' required />
                                         </div>
                                     </div>
-
-
-
-
                                 </div>
                                 <div className={style.sec2}>
-                                    <div className={style.inputParent}>
+                                    {/* <div className={style.inputParent}>
                                         <div className={style.para}>
                                             <p>Department</p>
-
                                         </div>
                                         <div className='border border-dark-subtle'>
                                             <select className='form-select  form-select-lg' value={dataToSend?.Department} onChange={(e) => {
@@ -237,7 +228,7 @@ function UpdateProcessDetails() {
 
 
                                         </div>
-                                    </div>
+                                    </div> */}
 
                                 </div>
                             </div>

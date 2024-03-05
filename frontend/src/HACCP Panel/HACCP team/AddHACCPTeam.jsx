@@ -111,9 +111,9 @@ function AddHACCPTeam() {
         }).catch(err => {
             dispatch(setSmallLoading(false));
             Swal.fire({
-                icon : 'error',
-                title : 'OOps..',
-                text : 'Something went wrong, Try Again!'
+                icon: 'error',
+                title: 'OOps..',
+                text: 'Something went wrong, Try Again!'
             })
         })
     }, [])
@@ -138,9 +138,9 @@ function AddHACCPTeam() {
             }).catch(err => {
                 dispatch(setSmallLoading(false));
                 Swal.fire({
-                    icon : 'error',
-                    title : 'OOps..',
-                    text : 'Something went wrong, Try Again!'
+                    icon: 'error',
+                    title: 'OOps..',
+                    text: 'Something went wrong, Try Again!'
                 })
             })
         } else {
@@ -201,6 +201,16 @@ function AddHACCPTeam() {
                                                 <option value="SOPs">SOPs</option>
                                                 <option value="Forms">Forms</option>
                                             </select>
+                                        </div>
+                                    </div>
+                                    <div className={style.inputParent}>
+                                        <div className={style.para}>
+                                            <p></p>
+                                        </div>
+                                        <div className='border border-dark-subtle'>
+                                            <input className='text-black' value={dataToSend?.teamName} type='text' placeholder='Team Name' onChange={(e) => {
+                                                setDataToSend({ ...dataToSend, teamName: e.target.value })
+                                            }} required/>
                                         </div>
                                     </div>
                                 </div>

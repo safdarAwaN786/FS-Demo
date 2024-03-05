@@ -18,6 +18,8 @@ function YearlyPlanAuditing() {
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
     const user = useSelector(state => state.auth.user);
+    const [deletePlan, setDeletePlan] = useState(false);
+    const [planToDelete, setPlanToDelete] = useState(null)
     useEffect(() => {
         dispatch(setSmallLoading(true))
         axios.get(`${process.env.REACT_APP_BACKEND_URL}/readYearlyAuditPlan`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
@@ -34,7 +36,22 @@ function YearlyPlanAuditing() {
             })
         })
     }, [])
-
+    const refreshData = async () => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readYearlyAuditPlan`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
+            console.log(response.data);
+            setAllDataArr(response.data.data);
+            setYearlyPlans(response.data.data.slice(startIndex, endIndex));
+            dispatch(setSmallLoading(false))
+        }).catch(err => {
+            dispatch(setSmallLoading(false));
+            Swal.fire({
+                icon: 'error',
+                title: 'OOps..',
+                text: 'Something went wrong, Try Again!'
+            })
+        })
+    }
 
 
     const nextPage = () => {
@@ -85,7 +102,6 @@ function YearlyPlanAuditing() {
                     <input autoComplete='off' onChange={search} type="number" placeholder='Search year in numbers ' />
                 </div>
                 {tabData?.Creation && (
-
                     <div onClick={() => {
                         dispatch(updateTabData({ ...tabData, Tab: 'addAuditingYearlyPlan' }));
                     }} className={style.sec2}>
@@ -125,6 +141,12 @@ function YearlyPlanAuditing() {
                                             }} className={`${style.view} btn btn-outline-primary`}>
                                                 Edit
                                             </button>
+                                            <button onClick={() => {
+                                                setDeletePlan(true);
+                                                setPlanToDelete(yearlyPlan._id)
+                                            }} className={`${style.view} btn btn-outline-danger`}>
+                                                Delete
+                                            </button>
                                         </td>
                                     </tr>
                                 )
@@ -148,6 +170,46 @@ function YearlyPlanAuditing() {
                     </button>
                 )}
             </div>
+            {
+                deletePlan ?
+                    <div class={style.alertparent}>
+                        <div class={style.alert}>
+                            <p class={style.msg}>Do you want to delete this Yearly Plan?</p>
+                            <div className={style.alertbtns}>
+                                <button onClick={() => {
+                                    setDeletePlan(false)
+                                    dispatch(setSmallLoading(true))
+                                    axios.delete(`${process.env.REACT_APP_BACKEND_URL}/deleteYearlyAuditPlan/${planToDelete}`).then((response) => {
+                                        dispatch(setSmallLoading(false));
+                                        Swal.fire({
+                                            icon: 'success',
+                                            title: 'Deleted Successfully',
+                                            text: 'Yearly Plan Deleted Successfully!',
+                                            confirmButtonText: 'OK.'
+                                        }).then((result) => {
+                                            if (result.isConfirmed) {
+                                                refreshData()
+                                            }
+                                        })
+
+                                    }).catch(err => {
+                                        dispatch(setSmallLoading(false));
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'OOps..',
+                                            text: 'Something went wrong, Try Again!'
+                                        })
+
+                                    })
+                                }} className={style.btn1}>Submit</button>
+                                <button onClick={() => {
+                                    setDeletePlan(false);
+                                }} className={style.btn2}>Cancel</button>
+
+                            </div>
+                        </div>
+                    </div> : null
+            }
         </>
 
 

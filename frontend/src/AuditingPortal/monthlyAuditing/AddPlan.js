@@ -42,8 +42,8 @@ function AddPlanAuditing() {
             })
         })
     }, [])
-    useEffect(()=>{
-        if(departmentsToShow != null && yearlyPlans != null){
+    useEffect(() => {
+        if (departmentsToShow != null && yearlyPlans != null) {
             dispatch(setSmallLoading(false));
         }
     }, [departmentsToShow, yearlyPlans])
@@ -58,7 +58,7 @@ function AddPlanAuditing() {
         } else {
             setDaysNums(array1To31)
         }
-        
+
     }, [dataToSend])
 
     const alertManager = () => {
@@ -101,9 +101,11 @@ function AddPlanAuditing() {
     const makeRequest = () => {
         if (planData) {
             dispatch(setSmallLoading(true))
-            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addMonthlyAuditingPlan`, {...planData, createdBy : user.Name}, { headers: { Authorization: `${user.Department._id}` } }).then(() => {
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addMonthlyAuditingPlan`, { ...planData, createdBy: user.Name }, { headers: { Authorization: `${user.Department._id}` } }).then(() => {
                 console.log("request made !");
                 setPlanData(null);
+                setSelectedPlan(null);
+                setSelectedPlanProcess(null);
                 setDataToSend(null)
                 dispatch(setSmallLoading(false))
                 Swal.fire({
@@ -174,19 +176,28 @@ function AddPlanAuditing() {
                                 </div>
                                 <div className={style.inputParent}>
                                     <div className={style.para}>
-                                        <p>Date : </p>
+                                        <p>Month : </p>
                                     </div>
                                     <div>
-                                        <select onChange={(e) => {
-                                            setDataToSend({ ...dataToSend, Date: e.target.value })
-                                        }} name='Date' style={{ width: "100%" }} required >
-                                            <option value="" selected></option>
-                                            {daysNums?.map((dayNum) => {
+                                        <select value={dataToSend?.Month === null ? 'Choose Month' : dataToSend?.Month} onChange={(e) => {
+                                            setDataToSend({ ...dataToSend, Month: e.target.value })
+                                        }} style={{ width: "100%" }} name='Month' required>
+                                            <option value="" selected>Choose Month</option>
+                                            {selectedPlanProcess?.monthNames.map((month) => {
                                                 return (
-                                                    <option value={dayNum}>{dayNum}</option>
+                                                    <option value={month}>{month}</option>
                                                 )
                                             })}
                                         </select>
+                                    </div>
+                                </div>
+                                <div className={style.inputParent}>
+                                    <div className={style.para}>
+                                        <p>Process Owner : </p>
+                                    </div>
+                                    <div>
+                                        <input autoComplete='off' value={selectedPlanProcess?.Process.ProcessOwner.Name} className='text-black' name='Duration' type="text" readOnly
+                                            required />
                                     </div>
                                 </div>
                                 <div className={style.inputParent}>
@@ -206,6 +217,9 @@ function AddPlanAuditing() {
                                         </select>
                                     </div>
                                 </div>
+
+                            </div>
+                            <div className={style.sec2}>
                                 <div className={style.inputParent}>
                                     <div className={style.para}>
                                         <p>Process : </p>
@@ -225,34 +239,24 @@ function AddPlanAuditing() {
                                         </select>
                                     </div>
                                 </div>
-                            </div>
-                            <div className={style.sec2}>
                                 <div className={style.inputParent}>
                                     <div className={style.para}>
-                                        <p>Month : </p>
+                                        <p>Date : </p>
                                     </div>
                                     <div>
-                                        <select value={dataToSend?.Month === null ? 'Choose Month' : dataToSend?.Month} onChange={(e) => {
-                                            setDataToSend({ ...dataToSend, Month: e.target.value })
-                                        }} style={{ width: "100%" }} name='Month' required>
-                                            <option value="" selected>Choose Month</option>
-                                            {selectedPlan?.Selected[0].monthNames.map((month) => {
+                                        <select onChange={(e) => {
+                                            setDataToSend({ ...dataToSend, Date: e.target.value })
+                                        }} name='Date' style={{ width: "100%" }} required >
+                                            <option value="" selected></option>
+                                            {daysNums?.map((dayNum) => {
                                                 return (
-                                                    <option value={month}>{month}</option>
+                                                    <option value={dayNum}>{dayNum}</option>
                                                 )
                                             })}
                                         </select>
                                     </div>
                                 </div>
-                                <div className={style.inputParent}>
-                                    <div className={style.para}>
-                                        <p>Process Owner : </p>
-                                    </div>
-                                    <div>
-                                        <input autoComplete='off' value={selectedPlanProcess?.Process.ProcessOwner.Name} className='text-black' name='Duration' type="text" readOnly
-                                            required />
-                                    </div>
-                                </div>
+
                                 <div className={style.inputParent}>
                                     <div className={style.para}>
                                         <p>Lead Auditor : </p>

@@ -269,9 +269,9 @@ router.get('/get-all-haccp-teams', async (req, res) => {
     }).populate({
       path: 'TeamMembers',
       model: 'User',
-      populate : ({
-        path : 'Department',
-        model : 'Department'
+      populate: ({
+        path: 'Department',
+        model: 'Department'
       })
     });
     if (!teams) {
@@ -288,7 +288,7 @@ router.get('/get-all-haccp-teams', async (req, res) => {
 
 router.get('/get-approved-haccp-teams', async (req, res) => {
   try {
-    const teams = await HaccpTeam.find({ UserDepartment: req.header('Authorization'), Status : 'Approved' }).populate('Department').populate({
+    const teams = await HaccpTeam.find({ UserDepartment: req.header('Authorization'), Status: 'Approved' }).populate('Department').populate({
       path: 'UserDepartment',
       model: 'Department'
     }).populate({
@@ -314,9 +314,9 @@ router.get('/get-haccp-team/:teamId', async (req, res) => {
     const team = await HaccpTeam.findById(teamId).populate('UserDepartment').populate('Department').populate({
       path: 'TeamMembers',
       model: 'User',
-      populate : ({
-        path : 'Department',
-        model : 'Department'
+      populate: ({
+        path: 'Department',
+        model: 'Department'
       })
     });
     if (!team) {
@@ -332,14 +332,18 @@ router.get('/get-haccp-team/:teamId', async (req, res) => {
 });
 
 // * Delete a HACCP Team document by ID
-router.delete('/delete-haccp-team', async (req, res) => {
+router.delete('/delete-haccp-team/:teamId', async (req, res) => {
   try {
-    const teamId = req.body.id;
+    const teamId = req.params.teamId;
     const deletedTeam = await HaccpTeam.findByIdAndDelete(teamId);
     if (!deletedTeam) {
       console.log(`HACCP Team document with ID: ${teamId} not found`);
       return res.status(404).json({ message: `HACCP Team document with ID: ${teamId} not found` });
     }
+    console.log(deletedTeam);
+    deletedTeam.TeamMembers.forEach(async (memberId) => {
+      await UserModel.findByIdAndDelete(memberId)
+    })
     console.log(`HACCP Team document with ID: ${teamId} deleted successfully`);
     res.status(200).json({ status: true, message: 'HACCP Team document deleted successfully', data: deletedTeam });
   } catch (error) {
@@ -385,12 +389,7 @@ router.patch('/update-haccp-team/:teamId', upload.fields(generateMembersDocArray
       return res.status(401).json({ message: `HACCP Team document with ID: ${teamId} not found` });
     }
 
-    // Check the status and handle revisions accordingly
-    if (existingTeam.Status === 'Approved') {
-      // If status is 'Approved', deny the update
-      console.log(`HACCP Team document with ID: ${teamId} is already approved, cannot be updated.`);
-      return res.status(401).json({ message: `This Team  is already approved, cannot be updated.` });
-    }
+
 
     if (filesObj && Object.keys(filesObj).length !== 0) {
       // If there are uploaded files, process each one
@@ -453,8 +452,14 @@ router.patch('/update-haccp-team/:teamId', upload.fields(generateMembersDocArray
     const membersIds = await Promise.all(
       teamData.TeamMembers.map(async (member) => {
         try {
-          const updateduser = new UserModel({ ...member, Company: requestUser.Company, Department: requestUser.Department, DepartmentText: member.DepartmentText, Password: CryptoJS.AES.encrypt(member.Password, process.env.PASS_CODE).toString() });
-          await updateduser.save();
+          let updateduser;
+          if (member._id) {
+            updateduser = await UserModel.findByIdAndUpdate(member._id, { ...member, Password: CryptoJS.AES.encrypt(member.Password, process.env.PASS_CODE).toString() })
+          } else {
+            const { _id, ...user } = member
+            updateduser = new UserModel({ ...user, Company: requestUser.Company, Department: requestUser.Department, DepartmentText: user.DepartmentText, Password: CryptoJS.AES.encrypt(user.Password, process.env.PASS_CODE).toString() });
+            await updateduser.save();
+          }
           console.log(updateduser);
           const emailBody = template.body
             .replace('{{name}}', member.Name)
@@ -477,7 +482,7 @@ router.patch('/update-haccp-team/:teamId', upload.fields(generateMembersDocArray
           return (updateduser._id);
         } catch (error) {
           console.log(error);
-          res.status(500).json({ message: 'Error creating HACCP Team document', error: error.message });
+          // res.status(500).json({ message: 'Error creating HACCP Team document', error: error.message });
         }
       })
     );

@@ -27,7 +27,23 @@ function AuditsHistory() {
         axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-conduct-audits-by-ChecklistId/${idToWatch}`, { headers: { Authorization: `${user.Department._id}` } }).then((res) => {
             console.log(res.data);
             setChecklistResults(res.data.data);
-            setChecklistData(res.data.data[0]?.Checklist);
+            dispatch(setSmallLoading(false))
+        }).catch(err => {
+            dispatch(setSmallLoading(false));
+            Swal.fire({
+                icon : 'error',
+                title : 'OOps..',
+                text : 'Something went wrong, Try Again!'
+            })
+        })
+    }, [])
+
+    useEffect(() => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/getChecklistById/${idToWatch}`).then((res) => {
+            console.log(res.data);
+            
+            setChecklistData(res.data.data);
             dispatch(setSmallLoading(false))
         }).catch(err => {
             dispatch(setSmallLoading(false));
@@ -96,7 +112,7 @@ function AuditsHistory() {
                     <table className={style.table}>
                         <tr className={style.tableHeader}>
                             <th>Audit Date</th>
-                            <th>TargetDate</th>
+                            {/* <th>TargetDate</th> */}
                             <th>Audit By</th>
                             <th>Department</th>
                             <th>Action</th>
@@ -106,7 +122,7 @@ function AuditsHistory() {
                                 return (
                                     <tr key={index}>
                                         <td>{dayjs(result.AuditDate).format('DD/MM/YYYY')}</td>
-                                        <td>{dayjs(result.TargetDate).format('DD/MM/YYYY')}</td>
+                                        {/* <td>{dayjs(result.TargetDate).format('DD/MM/YYYY')}</td> */}
                                         <td>{result.AuditBy}</td>
                                         <td>{result.UserDepartment.DepartmentName}</td>
                                         <td><button className={style.btn} onClick={() => {

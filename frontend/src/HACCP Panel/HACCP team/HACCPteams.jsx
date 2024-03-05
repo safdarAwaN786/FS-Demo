@@ -24,6 +24,8 @@ function HACCPteams() {
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
     const user = useSelector(state => state.auth.user);
+    const [deleteTeam, setDeleteTeam] = useState(false);
+    const [teamToDel, setTeamToDel] = useState(null);
     useEffect(() => {
         dispatch(setSmallLoading(true))
         axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-haccp-teams`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
@@ -106,6 +108,7 @@ function HACCPteams() {
                             <td>Department</td>
                             <td>Revision No</td>
                             <td className='ps-5'>Status</td>
+                            <td>Team Name</td>
                             <td>Reason</td>
                             {tabData?.Edit && (
                                 <td>Action</td>
@@ -114,6 +117,7 @@ function HACCPteams() {
                                 <td></td>
                             )}
                             <td>HACCP Team Members</td>
+                            <td>Action</td>
                             <td>Created By</td>
                             <td>Creation Date</td>
                             <td>Approved By</td>
@@ -139,7 +143,7 @@ function HACCPteams() {
                                         <td>{team.Department.ShortName}</td>
                                         <td>{team.RevisionNo}</td>
                                         <td><div className={`text-center ${team.Status === 'Approved' && style.greenStatus} ${team.Status === 'Disapproved' && style.redStatus} ${team.Status === 'Pending' && style.yellowStatus}  `}><p>{team.Status}</p></div></td>
-
+                                        <td>{team.teamName}</td>
                                         <td>
                                             <p onClick={() => {
                                                 if (team.Status === 'Disapproved') {
@@ -175,10 +179,10 @@ function HACCPteams() {
                                                     if (team.Status === 'Approved') {
                                                         setDataToShow('Sorry, Team is already Approved');
                                                         setShowBox(true);
-                                                    } else if(team.Status === 'Disapproved'){
+                                                    } else if (team.Status === 'Disapproved') {
                                                         setDataToShow('Sorry, Team is already DisApproved');
                                                         setShowBox(true);
-                                                    }else {
+                                                    } else {
                                                         setIdForAction(team._id);
                                                         setReject(true);
                                                     }
@@ -195,6 +199,16 @@ function HACCPteams() {
                                                 height: '28px'
                                             }} className={`btn btn-outline-warning pt-0 px-1`}>Click Here</p>
                                         </td>
+                                        <td>
+                                            <p onClick={() => {
+                                                setDeleteTeam(true);
+                                                setTeamToDel(team._id);
+                                                
+                                            }} style={{
+                                                height: '28px'
+                                            }} className={`btn btn-outline-danger pt-0 px-1`}>Delete</p>
+                                        </td>
+                                        
                                         <td>{team.CreatedBy}</td>
                                         <td>{dayjs(team.CreationDate).format('DD/MM/YYYY')}</td>
                                         {team.ApprovedBy ? (
@@ -252,6 +266,45 @@ function HACCPteams() {
                         </div>
                     </div>
                 )
+            }
+            {
+                deleteTeam ?
+                    <div class={style.alertparent}>
+                        <div class={style.alert}>
+                            <p class={style.msg}>Do you want to delete this Team?</p>
+                            <div className={style.alertbtns}>
+                                <button onClick={() => {
+                                    setDeleteTeam(false)
+                                    dispatch(setSmallLoading(true))
+                                    axios.delete(`${process.env.REACT_APP_BACKEND_URL}/delete-haccp-team/${teamToDel}`).then((response) => {
+                                        dispatch(setSmallLoading(false));
+                                        Swal.fire({
+                                            icon: 'success',
+                                            title: 'Deleted Successfully',
+                                            text: 'Team Deleted Successfully!',
+                                            confirmButtonText: 'OK.'
+                                        }).then((result) => {
+                                            if (result.isConfirmed) {
+                                                refreshData()
+                                            }
+                                        })
+                                    }).catch(err => {
+                                        dispatch(setSmallLoading(false));
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'OOps..',
+                                            text: 'Something went wrong, Try Again!'
+                                        })
+
+                                    })
+                                }} className={style.btn1}>Submit</button>
+                                <button onClick={() => {
+                                    setDeleteTeam(false);
+                                }} className={style.btn2}>Cancel</button>
+
+                            </div>
+                        </div>
+                    </div> : null
             }
             {
                 approve ?

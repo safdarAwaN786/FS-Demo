@@ -68,23 +68,7 @@ function UpdateConductHACCP() {
     }, [])
 
     const idToWatch = useSelector(state => state.idToProcess);
-    useEffect(() => {
-        if (teamsToShow?.length === 0) {
-            dispatch(setSmallLoading(false))
-            Swal.fire({
-                icon: 'warning',
-                title: 'OOps..',
-                text: 'No, Any team available!'
-            })
-        } else if (processesToShow?.length === 0) {
-            dispatch(setSmallLoading(false))
-            Swal.fire({
-                icon: 'warning',
-                title: 'OOps..',
-                text: 'No, Any Process available!'
-            })
-        }
-    }, [teamsToShow, processesToShow])
+   
 
     useEffect(() => {
         dispatch(setSmallLoading(true))
@@ -208,7 +192,7 @@ function UpdateConductHACCP() {
                         <div className={`${style.myBox} bg-light pb-3`}>
                             <div className={style.formDivider}>
                                 <div className={style.sec1}>
-                                    <div className={style.inputParent}>
+                                    {/* <div className={style.inputParent}>
                                         <div className={style.para}>
                                             <p>Document Type</p>
                                         </div>
@@ -224,7 +208,7 @@ function UpdateConductHACCP() {
                                                 <option value="Forms">Forms</option>
                                             </select>
                                         </div>
-                                    </div>
+                                    </div> */}
 
                                     {teamsToShow?.length > 0 && (
                                         <div className='w-75 mx-4 d-flex flex-column justify-content-start'>
@@ -255,14 +239,10 @@ function UpdateConductHACCP() {
                                         </div>
                                     )}
                                 </div>
-
-
-
                                 <div className={style.sec2}>
-                                    <div className={style.inputParent}>
+                                    {/* <div className={style.inputParent}>
                                         <div className={style.para}>
                                             <p>Department</p>
-
                                         </div>
                                         <div style={{
                                             border: '1px solid silver'
@@ -270,7 +250,7 @@ function UpdateConductHACCP() {
                                             <select className='form-select  form-select-lg' name='Department' value={dataToSend?.Department.DepartmentName} onChange={(e) => {
                                                 setDataToSend({ ...dataToSend, [e.target.name]: e.target.value });
                                             }} style={{ width: "100%" }} required>
-                                                {/* <option value="" selected disabled>Choose Department</option> */}
+                                              
 
                                                 {departmentsToShow?.map((depObj) => {
                                                     return (
@@ -282,9 +262,8 @@ function UpdateConductHACCP() {
 
 
                                         </div>
-                                    </div>
-                                    {processesToShow?.length > 0 && (
-
+                                    </div> */}
+                                    {/* {processesToShow?.length > 0 && (
                                         <div className={style.inputParent}>
                                             <div className={style.para}>
                                                 <p>Process</p>
@@ -296,7 +275,7 @@ function UpdateConductHACCP() {
                                                     setSelectedProcess(JSON.parse(e.target.value))
                                                     setDataToSend({ ...dataToSend, [e.target.name]: JSON.parse(e.target.value)._id });
                                                 }} style={{ width: "100%" }} required>
-                                                    {/* <option value="" selected disabled>Choose Process</option> */}
+                                                    
                                                     {processesToShow?.map((processDoc) => (
 
                                                         <option value={JSON.stringify(processDoc)}>{processDoc.ProcessName}</option>
@@ -308,7 +287,7 @@ function UpdateConductHACCP() {
 
                                             </div>
                                         </div>
-                                    )}
+                                    )} */}
 
                                 </div>
                             </div>

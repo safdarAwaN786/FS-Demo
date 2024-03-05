@@ -33,6 +33,7 @@ function AssignTabsToOwner() {
 
     // Tabs from where no functionality will be choosen..
     const tabsList1 = [
+        { Tab: 'Process Records' },
         // Monthly Plan A
         { Tab: 'Audit Plan (Monthly)' },
         { Tab: 'Conduct Audit' },
@@ -56,14 +57,18 @@ function AssignTabsToOwner() {
     // Tabs where Creation and Approval functionality will be choosen
 
     const tabsList3 = [
-
+        // Personal Rec
+        { Tab: 'Employee Requisition' },
+        // MWR Requests 
+        { Tab: 'Generate MWR Corrective' },
     ]
 
 
     // Tabs from where Creation, Approval, Review functionality willl be choosen..
 
     const tabsList4 = [
-
+        // Change Requests
+        { Tab: 'Document Change Creation' },
     ]
 
 

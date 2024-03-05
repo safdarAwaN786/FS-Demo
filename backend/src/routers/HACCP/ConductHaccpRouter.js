@@ -166,14 +166,6 @@ router.put('/update-conduct-haccp/:haccpId', async (req, res) => {
             return res.status(404).json({ message: `ConductHaccp document with ID: ${conductHaccpId} not found` });
         }
 
-        // Check if the status is 'Approved', deny the update
-        if (existingConductHaccp.Status === 'Approved') {
-            console.log(`ConductHaccp document with ID: ${conductHaccpId} is already approved, cannot be updated.`);
-            return res.status(401).json({ message: `Conduct Haccp is already approved, cannot be updated.` });
-        }
-
-
-
         // If the status is 'Pending', do not increment revision number
         if (existingConductHaccp.Status === 'Pending') {
             req.body.RevisionNo = existingConductHaccp.RevisionNo;
@@ -183,12 +175,19 @@ router.put('/update-conduct-haccp/:haccpId', async (req, res) => {
         }
         const haccpData = req.body;
 
-        const createdHazards = await HazardModel.create(haccpData.Hazards)
+        const createdHazards = await HazardModel.create(haccpData.Hazards.map(hazard => {
+            if(hazard._id){
+                const {_id, ...newHazard} = hazard;
+                return newHazard
+            } else {
+                return hazard
+            }
+        }))
         const hazardsArr = Object.values(createdHazards);
         const hazardsIds = hazardsArr.map(hazardObj => hazardObj._id);
         console.log(hazardsIds);
 
-        const updates = {
+        const {_id, ...updates} = {
             ...req.body,
             UpdatedBy: req.body.updatedBy,
             UpdationDate: new Date(),

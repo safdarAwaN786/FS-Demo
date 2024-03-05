@@ -115,10 +115,10 @@ router.get('/readYearlyAuditPlanById/:planId',  async (req, res) => {
 });
 
 // * DELETE YearlyAuditPlan Data By Id From MongooDB Database
-router.delete('/deleteYearlyAuditPlan',  async (req, res) => {
+router.delete('/deleteYearlyAuditPlan/:planId',  async (req, res) => {
     try {
 
-        const yearlyAuditPlan = await YearlyAuditPlan.findOneAndDelete({ _id: req.body.id })
+        const yearlyAuditPlan = await YearlyAuditPlan.findOneAndDelete({ _id: req.params.planId })
         console.log(new Date().toLocaleString() + ' ' + 'Checking YearlyAuditPlans...')
 
         if (!yearlyAuditPlan) {
