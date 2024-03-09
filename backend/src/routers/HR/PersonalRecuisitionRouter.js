@@ -34,8 +34,8 @@ router.post('/addPersonalRecuisition', async (req, res) => {
 // * GET All Personal Recuisition Data From MongooDB Database
 router.get('/readPersonalRecuisition', async (req, res) => {
   try {
-    const personalRecuisition = await PersonalRecuisition.find({UserDepartment : req.header('Authorization')}).populate('UserDepartment');
-   
+    const personalRecuisition = await PersonalRecuisition.find({ UserDepartment: req.header('Authorization') }).populate('UserDepartment');
+
 
     res.status(201).send({ status: true, message: "The following are Required Person!", data: personalRecuisition, });
     console.log(new Date().toLocaleString() + ' ' + 'GET Required Person Successfully!')
@@ -48,9 +48,8 @@ router.get('/readPersonalRecuisition', async (req, res) => {
 router.get('/readAllPersonalRecuisition', async (req, res) => {
   try {
     const personalRecuisition = await PersonalRecuisition.find().populate('UserDepartment');
-   
-
-    res.status(201).send({ status: true, message: "The following are Required Person!", data: personalRecuisition, });
+    const personalRecuisitionsToSend = personalRecuisition.filter(obj => obj.UserDepartment.Company.equals(req.header('Authorization')))
+    res.status(201).send({ status: true, message: "The following are Required Person!", data: personalRecuisitionsToSend, });
     console.log(new Date().toLocaleString() + ' ' + 'GET Required Person Successfully!')
 
   } catch (e) {

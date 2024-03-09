@@ -134,7 +134,7 @@ router.get('/get-record-by-recordId/:recordId', async (req, res) => {
     const recordId = req.params.recordId;
     console.log(recordId);
 
-    const responseForm = await FormRecords.findById(recordId).populate('User').populate([
+    const responseForm = await FormRecords.findById(recordId).populate('UserDepartment').populate([
       {
         path: 'Form',
         model: 'Form',

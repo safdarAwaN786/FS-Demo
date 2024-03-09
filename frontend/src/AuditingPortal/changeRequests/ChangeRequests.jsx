@@ -28,18 +28,33 @@ function ChangeRequests() {
     const user = useSelector(state => state.auth.user)
 
     useEffect(() => {
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readChangeRequest`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
-            setAllDataArr(response.data.data);
-            setRequestsList(response.data.data.slice(startIndex, endIndex));
-            console.log('data fetched..');
-        }).catch(err => {
-            console.log(err);
-            Swal.fire({
-                icon: 'error',
-                title: 'OOps..',
-                text: 'Something went wrong, Try Again!'
+        if (tabData?.Approval) {
+            axios.get(`${process.env.REACT_APP_BACKEND_URL}/readAllChangeRequest`, { headers: { Authorization: `${user.Company._id}` } }).then((response) => {
+                setAllDataArr(response.data.data);
+                setRequestsList(response.data.data.slice(startIndex, endIndex));
+                console.log('data fetched..');
+            }).catch(err => {
+                console.log(err);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'OOps..',
+                    text: 'Something went wrong, Try Again!'
+                })
             })
-        })
+        } else {
+            axios.get(`${process.env.REACT_APP_BACKEND_URL}/readChangeRequest`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
+                setAllDataArr(response.data.data);
+                setRequestsList(response.data.data.slice(startIndex, endIndex));
+                console.log('data fetched..');
+            }).catch(err => {
+                console.log(err);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'OOps..',
+                    text: 'Something went wrong, Try Again!'
+                })
+            })
+        }
     }, [])
     useEffect(() => {
         console.log(requestsList);
@@ -53,17 +68,33 @@ function ChangeRequests() {
     }, [requestsList])
 
     const refreshData = () => {
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/readChangeRequest`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
-            setAllDataArr(response.data.data)
-            setRequestsList(response.data.data.slice(startIndex, endIndex));
-            console.log('data fetched');
-        }).catch(err => {
-            Swal.fire({
-                icon: 'error',
-                title: 'OOps..',
-                text: 'Something went wrong, Try Again!'
+        if (tabData?.Approval) {
+            axios.get(`${process.env.REACT_APP_BACKEND_URL}/readAllChangeRequest`, { headers: { Authorization: `${user.Company._id}` } }).then((response) => {
+                setAllDataArr(response.data.data);
+                setRequestsList(response.data.data.slice(startIndex, endIndex));
+                console.log('data fetched..');
+            }).catch(err => {
+                console.log(err);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'OOps..',
+                    text: 'Something went wrong, Try Again!'
+                })
             })
-        })
+        } else {
+            axios.get(`${process.env.REACT_APP_BACKEND_URL}/readChangeRequest`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
+                setAllDataArr(response.data.data);
+                setRequestsList(response.data.data.slice(startIndex, endIndex));
+                console.log('data fetched..');
+            }).catch(err => {
+                console.log(err);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'OOps..',
+                    text: 'Something went wrong, Try Again!'
+                })
+            })
+        }
     }
 
     const nextPage = () => {
@@ -240,9 +271,9 @@ function ChangeRequests() {
                             <p class={style.msg}>{dataToShow}</p>
                             <div className={style.alertbtns}>
                                 <button style={{
-                                    marginLeft : '120px',
-                                    marginTop : '25px'
-                                }}  onClick={() => {
+                                    marginLeft: '120px',
+                                    marginTop: '25px'
+                                }} onClick={() => {
                                     setShowBox(false);
                                 }} className={style.btn2}>OK</button>
                             </div>
@@ -258,7 +289,7 @@ function ChangeRequests() {
                             <div className={style.alertbtns}>
                                 <button onClick={() => {
                                     dispatch(setSmallLoading(true))
-                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/approve-ChangeRequest`, { documentId: idForAction, approveBy : user.Name }).then(() => {
+                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/approve-ChangeRequest`, { documentId: idForAction, approveBy: user.Name }).then(() => {
                                         dispatch(setSmallLoading(false))
                                         refreshData();
                                         Swal.fire({
@@ -293,7 +324,7 @@ function ChangeRequests() {
                                 <button onClick={() => {
                                     setReview(false);
                                     dispatch(setSmallLoading(false))
-                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/review-ChangeRequest`, { documentId: idForAction, reviewBy : user.Name }).then(() => {
+                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/review-ChangeRequest`, { documentId: idForAction, reviewBy: user.Name }).then(() => {
                                         dispatch(setSmallLoading(false))
                                         refreshData();
                                         Swal.fire({
@@ -327,7 +358,7 @@ function ChangeRequests() {
                                 e.preventDefault();
                                 setDisApprove(false);
                                 dispatch(setSmallLoading(true))
-                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/disapprove-ChangeRequest`, { documentId: idForAction, reason: reason, disapproveBy : user.Name }).then(() => {
+                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/disapprove-ChangeRequest`, { documentId: idForAction, reason: reason, disapproveBy: user.Name }).then(() => {
                                     dispatch(setSmallLoading(false))
                                     Swal.fire({
                                         title: 'Success',
@@ -367,7 +398,7 @@ function ChangeRequests() {
                                 e.preventDefault();
                                 setReject(false);
                                 dispatch(setSmallLoading(true))
-                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/reject-ChangeRequest`, { documentId: idForAction, reason: reason, rejectBy : user.Name }).then(() => {
+                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/reject-ChangeRequest`, { documentId: idForAction, reason: reason, rejectBy: user.Name }).then(() => {
                                     dispatch(setSmallLoading(false))
                                     Swal.fire({
                                         title: 'Success',

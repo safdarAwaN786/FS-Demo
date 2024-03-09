@@ -101,7 +101,7 @@ function InfoForPlanned() {
                 <div className='d-flex flex-row px-4'>
                     <BsArrowLeftCircle role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
                         {
-                            dispatch(updateTabData({...tabData, Tab : 'Planned Trainings'}))
+                            dispatch(updateTabData({...tabData, Tab : 'Training Record'}))
                         }
                     }} />
                     <p className={style.headingtxt}>Training Information</p>

@@ -70,7 +70,7 @@ function AddChangeRequest() {
     const makeRequest = () => {
         if (dataToSend) {
             dispatch(setSmallLoading(true))
-            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addChangeRequest`, {...dataToSend, CreatedBy : user.Name}, { headers: { Authorization: `${user.Department._id}` } }).then(() => {
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addChangeRequest`, {...dataToSend, createdBy : user.Name}, { headers: { Authorization: `${user.Department._id}` } }).then(() => {
                 console.log("request made !");
                 setDataToSend(null);
                 dispatch(setSmallLoading(false))

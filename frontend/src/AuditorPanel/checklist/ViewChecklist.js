@@ -106,14 +106,14 @@ function ViewChecklist() {
                     pdf.setFontSize(10);
                     pdf.text(`${user.Company.CompanyName}`, pdf.internal.pageSize.getWidth() - 2, 0.3);
                     pdf.text('Checklist', pdf.internal.pageSize.getWidth() - 2, 0.5);
-                    pdf.text(`${dataToSend.DocumentId}`, pdf.internal.pageSize.getWidth() - 2, 0.7);
+                    pdf.text(`${dataToSend.ChecklistId}`, pdf.internal.pageSize.getWidth() - 2, 0.7);
                     pdf.text(`Revision No :${dataToSend.RevisionNo}`, pdf.internal.pageSize.getWidth() - 2, 0.9);
                     pdf.text(`Creation : ${dayjs(dataToSend.CreationDate).format('DD/MM/YYYY')}`, pdf.internal.pageSize.getWidth() - 2, 1.1);
                 }
             }
         }).save();
     };
-
+    console.log(dataToSend);
 
     const alertManager = () => {
         setalert(!alert)
@@ -164,7 +164,7 @@ function ViewChecklist() {
                             })
                         }
                     }}>
-                        <div id='printable' className={`${style.myBox} pb-4`}>
+                        <div  className={`${style.myBox} pb-4`}>
                             <div className={style.formDivider}>
                                 <div className={style.sec1}>
                                     <div className={style.inputParent}>
@@ -187,7 +187,7 @@ function ViewChecklist() {
                                     </div>
                                 </div>
                             </div>
-                            <div className={`${style.formDivider} flex-column justify-content-center`}>
+                            <div id='printable' className={`${style.formDivider} flex-column justify-content-center`}>
                                 {questions?.map((question, index) => {
                                     return (
                                         <div style={{

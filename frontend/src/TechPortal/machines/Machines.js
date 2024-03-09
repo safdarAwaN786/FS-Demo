@@ -129,7 +129,7 @@ function Machines() {
                             <table class="table my-custom-table">
                                 <thead >
                                     <tr className={`${style.font} `}>
-                                        <th scope="col"></th>
+                                        {/* <th scope="col"></th> */}
                                         <th scope="col"></th>
                                         <th scope="col"></th>
                                         <th scope="col"></th>
@@ -157,7 +157,7 @@ function Machines() {
 
                                     </tr>
                                     <tr className={style.font}>
-                                        <th className={`${style.textLight}`} scope="col">Machinery Id</th>
+                                        {/* <th className={`${style.textLight}`} scope="col">Machinery Id</th> */}
                                         <th className={`${style.textLight}`} scope="col">Machinery Name</th>
                                         <th className={`${style.textLight}`} scope="col">Machinery Location</th>
                                         <th className='px-4' scope="col"> </th>
@@ -187,25 +187,21 @@ function Machines() {
                                 <tbody>
                                     {machinaries?.map((machine, i) => {
                                         const object = maintenances?.find(obj => obj.Machinery._id === machine._id && obj.dateType === 'Daily' && obj.nextMaintainanceDate == formattedDate)
-                                        console.log(object);
-                                        console.log(object?.nextMaintainanceDate.slice(0, 10))
-                                        console.log(formattedDate);
-
+                                       
                                         return (
                                             <tr class={style.bodyrow} key={i}>
-                                                <td scope="row"><p style={{
+                                                {/* <td scope="row"><p style={{
                                                     backgroundColor: '#dddddd',
                                                     width: '50px',
                                                     borderRadius: '10px',
                                                     textAlign: 'center',
                                                     fontFamily: 'Poppins',
-                                                }}>{machine.machineCode}</p></td>
+                                                }}>{machine.machineCode}</p></td> */}
                                                 <td><p>{machine.machineName}</p></td>
                                                 <td><p>{machine.machinaryLocation}</p></td>
                                                 <td></td>
                                                 {machine.maintenanceFrequency.Daily ? (
                                                     <>
-
                                                         <td><div className={` text-center ${style.greenStatus} `}><p >Selected</p></div></td>
                                                         <td><button className={`${style.mybtn} ${(maintenances?.find(obj => obj.Machinery._id == machine._id && obj.dateType === 'Daily' && obj.nextMaintainanceDate.slice(0, 10) == formattedDate)) ? ' btn-danger ' : 'btn-outline-primary'} btn `} onClick={() => {
                                                             dispatch(changeDateType('Daily'))

@@ -7,6 +7,7 @@ const cloudinary = require('cloudinary').v2;
 const multer = require('multer');
 const upload = multer();
 const authMiddleware = require('../../middleware/auth');
+const User = require('../../models/AccountCreation/UserModel');
 
 // router.use(authMiddleware);
 
@@ -39,11 +40,11 @@ const uploadToCloudinaryImg = (buffer) => {
 };
 
 // * POST Machinery Data Into MongooDB Database
-router.post('/createWorkRequest',  upload.fields([{ name: 'mwrImage' }]), async (req, res) => {
+router.post('/createWorkRequest', upload.fields([{ name: 'mwrImage' }]), async (req, res) => {
   try {
 
     const { Area, Priority, Discipline, Description, SpecialInstruction, MachineId, } = req.body;
-
+    const requestUser = await User.findById(req.header('Authorization')).populate('Company Department')
     // Validate if Machinery ID exists in Machinery collection
     const machineryExists = await Machinery.findOne({ _id: MachineId });
     if (MachineId & !machineryExists) {
@@ -63,14 +64,14 @@ router.post('/createWorkRequest',  upload.fields([{ name: 'mwrImage' }]), async 
       console.log('Error outside ' + err);
     });
 
-    const createdBy = req.user.Name
+    const createdBy = requestUser.Name
     const workRequest = new WorkRequest({
       Area, Priority,
       Discipline: JSON.parse(Discipline),
       Description, SpecialInstruction,
       imageURL,
-      UserDepartment : req.header('Authorization'),
-      Department : req.header('Authorization'),
+      UserDepartment: requestUser?.Department?._id,
+      Department: requestUser?.Department?._id,
       Machinery: MachineId,
       CreatedBy: createdBy,
       CreationDate: new Date()
@@ -92,7 +93,7 @@ router.post('/createWorkRequest',  upload.fields([{ name: 'mwrImage' }]), async 
 });
 
 // * Reject the Request to set the own Priority
-router.patch('/rejectMWR/:id',  async (req, res) => {
+router.patch('/rejectMWR/:id', async (req, res) => {
   try {
     // Extract the MWR ID from the URL parameters
     const mwrId = req.params.id;
@@ -137,7 +138,7 @@ router.patch('/rejectMWR/:id',  async (req, res) => {
 });
 
 // * Accept the Request
-router.patch('/acceptMWR/:id',  async (req, res) => {
+router.patch('/acceptMWR/:id', async (req, res) => {
   try {
     console.log(req.body);
     // Extract the MWR ID from the URL parameters
@@ -189,7 +190,7 @@ router.patch('/acceptMWR/:id',  async (req, res) => {
 });
 
 // * Complete the Request
-router.patch('/completeMWR/:id',  async (req, res) => {
+router.patch('/completeMWR/:id', async (req, res) => {
   try {
     // Extract the MWR ID from the URL parameters
     const mwrId = req.params.id;
@@ -229,14 +230,11 @@ router.patch('/completeMWR/:id',  async (req, res) => {
 });
 
 // * API to retrieve all work requests
-router.get('/getAllWorkRequests',  async (req, res) => {
+router.get('/getAllWorkRequests', async (req, res) => {
   console.log('mwrs');
   try {
-    const workRequests = await WorkRequest.find({UserDepartment : req.header('Authorization')}).populate('Department')
+    const workRequests = await WorkRequest.find({ UserDepartment: req.header('Authorization') }).populate('Department')
       .populate('Machinery').populate('UserDepartment').exec();
-
- 
-
     // Log successful retrieval
     console.log('All work requests retrieved successfully.');
     res.status(200).json({ message: 'All work requests retrieved successfully', data: workRequests });
@@ -246,9 +244,24 @@ router.get('/getAllWorkRequests',  async (req, res) => {
     res.status(500).json({ error: 'Failed to retrieve work requests', message: error.message });
   }
 });
+router.get('/getTotalWorkRequests', async (req, res) => {
+  console.log('mwrs');
+  try {
+    const workRequests = await WorkRequest.find().populate('Department')
+      .populate('Machinery').populate('UserDepartment').exec();
+    const workRequestsToSend = workRequests.filter(request => request.UserDepartment?.Company.equals(req.header('Authorization')))
+    // Log successful retrieval
+    console.log('All work requests retrieved successfully.');
+    res.status(200).json({ message: 'All work requests retrieved successfully', data: workRequestsToSend });
+
+  } catch (error) {
+    console.error('Error retrieving all work requests:', error);
+    res.status(500).json({ error: 'Failed to retrieve work requests', message: error.message });
+  }
+});
 
 // * API to retrieve a single work request by its ID
-router.get('/getWorkRequestById/:id',  async (req, res) => {
+router.get('/getWorkRequestById/:id', async (req, res) => {
   try {
     const workRequestId = req.params.id;
     const workRequest = await WorkRequest.findById(workRequestId)
@@ -270,11 +283,11 @@ router.get('/getWorkRequestById/:id',  async (req, res) => {
 });
 
 // * API to retrieve a single work request by its ID
-router.get('/getWorkRequestsByMachineId/:MachineId',  async (req, res) => {
+router.get('/getWorkRequestsByMachineId/:MachineId', async (req, res) => {
   try {
 
     const MachineId = req.params.MachineId;
-    const workRequest = await WorkRequest.find({ Machinery: MachineId, UserDepartment : req.header('Authorization') })
+    const workRequest = await WorkRequest.find({ Machinery: MachineId, UserDepartment: req.header('Authorization') })
       .populate('Machinery')
       .exec();
 
@@ -293,7 +306,7 @@ router.get('/getWorkRequestsByMachineId/:MachineId',  async (req, res) => {
 });
 
 // * API to delete all work requests
-router.delete('/deleteAllWorkRequests',  async (req, res) => {
+router.delete('/deleteAllWorkRequests', async (req, res) => {
   try {
 
     await WorkRequest.deleteMany({});  // Deletes all documents in the WorkRequest collection
@@ -309,7 +322,7 @@ router.delete('/deleteAllWorkRequests',  async (req, res) => {
 });
 
 // * API to delete a single work request by its ID
-router.delete('/deleteWorkRequestById/:id',  async (req, res) => {
+router.delete('/deleteWorkRequestById/:id', async (req, res) => {
   try {
 
     const workRequestId = req.params.id;

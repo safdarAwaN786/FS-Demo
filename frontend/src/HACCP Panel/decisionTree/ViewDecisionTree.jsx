@@ -155,7 +155,7 @@ function ViewDecisionTree() {
                         event.preventDefault();
                         alertManager();
                     }}>
-                        <div id='printable' className={`${style.myBox} bg-light pb-3`}>
+                        <div className={`${style.myBox} bg-light pb-3`}>
                             <div className={style.formDivider}>
                                 <div className={style.sec1}>
                                     <div className={style.inputParent}>
@@ -194,162 +194,164 @@ function ViewDecisionTree() {
                                     </div>
                                 </div>
                             </div>
-                            {dataToSend?.Decisions?.map((decision, index) => {
-                                return (
-                                    <>
-                                        <div className={`bg-danger row mx-lg-4 mx-md-3 mx-1 mt-4 py-3  `}>
-                                            <div className=' col-lg-6 col-md-6 col-12'>
-                                                <div className={`${style.heading} ms-3 `}>
-                                                    {decision.Hazard.Process.ProcessNum}) {decision.Hazard.Process.Name}
+                            <div id='printable'>
+                                {dataToSend?.Decisions?.map((decision, index) => {
+                                    return (
+                                        <>
+                                            <div className={`bg-danger row mx-lg-4 mx-md-3 mx-1 mt-4 py-3  `}>
+                                                <div className=' col-lg-6 col-md-6 col-12'>
+                                                    <div className={`${style.heading} ms-3 `}>
+                                                        {decision.Hazard.Process.ProcessNum} : {decision.Hazard.Process.Name}
+                                                    </div>
+                                                </div>
+                                                <div className='col-lg-6 col-md-6 col-12 d-flex justify-content-end pe-3'>
+                                                    <div className={`${style.heading} ms-3 `}>
+                                                        {decision?.Hazard.type} Hazard
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div className='col-lg-6 col-md-6 col-12 d-flex justify-content-end pe-3'>
-                                                <div className={`${style.heading} ms-3 `}>
-                                                    {decision?.Hazard.type} Hazard
+                                            <div className='bg-white  mx-lg-4 mx-md-3 mx-1 p-3'>
+
+                                                <div className='d-flex justify-content-between'>
+                                                    <div>
+                                                        <h5><b>Q1 : </b> Are Control Measures in place for the hazard ?</h5>
+                                                    </div>
+                                                    <div>
+                                                        {decision.Q1 === true &&
+                                                            <span className={`${style.answerSpan} ${decision.Q1 ? 'bg-success' : 'bg-secondary'} m-1`} >
+                                                                Yes
+                                                            </span>
+                                                        }
+                                                        {decision.Q1 === false &&
+                                                            <span className={`${style.answerSpan} ${decision.Q1 === false ? 'bg-danger' : 'bg-secondary'} m-1`} >
+                                                                No
+                                                            </span>
+                                                        }
+                                                        {decision.Q1 === null &&
+                                                            <span className={`${style.answerSpan} 'bg-secondary'} m-1`} >
+                                                                Not Answered
+                                                            </span>
+                                                        }
+                                                    </div>
+
                                                 </div>
+                                                {decision.Q1 === false && (
+
+                                                    <div className='d-flex justify-content-between'>
+                                                        <div>
+                                                            <h5><b>Q 1A : </b> Is control at this step necessary ? </h5>
+                                                        </div>
+                                                        <div>
+                                                            {decision.Q1A === true &&
+                                                                <span className={`${style.answerSpan} ${decision.Q1A ? 'bg-success' : 'bg-secondary'} m-1`} >
+                                                                    Yes
+
+                                                                </span>
+                                                            }
+                                                            {decision.Q1A === false &&
+                                                                <span className={`${style.answerSpan} ${decision.Q1A === false ? 'bg-danger' : 'bg-secondary'} m-1`} >
+                                                                    No
+                                                                </span>
+                                                            }
+                                                            {decision.Q1A === null &&
+                                                                <span className={`${style.answerSpan} 'bg-secondary'} m-1`} >
+                                                                    Not Answered
+                                                                </span>
+                                                            }
+                                                        </div>
+
+                                                    </div>
+                                                )}
+                                                {(decision.Q1 === true || decision.Q1A === true) && (
+
+                                                    <div className='d-flex justify-content-between'>
+                                                        <div>
+                                                            <h5><b>Q 2 : </b> Is this step specially designed to control the Hazard ?</h5>
+                                                        </div>
+                                                        <div>
+                                                            {decision.Q2 === true &&
+                                                                <span className={`${style.answerSpan} ${decision.Q2 ? 'bg-success' : 'bg-secondary'} m-1`} >
+                                                                    Yes
+                                                                </span>
+                                                            }
+                                                            {decision.Q2 === false &&
+                                                                <span className={`${style.answerSpan} ${decision.Q2 === false ? 'bg-danger' : 'bg-secondary'} m-1`} >
+                                                                    No
+                                                                </span>
+                                                            }
+                                                            {decision.Q2 === null &&
+                                                                <span className={`${style.answerSpan} 'bg-secondary'} m-1`} >
+                                                                    Not Answered
+                                                                </span>
+                                                            }
+
+                                                        </div>
+
+                                                    </div>
+                                                )}
+                                                {decision.Q2 === false && (
+
+                                                    <div className='d-flex justify-content-between'>
+                                                        <div>
+                                                            <h5><b>Q 3 : </b> Could Hazard increase if not stopped at the point ?</h5>
+                                                        </div>
+                                                        <div>
+                                                            {decision.Q3 === true &&
+                                                                <span className={`${style.answerSpan} ${decision.Q3 ? 'bg-success' : 'bg-secondary'} m-1`} >
+                                                                    Yes
+                                                                </span>
+                                                            }
+                                                            {decision.Q3 === false &&
+                                                                <span className={`${style.answerSpan} ${decision.Q3 === false ? 'bg-danger' : 'bg-secondary'} m-1`} >
+                                                                    No
+                                                                </span>
+                                                            }
+                                                            {decision.Q3 === null &&
+                                                                <span className={`${style.answerSpan} 'bg-secondary'} m-1`} >
+                                                                    Not Answered
+                                                                </span>
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                )}
+                                                {decision.Q3 === true && (
+
+                                                    <div className='d-flex justify-content-between'>
+                                                        <div>
+                                                            <h5><b>Q 4 : </b> Will the subsequent step eliminate the hazard ?</h5>
+                                                        </div>
+                                                        <div>
+                                                            {decision.Q4 === true &&
+                                                                <span className={`${style.answerSpan} ${decision.Q4 ? 'bg-success' : 'bg-secondary'} m-1`} >
+                                                                    Yes
+                                                                </span>
+                                                            }
+                                                            {decision.Q4 === false &&
+                                                                <span className={`${style.answerSpan} ${decision.Q4 === false ? 'bg-danger' : 'bg-secondary'} m-1`} >
+                                                                    No
+                                                                </span>
+                                                            }
+                                                            {decision.Q4 === null &&
+                                                                <span className={`${style.answerSpan} 'bg-secondary'} m-1`} >
+                                                                    Not Answered
+                                                                </span>
+                                                            }
+                                                        </div>
+
+                                                    </div>
+                                                )}
+                                                <p className='text-center fw-bold'>
+                                                    {decision.Q1A === false && 'Stop✋! it is not a CCP.'}
+                                                    {decision.Q2 === true && 'Stop✋! CCP Identified.'}
+                                                    {decision.Q3 === false && 'Stop✋! it is not a CCP.'}
+                                                    {decision.Q4 === false && 'CCP Identified.'}
+                                                    {decision.Q4 === true && 'OPRP Identified.'}
+                                                </p>
                                             </div>
-                                        </div>
-                                        <div className='bg-white  mx-lg-4 mx-md-3 mx-1 p-3'>
-
-                                            <div className='d-flex justify-content-between'>
-                                                <div>
-                                                    <h5><b>Q1 : </b> Are Control Measures in place for the hazard ?</h5>
-                                                </div>
-                                                <div>
-                                                    {decision.Q1 === true &&
-                                                        <span className={`${style.answerSpan} ${decision.Q1 ? 'bg-success' : 'bg-secondary'} m-1`} >
-                                                            Yes
-                                                        </span>
-                                                    }
-                                                    {decision.Q1 === false &&
-                                                        <span className={`${style.answerSpan} ${decision.Q1 === false ? 'bg-danger' : 'bg-secondary'} m-1`} >
-                                                            No
-                                                        </span>
-                                                    }
-                                                    {decision.Q1 === null &&
-                                                        <span className={`${style.answerSpan} 'bg-secondary'} m-1`} >
-                                                            Not Answered
-                                                        </span>
-                                                    }
-                                                </div>
-
-                                            </div>
-                                            {decision.Q1 === false && (
-
-                                                <div className='d-flex justify-content-between'>
-                                                    <div>
-                                                        <h5><b>Q 1A : </b> Is control at this step necessary ? </h5>
-                                                    </div>
-                                                    <div>
-                                                        {decision.Q1A === true &&
-                                                            <span className={`${style.answerSpan} ${decision.Q1A ? 'bg-success' : 'bg-secondary'} m-1`} >
-                                                                Yes
-
-                                                            </span>
-                                                        }
-                                                        {decision.Q1A === false &&
-                                                            <span className={`${style.answerSpan} ${decision.Q1A === false ? 'bg-danger' : 'bg-secondary'} m-1`} >
-                                                                No
-                                                            </span>
-                                                        }
-                                                        {decision.Q1A === null &&
-                                                            <span className={`${style.answerSpan} 'bg-secondary'} m-1`} >
-                                                                Not Answered
-                                                            </span>
-                                                        }
-                                                    </div>
-
-                                                </div>
-                                            )}
-                                            {(decision.Q1 === true || decision.Q1A === true) && (
-
-                                                <div className='d-flex justify-content-between'>
-                                                    <div>
-                                                        <h5><b>Q 2 : </b> Is this step specially designed to control the Hazard ?</h5>
-                                                    </div>
-                                                    <div>
-                                                        {decision.Q2 === true &&
-                                                            <span className={`${style.answerSpan} ${decision.Q2 ? 'bg-success' : 'bg-secondary'} m-1`} >
-                                                                Yes
-                                                            </span>
-                                                        }
-                                                        {decision.Q2 === false &&
-                                                            <span className={`${style.answerSpan} ${decision.Q2 === false ? 'bg-danger' : 'bg-secondary'} m-1`} >
-                                                                No
-                                                            </span>
-                                                        }
-                                                        {decision.Q2 === null &&
-                                                            <span className={`${style.answerSpan} 'bg-secondary'} m-1`} >
-                                                                Not Answered
-                                                            </span>
-                                                        }
-
-                                                    </div>
-
-                                                </div>
-                                            )}
-                                            {decision.Q2 === false && (
-
-                                                <div className='d-flex justify-content-between'>
-                                                    <div>
-                                                        <h5><b>Q 3 : </b> Could Hazard increase if not stopped at the point ?</h5>
-                                                    </div>
-                                                    <div>
-                                                        {decision.Q3 === true &&
-                                                            <span className={`${style.answerSpan} ${decision.Q3 ? 'bg-success' : 'bg-secondary'} m-1`} >
-                                                                Yes
-                                                            </span>
-                                                        }
-                                                        {decision.Q3 === false &&
-                                                            <span className={`${style.answerSpan} ${decision.Q3 === false ? 'bg-danger' : 'bg-secondary'} m-1`} >
-                                                                No
-                                                            </span>
-                                                        }
-                                                        {decision.Q3 === null &&
-                                                            <span className={`${style.answerSpan} 'bg-secondary'} m-1`} >
-                                                                Not Answered
-                                                            </span>
-                                                        }
-                                                    </div>
-                                                </div>
-                                            )}
-                                            {decision.Q3 === true && (
-
-                                                <div className='d-flex justify-content-between'>
-                                                    <div>
-                                                        <h5><b>Q 4 : </b> Will the subsequent step eliminate the hazard ?</h5>
-                                                    </div>
-                                                    <div>
-                                                        {decision.Q4 === true &&
-                                                            <span className={`${style.answerSpan} ${decision.Q4 ? 'bg-success' : 'bg-secondary'} m-1`} >
-                                                                Yes
-                                                            </span>
-                                                        }
-                                                        {decision.Q4 === false &&
-                                                            <span className={`${style.answerSpan} ${decision.Q4 === false ? 'bg-danger' : 'bg-secondary'} m-1`} >
-                                                                No
-                                                            </span>
-                                                        }
-                                                        {decision.Q4 === null &&
-                                                            <span className={`${style.answerSpan} 'bg-secondary'} m-1`} >
-                                                                Not Answered
-                                                            </span>
-                                                        }
-                                                    </div>
-
-                                                </div>
-                                            )}
-                                            <p className='text-center fw-bold'>
-                                                {decision.Q1A === false && 'Stop✋! it is not a CCP.'}
-                                                {decision.Q2 === true && 'Stop✋! CCP Identified.'}
-                                                {decision.Q3 === false && 'Stop✋! it is not a CCP.'}
-                                                {decision.Q4 === false && 'CCP Identified.'}
-                                                {decision.Q4 === true && 'OPRP Identified.'}
-                                            </p>
-                                        </div>
-                                    </>
-                                )
-                            })}
+                                        </>
+                                    )
+                                })}
+                            </div>
                         </div>
                     </form>
                     <div className={`${style.btn} px-lg-4 px-2 d-flex justify-content-center`}>

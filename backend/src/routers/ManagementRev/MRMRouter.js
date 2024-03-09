@@ -4,13 +4,11 @@ const MRM = require('../../models/ManagementRev/MRMModel');
 require('dotenv').config();
 const NotificationModel = require('../../models/ManagementRev/NotificationModel').Notification;
 const { Agenda } = require('../../models/ManagementRev/NotificationModel');
-
 const ParticipantModel = require('../../models/ManagementRev/ParticipantsModel');
 const nodemailer = require('nodemailer');
 const smtpTransport = require('nodemailer-smtp-transport');
 const emailTemplates = require('../../EmailTemplates/userMRM.json');
 const template = emailTemplates.newMRMDiscussion;
-const authMiddleware = require('../../middleware/auth');
 
 // router.use(authMiddleware);
 
@@ -75,7 +73,6 @@ router.post('/create-mrm', async (req, res) => {
     }
     createdMRM.save();
     res.status(200).json({ status: true, message: "MRM document created successfully", data: createdMRM });
-    console.log(new Date().toLocaleString() + ' ' + 'CREATE MRM document Successfully!');
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Error creating MRM document', error: error.message });

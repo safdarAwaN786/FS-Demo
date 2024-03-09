@@ -29,6 +29,7 @@ function AssignTrainings() {
         dispatch(setSmallLoading(true))
         axios.get(`${process.env.REACT_APP_BACKEND_URL}/readMonthlyPlan`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
             const plannedTrainingsList = response.data.data;
+            console.log(plannedTrainingsList);
             setPlannedTraining(plannedTrainingsList.find((training) => training._id === idToWatch))
             dispatch(setSmallLoading(false))
         }).catch(err => {
@@ -82,7 +83,6 @@ function AssignTrainings() {
     }
 
     useEffect(() => {
-
         setEmployeesToShow(allDataArr?.slice(startIndex, endIndex))
     }, [startIndex, endIndex])
 

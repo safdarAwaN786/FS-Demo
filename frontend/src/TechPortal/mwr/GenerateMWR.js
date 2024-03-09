@@ -105,7 +105,7 @@ function GenerateMWR() {
     const makeRequest = () => {
         const formData = convertStateToFormData(formValues);
         dispatch(setSmallLoading(true))
-        axios.post(`${process.env.REACT_APP_BACKEND_URL}/createWorkRequest`, formData, { headers: { Authorization: `${user.Department._id}` } }).then((res) => {
+        axios.post(`${process.env.REACT_APP_BACKEND_URL}/createWorkRequest`, formData, { headers: { Authorization: `${user._id}` } }).then((res) => {
             dispatch(setSmallLoading(false))
             Swal.fire({
                 title: 'Success',
@@ -132,202 +132,199 @@ function GenerateMWR() {
     return (
         <>
 
-                <div className='d-flex flex-row bg-white px-lg-5 mx-1 px-2 py-2'>
-                    <BsArrowLeftCircle
-                        role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
-                            {
-                                dispatch(updateTabData({ ...tabData, Tab: 'Generate MWR Corrective' }))
-                            }
-                        }} />
+            <div className='d-flex flex-row bg-white px-lg-5 mx-1 px-2 py-2'>
+                <BsArrowLeftCircle
+                    role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
+                        {
+                            dispatch(updateTabData({ ...tabData, Tab: 'Generate MWR Corrective' }))
+                        }
+                    }} />
 
+            </div>
+            <div className={`${style.headers} mt-1 `}>
+                <div className={style.spans}>
+                    <span></span>
+                    <span></span>
+                    <span></span>
                 </div>
-                <div className={`${style.headers} mt-1 `}>
-                    <div className={style.spans}>
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                    </div>
-                    <div className={style.para}>
-                        Generate MWR
-                    </div>
-
+                <div className={style.para}>
+                    Generate MWR
                 </div>
-                <form onSubmit={(e) => {
-                    e.preventDefault();
-                    console.log(formValues);
-                    console.log(discipline)
-                    setFormValues({ ...formValues, Discipline: discipline });
-                    if (formValues.Area && formValues.Priority && formValues.MachineId && discipline.length !== 0 && formValues.mwrImage) {
-                        setPopUpData('Do you want to submit the data ?')
-                        setSubmitAlert(true)
-                    } else {
-                        setPopUpData('Kindly provide all required data above including Image.');
-                        setalert(true);
-                    }
-                }}>
-                    <div className={style.form}>
-                        <div className={style.sec1}>
-                            <div>
-                                <p className='mt-2'>Area</p>
-                                <div onClick={() => {
-                                    setarea(!area)
-                                }} className={style.dropdownfield}>
-                                    <p>{formValues?.Area}</p>
-                                    <img className={area ? style.rotate : null} src={arrow} alt="" />
-                                </div>
-                            </div>
-                            {area ?
-                                <div className={style.droper}>
-                                    <p onClick={() => {
-                                        setFormValues({ ...formValues, Area: 'Area 1' });
-                                        setarea(false)
-                                    }} className={style.optStyle}>Area 1</p>
-                                    <p onClick={() => {
-                                        setFormValues({ ...formValues, Area: 'Area 2' });
-                                        setarea(false)
-                                    }} className={style.optStyle}>Area 2</p>
-                                    <p onClick={() => {
-                                        setFormValues({ ...formValues, Area: 'Area 3' });
-                                        setarea(false)
-                                    }} className={style.optStyle}>Area 3</p>
 
-                                </div> : null
-                            }
-                            <div >
-                                <p className='mt-2'>Priority</p>
-                                <div onClick={() => {
-                                    setpri(!pri)
-                                }} className={style.dropdownfield}>
-                                    <p>{formValues?.Priority}</p>
-                                    <img className={pri ? style.rotate : null} src={arrow} alt="" />
-                                </div>
-                            </div>
-                            {pri ?
-                                <div className={style.droper}>
-                                    <div onClick={() => {
-                                        setFormValues({ ...formValues, Priority: 'A' });
-                                        setpri(false)
-                                    }}>
-
-                                        <p  >A-Emergency Job</p>
-                                    </div>
-                                    <div onClick={() => {
-                                        setFormValues({ ...formValues, Priority: 'B' });
-                                        setpri(false)
-                                    }}>
-
-                                        <p >B-Urgent Job</p>
-                                    </div>
-                                    <div onClick={() => {
-                                        setFormValues({ ...formValues, Priority: 'C' });
-                                        setpri(false);
-                                    }}>
-
-                                        <p >C-Maintainance Job within 8 days</p>
-                                    </div>
-                                    <div onClick={() => {
-                                        setFormValues({ ...formValues, Priority: 'D' });
-                                        setpri(false)
-                                    }}>
-
-                                        <p >D-General purpose within 7 days
-                                            or more</p>
-                                    </div>
-                                </div> : null
-                            }
-                            <div >
-                                <p className='mt-2'>
-                                    Description of work
-                                </p>
-                                <textarea name='Description' onChange={updateFormValues} type="text" required />
+            </div>
+            <form onSubmit={(e) => {
+                e.preventDefault();
+                console.log(formValues);
+                console.log(discipline)
+                setFormValues({ ...formValues, Discipline: discipline });
+                if (formValues.Area && formValues.Priority && formValues.MachineId && discipline.length !== 0 && formValues.mwrImage) {
+                    setPopUpData('Do you want to submit the data ?')
+                    setSubmitAlert(true)
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'OOps..',
+                        text: 'Please Provide all Data including Image!!'
+                    })
+                }
+            }}>
+                <div className={style.form}>
+                    <div className={style.sec1}>
+                        <div>
+                            <p className='mt-2'>Machine Location</p>
+                            <div onClick={() => {
+                                setarea(!area)
+                            }} className={style.dropdownfield}>
+                                <p>{formValues?.Area}</p>
+                                <img className={area ? style.rotate : null} src={arrow} alt="" />
                             </div>
                         </div>
-                        <div className={style.sec2}>
-                            <div >
-                                <p className='mt-2'>Machine Code</p>
-                                <div onClick={() => {
-                                    setcode(!code)
-                                }} className={style.dropdownfield}>
-                                    <p>{formValues?.MachineCode}</p>
-                                    <img className={code ? style.rotate : null} src={arrow} alt="" />
-                                </div>
-                            </div>
-                            {code ?
-                                <div className={style.droper}>
-                                    {machineries?.map((machine) => {
-
-                                        return (
-                                            <p onClick={() => {
-                                                setFormValues({
-                                                    ...formValues, MachineCode: machine.machineCode,
-                                                    MachineId: machine._id
-                                                });
-                                                setcode(false);
-                                            }} className={style.optStyle}>{machine.machineCode}</p>
-                                        )
-                                    })}
-
-                                </div> : null
-                            }
-                            <div>
-                                <p className='mt-2'>Discipline</p>
-                                <div className={style.dropdownfield}>
-
-
-                                </div>
-                            </div>
-
+                        {area ?
                             <div className={style.droper}>
-                                <div>
-                                    <input autoComplete='off' value='Mechenical' onChange={updateDiscipline} type="checkbox" />
-                                    <p >Mechanical</p>
-                                </div>
-                                <div>
-                                    <input autoComplete='off' value='Electrical' onChange={updateDiscipline} type="checkbox" />
-                                    <p >Electrical</p>
-                                </div>
+                                {machineries?.map((machine) => {
+                                    return (
+                                        <p onClick={() => {
+                                            setFormValues({
+                                                ...formValues, Area: machine.machinaryLocation
+                                            });
+                                            setarea(false);
+                                        }} className={style.optStyle}>{machine.machinaryLocation}</p>
+                                    )
+                                })}
 
-                                <div>
-                                    <input autoComplete='off' value='Insulation & Paint' onChange={updateDiscipline} type="checkbox" />
-                                    <p >Insulation & Paint</p>
+                            </div> : null
+                        }
+                        <div >
+                            <p className='mt-2'>Priority</p>
+                            <div onClick={() => {
+                                setpri(!pri)
+                            }} className={style.dropdownfield}>
+                                <p>{formValues?.Priority}</p>
+                                <img className={pri ? style.rotate : null} src={arrow} alt="" />
+                            </div>
+                        </div>
+                        {pri ?
+                            <div className={style.droper}>
+                                <div onClick={() => {
+                                    setFormValues({ ...formValues, Priority: 'A' });
+                                    setpri(false)
+                                }}>
+
+                                    <p  >A-Emergency Job</p>
                                 </div>
-                                <div>
-                                    <input autoComplete='off' value='Carpentary' onChange={updateDiscipline} type="checkbox" />
-                                    <p >Carpentary</p>
+                                <div onClick={() => {
+                                    setFormValues({ ...formValues, Priority: 'B' });
+                                    setpri(false)
+                                }}>
+
+                                    <p >B-Urgent Job</p>
                                 </div>
-                                <div>
-                                    <input autoComplete='off' value='Civil' onChange={updateDiscipline} type="checkbox" />
-                                    <p >Civil</p>
+                                <div onClick={() => {
+                                    setFormValues({ ...formValues, Priority: 'C' });
+                                    setpri(false);
+                                }}>
+
+                                    <p >C-Maintainance Job within 8 days</p>
                                 </div>
+                                <div onClick={() => {
+                                    setFormValues({ ...formValues, Priority: 'D' });
+                                    setpri(false)
+                                }}>
+
+                                    <p >D-General purpose within 7 days
+                                        or more</p>
+                                </div>
+                            </div> : null
+                        }
+                        <div >
+                            <p className='mt-2'>
+                                Description of work
+                            </p>
+                            <textarea name='Description' onChange={updateFormValues} type="text" required />
+                        </div>
+                    </div>
+                    <div className={style.sec2}>
+                        <div >
+                            <p className='mt-2'>Machine Name</p>
+                            <div onClick={() => {
+                                setcode(!code)
+                            }} className={style.dropdownfield}>
+                                <p>{formValues?.MachineName}</p>
+                                <img className={code ? style.rotate : null} src={arrow} alt="" />
+                            </div>
+                        </div>
+                        {code ?
+                            <div className={style.droper}>
+                                {machineries?.map((machine) => {
+                                    return (
+                                        <p onClick={() => {
+                                            setFormValues({
+                                                ...formValues, MachineName: machine.machineName,
+                                                MachineId: machine._id
+                                            });
+                                            setcode(false);
+                                        }} className={style.optStyle}>{machine.machineName}</p>
+                                    )
+                                })}
+
+                            </div> : null
+                        }
+                        <div>
+                            <p className='mt-2'>Discipline</p>
+                            {/* <div className={style.dropdownfield}>
+                            </div> */}
+                        </div>
+
+                        <div className={style.droper}>
+                            <div>
+                                <input autoComplete='off' value='Mechenical' onChange={updateDiscipline} type="checkbox" />
+                                <p >Mechanical</p>
+                            </div>
+                            <div>
+                                <input autoComplete='off' value='Electrical' onChange={updateDiscipline} type="checkbox" />
+                                <p >Electrical</p>
                             </div>
 
                             <div>
-                                <p className='mt-2'>
-                                    Special Instruction
-                                </p>
-                                <textarea name='SpecialInstruction' onChange={updateFormValues} type="text" required />
+                                <input autoComplete='off' value='Insulation & Paint' onChange={updateDiscipline} type="checkbox" />
+                                <p >Insulation & Paint</p>
+                            </div>
+                            <div>
+                                <input autoComplete='off' value='Carpentary' onChange={updateDiscipline} type="checkbox" />
+                                <p >Carpentary</p>
+                            </div>
+                            <div>
+                                <input autoComplete='off' value='Civil' onChange={updateDiscipline} type="checkbox" />
+                                <p >Civil</p>
                             </div>
                         </div>
+
+                        <div>
+                            <p className='mt-2'>
+                                Special Instruction
+                            </p>
+                            <textarea name='SpecialInstruction' onChange={updateFormValues} type="text" required />
+                        </div>
                     </div>
-                    <div className={style.btnparent}>
-                        <p>Image</p>
-                        <a onClick={handleImageClick} className={`${style.download} btn btn-outline-danger`}>{formValues?.mwrImage?.name?.slice(0, 15) || 'Upload'}</a>
-                        <input
-                            type="file"
-                            id="file-input"
-                            name='mwrImage'
-                            accept='.jpg, .jpeg, .png'
-                            style={{ display: 'none' }}
-                            ref={fileInputRef}
-                            onChange={updateFormFiles}
-                            required
-                        />
-                    </div>
-                    <div className={style.resbtns}>
+                </div>
+                <div className={style.btnparent}>
+                    <p>Image</p>
+                    <a onClick={handleImageClick} className={`${style.download} btn btn-outline-danger`}>{formValues?.mwrImage?.name?.slice(0, 15) || 'Upload'}</a>
+                    <input
+                        type="file"
+                        id="file-input"
+                        name='mwrImage'
+                        accept='.jpg, .jpeg, .png'
+                        style={{ display: 'none' }}
+                        ref={fileInputRef}
+                        onChange={updateFormFiles}
+                    />
+                    <div className='w-100 d-flex mt-3 justify-content-center align-items-center '>
                         <button type='submit' className={`${style.submit} px-3 py-2 btn btn-danger`} >Submit</button>
                     </div>
+                </div>
 
-                </form>
+            </form>
 
             {
                 alert ?
@@ -336,9 +333,9 @@ function GenerateMWR() {
                             <p class={style.msg}>{popUpData}</p>
                             <div className={style.alertbtns}>
                                 <button style={{
-                                    marginLeft : '120px',
-                                    marginTop : '25px'
-                                }}  onClick={alertManager} className={style.btn2}>OK.</button>
+                                    marginLeft: '120px',
+                                    marginTop: '25px'
+                                }} onClick={alertManager} className={style.btn2}>OK.</button>
                             </div>
                         </div>
                     </div> : null

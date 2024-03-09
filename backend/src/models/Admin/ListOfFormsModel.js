@@ -178,7 +178,7 @@ FormSchema.pre('save', async function (next) {
 
     
 
-    const department = await DepartmentModel.findById(this.Department).populate('Company');
+    const department = await DepartmentModel.findById(this.UserDepartment).populate('Company');
     if (!department) {
       throw new Error('Department not found');
     }

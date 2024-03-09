@@ -26,7 +26,7 @@ router.post('/create-notification', async (req, res) => {
   console.log('request To Create Notification');
   try {
     const notificationToCreate = {
-      ...req.body,
+      ...req.body
     }
 
     console.log(notificationToCreate);
@@ -71,14 +71,13 @@ router.post('/create-notification', async (req, res) => {
       } else {
         console.log(createdAgendas);
         agendaIds = createdAgendas.map(agenda => agenda._id);
-
         const notificationToSave = new Notification({
           ...notificationToCreate,
           Agendas: agendaIds,
-          UserDepartment: req.header('Autorization')
+          UserDepartment: req.header('Authorization')
         })
         notificationToSave.save().then(() => {
-          console.log('Saved' + notificationToCreate);
+          console.log('Saved' + notificationToSave);
           res.status(201).json({ status: true, message: "Notification document created and Email Sent successfully", data: notificationToSave });
         })
       }
@@ -94,8 +93,7 @@ router.post('/create-notification', async (req, res) => {
 router.get('/get-all-notifications', async (req, res) => {
   try {
 
-    const notifications = await Notification.find({UserDepartment : req.header('Authorization')}).populate('Agendas')
-      .populate('Participants').populate('User').select('-__v').sort({ createdAt: -1 });
+    const notifications = await Notification.find({UserDepartment : req.header('Authorization')}).populate('Agendas').populate('Participants').populate('UserDepartment').select('-__v').sort({ createdAt: -1 });
 
     if (!notifications) {
       console.log('Notification documents not found');

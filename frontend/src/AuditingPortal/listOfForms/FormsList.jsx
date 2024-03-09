@@ -161,7 +161,7 @@ function FormsList() {
                                 <td>Results History</td>
                                 <td>Action</td>
                                 <td>Action</td>
-                                <td>Document</td>
+                                {/* <td>Document</td> */}
                                 <td>Reason</td>
                                 {tabData?.Approval && (
 
@@ -241,13 +241,13 @@ function FormsList() {
 
                                                 }} className={`btn btn-outline-danger pt-0`}>View</p>
                                             </td>
-                                            <td >
+                                            {/* <td >
 
                                                 <p onClick={() => {
                                                     setShowBox(true);
                                                     setDataToShow('Pending feature!')
                                                 }} className={style.click}>Download</p>
-                                            </td>
+                                            </td> */}
                                             <td >
 
                                                 <p onClick={() => {

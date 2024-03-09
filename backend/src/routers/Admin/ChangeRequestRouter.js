@@ -13,15 +13,12 @@ router.post('/addChangeRequest', async (req, res) => {
     // The changeRequest data sent in the request body
     const changeRequest = new ChangeRequest({
       ...req.body,
-      CreatedBy: createdBy,
-      UserDepartment : departmentId,
+      CreatedBy: req.body.createdBy,
+      UserDepartment: departmentId,
     });
-
-  
 
     await changeRequest.save();
     console.log(new Date().toLocaleString() + ' ' + 'Loading ChangeRequest...');
-
     res.status(201).send({ status: true, message: "The ChangeRequest is added!", data: changeRequest });
     console.log(new Date().toLocaleString() + ' ' + 'ADD ChangeRequest Successfully!');
 
@@ -36,12 +33,29 @@ router.get('/readChangeRequest', async (req, res) => {
   console.log('change request');
   try {
     const departmentId = req.header('Authorization');
-    const changeRequest = await ChangeRequest.find({UserDepartment : departmentId}).populate("Document Department UserDepartment");
+    const changeRequest = await ChangeRequest.find({ UserDepartment: departmentId }).populate("Document Department UserDepartment");
 
     res.status(201).send({ status: true, message: "The following are ChangeRequests!", data: changeRequest });
     console.log(new Date().toLocaleString() + ' ' + 'READ ChangeRequest Successfully!')
 
   } catch (e) {
+    res.status(500).json({ message: e.message });
+  }
+
+});
+
+router.get('/readAllChangeRequest', async (req, res) => {
+  console.log('change request');
+  try {
+    const companyId = req.header('Authorization');
+    const changeRequest = await ChangeRequest.find().populate("Document Department UserDepartment");
+    
+    const changeRequestsToSend = changeRequest.filter(request => request.UserDepartment.Company.equals(companyId))
+    res.status(201).send({ status: true, message: "The following are ChangeRequests!", data: changeRequestsToSend });
+    console.log(new Date().toLocaleString() + ' ' + 'READ ChangeRequest Successfully!')
+
+  } catch (e) {
+    console.log(e);
     res.status(500).json({ message: e.message });
   }
 

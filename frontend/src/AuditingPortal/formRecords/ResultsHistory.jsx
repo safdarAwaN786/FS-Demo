@@ -36,7 +36,21 @@ function ResultsHistory() {
         dispatch(setSmallLoading(true))
         axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-responses-by-formId/${idToWatch}`, { headers: { Authorization: `${user.Department._id}` } }).then((res) => {
             setFormResults(res.data.data);
-            setFormData(res.data.data[0]?.Form);
+            dispatch(setSmallLoading(false))
+        }).catch(err => {
+            dispatch(setSmallLoading(false));
+            Swal.fire({
+                icon: 'error',
+                title: 'OOps..',
+                text: 'Something went wrong, Try Again!'
+            })
+        })
+    }, [])
+
+    useEffect(() => {
+        dispatch(setSmallLoading(true))
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-form-by-id/${idToWatch}`, { headers: { Authorization: `${user.Department._id}` } }).then((res) => {
+            setFormData(res.data.form);
             dispatch(setSmallLoading(false))
         }).catch(err => {
             dispatch(setSmallLoading(false));
@@ -132,7 +146,7 @@ function ResultsHistory() {
                             <th>Verified By</th>
                             <th>Verification Date</th>
                             <th>Department</th>
-                            <th>Designation</th>
+                            {/* <th>Designation</th> */}
                             <th>Action</th>
                             {tabData?.Verification && (
                                 <th>Action</th>
@@ -151,7 +165,7 @@ function ResultsHistory() {
                                         <td>{result?.verifiedBy || 'Pending'}</td>
                                         <td>{result?.verificationDate || 'Pending'}</td>
                                         <td>{formData?.Department.DepartmentName}</td>
-                                        <td>{result.User.Designation}</td>
+                                        {/* <td>{result?.User?.Designation}</td> */}
                                         <td><button className={style.btn} onClick={() => {
                                             dispatch(updateTabData({ ...tabData, Tab: 'viewFormAnswers' }))
                                             dispatch(changeId(result._id));

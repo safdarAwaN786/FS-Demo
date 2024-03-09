@@ -22,7 +22,7 @@ function Main() {
     useEffect(() => {
         dispatch(setSmallLoading(true))
         if (tabData?.Approval) {
-            axios.get(`${process.env.REACT_APP_BACKEND_URL}/readAllPersonalRecuisition`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
+            axios.get(`${process.env.REACT_APP_BACKEND_URL}/readAllPersonalRecuisition`, { headers: { Authorization: `${user.Company._id}` } }).then((response) => {
                 dispatch(setSmallLoading(false))
                 setAllDataArr(response.data.data);
                 setPersonReqList(response.data.data.slice(startIndex, endIndex));
@@ -53,7 +53,7 @@ function Main() {
 
     const statusUpdated = () => {
         if (tabData?.Approval) {
-            axios.get(`${process.env.REACT_APP_BACKEND_URL}/readAllPersonalRecuisition`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
+            axios.get(`${process.env.REACT_APP_BACKEND_URL}/readAllPersonalRecuisition`, { headers: { Authorization: `${user.Company._id}` } }).then((response) => {
                 dispatch(setSmallLoading(false))
                 setAllDataArr(response.data.data);
                 setPersonReqList(response.data.data.slice(startIndex, endIndex));

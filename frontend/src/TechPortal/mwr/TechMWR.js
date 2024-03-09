@@ -30,34 +30,65 @@ function TechMWR() {
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(setSmallLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/getAllWorkRequests`, { headers: { Authorization: `${user.Department._id}` } }).then((res) => {
-            setAllDataArr(res.data.data);
-            setRequests(res.data.data.slice(startIndex, endIndex));
-            dispatch(setSmallLoading(false))
-        }).catch(err => {
-            dispatch(setSmallLoading(false));
-            Swal.fire({
-                icon: 'error',
-                title: 'OOps..',
-                text: 'Something went wrong, Try Again!'
+        if (tabData?.Approval) {
+            axios.get(`${process.env.REACT_APP_BACKEND_URL}/getTotalWorkRequests`, { headers: { Authorization: `${user.Company._id}` } }).then((res) => {
+                setAllDataArr(res.data.data);
+                setRequests(res.data.data.slice(startIndex, endIndex));
+                dispatch(setSmallLoading(false))
+            }).catch(err => {
+                dispatch(setSmallLoading(false));
+                Swal.fire({
+                    icon: 'error',
+                    title: 'OOps..',
+                    text: 'Something went wrong, Try Again!'
+                })
             })
-        })
+        } else {
+            axios.get(`${process.env.REACT_APP_BACKEND_URL}/getAllWorkRequests`, { headers: { Authorization: `${user.Department._id}` } }).then((res) => {
+                setAllDataArr(res.data.data);
+                setRequests(res.data.data.slice(startIndex, endIndex));
+                dispatch(setSmallLoading(false))
+            }).catch(err => {
+                dispatch(setSmallLoading(false));
+                Swal.fire({
+                    icon: 'error',
+                    title: 'OOps..',
+                    text: 'Something went wrong, Try Again!'
+                })
+            })
+        }
+
     }, [])
 
     const reGetData = () => {
         dispatch(setSmallLoading(true))
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/getAllWorkRequests`, { headers: { Authorization: `${user.Department._id}` } }).then((res) => {
-            setAllDataArr(res.data.data);
-            setRequests(res.data.data.slice(startIndex, endIndex));
-            dispatch(setSmallLoading(false))
-        }).catch(err => {
-            dispatch(setSmallLoading(false));
-            Swal.fire({
-                icon: 'error',
-                title: 'OOps..',
-                text: 'Something went wrong, Try Again!'
+        if (tabData?.Approval) {
+            axios.get(`${process.env.REACT_APP_BACKEND_URL}/getTotalWorkRequests`, { headers: { Authorization: `${user.Company._id}` } }).then((res) => {
+                setAllDataArr(res.data.data);
+                setRequests(res.data.data.slice(startIndex, endIndex));
+                dispatch(setSmallLoading(false))
+            }).catch(err => {
+                dispatch(setSmallLoading(false));
+                Swal.fire({
+                    icon: 'error',
+                    title: 'OOps..',
+                    text: 'Something went wrong, Try Again!'
+                })
             })
-        })
+        } else {
+            axios.get(`${process.env.REACT_APP_BACKEND_URL}/getAllWorkRequests`, { headers: { Authorization: `${user.Department._id}` } }).then((res) => {
+                setAllDataArr(res.data.data);
+                setRequests(res.data.data.slice(startIndex, endIndex));
+                dispatch(setSmallLoading(false))
+            }).catch(err => {
+                dispatch(setSmallLoading(false));
+                Swal.fire({
+                    icon: 'error',
+                    title: 'OOps..',
+                    text: 'Something went wrong, Try Again!'
+                })
+            })
+        }
     }
 
     const nextPage = () => {
@@ -122,190 +153,190 @@ function TechMWR() {
         }
     }
 
- 
+
 
 
 
     return (
         <>
 
-                <div className={`${style.searchbar}`}>
-                    <div className={style.sec1}>
-                        <img src={Search} alt="" />
-                        <input autoComplete='off' onChange={searchFunction} type="text" placeholder='Search MWR by id' />
+            <div className={`${style.searchbar}`}>
+                <div className={style.sec1}>
+                    <img src={Search} alt="" />
+                    <input autoComplete='off' onChange={searchFunction} type="text" placeholder='Search MWR by id' />
+                </div>
+                {tabData?.Creation && (
+                    <div onClick={() => {
+                        dispatch(updateTabData({ ...tabData, Tab: 'generateMWR' }))
+                    }} className={style.sec2}>
+                        <img src={add} alt="" />
+                        <p>Generate MWR</p>
                     </div>
-                    {tabData?.Creation && (
-                        <div onClick={() => {
-                            dispatch(updateTabData({ ...tabData, Tab: 'generateMWR' }))
-                        }} className={style.sec2}>
-                            <img src={add} alt="" />
-                            <p>Generate MWR</p>
-                        </div>
-                    )}
-                </div>
-                <div className={style.tableParent}>
-                    {!requests || requests?.length === 0 ? (
-                        <div className='w-100 d-flex align-items-center justify-content-center'>
-                            <p className='text-center'>No any Records Available here.</p>
-                        </div>
-                    ) : (
+                )}
+            </div>
+            <div className={style.tableParent}>
+                {!requests || requests?.length === 0 ? (
+                    <div className='w-100 d-flex align-items-center justify-content-center'>
+                        <p className='text-center'>No any Records Available here.</p>
+                    </div>
+                ) : (
 
-                        <table className={style.table}>
-                            <tr className={style.headers}>
-                                <td>MWR Id</td>
-                                <td>Date</td>
-                                <td>Time</td>
-                                <td>Area</td>
-                                <td>Department</td>
-                                <td>Machine Id</td>
-                                <td>Priority</td>
-                                <td>Description</td>
-                                <td>Instruction</td>
-                                {tabData?.Approval && (
-                                    <td>Action</td>
-                                )}
-                                <td>Start Time</td>
-                                <td>End Time</td>
-                                <td>Reason</td>
-                                <td>Detail</td>
-                                <td>Status</td>
-                                <td>MWR Detail</td>
-                            </tr>
-                            {
-                                requests?.map((request, i) => {
-                                    return (
-                                        <tr className={style.body} key={i}>
-                                            <td>
+                    <table className={style.table}>
+                        <tr className={style.headers}>
+                            <td>MWR Id</td>
+                            <td>Date</td>
+                            <td>Time</td>
+                            <td>Area</td>
+                            <td>Department</td>
+                            <td>Machine Id</td>
+                            <td>Priority</td>
+                            <td>Description</td>
+                            <td>Instruction</td>
+                            {tabData?.Approval && (
+                                <td>Action</td>
+                            )}
+                            <td>Start Time</td>
+                            <td>End Time</td>
+                            <td>Reason</td>
+                            <td>Detail</td>
+                            <td>Status</td>
+                            <td>MWR Detail</td>
+                        </tr>
+                        {
+                            requests?.map((request, i) => {
+                                return (
+                                    <tr className={style.body} key={i}>
+                                        <td>
+                                            <p>
+                                                {request.MWRId}
+                                            </p>
+                                        </td>
+                                        <td className={style.text1}>{request.Date.slice(0, 10).split('-')[2]}/{request.Date.slice(0, 10).split('-')[1]}/{request.Date.slice(0, 10).split('-')[0]}</td>
+                                        <td className={style.text2}>
+                                            {formattedTime(request.Time)}
+                                        </td>
+                                        <td className={style.text2}>{request.Area}</td>
+                                        <td className={style.text2}>{request.Department.DepartmentName}</td>
+                                        <td>
+                                            <p>
+                                                {request.Machinery.machineCode}
+                                            </p>
+                                        </td>
+                                        <td className={style.text3}>
+
+                                            {(request.Status === 'Pending') ? (
+
+                                                <select onChange={(e) => {
+                                                    setSelectedPriority(e.target.value);
+                                                }} name="" id="">
+                                                    <option style={{ display: 'none' }} value={request.Priority} selected disabled>{request.Priority}</option>
+                                                    <option value="A">A-Emergency Job</option>
+                                                    <option value="B">B-Urgent Job</option>
+                                                    <option value="C">within 8 days</option>
+                                                    <option value="D">within 7 days
+                                                        or more</option>
+                                                </select>
+                                            ) : (
                                                 <p>
-                                                    {request.MWRId}
+                                                    {request.Priority}
                                                 </p>
-                                            </td>
-                                            <td className={style.text1}>{request.Date.slice(0, 10).split('-')[2]}/{request.Date.slice(0, 10).split('-')[1]}/{request.Date.slice(0, 10).split('-')[0]}</td>
-                                            <td className={style.text2}>
-                                                {formattedTime(request.Time)}
-                                            </td>
-                                            <td className={style.text2}>{request.Area}</td>
-                                            <td className={style.text2}>{request.Department.DepartmentName}</td>
-                                            <td>
-                                                <p>
-                                                    {request.Machinery.machineCode}
-                                                </p>
-                                            </td>
-                                            <td className={style.text3}>
-
-                                                {(request.Status === 'Pending') ? (
-
-                                                    <select onChange={(e) => {
-                                                        setSelectedPriority(e.target.value);
-                                                    }} name="" id="">
-                                                        <option style={{ display: 'none' }} value={request.Priority} selected disabled>{request.Priority}</option>
-                                                        <option value="A">A-Emergency Job</option>
-                                                        <option value="B">B-Urgent Job</option>
-                                                        <option value="C">within 8 days</option>
-                                                        <option value="D">within 7 days
-                                                            or more</option>
-                                                    </select>
-                                                ) : (
-                                                    <p>
-                                                        {request.Priority}
-                                                    </p>
-                                                )}
-                                            </td>
-                                            <td><button onClick={() => {
-                                                setPopUpData(request.Description)
-                                                setalert(!alert)
-                                            }} className={style.viewBtn}>View</button></td>
-                                            <td><button onClick={() => {
-                                                setPopUpData(request.SpecialInstruction)
-                                                setalert(!alert)
-                                            }} className={style.viewBtn}>View</button></td>
-                                            {tabData?.Approval && (
-
-                                                <td>
-                                                    <button className={`${style.accept} ${request.Status === 'Approved' && 'bg-primary text-light'}`} onClick={() => {
-                                                        if (request.Status === 'Pending' || request.Status === 'Rejected') {
-
-                                                            setOpenedRequestId(request._id)
-                                                            setalert3(!alert3)
-                                                        } else {
-                                                            setPopUpData('Sorry! This Job is Already Accepted or Completed');
-                                                            setalert(true)
-                                                        }
-                                                    }} >Accept</button>
-                                                    <button onClick={() => {
-                                                        if (request.Status === 'Approved' || request.Status === 'Completed' || request.Status === 'Rejected') {
-                                                            setPopUpData('Sorry! Job is not Pending for Rejection')
-                                                            setalert(true)
-                                                        } else {
-                                                            if (selectedPriority) {
-
-                                                                setRejectObj({ ...rejectObj, Priority: selectedPriority })
-                                                            } else {
-                                                                setRejectObj({ ...rejectObj, Priority: request.Priority })
-                                                            }
-                                                            setOpenedRequestId(request._id);
-                                                            setalert2(!alert2)
-                                                        }
-                                                    }} className={`${style.reject} ${request.Status === 'Rejected' && 'bg-danger text-light'}`}>Reject</button>
-                                                    <button onClick={() => {
-                                                        if (request.Status !== 'Approved') {
-                                                            setPopUpData("Kindly Accept job before completing!");
-                                                            setalert(true)
-
-                                                        } else {
-
-                                                            setOpenedRequestId(request._id)
-                                                            setPopUpData('Do you Really want to complete this request ?');
-                                                            setAlert4(true);
-                                                        }
-                                                    }} className={`${style.complete} ${request.Status === 'Completed' && 'bg-success text-light'}`}>Complete</button>
-                                                </td>
                                             )}
-                                            <td className={style.text2}>{formattedTime(request.StartTime)}</td>
-                                            <td className={style.text2}>{formattedTime(request.EndTime)}</td>
-                                            <td><button onClick={() => {
-                                                if (request.Status === 'Rejected') {
+                                        </td>
+                                        <td><button onClick={() => {
+                                            setPopUpData(request.Description)
+                                            setalert(!alert)
+                                        }} className={style.viewBtn}>View</button></td>
+                                        <td><button onClick={() => {
+                                            setPopUpData(request.SpecialInstruction)
+                                            setalert(!alert)
+                                        }} className={style.viewBtn}>View</button></td>
+                                        {tabData?.Approval && (
 
-                                                    setPopUpData(request.Reason)
-                                                    setalert(!alert)
-                                                } else {
-                                                    setPopUpData(` Job is ${request.Status}`);
-                                                    setalert(true)
-                                                }
-                                            }} className={style.viewBtn}>View</button></td>
-                                            <td><button className={style.viewBtn} onClick={() => {
-                                                dispatch(changeId(request.Machinery._id))
-                                                dispatch(updateTabData({ ...tabData, Tab: 'viewCorrectiveMaintenanceForMWR' }))
+                                            <td>
+                                                <button className={`${style.accept} ${request.Status === 'Approved' && 'bg-primary text-light'}`} onClick={() => {
+                                                    if (request.Status === 'Pending' || request.Status === 'Rejected') {
 
-                                            }}>View</button></td>
-                                            <td ><div className={`${style.text2} text-center ${(request.Status === 'Approved') && (style.blueStatus)} ${(request.Status === 'Completed') && (style.greenStatus)} ${request.Status === 'Rejected' && (style.redStatus)}`}><p>{request.Status}</p></div></td>
-                                            <td><button onClick={() => {
-                                                dispatch(changeId(request._id))
-                                                dispatch(updateTabData({ ...tabData, Tab: 'MWRDetails' }))
+                                                        setOpenedRequestId(request._id)
+                                                        setalert3(!alert3)
+                                                    } else {
+                                                        setPopUpData('Sorry! This Job is Already Accepted or Completed');
+                                                        setalert(true)
+                                                    }
+                                                }} >Accept</button>
+                                                <button onClick={() => {
+                                                    if (request.Status === 'Approved' || request.Status === 'Completed' || request.Status === 'Rejected') {
+                                                        setPopUpData('Sorry! Job is not Pending for Rejection')
+                                                        setalert(true)
+                                                    } else {
+                                                        if (selectedPriority) {
 
-                                            }} className={style.viewBtn}>View</button></td>
-                                        </tr>
-                                    )
+                                                            setRejectObj({ ...rejectObj, Priority: selectedPriority })
+                                                        } else {
+                                                            setRejectObj({ ...rejectObj, Priority: request.Priority })
+                                                        }
+                                                        setOpenedRequestId(request._id);
+                                                        setalert2(!alert2)
+                                                    }
+                                                }} className={`${style.reject} ${request.Status === 'Rejected' && 'bg-danger text-light'}`}>Reject</button>
+                                                <button onClick={() => {
+                                                    if (request.Status !== 'Approved') {
+                                                        setPopUpData("Kindly Accept job before completing!");
+                                                        setalert(true)
 
-                                })
-                            }
-                        </table>
-                    )}
-                </div>
-                <div className={style.next}>
-                    {startIndex > 0 && (
+                                                    } else {
 
-                        <button className='mx-2' onClick={backPage}>
-                            {'<< '}Back
-                        </button>
-                    )}
-                    {allDataArr?.length > endIndex && (
+                                                        setOpenedRequestId(request._id)
+                                                        setPopUpData('Do you Really want to complete this request ?');
+                                                        setAlert4(true);
+                                                    }
+                                                }} className={`${style.complete} ${request.Status === 'Completed' && 'bg-success text-light'}`}>Complete</button>
+                                            </td>
+                                        )}
+                                        <td className={style.text2}>{formattedTime(request.StartTime)}</td>
+                                        <td className={style.text2}>{formattedTime(request.EndTime)}</td>
+                                        <td><button onClick={() => {
+                                            if (request.Status === 'Rejected') {
 
-                        <button className='mx-2' onClick={nextPage}>
-                            next{'>> '}
-                        </button>
-                    )}
-                </div>
+                                                setPopUpData(request.Reason)
+                                                setalert(!alert)
+                                            } else {
+                                                setPopUpData(` Job is ${request.Status}`);
+                                                setalert(true)
+                                            }
+                                        }} className={style.viewBtn}>View</button></td>
+                                        <td><button className={style.viewBtn} onClick={() => {
+                                            dispatch(changeId(request.Machinery._id))
+                                            dispatch(updateTabData({ ...tabData, Tab: 'viewCorrectiveMaintenanceForMWR' }))
+
+                                        }}>View</button></td>
+                                        <td ><div className={`${style.text2} text-center ${(request.Status === 'Approved') && (style.blueStatus)} ${(request.Status === 'Completed') && (style.greenStatus)} ${request.Status === 'Rejected' && (style.redStatus)}`}><p>{request.Status}</p></div></td>
+                                        <td><button onClick={() => {
+                                            dispatch(changeId(request._id))
+                                            dispatch(updateTabData({ ...tabData, Tab: 'MWRDetails' }))
+
+                                        }} className={style.viewBtn}>View</button></td>
+                                    </tr>
+                                )
+
+                            })
+                        }
+                    </table>
+                )}
+            </div>
+            <div className={style.next}>
+                {startIndex > 0 && (
+
+                    <button className='mx-2' onClick={backPage}>
+                        {'<< '}Back
+                    </button>
+                )}
+                {allDataArr?.length > endIndex && (
+
+                    <button className='mx-2' onClick={nextPage}>
+                        next{'>> '}
+                    </button>
+                )}
+            </div>
 
             {
                 alert ?
@@ -314,9 +345,9 @@ function TechMWR() {
                             <p class={style.msg}>{popUpData}</p>
                             <div className={style.alertbtns}>
                                 <button style={{
-                                    marginLeft : '120px',
-                                    marginTop : '25px'
-                                }}  onClick={alertManager} className={style.btn2}>Close</button>
+                                    marginLeft: '120px',
+                                    marginTop: '25px'
+                                }} onClick={alertManager} className={style.btn2}>Close</button>
                             </div>
                         </div>
                     </div> : null
@@ -328,7 +359,7 @@ function TechMWR() {
                             <form onSubmit={(e) => {
                                 e.preventDefault();
                                 dispatch(setSmallLoading(true))
-                                axios.patch(`/rejectMWR/${openedRequestId}`, {...rejectObj, rejectedBy : user.Name }).then(() => {
+                                axios.patch(`/rejectMWR/${openedRequestId}`, { ...rejectObj, rejectedBy: user.Name }).then(() => {
                                     dispatch(setSmallLoading(false))
                                     Swal.fire({
                                         title: 'Success',
@@ -372,7 +403,7 @@ function TechMWR() {
                             <div className={style.alertbtns}>
                                 <button onClick={() => {
                                     dispatch(setSmallLoading(true))
-                                    axios.patch(`/completeMWR/${openedRequestId}`, {completedBy : user.Name}).then(() => {
+                                    axios.patch(`/completeMWR/${openedRequestId}`, { completedBy: user.Name }).then(() => {
                                         dispatch(setSmallLoading(false))
                                         Swal.fire({
                                             title: 'Success',
@@ -410,7 +441,7 @@ function TechMWR() {
                                 setalert3(false);
                                 console.log(acceptObj)
                                 dispatch(setSmallLoading(true))
-                                axios.patch(`/acceptMWR/${openedRequestId}`, {...acceptObj, acceptedBy : user.Name }).then((res) => {
+                                axios.patch(`/acceptMWR/${openedRequestId}`, { ...acceptObj, acceptedBy: user.Name }).then((res) => {
                                     dispatch(setSmallLoading(false))
                                     Swal.fire({
                                         title: 'Success',

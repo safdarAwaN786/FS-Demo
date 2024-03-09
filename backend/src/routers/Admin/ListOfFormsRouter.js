@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const Form = require('../../models/Admin/ListOfFormsModel').ListOfForms;
 const { QuestionModel } = require('../../models/Admin/ListOfFormsModel');
-const authMiddleware = require('../../middleware/auth');
 // router.use(authMiddleware);
 
 // * Route to create a new form
@@ -62,7 +61,7 @@ router.get('/get-form-by-id/:formId', async (req, res) => {
 // * Route to get all forms
 router.get('/get-all-forms', async (req, res) => {
   try {
-    const departmentId = req.header('Authrization')
+    const departmentId = req.header('Authorization')
     const forms = await Form.find({ UserDepartment: departmentId }).populate('Department UserDepartment').populate({
       path: 'questions',
       model: 'Question'

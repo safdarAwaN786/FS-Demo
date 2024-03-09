@@ -23,9 +23,11 @@ function ShowFormAnswers() {
         dispatch(setSmallLoading(true))
         axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-record-by-recordId/${idToWatch}`, { headers: { Authorization: `${user._id}` } }).then((res) => {
             setDataToSend(res.data.data);
-            setAnswers(res.data.data.answers);
+            console.log(res.data.data)
+            setAnswers(res.data.data?.answers);
             dispatch(setSmallLoading(false))
         }).catch(err => {
+            console.log(err);
             dispatch(setSmallLoading(false));
             Swal.fire({
                 icon: 'error',
@@ -43,7 +45,7 @@ function ShowFormAnswers() {
                         <BsArrowLeftCircle
                             role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
                                 {
-                                    dispatch(updateTabData({ ...tabData, Tab: 'List of Forms' }))
+                                    dispatch(updateTabData({ ...tabData, Tab: 'Master List of Records/Forms' }))
                                 }
                             }} />
                     </div>
@@ -74,7 +76,7 @@ function ShowFormAnswers() {
                                     <input autoComplete='off' value={dataToSend?.Form.FormDescription} className='w-100' name='FormDescription' type="text" readOnly />
                                 </div>
                             </div>
-                            {answers.map((answer, index) => {
+                            {answers?.map((answer, index) => {
                                 return (
                                     <div style={{
                                         borderRadius: '6px'
@@ -214,7 +216,7 @@ function ShowFormAnswers() {
                                                 {answer.question?.options?.map((option, optindex) => {
                                                     return (
                                                         <div className='my-2 d-flex flex-row'>
-                                                            <input autoComplete='off' value={answer.CheckboxesAnswers.includes(option.optionText)} className='mx-2 mt-1' type='checkbox' readOnly />                                               <input autoComplete='off' type='text' value={option.optionText} style={{
+                                                            <input autoComplete='off' checked={answer.CheckboxesAnswers.includes(option.optionText)} className='mx-2 mt-1' type='checkbox' readOnly />                                               <input autoComplete='off' type='text' value={option.optionText} style={{
                                                                 borderRadius: '0px'
                                                             }} name='optionText' className='bg-light border-bottom border-secondary w-50 px-2 py-0 d-inline' readOnly />
                                                         </div>
@@ -227,7 +229,7 @@ function ShowFormAnswers() {
                                                 {answer.question?.options?.map((option, optindex) => {
                                                     return (
                                                         <div className='my-2 d-flex flex-row'>
-                                                            <input autoComplete='off' value={(answer.multipleChoiceAnswer === option.optionText)} style={{
+                                                            <input autoComplete='off' checked={(answer.multipleChoiceAnswer === option.optionText)} style={{
                                                                 width: '23px'
                                                             }} className='mx-2' type='radio' name={`question-${index}`} readOnly />
                                                             <input autoComplete='off' type='text' value={option.optionText} style={{

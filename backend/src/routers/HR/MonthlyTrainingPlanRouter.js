@@ -7,7 +7,7 @@ const router = new express.Router();
 require('dotenv').config()
 const cloudinary = require('cloudinary').v2;
 const multer = require('multer');
-const authMiddleware = require('../../middleware/auth');
+const EmployeeModel = require('../../models/HR/EmployeeModel')
 
 
 // router.use(authMiddleware);
@@ -127,7 +127,7 @@ router.patch('/assignEmployee', async (req, res) => {
   const monthlyId = req.body.monthlyId;
   console.log('request to assign employees to plan');
   try {
-    const monthlyPlan = await MonthlyPlan.findOne({ _id: monthlyId });
+    const monthlyPlan = await MonthlyPlan.findById(monthlyId);
 
     if (!monthlyPlan) {
       return res.status(404).send({ status: false, message: `${monthlyId} MonthlyPlan not found!` });
@@ -136,8 +136,9 @@ router.patch('/assignEmployee', async (req, res) => {
     if (!Array.isArray(employeeIds)) {
       return res.status(400).send({ status: false, message: 'Employee IDs should be provided as an array!' });
     }
-
-    const employees = await User.find({ _id: { $in: employeeIds } });
+    console.log(employeeIds);
+    const employees = await EmployeeModel.find({ _id: { $in: employeeIds } });
+    console.log(employees);
     
     const foundEmployeeIds = employees.map((employee) => employee._id.toString());
    
@@ -159,11 +160,12 @@ router.patch('/assignEmployee', async (req, res) => {
         .join(', ')}. `;
     }
     console.log(monthlyPlan.Employee);
+    console.log(foundEmployeeIds);
     const newEmployeeIds = foundEmployeeIds.filter((id) => !monthlyPlan.Employee.includes(id));
     console.log(newEmployeeIds);
     if (newEmployeeIds.length > 0) {
       // Update Employee schema for newly assigned employees
-      await User.updateMany({ _id: { $in: newEmployeeIds } }, { $set: { Assigned: true } });
+      await EmployeeModel.updateMany({ _id: { $in: newEmployeeIds } }, { $set: { Assigned: true } });
 
       // Assign employees to MonthlyPlan
       newEmployeeIds.forEach((employeeId) => {
@@ -199,7 +201,7 @@ router.patch('/update-training-status', async (req, res) => {
       console.log(dataArr[index]);
 
       // Check if the Employee ID is found
-      const employee = await User.findById(employeeId);
+      const employee = await EmployeeModel.findById(employeeId);
       if (!employee) {
         throw new Error('Employee ID not found');
       } else {
@@ -270,6 +272,7 @@ router.patch('/update-training-status', async (req, res) => {
     res.status(200).send({ status: true, message: "Success" });
 
   } catch (error) {
+    console.log(error);
     res.status(400).send({ message: error.message });
   }
 })

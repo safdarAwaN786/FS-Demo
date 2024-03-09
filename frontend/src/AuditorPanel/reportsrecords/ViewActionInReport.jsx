@@ -9,6 +9,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import Slider from 'rc-slider';
 import { setSmallLoading } from '../../redux/slices/loading';
+import html2pdf from 'html2pdf.js';
+import dayjs from 'dayjs'
 
 function ViewActionInReport() {
 
@@ -21,6 +23,7 @@ function ViewActionInReport() {
     const dispatch = useDispatch();
     const idToWatch = useSelector(state => state.idToProcess);
     const [correctiveAnswers, setCorrectiveAnswers] = useState([]);
+    const [downloadingPdf, setDownloadingPdf] = useState(false)
 
     const handleDownloadImage = async (imageURL) => {
         try {
@@ -100,6 +103,91 @@ function ViewActionInReport() {
             })
         })
     }, [])
+    console.log(actionData);
+    const downloadPDF = async () => {
+        
+        setDownloadingPdf(true)
+        var element = document.getElementById('printable');
+        var opt = {
+            margin: [1.3, 0, 0, 0],
+            filename: `${user.Department.DepartmentName}-doc.pdf`,
+            enableLinks: false,
+            pagebreak: { mode: 'avoid-all' },
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 4 },
+            jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+        };
+
+        html2pdf().from(element).set(opt).toPdf().get('pdf').then(async function (pdf) {
+            pdf.insertPage(1);
+            var totalPages = pdf.internal.getNumberOfPages();
+            //print current pdf width & height to console
+            console.log("getHeight:" + pdf.internal.pageSize.getHeight());
+            console.log("getWidth:" + pdf.internal.pageSize.getWidth());
+            for (var i = 1; i <= totalPages; i++) {
+                pdf.setPage(i);
+                pdf.setFillColor(0, 0, 0);
+                if (i === 1) {
+                    try {
+                        console.log(user.Company.CompanyLogo);
+                        const response = await fetch(user.Company.CompanyLogo);
+                        const blob = await response.blob();
+                        const imageBitmap = await createImageBitmap(blob);
+                        // create a canvas element and draw the image bitmap on it
+                        const canvas = document.createElement('canvas');
+                        canvas.width = imageBitmap.width;
+                        canvas.height = imageBitmap.height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(imageBitmap, 0, 0);
+                        // get the data URL of the canvas
+                        const dataURL = canvas.toDataURL('image/jpeg');
+                        // pass the data URL to the pdf.addImage method
+                        pdf.addImage(dataURL, 'JPEG', 1, 2.5, 3, 3);
+                        pdf.setFontSize(20);
+                        pdf.text(`Company : ${user.Company.CompanyName}`, 1, (pdf.internal.pageSize.getHeight() / 2));
+                        pdf.setFontSize(15);
+                        pdf.text(`Address : ${user.Company.Address}`, 1, (pdf.internal.pageSize.getHeight() / 2) + 0.5);
+                        pdf.setFontSize(15);
+                        pdf.setLineWidth(0.1); // Example line width
+                        pdf.line(0.1, (pdf.internal.pageSize.getHeight() / 2) + 1, pdf.internal.pageSize.getWidth() - 0.2, (pdf.internal.pageSize.getHeight() / 2) + 1)
+                        pdf.text("Checklist Id", 1, (pdf.internal.pageSize.getHeight() / 2) + 1.5);
+                        pdf.text(`${actionData?.Report?.ConductAudit?.Checklist?.ChecklistId}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 1.5);
+                        pdf.text("Action By", 1, (pdf.internal.pageSize.getHeight() / 2) + 1.8);
+                        pdf.text(`${actionData.CorrectionBy}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 1.8);
+                        pdf.text("Action Date", 1, (pdf.internal.pageSize.getHeight() / 2) + 2.1);
+                        pdf.text(`${dayjs(actionData.CorrectionDate).format('DD/MM/YYYY')}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 2.1);
+                        pdf.text("Revision Number", 1, (pdf.internal.pageSize.getHeight() / 2) + 2.4);
+                        pdf.text(`${actionData?.Report?.ConductAudit?.Checklist?.RevisionNo}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 2.4);
+                        // if (dataToSend.ConductAudit.Checklist.Status == 'Approved') {
+                        //     pdf.text("Approved By", 1, (pdf.internal.pageSize.getHeight() / 2) + 2.7);
+                        //     pdf.text(`${dataToSend.ConductAudit.Checklist.ApprovedBy}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 2.7);
+                        //     pdf.text("Approval Date", 1, (pdf.internal.pageSize.getHeight() / 2) + 3.0);
+                        //     pdf.text(`${formatDate(dataToSend.ApprovalDate)}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 3.0);
+                        // }
+                        // if (dataToSend.ReviewedBy) {
+                        //     pdf.text("Reviewed By", 1, (pdf.internal.pageSize.getHeight() / 2) + 3.3);
+                        //     pdf.text(`${dataToSend.ReviewedBy}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 3.3);
+                        //     pdf.text("Reviewed Date", 1, (pdf.internal.pageSize.getHeight() / 2) + 3.6);
+                        //     pdf.text(`${formatDate(dataToSend.ReviewDate)}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 3.6);
+                        // }
+                    } catch (error) {
+                        console.log(error);
+                    }
+                } else {
+                    pdf.setFontSize(15)
+                    pdf.text('Powered By Feat Technology', (pdf.internal.pageSize.getWidth() / 2) - 1.3, 0.5);
+                    pdf.setFontSize(10);
+                    pdf.text(`${user.Company.CompanyName}`, pdf.internal.pageSize.getWidth() - 2, 0.3);
+                    pdf.text('Corrective Action', pdf.internal.pageSize.getWidth() - 2, 0.5);
+                    pdf.text(`Checklist : ${actionData?.Report?.ConductAudit?.Checklist?.ChecklistId}`, pdf.internal.pageSize.getWidth() - 2, 0.7);
+                    pdf.text(`Revision No :${actionData?.Report?.ConductAudit?.Checklist?.RevisionNo}`, pdf.internal.pageSize.getWidth() - 2, 0.9);
+                    pdf.text(`Action Date : ${dayjs(actionData.CorrectionDate).format('DD/MM/YYYY')}`, pdf.internal.pageSize.getWidth() - 2, 1.1)
+                }
+            }
+        }).save();
+        setDownloadingPdf(false);
+        dispatch(setSmallLoading(false));
+    };
 
 
 
@@ -122,7 +210,7 @@ function ViewActionInReport() {
                             Corrective Action
                         </div>
                     </div>
-                    <form className='bg-white' encType='multipart/form-data' onSubmit={(event) => {
+                    <form id='printable' className='bg-white' encType='multipart/form-data' onSubmit={(event) => {
                         event.preventDefault();
                     }}>
                         {correctiveAnswers?.map((correctiveAnswer, index) => {
@@ -277,8 +365,8 @@ function ViewActionInReport() {
                                                 <p className='fw-bold'>Root Cause : </p>
                                                 <textarea placeholder='write here..' value={correctiveAnswer?.RootCause} rows={4} className='w-100 border-0 p-2 m-2' type='text' required readOnly />
                                             </div>
-                                            {correctiveAnswer?.CorrectiveDoc && (
-                                                <div className='col-lg-6 col-md-12'>
+                                            {(correctiveAnswer?.CorrectiveDoc && !downloadingPdf) && (
+                                                <div className={`${downloadingPdf ? 'd-none' : ' '} col-lg-6 col-md-12`}>
                                                     <p><b>Corrective Document : </b></p>
                                                     <a onClick={() => {
                                                         handleDownloadImage(correctiveAnswer?.CorrectiveDoc)
@@ -290,14 +378,14 @@ function ViewActionInReport() {
                                 </div>
                             )
                         })}
-
-
-
-
-
-
-
                     </form>
+                    <div className={`${style.btn} px-lg-4 px-2 d-flex justify-content-center`}>
+                        <button onClick={() => {
+                            dispatch(setSmallLoading(true))
+                            setDownloadingPdf(true)
+                            setTimeout(downloadPDF, 2000);
+                        }} type='button' >Download</button>
+                    </div>
                 </div>
             </div>
             {
