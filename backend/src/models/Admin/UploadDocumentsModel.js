@@ -122,8 +122,6 @@ UploadDocumentsSchema.pre('save', async function (next) {
       throw new Error('Department not found');
     }
 
-  
-
     const documentTypeNumber = { 'Manuals': 1, 'Procedures': 2, 'SOPs': 3, 'Forms': 4 }[this.DocumentType];
     if (!documentTypeNumber) {
       throw new Error('Invalid Document Type');
@@ -141,7 +139,8 @@ UploadDocumentsSchema.pre('save', async function (next) {
       nextNumericPart = parseInt(parts[3]) + 1;
     }
 
-    this.DocumentId = `${department.Company.ShortName}/${department.ShortName}/${documentTypeNumber}/${nextNumericPart}`;
+    this.DocumentId = `${department.Company.ShortName}/${department.ShortName}/${documentTypeNumber}/${nextNumericPart.toString().padStart(3, '0')}`;
+    console.log('Generated DocumentId:', this.DocumentId);
     next();
   } catch (error) {
     next(error);

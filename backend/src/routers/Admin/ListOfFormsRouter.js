@@ -186,150 +186,157 @@ router.put('/send-form', async (req, res) => {
 // * Review Form
 router.patch('/reviewForm', async (req, res) => {
   try {
+    const { formId, reviewedBy } = req.body;
 
-    const reviewedBy = req.body.reviewedBy;
-    const formId = req.body.formId;
+    // Find the form by ID
+    const form = await Form.findById(formId);
 
-    // Find the document by ID
-    const document = await Form.findById(formId);
-
-    // If document not found
-    if (!document) {
-      console.error(`Document with ID: ${document} not found.`);
-      return res.status(404).json({ error: 'Document not found.' });
+    // If form not found
+    if (!form) {
+      console.error(`Form with ID: ${formId} not found.`);
+      return res.status(404).json({ error: 'Form not found.' });
     }
 
-    if (document.Status === 'Reviewed') {
-      console.warn(`Document with ID: ${formId} is already marked as 'Reviewed'.`);
-      return res.status(400).json({ error: 'Document is already reviewed.' });
+    // Ensure the Form status is pending
+    if (form.Status !== 'Pending') {
+      console.warn(`Form with ID: ${formId} cannot be reviewed as it is not in 'Pending' status.`);
+      return res.status(400).json({ error: 'Form status is not eligible for review.' });
     }
-    document.ReviewDate = new Date(),
-      document.Status = 'Reviewed';
-    document.RejectionDate = null;
-    document.ReviewedBy = reviewedBy
 
-    // Save the updated document
-    await document.save();
-    res.status(200).send({ status: true, message: 'Document reviewed successfully', data: document });
+    // Ensure the Form status is not already Reviewed or Rejected
+    if (form.Status === 'Reviewed' || form.Status === 'Rejected' || form.Status === 'Approved' || form.Status === 'Disapproved') {
+      console.warn(`Form with ID: ${formId} cannot be reviewed as it is already in 'Reviewed' or 'Rejected' or 'Approved' or 'Disapproved' status.`);
+      return res.status(400).json({ error: 'Form status is not eligible for review.' });
+    }
 
+    // Update form status to Reviewed
+    form.Status = 'Reviewed';
+    form.ReviewedBy = reviewedBy;
+    form.RejectedBy = "";
+    form.RejectionDate = null;
+    form.ReviewDate = new Date();
+
+    // Save the updated form
+    await form.save();
+
+    res.status(200).send({ status: true, message: 'Form reviewed successfully', data: form });
   } catch (error) {
-    res.status(500).send({ status: false, message: 'Failed to update document review', error: error.message });
+    res.status(500).send({ status: false, message: 'Failed to update form review', error: error.message });
   }
 });
 
 // * Reject Form
 router.patch('/rejectForm', async (req, res) => {
   try {
+    const { formId, reason, rejectedBy } = req.body;
 
-    const rejectBy = req.body.rejectedBy;
-    const { formId, reason } = req.body;
+    // Find the form by ID
+    const form = await Form.findById(formId);
 
-    // Find the document by ID
-    const document = await Form.findById(formId);
-
-    // If document not found
-    if (!document) {
-      console.error(`Document with ID: ${document} not found.`);
-      return res.status(404).json({ error: 'Document not found.' });
+    // If form not found
+    if (!form) {
+      console.error(`Form with ID: ${formId} not found.`);
+      return res.status(404).json({ error: 'Form not found.' });
     }
 
-    if (document.Status === 'Reviewed' || document.Status === 'Rejected') {
-      console.warn(`Document with ID: ${formId} is already marked as 'Reviewed'. or Aleady marked as 'Rejected'`);
-      return res.status(400).json({ error: 'Document is already reviewed or rejected .' });
+    // Ensure the form status is pending
+    if (form.Status !== 'Pending') {
+      console.warn(`Form with ID: ${formId} cannot be rejected as it is not in 'Pending' status.`);
+      return res.status(400).json({ error: 'Form status is not eligible for rejection.' });
     }
 
-    document.Reason = reason
-    document.RejectionDate = new Date(),
-      document.ReviewDate = null,
-      document.Status = 'Rejected';
-    document.RejectedBy = rejectBy
+    // Ensure the form status is not already Reviewed or Rejected
+    if (form.Status === 'Reviewed' || form.Status === 'Rejected' || form.Status === 'Approved' || form.Status === 'Disapproved') {
+      console.warn(`Form with ID: ${formId} cannot be rejected as it is already in 'Reviewed' or 'Rejected' or 'Approved' or 'Disapproved' status.`);
+      return res.status(400).json({ error: 'Form status is not eligible for rejected.' });
+    }
+    // Update form status to Rejected
+    form.Reason = reason;
+    form.RejectionDate = new Date();
+    form.ReviewDate = null;
+    form.ReviewedBy = "";
+    form.Status = 'Rejected';
+    form.RejectedBy = rejectedBy;
 
-    // Save the updated document
-    await document.save();
-    res.status(200).send({ status: true, message: 'Document rejected successfully', data: document });
+    // Save the updated form
+    await form.save();
 
+    res.status(200).send({ status: true, message: 'Form rejected successfully', data: form });
   } catch (error) {
-    res.status(500).send({ status: false, message: 'Failed to update document reject', error: error.message });
+    res.status(500).send({ status: false, message: 'Failed to update form rejection', error: error.message });
   }
 });
 
 // * Approve Form
 router.patch('/approveForm', async (req, res) => {
   try {
+    const { formId, approvedBy } = req.body;
 
-    const approveBy = req.body.approveBy;
-    const documentId = req.body.id;
+    // Find the form by ID
+    const form = await Form.findById(formId);
 
-    // Find the document by ID
-    const document = await Form.findById(documentId);
-
-    // If document not found
-    if (!document) {
-      console.error(`Document with ID: ${document} not found.`);
-      return res.status(404).json({ error: 'Document not found.' });
+    // If form not found
+    if (!form) {
+      console.error(`Form with ID: ${formId} not found.`);
+      return res.status(404).json({ error: 'Form not found.' });
     }
 
-    if (document.Status === 'Approved') {
-      console.warn(`Document with ID: ${documentId} is already marked as 'Approved'.`);
-      return res.status(400).json({ error: 'Document is already approved.' });
+    // Ensure the form status is not already Approved or Disapproved
+    if (form.Status === 'Approved' || form.Status === 'Disapproved' || form.Status === 'Rejected' || form.Status === 'Pending') {
+      console.warn(`Form with ID: ${formId} cannot be approved as it is already in 'Approved' or 'Disapproved' or 'Rejected' or 'Pending' status.`);
+      return res.status(400).json({ error: 'Form status is not eligible for approval.' });
     }
 
-    if (document.Status == 'Rejected') {
-      return res.status(404).json({ error: 'You cannot approve this document' })
-    }
+    // Update form status to Approved
+    form.Status = 'Approved';
+    form.ApprovedBy = approvedBy;
+    form.DisapprovedBy = "";
+    form.DisapprovalDate = null;
+    form.ApprovalDate = new Date();
 
-    document.ApprovalDate = new Date(),
-      document.Status = 'Approved';
-    document.DisapprovalDate = null
-    document.ApprovedBy = approveBy
+    // Save the updated form
+    await form.save();
 
-    // Save the updated document
-    await document.save();
-    res.status(200).send({ status: true, message: 'Document approved successfully', data: document });
-
+    res.status(200).send({ status: true, message: 'Form approved successfully', data: form });
   } catch (error) {
-    console.log(error);
-    res.status(500).send({ status: false, message: 'Failed to update document approve', error: error.message });
+    res.status(500).send({ status: false, message: 'Failed to update form approval', error: error.message });
   }
 });
 
-// * Diapprove Form
+// * Disapprove Form
 router.patch('/disapproveForm', async (req, res) => {
   try {
+    const { formId, reason, disapprovedBy } = req.body;
 
-    const disapproveBy = req.body.disapproveBy;
-    const { formId, reason } = req.body;
+    // Find the form by ID
+    const form = await Form.findById(formId);
 
-    // Find the document by ID
-    const document = await Form.findById(formId);
-
-    // If document not found
-    if (!document) {
-      console.error(`Document with ID: ${document} not found.`);
-      return res.status(404).json({ error: 'Document not found.' });
+    // If form not found
+    if (!form) {
+      console.error(`Form with ID: ${formId} not found.`);
+      return res.status(404).json({ error: 'Form not found.' });
     }
 
-    if (document.Status == 'Rejected') {
-      return res.status(404).json({ error: 'You cannot disapprove this document' })
+    // Ensure the form status is not already Approved or Disapproved
+    if (form.Status === 'Approved' || form.Status === 'Disapproved' || form.Status === 'Rejected' || form.Status === 'Pending') {
+      console.warn(`Form with ID: ${formId} cannot be disapproved as it is already in 'Approved' or 'Disapproved' or 'Rejected' or 'Pending' status.`);
+      return res.status(400).json({ error: 'Form status is not eligible for disapproval.' });
     }
 
-    if (document.Status === 'Disapproved' || document.Status === 'Approved') {
-      console.warn(`Document with ID: ${formId} is already marked as 'Disapproved'. or Aleady marked as 'Approved'`);
-      return res.status(400).json({ error: 'Document is already Disapproved or Approved .' });
-    }
+    // Update form status to Disapproved
+    form.DisapprovalDate = new Date();
+    form.Status = 'Disapproved';
+    form.Reason = reason;
+    form.ApprovalDate = null;
+    form.ApprovedBy = "";
+    form.DisapprovedBy = disapprovedBy;
 
-    document.DisapprovalDate = new Date();
-    document.Status = 'Disapproved';
-    document.Reason = reason;
-    document.ApprovalDate = null;
-    document.DisapprovedBy = disapproveBy
+    // Save the updated form
+    await form.save();
 
-    // Save the updated document
-    await document.save();
-    res.status(200).send({ status: true, message: 'Document disapproved successfully', data: document });
-
+    res.status(200).send({ status: true, message: 'Form disapproved successfully', data: form });
   } catch (error) {
-    res.status(500).send({ status: false, message: 'Failed to update document disapprove', error: error.message });
+    res.status(500).send({ status: false, message: 'Failed to update form disapproval', error: error.message });
   }
 });
 

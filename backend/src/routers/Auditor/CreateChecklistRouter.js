@@ -7,21 +7,51 @@ const router = express.Router();
 
 // router.use(authMiddleware);
 
+// router.post('/addChecklist', async (req, res) => {
+//     console.log('Received POST request to add a checklist:', req.body);
+//     try {
+
+//         const createdBy = req.body.createdBy;
+//         const createdQuestions = await ChecklistQuestionModel.create(req.body.ChecklistQuestions);
+//         const questionsArr = Object.values(createdQuestions);
+//         const questionsIds = questionsArr.map(questionObj => questionObj._id);
+//         console.log(questionsIds);
+
+//         // The checklist data sent in the request body
+//         const checklist = new Checklists({
+//             ...req.body,
+//             CreatedBy: createdBy,
+//             CreationDate: new Date(),
+//             ChecklistQuestions: questionsIds,
+//             UserDepartment: req.header('Authorization')
+//         });
+
+//         await checklist.save();
+//         res.status(201).send({ status: true, message: 'The checklist is added!', data: checklist, });
+//         console.log(new Date().toLocaleString() + ' ' + 'ADD Checklist Successfully!');
+
+//     } catch (e) {
+//         console.error('Error adding checklist:', e);
+//         res.status(400).json({ message: e.message });
+//     }
+// });
+
 
 // * POST a new checklist
 router.post('/addChecklist', async (req, res) => {
     console.log('Received POST request to add a checklist:', req.body);
     try {
-
         const createdBy = req.body.createdBy;
+        
+        // Create ChecklistQuestions
+        const createdQuestions = await Promise.all(req.body.ChecklistQuestions.map(async question => {
+            return await ChecklistQuestionModel.create(question);
+        }));
+        
+        // Extract ChecklistQuestions ObjectIds
+        const questionsIds = createdQuestions.map(question => question._id);
 
-        const createdQuestions = await ChecklistQuestionModel.create(req.body.ChecklistQuestions);
-        const questionsArr = Object.values(createdQuestions);
-        const questionsIds = questionsArr.map(questionObj => questionObj._id);
-        console.log(questionsIds);
-
-
-        // The checklist data sent in the request body
+        // Create Checklist
         const checklist = new Checklists({
             ...req.body,
             CreatedBy: createdBy,
@@ -31,11 +61,8 @@ router.post('/addChecklist', async (req, res) => {
         });
 
         await checklist.save();
-
-
-        res.status(201).send({ status: true, message: 'The checklist is added!', data: checklist, });
+        res.status(201).send({ status: true, message: 'The checklist is added!', data: checklist });
         console.log(new Date().toLocaleString() + ' ' + 'ADD Checklist Successfully!');
-
     } catch (e) {
         console.error('Error adding checklist:', e);
         res.status(400).json({ message: e.message });

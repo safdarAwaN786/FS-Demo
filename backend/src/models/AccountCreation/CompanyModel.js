@@ -5,8 +5,6 @@ const { Schema } = mongoose;
 // * Creation of Company Schema
 const CompanySchema = new mongoose.Schema({
  
-    
-
     CompanyId: {
         type: String,
         unique: true

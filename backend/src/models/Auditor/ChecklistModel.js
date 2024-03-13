@@ -3,6 +3,7 @@ const { Schema } = mongoose;
 const DepartmentModel = require('../../models/AccountCreation/DepartmentModel');
 const UserModel = require('../../models/AccountCreation/UserModel');
 const Company = require('../../models/AccountCreation/CompanyModel');
+
 // * Creation of CreateChecklists Schema
 const ChecklistQuestionSchema = new mongoose.Schema({
 
@@ -10,13 +11,13 @@ const ChecklistQuestionSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+
   ComplianceType: {
     type: String,
     enum: ['Yes/No', 'GradingSystem', 'Good/Fair/Poor', 'Safe/AtRisk', 'Pass/Fail', 'Compliant/NonCompliant', 'Conform/MinorNonComform/MajorNonConform/CriticalNonConform/Observation'],
     required: true,
   },
 
- 
   Required: {
     type: Boolean,
     default: false
@@ -55,10 +56,12 @@ const ChecklistSchema = new mongoose.Schema({
     type: Number,
     default: 0
   },
+
   UserDepartment : {
     type : Schema.Types.ObjectId,
     ref : 'Department'
   },
+
   Status: {
     type: String,
     enum: ['Pending', 'Approved', 'Disapproved'],
@@ -114,8 +117,6 @@ ChecklistSchema.pre('save', async function (next) {
       throw new Error('Department not found');
     }
 
-
-
     const documentTypeNumber = { 'Manuals': 1, 'Procedures': 2, 'SOPs': 3, 'Forms': 4 }[this.DocumentType];
     if (!documentTypeNumber) {
       throw new Error('Invalid Document Type');
@@ -136,6 +137,7 @@ ChecklistSchema.pre('save', async function (next) {
     this.ChecklistId = `${department.Company.ShortName}/${department.ShortName}/${documentTypeNumber}/${nextNumericPart.toString().padStart(3, '0')}`;
     console.log('Generated ChecklistId:', this.ChecklistId);
     next();
+    
   } catch (error) {
     next(error);
   }

@@ -9,6 +9,7 @@ const UserSchema = new mongoose.Schema({
         type: Schema.Types.ObjectId,
         ref: 'Department',
     },
+
     PhoneNumber: {
         type: Number,
         validate: {
@@ -19,9 +20,11 @@ const UserSchema = new mongoose.Schema({
             message: 'Phone number must have a maximum of 11 digits.',
         },
     },
+
     Qualification: {
         type: String,
     },
+
     CNIC: {
         type: Number,
         validate: {
@@ -37,6 +40,7 @@ const UserSchema = new mongoose.Schema({
         type: Schema.Types.ObjectId,
         ref: 'Company',
     },
+
     UserDepartment: {
         type: Schema.Types.ObjectId,
         ref: 'Department',
@@ -46,11 +50,13 @@ const UserSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+
     TrainingStatus: {
         type: String,
         enum: ['Trained', 'Not Trained'],
         default: 'Not Trained'
     },
+
     UserId: {
         type: String
     },
@@ -80,25 +86,27 @@ const UserSchema = new mongoose.Schema({
     EmployeeCV: {
         type: Object
     },
+
     Age: {
         type: Number,
-
     },
+
     Specialities: {
         type: String
     },
+
     TrainerImage: {
         type: String
-        // required: true
     },
+
     TrainerDocument: {
         type: String
-        // required: true
     },
 
     EmployeeImage: {
         type: Object
     },
+    
     EmployeeData: [{
 
         Training: {
@@ -139,6 +147,7 @@ const UserSchema = new mongoose.Schema({
     CreationDate: {
         type: Date
     },
+
     AuditorImage: {
         type: String
     },
@@ -146,6 +155,7 @@ const UserSchema = new mongoose.Schema({
     AuditorDocument: {
         type: String
     },
+
     ApprovedAuditorLetter: {
         type: String
     },
@@ -174,31 +184,37 @@ const UserSchema = new mongoose.Schema({
             }
         }
     },
+
     isEmployee: {
         type: Boolean,
         default: false,
         required: true
     },
+
     isProcessOwner : {
         type : Boolean,
         default : false,
         required : true
     },
+
     isDeputyOwner : {
         type : Boolean,
         default : false,
         required : true
     },
+
     isAuditor : {
         type : Boolean,
         default : false,
         required : true
     },
+
     isMember: {
         type: Boolean,
         required: true,
         default: false
     },
+
     isTrainer: {
         type: Boolean,
         required: true,
@@ -276,7 +292,7 @@ const UserSchema = new mongoose.Schema({
     isSuspended: {
         type: Boolean,
         required: true,
-        default: false // Access is not suspended by default
+        default: false
     }
 
 }, {
