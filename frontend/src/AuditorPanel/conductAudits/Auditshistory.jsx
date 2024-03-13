@@ -31,9 +31,9 @@ function AuditsHistory() {
         }).catch(err => {
             dispatch(setSmallLoading(false));
             Swal.fire({
-                icon : 'error',
-                title : 'OOps..',
-                text : 'Something went wrong, Try Again!'
+                icon: 'error',
+                title: 'OOps..',
+                text: 'Something went wrong, Try Again!'
             })
         })
     }, [])
@@ -42,102 +42,98 @@ function AuditsHistory() {
         dispatch(setSmallLoading(true))
         axios.get(`${process.env.REACT_APP_BACKEND_URL}/getChecklistById/${idToWatch}`).then((res) => {
             console.log(res.data);
-            
+
             setChecklistData(res.data.data);
             dispatch(setSmallLoading(false))
         }).catch(err => {
             dispatch(setSmallLoading(false));
             Swal.fire({
-                icon : 'error',
-                title : 'OOps..',
-                text : 'Something went wrong, Try Again!'
+                icon: 'error',
+                title: 'OOps..',
+                text: 'Something went wrong, Try Again!'
             })
         })
     }, [])
 
     return (
         <>
-                <div className='mx-lg-5 px-2 mx-md-4 mx-2 mt-5 mb-1 '>
-                    <BsArrowLeftCircle onClick={(e) => {
-                        dispatch(updateTabData({...tabData, Tab : 'Conduct Audit'}))
-                    }} className='fs-3 text-danger mx-1' role='button' />
+            <div className='mx-lg-5 px-2 mx-md-4 mx-2 mt-5 mb-1 '>
+                <BsArrowLeftCircle onClick={(e) => {
+                    dispatch(updateTabData({ ...tabData, Tab: 'Conduct Audit' }))
+                }} className='fs-3 text-danger mx-1' role='button' />
+            </div>
+            <div className={`${style.headers} mt-0`}>
+                <div className={style.spans}>
+                    <span></span>
+                    <span></span>
+                    <span></span>
                 </div>
-                <div className={`${style.headers} mt-0`}>
-                    <div className={style.spans}>
-                        <span></span>
-                        <span></span>
-                        <span></span>
+                <div className={style.para}>
+                    Audit Records
+                </div>
+            </div>
+            <div className={style.form}>
+                <div className={style.sec1}>
+                    <div>
+                        <p>Checklist Id</p>
+                        <input autoComplete='off' value={checklistData?.ChecklistId} type="text" readOnly />
                     </div>
-                    <div className={style.para}>
-                        Audit Records
+                    <div>
+                        <p>Created By</p>
+                        <input autoComplete='off' value={checklistData?.CreatedBy} type="text" readOnly />
                     </div>
+                    <div>
+                        <p>Creation Date</p>
+                        {checklistData?.CreationDate ? (
+                            <input autoComplete='off' value={`${checklistData?.CreationDate?.slice(0, 10).split('-')[2]}/${checklistData?.CreationDate?.slice(0, 10).split('-')[1]}/${checklistData?.CreationDate?.slice(0, 10).split('-')[0]}`} type="text" readOnly />
+                        ) : (
+                            <input autoComplete='off' value='- - -' />
+                        )}
+                    </div>
+                </div>
+                <div className={style.sec2}>
+                    <div>
+                        <p>Approved By</p>
+                        <input autoComplete='off' value={checklistData?.ApprovedBy || '- - -'} type="text" readOnly />
+                    </div>
+                    <div>
+                        <p>Approval Date</p>
+                        {checklistData?.ApprovalDate !== undefined ? (
+                            <input autoComplete='off' type="text" value={`${checklistData?.ApprovalDate?.slice(0, 10).split('-')[2]}/${checklistData?.ApprovalDate?.slice(0, 10).split('-')[1]}/${checklistData?.ApprovalDate?.slice(0, 10).split('-')[0]}`} />
+                        ) : (
+                            <input autoComplete='off' type="text" value={`- - -`} />
+                        )}
+                    </div>
+                </div>
+            </div>
+            <div className={style.tableParent}>
+                <table className={style.table}>
+                    <tr className={style.tableHeader}>
+                        <th>Audit Date</th>
+                        {/* <th>TargetDate</th> */}
+                        <th>Audit By</th>
+                        <th>Department</th>
+                        <th>Action</th>
+                    </tr>
+                    {
+                        checklistResults?.map((result, index) => {
+                            return (
+                                <tr key={index}>
+                                    <td>{dayjs(result.AuditDate).format('DD/MM/YYYY')}</td>
+                                    {/* <td>{dayjs(result.TargetDate).format('DD/MM/YYYY')}</td> */}
+                                    <td>{result.AuditBy}</td>
+                                    <td>{result.UserDepartment.DepartmentName}</td>
+                                    <td><button className={style.btn} onClick={() => {
+                                        dispatch(updateTabData({ ...tabData, Tab: 'viewAuditAnswers' }))
+                                        dispatch(changeId(result._id));
+                                    }}>View Audit</button></td>
+                                </tr>
+                            )
+                        })
+                    }
+                </table>
+            </div>
 
-                </div>
-                <div className={style.form}>
-                    <div className={style.sec1}>
-                        <div>
-                            <p>Checklist Id</p>
-                            <input autoComplete='off' value={checklistData?.ChecklistId} type="text" readOnly />
-                        </div>
-                        <div>
-                            <p>Created By</p>
-                            <input autoComplete='off' value={checklistData?.CreatedBy} type="text" readOnly />
-                        </div>
-                        <div>
-                            <p>Creation Date</p>
-                            {checklistData?.CreationDate ? (
-                                <input autoComplete='off' value={`${checklistData?.CreationDate?.slice(0, 10).split('-')[2]}/${checklistData?.CreationDate?.slice(0, 10).split('-')[1]}/${checklistData?.CreationDate?.slice(0, 10).split('-')[0]}`} type="text" readOnly />
-                            ) : (
-                                <input autoComplete='off' value='- - -' />
-                            )}
-                        </div>
-                    </div>
-                    <div className={style.sec2}>
-                        <div>
-                            <p>Approved By</p>
-                            <input autoComplete='off' value={checklistData?.ApprovedBy || '- - -'} type="text" readOnly />
-                        </div>
-                        <div>
-                            <p>Approval Date</p>
-                            {checklistData?.ApprovalDate !== undefined ? (
-
-                                <input autoComplete='off' type="text" value={`${checklistData?.ApprovalDate?.slice(0, 10).split('-')[2]}/${checklistData?.ApprovalDate?.slice(0, 10).split('-')[1]}/${checklistData?.ApprovalDate?.slice(0, 10).split('-')[0]}`} />
-                            ) : (
-                                <input autoComplete='off' type="text" value={`- - -`} />
-                            )}
-                        </div>
-                    </div>
-                </div>
-                <div className={style.tableParent}>
-                    <table className={style.table}>
-                        <tr className={style.tableHeader}>
-                            <th>Audit Date</th>
-                            {/* <th>TargetDate</th> */}
-                            <th>Audit By</th>
-                            <th>Department</th>
-                            <th>Action</th>
-                        </tr>
-                        {
-                            checklistResults?.map((result, index) => {
-                                return (
-                                    <tr key={index}>
-                                        <td>{dayjs(result.AuditDate).format('DD/MM/YYYY')}</td>
-                                        {/* <td>{dayjs(result.TargetDate).format('DD/MM/YYYY')}</td> */}
-                                        <td>{result.AuditBy}</td>
-                                        <td>{result.UserDepartment.DepartmentName}</td>
-                                        <td><button className={style.btn} onClick={() => {
-                                            dispatch(updateTabData({...tabData, Tab : 'viewAuditAnswers'}))
-                                            dispatch(changeId(result._id));
-                                        }}>View Audit</button></td>
-                                    </tr>
-                                )
-                            })
-                        }
-                    </table>
-                </div>
-                <div className={style.btnparent}>
-                    <button className={style.download}>Download</button>
-                </div>
             {
                 alert ?
                     <div class={style.alertparent}>
@@ -145,15 +141,13 @@ function AuditsHistory() {
                             <p class={style.msg}>{popUpData}</p>
                             <div className={style.alertbtns}>
                                 <button style={{
-                                    marginLeft : '120px',
-                                    marginTop : '25px'
-                                }}  onClick={alertManager} className={style.btn2}>OK.</button>
+                                    marginLeft: '120px',
+                                    marginTop: '25px'
+                                }} onClick={alertManager} className={style.btn2}>OK.</button>
                             </div>
                         </div>
                     </div> : null
             }
-
-           
         </>
     )
 }

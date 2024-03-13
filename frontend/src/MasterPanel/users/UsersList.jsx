@@ -26,6 +26,7 @@ function UsersList() {
     const [endIndex, setEndIndex] = useState(8);
     const [allDataArr, setAllDataArr] = useState(null);
     const idToWatch = useSelector(state => state.idToProcess);
+    const [idToProcess, setIdToProcess] = useState(null);
     useEffect(() => {
         dispatch(setSmallLoading(true));
         axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-usersByDepartment/${idToWatch}`).then((response) => {
@@ -57,42 +58,28 @@ function UsersList() {
             })
         })
     }
-
-
-    const [idToProcess, setIdToProcess] = useState(null);
-
-
     const nextPage = () => {
         setStartIndex(startIndex + 8);
         setEndIndex(endIndex + 8);
     }
-
     const backPage = () => {
         setStartIndex(startIndex - 8);
         setEndIndex(endIndex - 8);
     }
-
     const [userIdForAccess, setUserIdForAccess] = useState(null);
     useEffect(() => {
         setUsersList(allDataArr?.slice(startIndex, endIndex))
     }, [startIndex, endIndex])
-
-
     const search = (event) => {
         if (event.target.value !== "") {
-            console.log(event.target.value);
             const searchedList = allDataArr.filter((obj) =>
                 obj.Name.includes(event.target.value)
             )
-            console.log(searchedList);
             setUsersList(searchedList);
         } else {
             setUsersList(allDataArr?.slice(startIndex, endIndex))
         }
     }
-
-
-
 
     return (
         <>
@@ -103,14 +90,12 @@ function UsersList() {
                         dispatch(updateTabData({ ...tabData, Tab: 'viewUsersDepartments' }));
                     }
                 }} />
-
             </div>
             <div className={style.searchbar}>
                 <div className={style.sec1}>
                     <img src={Search} alt="" />
                     <input autoComplete='off' onChange={search} type="text" placeholder='Search Document by name' />
                 </div>
-
             </div>
             <div className={style.tableParent}>
                 {!usersList || usersList?.length === 0 ? (
@@ -118,10 +103,8 @@ function UsersList() {
                         <p className='text-center'>No any Records Available here.</p>
                     </div>
                 ) : (
-
                     <table className={style.table}>
                         <tr className={style.headers}>
-
                             <td>Name</td>
                             <td>Designation</td>
                             <td>Role No</td>
@@ -134,7 +117,6 @@ function UsersList() {
                             {/* <td>Send</td> */}
                             <td>Action</td>
                             <td>Action</td>
-
                         </tr>
                         {
                             usersList?.map((user, i) => {
@@ -150,13 +132,11 @@ function UsersList() {
                                             fontWeight: "400",
                                             lineHeight: "20px",
                                         }}>{user.Name}</p></td>
-
                                         <td>{user.Designation}</td>
                                         <td>{user.Role}</td>
                                         <td>{user.PhoneNo}</td>
                                         <td>{user.Email}</td>
                                         <td>{user.UserName}</td>
-
                                         <td>
                                             <p onClick={() => {
                                                 setUserTabs(user.Tabs);
@@ -169,19 +149,16 @@ function UsersList() {
                                                 dispatch(changeId(user._id));
                                             }} className='btn btn-outline-success p-1 m-2'>Assign Tabs</p>
                                         </td>
-                                        
                                         <td>
                                             {user.isSuspended ? (
                                                 <button onClick={() => {
                                                     setUserIdForAccess(user._id);
                                                     setalert2(true);
-
                                                 }} className='btn btn-outline-primary  p-1'>Allow Access</button>
                                             ) : (
                                                 <button onClick={() => {
                                                     setUserIdForAccess(user._id);
                                                     alertManager();
-
                                                 }} className='btn btn-outline-primary  p-1'>Stop Access</button>
                                             )}
                                         </td>
@@ -191,7 +168,6 @@ function UsersList() {
                                         }} className='btn  btn-outline-danger px-3 py-1'>Delete</button></td>
                                     </tr>
                                 )
-
                             })
                         }
                     </table>
@@ -199,44 +175,35 @@ function UsersList() {
             </div>
             <div className={style.Btns}>
                 {startIndex > 0 && (
-
                     <button onClick={backPage}>
                         {'<< '}Back
                     </button>
                 )}
                 {allDataArr?.length > endIndex && (
-
                     <button onClick={nextPage}>
                         next{'>> '}
                     </button>
                 )}
             </div>
-
             {
                 showBox && (
-
                     <div class={style.alertparent}>
                         <div style={{
                             height: '80%',
                             overflowY: 'scroll'
                         }} class={`${style.alert} py-3 `}>
-
                             {userTabs.map((tabObj) => {
                                 return (
                                     <p class={style.msg}>{tabObj.Tab}</p>
                                 )
                             })}
-
                             <div className={style.alertbtns}>
-
                                 <button style={{
                                     marginLeft: '120px',
                                     marginTop: '25px'
                                 }} onClick={() => {
                                     setShowBox(false);
-
                                 }} className={style.btn2}>OK</button>
-
                             </div>
                         </div>
                     </div>
@@ -314,7 +281,6 @@ function UsersList() {
                         </div>
                     </div> : null
             }
-
             {
                 deleteUser ?
                     <div class={style.alertparent}>
@@ -355,8 +321,6 @@ function UsersList() {
                         </div>
                     </div> : null
             }
-
-
         </>
     )
 }

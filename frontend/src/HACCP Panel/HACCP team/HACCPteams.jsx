@@ -117,13 +117,13 @@ function HACCPteams() {
                                 <td></td>
                             )}
                             <td>HACCP Team Members</td>
-                            <td>Action</td>
                             <td>Created By</td>
                             <td>Creation Date</td>
                             <td>Approved By</td>
                             <td>Approval Date</td>
                             <td>Disapproved By</td>
                             <td>Disapproval Date</td>
+                            <td>Action</td>
                         </tr>
                         {
                             teamsList?.map((team, i) => {
@@ -199,16 +199,6 @@ function HACCPteams() {
                                                 height: '28px'
                                             }} className={`btn btn-outline-warning pt-0 px-1`}>Click Here</p>
                                         </td>
-                                        <td>
-                                            <p onClick={() => {
-                                                setDeleteTeam(true);
-                                                setTeamToDel(team._id);
-                                                
-                                            }} style={{
-                                                height: '28px'
-                                            }} className={`btn btn-outline-danger pt-0 px-1`}>Delete</p>
-                                        </td>
-                                        
                                         <td>{team.CreatedBy}</td>
                                         <td>{dayjs(team.CreationDate).format('DD/MM/YYYY')}</td>
                                         {team.ApprovedBy ? (
@@ -231,6 +221,14 @@ function HACCPteams() {
                                         ) : (
                                             <td>- - -</td>
                                         )}
+                                        <td>
+                                            <p onClick={() => {
+                                                setDeleteTeam(true);
+                                                setTeamToDel(team._id);
+                                            }} style={{
+                                                height: '28px'
+                                            }} className={`btn btn-outline-danger pt-0 px-1`}>Delete</p>
+                                        </td>
                                     </tr>
                                 )
                             })
@@ -295,13 +293,11 @@ function HACCPteams() {
                                             title: 'OOps..',
                                             text: 'Something went wrong, Try Again!'
                                         })
-
                                     })
                                 }} className={style.btn1}>Submit</button>
                                 <button onClick={() => {
                                     setDeleteTeam(false);
                                 }} className={style.btn2}>Cancel</button>
-
                             </div>
                         </div>
                     </div> : null
@@ -340,7 +336,6 @@ function HACCPteams() {
                         </div>
                     </div> : null
             }
-
             {
                 reject && (
                     <div class={style.alertparent}>

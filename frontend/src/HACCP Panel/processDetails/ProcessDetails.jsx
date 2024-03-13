@@ -58,22 +58,17 @@ function ProcessDetails() {
         })
     }, [])
 
-
     const nextPage = () => {
         setStartIndex(startIndex + 8);
         setEndIndex(endIndex + 8);
     }
-
     const backPage = () => {
         setStartIndex(startIndex - 8);
         setEndIndex(endIndex - 8);
     }
-
     useEffect(() => {
         setProcessesList(allDataArr?.slice(startIndex, endIndex))
     }, [startIndex, endIndex])
-
-
     const search = (event) => {
         if (event.target.value !== "") {
             const searchedList = allDataArr.filter((obj) =>
@@ -84,8 +79,6 @@ function ProcessDetails() {
             setProcessesList(allDataArr?.slice(startIndex, endIndex))
         }
     }
-
-
 
     return (
         <>
@@ -117,7 +110,6 @@ function ProcessDetails() {
                             <td>Department</td>
                             <td className='ps-5'>Status</td>
                             <td>Revision No</td>
-
                             <td>Reason</td>
                             {tabData?.Edit && (
                                 <td>Action</td>
@@ -152,7 +144,6 @@ function ProcessDetails() {
                                         <td>{process.Department.DepartmentName}</td>
                                         <td><div className={`text-center ${process.Status === 'Approved' && style.greenStatus} ${process.Status === 'Disapproved' && style.redStatus} ${process.Status === 'Pending' && style.yellowStatus}  `}><p>{process.Status}</p></div></td>
                                         <td>{process.RevisionNo}</td>
-
                                         <td>
                                             <p onClick={() => {
                                                 if (process.Status === 'Disapproved') {
@@ -177,6 +168,9 @@ function ProcessDetails() {
                                                     if (process.Status === 'Approved') {
                                                         setDataToShow('Process is already Approved!');
                                                         setShowBox(true)
+                                                    } else if (process.Status === 'Disapproved') {
+                                                        setDataToShow('Process is already DisApproved!');
+                                                        setShowBox(true)
                                                     } else {
                                                         setIdForAction(process._id);
                                                         setApprove(true);
@@ -197,7 +191,6 @@ function ProcessDetails() {
                                                     }
                                                 }} style={{
                                                     height: '28px'
-
                                                 }} className={`btn btn-outline-danger pt-0 px-1`}>Disapprove</p>
                                             </td>
                                         )}
@@ -240,37 +233,28 @@ function ProcessDetails() {
             </div>
             <div className={style.Btns}>
                 {startIndex > 0 && (
-
                     <button onClick={backPage}>
                         {'<< '}Back
                     </button>
                 )}
                 {allDataArr?.length > endIndex && (
-
                     <button onClick={nextPage}>
                         next{'>> '}
                     </button>
                 )}
             </div>
-
             {
                 showBox && (
-
                     <div class={style.alertparent}>
                         <div class={style.alert}>
-
                             <p class={style.msg}>{dataToShow}</p>
-
                             <div className={style.alertbtns}>
-
                                 <button style={{
                                     marginLeft: '120px',
                                     marginTop: '25px'
                                 }} onClick={() => {
                                     setShowBox(false);
-
                                 }} className={style.btn2}>OK</button>
-
                             </div>
                         </div>
                     </div>
@@ -304,12 +288,9 @@ function ProcessDetails() {
                                         })
                                     })
                                 }} className={style.btn1}>Submit</button>
-
-
                                 <button onClick={() => {
                                     setApprove(false);
                                 }} className={style.btn2}>Cancel</button>
-
                             </div>
                         </div>
                     </div> : null
@@ -330,8 +311,6 @@ function ProcessDetails() {
                                         icon: 'success',
                                         confirmButtonText: 'Go!',
                                     })
-
-
                                     refreshData();
                                 }).catch(err => {
                                     dispatch(setSmallLoading(false));
@@ -345,8 +324,6 @@ function ProcessDetails() {
                                 <textarea onChange={(e) => {
                                     setReason(e.target.value);
                                 }} name="Reason" id="" cols="30" rows="10" placeholder='Comment here' required />
-
-
                                 <div className={`$ mt-3 d-flex justify-content-end `}>
                                     <button type='submit' className='btn btn-danger px-3 py-2 m-3'>Disapprove</button>
                                     <a onClick={() => {
@@ -358,7 +335,6 @@ function ProcessDetails() {
                     </div>
                 )
             }
-
         </>
     )
 }

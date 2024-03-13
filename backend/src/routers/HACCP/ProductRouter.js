@@ -19,7 +19,6 @@ router.post('/create-product', async (req, res) => {
       UserDepartment: requestUser.Department._id,
       User: requestUser
     });
-    console.log(createdProduct);
     await createdProduct.save();
     res.status(200).json({ status: true, message: "Product document created successfully", data: createdProduct });
   } catch (error) {
@@ -68,9 +67,9 @@ router.get('/get-product/:productId', async (req, res) => {
 });
 
 // * Delete a Product document by ID
-router.delete('/delete-product', async (req, res) => {
+router.delete('/delete-product/:productId', async (req, res) => {
   try {
-    const productId = req.body.id;
+    const productId = req.params.productId;
     const deletedProduct = await Product.findByIdAndDelete(productId);
     if (!deletedProduct) {
       console.log(`Product document with ID: ${productId} not found`);

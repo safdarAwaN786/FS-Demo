@@ -127,10 +127,6 @@ HaccpTeamSchema.pre('save', async function (next) {
 
 
 
-
-
-
-
 // * Creation of model
 const HaccpTeam = mongoose.model('HaccpTeam', HaccpTeamSchema);
 module.exports = HaccpTeam;

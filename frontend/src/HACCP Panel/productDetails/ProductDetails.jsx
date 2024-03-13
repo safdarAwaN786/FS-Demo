@@ -27,8 +27,8 @@ function ProductDetails() {
     const [reject, setReject] = useState(false);
     const user = useSelector(state => state.auth.user);
     const [allDataArr, setAllDataArr] = useState(null);
-    const userToken = Cookies.get('userToken');
-
+    const [idToProcess, setIdToProcess] = useState(null);
+    const [deleteProduct, setDeleteProduct] = useState(false);
     const refreshData = () => {
         dispatch(setSmallLoading(true))
         axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-all-products`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
@@ -61,23 +61,17 @@ function ProductDetails() {
             })
         })
     }, [])
-
-
     const nextPage = () => {
         setStartIndex(startIndex + 8);
         setEndIndex(endIndex + 8);
     }
-
     const backPage = () => {
         setStartIndex(startIndex - 8);
         setEndIndex(endIndex - 8);
     }
-
     useEffect(() => {
         setProductsList(allDataArr?.slice(startIndex, endIndex))
     }, [startIndex, endIndex])
-
-
     const search = (event) => {
         if (event.target.value !== "") {
             const searchedList = allDataArr.filter((obj) =>
@@ -88,8 +82,6 @@ function ProductDetails() {
             setProductsList(allDataArr?.slice(startIndex, endIndex))
         }
     }
-
-
 
     return (
         <>
@@ -134,6 +126,7 @@ function ProductDetails() {
                             <td>Approval Date</td>
                             <td>Disapproved By</td>
                             <td>Disapproval Date</td>
+                            <td>Action</td>
                         </tr>
                         {
                             productsList?.map((product, i) => {
@@ -177,10 +170,10 @@ function ProductDetails() {
                                                     if (product.Status === 'Approved') {
                                                         setDataToShow('Sorry, Product is already Approved');
                                                         setShowBox(true);
-                                                    } else if(product.Status === 'Disapproved') {
+                                                    } else if (product.Status === 'Disapproved') {
                                                         setDataToShow('Sorry, Product is already Disapproved');
                                                         setShowBox(true);
-                                                    }else {
+                                                    } else {
                                                         setIdForAction(product._id);
                                                         setApprove(true);
                                                     }
@@ -233,6 +226,10 @@ function ProductDetails() {
                                         ) : (
                                             <td>- - -</td>
                                         )}
+                                        <td><button onClick={() => {
+                                            setIdToProcess(product._id);
+                                            setDeleteProduct(true);
+                                        }} className='btn  btn-outline-danger px-3 py-1'>Delete</button></td>
                                     </tr>
                                 )
                             })
@@ -342,6 +339,44 @@ function ProductDetails() {
                         </div>
                     </div>
                 )
+            }
+            {
+                deleteProduct ?
+                    <div class={style.alertparent}>
+                        <div class={style.alert}>
+                            <p class={style.msg}>Do you want to delete this Product?</p>
+                            <div className={style.alertbtns}>
+                                <button onClick={() => {
+                                    setDeleteProduct(false)
+                                    dispatch(setSmallLoading(true))
+                                    axios.delete(`${process.env.REACT_APP_BACKEND_URL}/delete-product/${idToProcess}`).then((response) => {
+                                        dispatch(setSmallLoading(false));
+                                        Swal.fire({
+                                            icon: 'success',
+                                            title: 'Deleted Successfully',
+                                            text: 'Product Deleted Successfully!',
+                                            confirmButtonText: 'OK.'
+                                        }).then((result) => {
+                                            if (result.isConfirmed) {
+                                                refreshData()
+                                            }
+                                        })
+                                    }).catch(err => {
+                                        dispatch(setSmallLoading(false));
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'OOps..',
+                                            text: 'Something went wrong, Try Again!'
+                                        })
+                                    })
+                                }} className={style.btn1}>Submit</button>
+                                <button onClick={() => {
+                                    setDeleteProduct(false);
+                                }} className={style.btn2}>Cancel</button>
+
+                            </div>
+                        </div>
+                    </div> : null
             }
         </>
     )

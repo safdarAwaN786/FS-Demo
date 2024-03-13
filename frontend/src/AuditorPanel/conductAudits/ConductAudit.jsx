@@ -56,13 +56,9 @@ function ConductAudits() {
 
     const search = (event) => {
         if (event.target.value !== "") {
-            console.log(event.target.value);
-
             const searchedList = allDataArr.filter((obj) =>
-
                 obj.ChecklistId.includes(event.target.value)
             )
-            console.log(searchedList);
             setChecklists(searchedList);
         } else {
             setChecklists(allDataArr?.slice(startIndex, endIndex))
