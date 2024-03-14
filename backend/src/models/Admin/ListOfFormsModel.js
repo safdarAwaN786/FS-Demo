@@ -164,39 +164,38 @@ const FormSchema = new mongoose.Schema({
 
 FormSchema.pre('save', async function (next) {
   try {
-    const latestForm = await this.constructor.findOne(
-      {},
-      { FormId: 1 },
-      { sort: { FormId: -1 } }
-    ).exec();
+    const department = await DepartmentModel.findById(this.Department).populate('Company');
 
-    let nextNumericPart = 1;
-    if (latestForm) {
-      const numericPart = parseInt(latestForm.FormId.slice(1), 10);
-      nextNumericPart = numericPart + 1;
-    }
-
-    
-
-    const department = await DepartmentModel.findById(this.UserDepartment).populate('Company');
     if (!department) {
       throw new Error('Department not found');
     }
 
-  
-
+    
     const documentTypeNumber = { 'Manuals': 1, 'Procedures': 2, 'SOPs': 3, 'Forms': 4 }[this.DocumentType];
     if (!documentTypeNumber) {
       throw new Error('Invalid Document Type');
     }
 
-    this.FormId = `${department.Company.ShortName}/${department.ShortName}/${documentTypeNumber}/${nextNumericPart}`;
+    const latestDocument = await this.constructor.findOne(
+      { Department: this.Department, DocumentType: this.DocumentType },
+      { FormId: 1 },
+      { sort: { FormId: -1 } }
+    ).exec();
+
+    let nextNumericPart = 1;
+    if (latestDocument) {
+      const parts = latestDocument.FormId.split('/');
+      nextNumericPart = parseInt(parts[3]) + 1;
+    }
+
+    this.FormId = `${department.Company.ShortName}/${department.ShortName}/${documentTypeNumber}/${nextNumericPart.toString().padStart(3, '0')}`;
     console.log('Generated FormId:', this.FormId);
     next();
   } catch (error) {
     next(error);
   }
 });
+
 
 // Model for the form schema
 const ListOfForms = mongoose.model('Form', FormSchema);

@@ -28,8 +28,6 @@ router.post('/create-department',  async (req, res) => {
     }
     console.log(addedDepartments);
 
-
-
     console.log(new Date().toLocaleString() + ' ' + 'Creating Department document...');
 
     res.status(201).json({ status: true, message: "Departments added successfully", data: addedDepartments });

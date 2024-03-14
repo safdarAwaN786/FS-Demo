@@ -9,8 +9,8 @@ const ProcessDetailsSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    ProcessNum : {
-        type : String
+    ProcessNum: {
+        type: String
     },
     Description: {
         type: String,
@@ -43,8 +43,8 @@ const ProcessSchema = new mongoose.Schema({
         ref: 'Department',
         required: true
     },
-    ProcessName : {
-        type : String
+    ProcessName: {
+        type: String
     },
     DocumentType: {
         type: String,
@@ -120,24 +120,23 @@ ProcessSchema.pre('save', async function (next) {
             throw new Error('Department not found');
         }
 
-
         const documentTypeNumber = { 'Manuals': 1, 'Procedures': 2, 'SOPs': 3, 'Forms': 4 }[this.DocumentType];
         if (!documentTypeNumber) {
             throw new Error('Invalid Document Type');
         }
+
         const latestDocument = await this.constructor.findOne(
-            {},
+            { Department: this.Department, DocumentType: this.DocumentType },
             { DocumentId: 1 },
             { sort: { DocumentId: -1 } }
         ).exec();
 
         let nextNumericPart = 1;
         if (latestDocument) {
-            const numericPart = parseInt(latestDocument.DocumentId.slice(1), 10);
-            if (!isNaN(numericPart)) {
-                nextNumericPart = numericPart + 1;
-            }
+            const parts = latestDocument.DocumentId.split('/');
+            nextNumericPart = parseInt(parts[3]) + 1;
         }
+
         this.DocumentId = `${department.Company.ShortName}/${department.ShortName}/${documentTypeNumber}/${nextNumericPart.toString().padStart(3, '0')}`;
         console.log('Generated DocumentId:', this.DocumentId);
         next();
@@ -146,6 +145,7 @@ ProcessSchema.pre('save', async function (next) {
     }
 });
 
+
 // * Creation of model
 const Processes = mongoose.model('Processes', ProcessSchema);
-module.exports = {Processes, ProcessDetailModel};
+module.exports = { Processes, ProcessDetailModel };

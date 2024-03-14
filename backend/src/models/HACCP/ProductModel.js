@@ -134,16 +134,14 @@ ProductSchema.pre('save', async function (next) {
             throw new Error('Invalid Document Type');
         }
         const latestDocument = await this.constructor.findOne(
-            {},
+            { Department: this.Department, DocumentType: this.DocumentType },
             { DocumentId: 1 },
             { sort: { DocumentId: -1 } }
         ).exec();
         let nextNumericPart = 1;
         if (latestDocument) {
-            const numericPart = parseInt(latestDocument.DocumentId.slice(1), 10);
-            if (!isNaN(numericPart)) {
-                nextNumericPart = numericPart + 1;
-            }
+            const parts = latestDocument.DocumentId.split('/');
+            nextNumericPart = parseInt(parts[3]) + 1;
         }
         this.DocumentId = `${department.Company.ShortName}/${department.ShortName}/${documentTypeNumber}/${nextNumericPart.toString().padStart(3, '0')}`;
         console.log('Generated DocumentId:', this.DocumentId);
@@ -152,6 +150,7 @@ ProductSchema.pre('save', async function (next) {
         next(error);
     }
 });
+
 
 // * Creation of model
 const Product = mongoose.model('Product', ProductSchema);

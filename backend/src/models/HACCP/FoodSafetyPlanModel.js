@@ -187,24 +187,21 @@ FoodSafetySchema.pre('save', async function (next) {
             throw new Error('Department not found');
         }
 
-       
-
         const documentTypeNumber = { 'Manuals': 1, 'Procedures': 2, 'SOPs': 3, 'Forms': 4 }[this.DocumentType];
         if (!documentTypeNumber) {
             throw new Error('Invalid Document Type');
         }
+
         const latestDocument = await this.constructor.findOne(
-            {},
+            { Department: this.Department, DocumentType: this.DocumentType },
             { DocumentId: 1 },
             { sort: { DocumentId: -1 } }
         ).exec();
 
         let nextNumericPart = 1;
         if (latestDocument) {
-            const numericPart = parseInt(latestDocument.DocumentId.slice(1), 10);
-            if (!isNaN(numericPart)) {
-                nextNumericPart = numericPart + 1;
-            }
+            const parts = latestDocument.DocumentId.split('/');
+            nextNumericPart = parseInt(parts[3]) + 1;
         }
 
         this.DocumentId = `${department.Company.ShortName}/${department.ShortName}/${documentTypeNumber}/${nextNumericPart.toString().padStart(3, '0')}`;
@@ -214,6 +211,7 @@ FoodSafetySchema.pre('save', async function (next) {
         next(error);
     }
 });
+
 
 // * Creation of model
 const FoodSafety = mongoose.model('FoodSafety', FoodSafetySchema);

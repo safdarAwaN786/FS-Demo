@@ -13,6 +13,7 @@ const monthlyAuditingPlanSchema = new mongoose.Schema({
     enum: ['Conducted', 'Not Conducted'],
     default: 'Not Conducted'
   },
+  
   UserDepartment : {
     type : Schema.Types.ObjectId,
     ref : 'Department'

@@ -4,13 +4,12 @@ const user = require('../../models/AccountCreation/UserModel');
 const router = new express.Router();
 
 // const authMiddleware = require('../../middleware/auth');
-
 // router.use(authMiddleware)
 
 // * Post a New document
 router.post('/create-document', async (req, res) => {
   try {
-   
+
     //  The document data sent in the request body
     const createdBy = req.body.createdBy;
 
@@ -18,7 +17,7 @@ router.post('/create-document', async (req, res) => {
     const createdDocument = new Document({
       ...req.body,
       CreatedBy: createdBy,
-      UserDepartment : req.header('Authorization'),
+      UserDepartment: req.header('Authorization'),
 
     });
 
@@ -40,7 +39,7 @@ router.get('/get-documents', async (req, res) => {
   try {
     const departmentId = req.header('Authorization')
     //  The documents data find in the database
-    const documents = await Document.find({UserDepartment : departmentId}).populate('Department UserDepartment');
+    const documents = await Document.find({ UserDepartment: departmentId }).populate('Department UserDepartment');
 
     console.log(new Date().toLocaleString() + ' ' + 'Fetching Documents...');
     res.status(200).json({ status: true, message: 'Documents fetched successfully', data: documents });
@@ -71,7 +70,7 @@ router.get('/get-documentById/:documentId', async (req, res) => {
 });
 
 // * Update the document
-router.put('/updateDocument',  async (req, res) => {
+router.put('/updateDocument', async (req, res) => {
   try {
 
     const updatedBy = req.body.updatedBy;
@@ -119,10 +118,8 @@ router.put('/updateDocument',  async (req, res) => {
 });
 
 // * Review Document
-router.patch('/review-document',  async (req, res) => {
+router.patch('/review-document', async (req, res) => {
   try {
-
-
     const { documentId, reviewedBy } = req.body;
 
     // Find the document by ID
@@ -130,32 +127,41 @@ router.patch('/review-document',  async (req, res) => {
 
     // If document not found
     if (!document) {
-      console.error(`Document with ID: ${document} not found.`);
+      console.error(`Document with ID: ${documentId} not found.`);
       return res.status(404).json({ error: 'Document not found.' });
     }
 
-    if (document.Status === 'Reviewed') {
-      console.warn(`Document with ID: ${documentId} is already marked as 'Reviewed'.`);
-      return res.status(400).json({ error: 'Document is already reviewed.' });
+    // Ensure the document status is pending
+    if (document.Status !== 'Pending') {
+      console.warn(`Document with ID: ${documentId} cannot be reviewed as it is not in 'Pending' status.`);
+      return res.status(400).json({ error: 'Document status is not eligible for review.' });
     }
-    document.ReviewDate = new Date(),
-      document.Status = 'Reviewed';
+
+    // Ensure the document status is not already Reviewed or Rejected
+    if (document.Status === 'Reviewed' || document.Status === 'Rejected' || document.Status === 'Approved' || document.Status === 'Disapproved') {
+      console.warn(`Document with ID: ${documentId} cannot be reviewed as it is already in 'Reviewed' or 'Rejected' or 'Approved' or 'Disapproved' status.`);
+      return res.status(400).json({ error: 'Document status is not eligible for review.' });
+    }
+
+    // Update document status to reviewed
+    document.Status = 'Reviewed';
+    document.ReviewedBy = reviewedBy;
+    document.RejectedBy = "";
     document.RejectionDate = null;
-    document.ReviewedBy = reviewedBy
+    document.ReviewDate = new Date();
 
     // Save the updated document
     await document.save();
-    res.status(200).send({ status: true, message: 'Document reviewed successfully', data: document });
 
+    res.status(200).send({ status: true, message: 'Document reviewed successfully', data: document });
   } catch (error) {
     res.status(500).send({ status: false, message: 'Failed to update document review', error: error.message });
   }
 });
 
 // * Reject Document
-router.patch('/reject-document',  async (req, res) => {
+router.patch('/reject-document', async (req, res) => {
   try {
-
     const { documentId, reason, rejectedBy } = req.body;
 
     // Find the document by ID
@@ -163,25 +169,33 @@ router.patch('/reject-document',  async (req, res) => {
 
     // If document not found
     if (!document) {
-      console.error(`Document with ID: ${document} not found.`);
+      console.error(`Document with ID: ${documentId} not found.`);
       return res.status(404).json({ error: 'Document not found.' });
     }
 
-    if (document.Status === 'Reviewed' || document.Status === 'Rejected') {
-      console.warn(`Document with ID: ${documentId} is already marked as 'Reviewed'. or Aleady marked as 'Rejected'`);
-      return res.status(400).json({ error: 'Document is already reviewed or rejected .' });
+    // Ensure the document status is pending
+    if (document.Status !== 'Pending') {
+      console.warn(`Document with ID: ${documentId} cannot be rejected as it is not in 'Pending' status.`);
+      return res.status(400).json({ error: 'Document status is not eligible for rejection.' });
     }
 
-    document.Reason = reason
-    document.RejectionDate = new Date(),
-      document.ReviewDate = null
+    // Ensure the document status is not already Reviewed or Rejected
+    if (document.Status === 'Reviewed' || document.Status === 'Rejected' || document.Status === 'Approved' || document.Status === 'Disapproved') {
+      console.warn(`Document with ID: ${documentId} cannot be rejected as it is already in 'Reviewed' or 'Rejected' or 'Approved' or 'Disapproved' status.`);
+      return res.status(400).json({ error: 'Document status is not eligible for rejected.' });
+    }
+    // Update document status to rejected
     document.Status = 'Rejected';
-    document.RejectedBy = rejectedBy
+    document.RejectedBy = rejectedBy;
+    document.ReviewedBy = "";
+    document.ReviewDate = null;
+    document.RejectionDate = new Date();
+    document.Reason = reason;
 
     // Save the updated document
     await document.save();
-    res.status(200).send({ status: true, message: 'Document rejected successfully', data: document });
 
+    res.status(200).send({ status: true, message: 'Document rejected successfully', data: document });
   } catch (error) {
     res.status(500).send({ status: false, message: 'Failed to update document reject', error: error.message });
   }
@@ -190,32 +204,29 @@ router.patch('/reject-document',  async (req, res) => {
 // * Approve Document
 router.patch('/approve-document', async (req, res) => {
   try {
-
-    const approvedBy = req.body.approvedBy;
-    const documentId = req.body.id;
+    const { documentId, approvedBy } = req.body;
 
     // Find the document by ID
     const document = await Document.findById(documentId);
 
     // If document not found
     if (!document) {
-      console.error(`Document with ID: ${document} not found.`);
+      console.error(`Document with ID: ${documentId} not found.`);
       return res.status(404).json({ error: 'Document not found.' });
     }
 
-    if (document.Status === 'Approved') {
-      console.warn(`Document with ID: ${documentId} is already marked as 'Approved'.`);
-      return res.status(400).json({ error: 'Document is already approved.' });
+    // Ensure the document status is not already Approved or Disapproved
+    if (document.Status === 'Approved' || document.Status === 'Disapproved' || document.Status === 'Rejected' || document.Status === 'Pending') {
+      console.warn(`Document with ID: ${documentId} cannot be approved as it is already in 'Approved' or 'Disapproved' or 'Rejected' or 'Pending' status.`);
+      return res.status(400).json({ error: 'Document status is not eligible for approval.' });
     }
 
-    if (document.Status == 'Rejected') {
-      return res.status(404).json({ error: 'You cannot approve this document' })
-    }
-
-    document.ApprovalDate = new Date(),
+    // Update document status to approved
     document.Status = 'Approved';
-    document.DisapprovalDate = null
-    document.ApprovedBy = approvedBy
+    document.ApprovedBy = approvedBy;
+    document.DisapprovedBy = "";
+    document.DisapprovalDate = null;
+    document.ApprovalDate = new Date();
 
     // Save the updated document
     await document.save();
@@ -226,10 +237,9 @@ router.patch('/approve-document', async (req, res) => {
   }
 });
 
-// * Diapprove Document
-router.patch('/disapprove-document',  async (req, res) => {
+// * Disapprove Document
+router.patch('/disapprove-document', async (req, res) => {
   try {
-
     const { documentId, reason, disapprovedBy } = req.body;
 
     // Find the document by ID
@@ -237,24 +247,23 @@ router.patch('/disapprove-document',  async (req, res) => {
 
     // If document not found
     if (!document) {
-      console.error(`Document with ID: ${document} not found.`);
+      console.error(`Document with ID: ${documentId} not found.`);
       return res.status(404).json({ error: 'Document not found.' });
     }
 
-    if (document.Status == 'Rejected') {
-      return res.status(404).json({ error: 'You cannot disapprove this document' })
+    // Ensure the document status is not already Approved or Disapproved
+    if (document.Status === 'Approved' || document.Status === 'Disapproved' || document.Status === 'Rejected' || document.Status === 'Pending') {
+      console.warn(`Document with ID: ${documentId} cannot be disapproved as it is already in 'Approved' or 'Disapproved' or 'Rejected' or 'Pending' status.`);
+      return res.status(400).json({ error: 'Document status is not eligible for disapproval.' });
     }
 
-    if (document.Status === 'Disapproved' || document.Status === 'Approved') {
-      console.warn(`Document with ID: ${documentId} is already marked as 'Disapproved'. or Aleady marked as 'Approved'`);
-      return res.status(400).json({ error: 'Document is already Disapproved or Approved .' });
-    }
-
-    document.DisapprovalDate = new Date();
+    // Update document status to disapproved
     document.Status = 'Disapproved';
-    document.Reason = reason;
+    document.DisapprovedBy = disapprovedBy;
+    document.ApprovedBy = "";
     document.ApprovalDate = null;
-    document.DisapprovedBy = disapprovedBy
+    document.DisapprovalDate = new Date();
+    document.Reason = reason;
 
     // Save the updated document
     await document.save();

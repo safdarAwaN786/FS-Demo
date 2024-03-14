@@ -7,14 +7,17 @@ const processOwnerSchema = new Schema({
     ProcessCode: {
         type: String,
     },
+    
     UserDepartment: {
         type: Schema.Types.ObjectId,
         ref: 'Department'
     },
+
     Department : {
         type : Schema.Types.ObjectId,
         ref : 'Department'
-    },    
+    },
+        
     ProcessName: {
         type: String,
         required: true
@@ -92,11 +95,6 @@ processOwnerSchema.pre('save', async function (next) {
         next(error);
     }
 });
-
-
-
-
-
 
 // * Creation of Model
 const ProcessOwner = mongoose.model('ProcessOwner', processOwnerSchema);
