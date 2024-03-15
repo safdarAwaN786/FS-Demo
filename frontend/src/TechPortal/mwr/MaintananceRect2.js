@@ -75,9 +75,7 @@ function MaintananceRect2() {
         dispatch(setSmallLoading(true))
         axios.get(`${process.env.REACT_APP_BACKEND_URL}/readMachinery/${idToWatch}`).then((res) => {
             setMachine(res.data.data)
-            if (maintenances) {
-                dispatch(setSmallLoading(false))
-            }
+            dispatch(setSmallLoading(false))
         }).catch(err => {
             dispatch(setSmallLoading(false));
             Swal.fire({
@@ -89,9 +87,7 @@ function MaintananceRect2() {
         axios.get(`${process.env.REACT_APP_BACKEND_URL}/getMaintenanceByMachineId/${idToWatch}`, { headers: { Authorization: `${user.Department._id}` } }).then((res) => {
             const allMaintenances = res.data.data;
             setMaintenances(allMaintenances.filter((maintenance) => maintenance.dateType === dateType));
-            if (machine) {
-                dispatch(setSmallLoading(false))
-            }
+            dispatch(setSmallLoading(false))
         }).catch(err => {
             dispatch(setSmallLoading(false));
             Swal.fire({
@@ -102,110 +98,104 @@ function MaintananceRect2() {
         })
     }, [])
 
-    useEffect(() => {
-        console.log(maintenances);
-    }, [maintenances])
-
-
-
 
     return (
         <>
-                <div className='d-flex flex-row bg-white px-lg-5  px-2 py-2'>
-                    <BsArrowLeftCircle role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
-                        {
-                            dispatch(updateTabData({ ...tabData, Tabb: 'Machinery' }));
-                        }
-                    }} />
+            <div className='d-flex flex-row bg-white px-lg-5  px-2 py-2'>
+                <BsArrowLeftCircle role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
+                    {
+                        dispatch(updateTabData({ ...tabData, Tab: 'Master List of Machinery' }));
+                    }
+                }} />
 
+            </div>
+            <div className={`${style.headers} mt-1 `}>
+                <div className={style.spans}>
+                    <span></span>
+                    <span></span>
+                    <span></span>
                 </div>
-                <div className={`${style.headers} mt-1 `}>
-                    <div className={style.spans}>
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                    </div>
-                    <div className={style.para}>
-                        Maintainance Record
-                    </div>
+                <div className={style.para}>
+                    Maintainance Record
+                </div>
 
-                </div>
-                <div className={style.form}>
-                    <div className={style.sec1}>
-                        <div>
-                            <p>Machine Id</p>
-                            <input autoComplete='off' type="text" value={machine?.machineCode} />
-                        </div>
-                        <div>
-                            <p>Machine name</p>
-                            <input autoComplete='off' type="text" value={machine?.machineName} />
-                        </div>
-                        <div>
-                            <p>Date type</p>
-                            <input autoComplete='off' type="text" value={dateType} />
-                        </div>
+            </div>
+            <div className={style.form}>
+                <div className={style.sec1}>
+                    <div>
+                        <p>Machine Id</p>
+                        <input autoComplete='off' type="text" value={machine?.machineCode} />
                     </div>
-                    <div className={style.sec2}>
-                        <div>
-                            <p>Machine location</p>
-                            <input autoComplete='off' type="text" value={machine?.machinaryLocation} />
-                        </div>
-                        <div>
-                            <p>Maintainance type</p>
-                            <input autoComplete='off' type="text" value='Preventive' />
-                        </div>
+                    <div>
+                        <p>Machine name</p>
+                        <input autoComplete='off' type="text" value={machine?.machineName} />
+                    </div>
+                    <div>
+                        <p>Date type</p>
+                        <input autoComplete='off' type="text" value={dateType} />
                     </div>
                 </div>
-                <div className={style.tableParent}>
-                    <table className={style.table}>
-                        <tr className={style.tableHeader}>
-                            <th>Maintainance ID</th>
-                            <th>Last Date</th>
-                            <th>Next Date</th>
-                            <th>Nature of Fault</th>
-                            <th>Root Cause of Breakdown</th>
-                            <th>Detail Of Work</th>
-                            <th>Replacement</th>
-                            <th>Image</th>
-                            <th>Certificate</th>
-                        </tr>
-                        {
-                            maintenances?.map((maintenance, i) => {
-                                return (
-                                    <tr key={i}>
-                                        <td>{maintenance.maintenanceCode}</td>
-                                        <td>{maintenance?.lastMaintainanceDate.slice(0, 10).split('-')[2]}/{maintenance.lastMaintainanceDate.slice(0, 10).split('-')[1]}/{maintenance?.lastMaintainanceDate.slice(0, 10).split('-')[0]}</td>
-                                        <td>{maintenance?.nextMaintainanceDate.slice(0, 10).split('-')[2]}/{maintenance.nextMaintainanceDate.slice(0, 10).split('-')[1]}/{maintenance?.nextMaintainanceDate.slice(0, 10).split('-')[0]}</td>
-                                        <td><button className={style.btn} onClick={() => {
-                                            setPopUpData(maintenance.natureOfFault);
-                                            alertManager();
-                                            console.log('clicked')
-
-                                        }}>View</button></td>
-                                        <td ><button className={style.btn} onClick={() => {
-                                            setPopUpData(maintenance.rootCause);
-                                            alertManager();
-
-                                        }}>View</button></td>
-                                        <td ><button className={style.btn} onClick={() => {
-                                            setPopUpData(maintenance.detailOfWork);
-                                            alertManager();
-
-                                        }}>View</button></td>
-                                        <td ><button className={style.btn} onClick={() => {
-                                            setPopUpData(maintenance.replacement);
-                                            alertManager();
-
-                                        }}>View</button></td>
-                                        <td ><button onClick={() => { handleDownloadImage(maintenance.uploadImage) }} className={style.btn}>Download</button></td>
-                                        <td ><button className={style.btn}>Generate</button></td>
-                                    </tr>
-                                )
-                            })
-                        }
-                    </table>
+                <div className={style.sec2}>
+                    <div>
+                        <p>Machine location</p>
+                        <input autoComplete='off' type="text" value={machine?.machinaryLocation} />
+                    </div>
+                    <div>
+                        <p>Maintainance type</p>
+                        <input autoComplete='off' type="text" value='Preventive' />
+                    </div>
                 </div>
-                {/* <div className={style.btnparent}>
+            </div>
+            <div className={style.tableParent}>
+                <table className={style.table}>
+                    <tr className={style.tableHeader}>
+                        <th>Maintainance ID</th>
+                        <th>Last Date</th>
+                        <th>Next Date</th>
+                        <th>Nature of Fault</th>
+                        <th>Root Cause of Breakdown</th>
+                        <th>Detail Of Work</th>
+                        <th>Replacement</th>
+                        <th>Image</th>
+                        {/* <th>Certificate</th> */}
+                    </tr>
+                    {
+                        maintenances?.map((maintenance, i) => {
+                            return (
+                                <tr key={i}>
+                                    <td>{maintenance.maintenanceCode}</td>
+                                    <td>{maintenance?.lastMaintainanceDate.slice(0, 10).split('-')[2]}/{maintenance.lastMaintainanceDate.slice(0, 10).split('-')[1]}/{maintenance?.lastMaintainanceDate.slice(0, 10).split('-')[0]}</td>
+                                    <td>{maintenance?.nextMaintainanceDate.slice(0, 10).split('-')[2]}/{maintenance.nextMaintainanceDate.slice(0, 10).split('-')[1]}/{maintenance?.nextMaintainanceDate.slice(0, 10).split('-')[0]}</td>
+                                    <td><button className={style.btn} onClick={() => {
+                                        setPopUpData(maintenance.natureOfFault);
+                                        alertManager();
+                                        console.log('clicked')
+
+                                    }}>View</button></td>
+                                    <td ><button className={style.btn} onClick={() => {
+                                        setPopUpData(maintenance.rootCause);
+                                        alertManager();
+
+                                    }}>View</button></td>
+                                    <td ><button className={style.btn} onClick={() => {
+                                        setPopUpData(maintenance.detailOfWork);
+                                        alertManager();
+
+                                    }}>View</button></td>
+                                    <td ><button className={style.btn} onClick={() => {
+                                        setPopUpData(maintenance.replacement);
+                                        alertManager();
+
+                                    }}>View</button></td>
+                                    <td ><button onClick={() => { handleDownloadImage(maintenance.uploadImage) }} className={style.btn}>Download</button></td>
+                                    {/* <td ><button className={style.btn}>Generate</button></td> */}
+                                </tr>
+                            )
+                        })
+                    }
+                </table>
+            </div>
+            {/* <div className={style.btnparent}>
                     <button className={style.download}>Download</button>
                 </div> */}
 
@@ -216,9 +206,9 @@ function MaintananceRect2() {
                             <p class={style.msg}>{popUpData}</p>
                             <div className={style.alertbtns}>
                                 <button style={{
-                                    marginLeft : '120px',
-                                    marginTop : '25px'
-                                }}  onClick={alertManager} className={style.btn2}>OK.</button>
+                                    marginLeft: '120px',
+                                    marginTop: '25px'
+                                }} onClick={alertManager} className={style.btn2}>OK.</button>
                             </div>
                         </div>
                     </div> : null

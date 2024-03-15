@@ -8,9 +8,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { updateTabData } from '../../redux/slices/tabSlice'
 import { setSmallLoading } from '../../redux/slices/loading'
 
-
 export default function Suppliers() {
-
     const [suppliers, setSuppliers] = useState(null);
     const [startIndex, setStartIndex] = useState(0);
     const [endIndex, setEndIndex] = useState(8);
@@ -112,7 +110,6 @@ export default function Suppliers() {
                     <input autoComplete='off' onChange={search} type="text" placeholder='Search by Name or Code ' />
                 </div>
                 {tabData?.Creation && (
-
                     <div className='d-flex'>
                         <div onClick={() => {
                             dispatch(updateTabData({ ...tabData, Tab: 'addSupplier' }));
@@ -132,7 +129,7 @@ export default function Suppliers() {
                 ) : (
                     <table className={style.table}>
                         <tr className={style.headers}>
-                            <td>Supplier Code</td>
+                            {/* <td>Supplier Code</td> */}
                             <td>Name</td>
                             <td>Phone #</td>
                             <td>Phone 2 #</td>
@@ -160,7 +157,7 @@ export default function Suppliers() {
                             suppliers?.map((supplier, i) => {
                                 return (
                                     <tr className={style.tablebody} key={i}>
-                                        <td className={style.textStyle2}>{supplier.SupplierCode}</td>
+                                        {/* <td className={style.textStyle2}>{supplier.SupplierCode}</td> */}
                                         <td className={style.textStyle3}>{supplier.Name}</td>
                                         <td className={style.textStyle3}>{supplier.PhoneNumber}</td>
                                         <td className={style.textStyle3}>{supplier.PhoneNumber2}</td>

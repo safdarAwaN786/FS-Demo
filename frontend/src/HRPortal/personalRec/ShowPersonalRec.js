@@ -28,7 +28,7 @@ function ShowPersonalRec() {
                 text : 'Something went wrong, Try Again!'
             })
         })
-    })
+    }, [])
     return (
 
    <>

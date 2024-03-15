@@ -202,34 +202,29 @@ router.patch('/update-food-safety/:planId', async (req, res) => {
     const safetyPlanData = req.body;
 
     const createdPlans = await PlanModel.create(safetyPlanData.Plans.map(plan => {
-      if(plan._id){
-        const {_id, ...newPlan} = plan;
+      if (plan._id) {
+        const { _id, ...newPlan } = plan;
         return newPlan
-      }else {
+      } else {
         return plan
       }
     }));
     const plansArr = Object.values(createdPlans);
     const plansIds = plansArr.map(planObj => planObj._id);
-    console.log(plansIds);
 
     const updates = {
       ...req.body,
       UpdatedBy: req.body.updatedBy,
       Plans: plansIds,
       UpdationDate: new Date(),
-      Status: 'Pending'
+      Status: 'Pending',
+      ApprovalDate: null,
+      ApprovedBy: null,
+      DisapprovalDate: null,
+      DisapprovedBy: null,
+      Reason: null
     };
-
-    // If status is 'Pending', do not increment revision number
-    if (existingFoodSafety.Status === 'Pending') {
-      updates.RevisionNo = existingFoodSafety.RevisionNo;
-    } else if (existingFoodSafety.Status === 'Disapproved') {
-      // If status is 'Disapproved', increment revision number
-      updates.RevisionNo = existingFoodSafety.RevisionNo + 1;
-    }
-
-
+    updates.RevisionNo = existingFoodSafety.RevisionNo + 1;
     // Update the FoodSafety document
     const updatedFoodSafety = await FoodSafety.findByIdAndUpdate(foodSafetyId, updates, { new: true });
 
@@ -269,6 +264,7 @@ router.patch('/approve-food-safety', async (req, res) => {
     foodSafety.Status = 'Approved';
     foodSafety.DisapprovalDate = null; // Set disapproval date to null
     foodSafety.DisapprovedBy = null;
+    foodSafety.Reason = null;
     foodSafety.ApprovedBy = approveBy
 
     // Save the updated FoodSafety
@@ -319,7 +315,7 @@ router.patch('/disapprove-food-safety', async (req, res) => {
     foodSafety.Status = 'Disapproved';
     foodSafety.Reason = Reason;
     foodSafety.ApprovalDate = null; // Set approval date to null
-    foodSafety.ApprovedBy = 'Pending';
+    foodSafety.ApprovedBy = null;
     foodSafety.DisapprovedBy = disapproveBy
 
     // Save the updated FoodSafety

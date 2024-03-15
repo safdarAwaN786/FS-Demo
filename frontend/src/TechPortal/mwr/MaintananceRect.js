@@ -62,7 +62,7 @@ function MaintananceRect() {
                 <div className='d-flex flex-row bg-white px-lg-5 mx-1 px-2 py-2'>
                     <BsArrowLeftCircle role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
                         {
-                            dispatch(updateTabData({...tabData, Tab : 'Machinery'}));
+                            dispatch(updateTabData({...tabData, Tab : 'Master List of Machinery'}));
                         }
                     }} />
 
@@ -82,8 +82,8 @@ function MaintananceRect() {
                 <div className={style.tableParent}>
                     <table className={style.table}>
                         <tr className={style.tableHeader}>
-                            <th>MWR ID</th>
-                            <th>Machine Id</th>
+                            {/* <th>MWR ID</th> */}
+                            <th>Machine Name</th>
                             <th>Time</th>
                             <th>Date</th>
                             <th>Area</th>
@@ -98,8 +98,8 @@ function MaintananceRect() {
                             requests?.map((request, i) => {
                                 return (
                                     <tr key={i}>
-                                        <td>{request.MWRId}</td>
-                                        <td>{request.Machinery.machineCode}</td>
+                                        {/* <td>{request.MWRId}</td> */}
+                                        <td>{request.Machinery.machineName}</td>
                                         <td>{formattedTime(request.Time)}</td>
                                         <td>{request.Date.slice(0, 10).split('-')[2]}/{request.Date.slice(0, 10).split('-')[1]}/{request.Date.slice(0, 10).split('-')[0]}</td>
                                         <td>{request.Area}</td>

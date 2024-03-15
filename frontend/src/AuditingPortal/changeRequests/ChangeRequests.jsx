@@ -146,8 +146,6 @@ function ChangeRequests() {
                             <td>Change Request ID</td>
                             <td>Document Title</td>
                             <td>Department</td>
-                            <td>Creation Date</td>
-                            <td>Created By</td>
                             <td>Status</td>
                             <td>Action</td>
                             <td>Reason</td>
@@ -157,6 +155,16 @@ function ChangeRequests() {
                             {tabData?.Review && (
                                 <td></td>
                             )}
+                            <td className='ms-4'>Created By</td>
+                            <td>Creation Date</td>
+                            <td>Reviewed By</td>
+                            <td>Review Date</td>
+                            <td>Rejected By</td>
+                            <td>Rejection Date</td>
+                            <td>Approved By</td>
+                            <td>Approval Date</td>
+                            <td>Disapproved By</td>
+                            <td>Disapproval Date</td>
                         </tr>
                         {
                             requestsList?.map((request, i) => {
@@ -174,8 +182,6 @@ function ChangeRequests() {
                                         }}>{request.ChangeRequestId}</p></td>
                                         <td className={style.simpleContent}>{request.Document.DocumentTitle || request.Document.DocumentName}</td>
                                         <td>{request.Department.DepartmentName}</td>
-                                        <td>{request.CreationDate?.slice(0, 10).split('-')[2]}/{request.CreationDate?.slice(0, 10).split('-')[1]}/{request.CreationDate?.slice(0, 10).split('-')[0]}</td>
-                                        <td>{request.CreatedBy || '---'}</td>
                                         <td><div className={`text-center ${request.Status === 'Approved' && style.greenStatus} ${request.Status === 'Disapproved' && style.redStatus} ${request.Status === 'Rejected' && style.redStatus} ${request.Status === 'Pending' && style.yellowStatus} ${request.Status === 'Reviewed' && style.blueStatus} `}><p>{request.Status}</p></div></td>
                                         <td>
                                             <p onClick={() => {
@@ -196,23 +202,23 @@ function ChangeRequests() {
                                         {tabData?.Approval && (
                                             <td>
                                                 <p onClick={() => {
-                                                    if (request.Status === 'Approved' || request.Status === 'Rejected') {
-                                                        setDataToShow('Document is already Approved or Rejected!');
-                                                        setShowBox(true)
-                                                    } else {
+                                                    if (request.Status === 'Reviewed') {
                                                         setApprove(true);
                                                         setIdForAction(request._id)
+                                                    } else {
+                                                        setDataToShow('Change Request is not Reviewed!');
+                                                        setShowBox(true)
                                                     }
                                                 }} style={{
                                                     height: '28px'
                                                 }} className={`btn btn-outline-primary pt-0 px-1`}>Approve</p>
                                                 <p onClick={() => {
-                                                    if (request.Status === 'Approved' || request.Status === 'Disapproved' || request.Status === 'Rejected') {
-                                                        setDataToShow(`Document is already ${request.Status}!`);
-                                                        setShowBox(true);
-                                                    } else {
+                                                    if (request.Status === 'Reviewed') {
                                                         setDisApprove(true);
                                                         setIdForAction(request._id);
+                                                    } else {
+                                                        setDataToShow(`Change Request is not Reviewed!`);
+                                                        setShowBox(true);
                                                     }
                                                 }} style={{
                                                     height: '28px'
@@ -222,28 +228,54 @@ function ChangeRequests() {
                                         {tabData?.Review && (
                                             <td className='ms-4' >
                                                 <p onClick={() => {
-                                                    if (request.Status === 'Reviewed') {
-                                                        setDataToShow('Document is already Reviewed!');
-                                                        setShowBox(true);
-                                                    } else {
+                                                    if (request.Status === 'Pending') {
                                                         setReview(true);
                                                         setIdForAction(request._id)
+                                                    } else {
+                                                        setDataToShow('Change request is not Pending!');
+                                                        setShowBox(true);
                                                     }
                                                 }} style={{
                                                     height: '28px'
                                                 }} className={`btn btn-outline-danger pt-0 px-1`}>Review</p>
                                                 <p onClick={() => {
-                                                    if (document.Status === 'Rejected' || document.Status === 'Reviewed') {
-                                                        setDataToShow('Document is already Rejected or Reviewed');
-                                                        setShowBox(true);
-                                                    } else {
+                                                    if (document.Status === 'Pending' || document.Status === 'Reviewed') {
                                                         setReject(true);
                                                         setIdForAction(request._id)
+                                                    } else {
+                                                        setDataToShow('Change Request is niether Pending nor Reviewed');
+                                                        setShowBox(true);
                                                     }
                                                 }} style={{
                                                     height: '28px'
                                                 }} className={`btn btn-outline-primary pt-0 px-1`}>Reject</p>
                                             </td>
+                                        )}
+                                        <td>{request.CreatedBy || '---'}</td>
+                                        <td>{request.CreationDate?.slice(0, 10).split('-')[2]}/{request.CreationDate?.slice(0, 10).split('-')[1]}/{request.CreationDate?.slice(0, 10).split('-')[0]}</td>
+                                        <td>{request.ReviewedBy || '---'}</td>
+                                        {request.ReviewDate ? (
+                                            <td>{request.ReviewDate?.slice(0, 10).split('-')[2]}/{request.ReviewDate?.slice(0, 10).split('-')[1]}/{request.ReviewDate?.slice(0, 10).split('-')[0]}</td>
+                                        ) : (
+                                            <td>- - -</td>
+                                        )}
+                                        <td>{request.RejectedBy || '--'}</td>
+                                        {request.RejectionDate ? (
+                                            <td>{request.RejectionDate?.slice(0, 10).split('-')[2]}/{request.RejectionDate?.slice(0, 10).split('-')[1]}/{request.RejectionDate?.slice(0, 10).split('-')[0]}</td>
+                                        ) : (
+                                            <td>- - -</td>
+                                        )}
+                                        <td>{request.ApprovedBy || '--'}</td>
+                                        {request.ApprovalDate ? (
+                                            <td>{request.ApprovalDate?.slice(0, 10).split('-')[2]}/{request.ApprovalDate?.slice(0, 10).split('-')[1]}/{request.ApprovalDate?.slice(0, 10).split('-')[0]}</td>
+                                        ) : (
+                                            <td>---</td>
+                                        )}
+                                        <td>{request.DisapprovedBy || '--'}</td>
+                                        {request.DisapprovalDate ? (
+                                            <td>{request.DisapprovalDate?.slice(0, 10).split('-')[2]}/{request.DisapprovalDate?.slice(0, 10).split('-')[1]}/{request.DisapprovalDate?.slice(0, 10).split('-')[0]}</td>
+                                        ) : (
+                                            <td>---</td>
                                         )}
                                     </tr>
                                 )

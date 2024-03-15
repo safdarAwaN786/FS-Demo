@@ -48,10 +48,10 @@ router.get('/get-all-decision-trees', async (req, res) => {
       populate: [
         {
           path: 'Teams',
-          model : 'HaccpTeam',
-          populate : {
-            path : 'TeamMembers',
-            model : 'User'
+          model: 'HaccpTeam',
+          populate: {
+            path: 'TeamMembers',
+            model: 'User'
           }
         },
         {
@@ -89,13 +89,13 @@ router.get('/get-all-decision-trees', async (req, res) => {
 router.get('/get-approved-decision-trees', async (req, res) => {
   try {
 
-    const decisionTrees = await DecisionTree.find({ UserDepartment: req.header('Authorization'), Status : 'Approved' }).populate("Department UserDepartment").populate({
+    const decisionTrees = await DecisionTree.find({ UserDepartment: req.header('Authorization'), Status: 'Approved' }).populate("Department UserDepartment").populate({
       path: 'ConductHaccp',
       model: 'ConductHaccp',
       populate: [
         {
           path: 'Teams',
-          model : 'HaccpTeam',
+          model: 'HaccpTeam',
           populate: {
             path: 'TeamMembers',
             model: 'User'
@@ -144,7 +144,7 @@ router.get('/get-decision-tree/:treeId', async (req, res) => {
       populate: [
         {
           path: 'Teams',
-          model : 'HaccpTeam',
+          model: 'HaccpTeam',
           populate: {
             path: 'TeamMembers',
             model: 'User'
@@ -235,32 +235,25 @@ router.patch('/update-decision-tree/:treeId', async (req, res) => {
       return res.status(404).json({ message: `DecisionTree document with ID: ${decisionTreeId} not found` });
     }
 
-    // Check the status and handle revisions accordingly
-    if (existingDecisionTree.Status === 'Approved') {
-      // If status is 'Approved', deny the update
-      console.log(`DecisionTree document with ID: ${decisionTreeId} is already approved, cannot be updated.`);
-      return res.status(400).json({ message: `DecisionTree document with ID: ${decisionTreeId} is already approved, cannot be updated.` });
-    }
     const createdDecisions = await DecisionModel.create(treeData.Decisions.map((decisionObj => {
       const { _id, ...obj } = decisionObj;
       return obj
     })))
     const decisionsArr = Object.values(createdDecisions);
     const decisionIds = decisionsArr.map(decisionObj => decisionObj._id);
-    console.log(decisionIds);
 
     const updates = {
       ...req.body,
-      Decisions: decisionIds
+      Decisions: decisionIds,
+      ApprovalDate : null,
+      ApprovedBy : null,
+      DisapprovalDate : null,
+      DisapprovedBy : null,
+      Reason : null,
+      Status : 'Pending'
     }
 
-    // If status is 'Pending', do not increment revision number
-    if (existingDecisionTree.Status === 'Pending') {
-      updates.RevisionNo = existingDecisionTree.RevisionNo;
-    } else if (existingDecisionTree.Status === 'Disapproved') {
-      // If status is 'Disapproved', increment revision number
-      updates.RevisionNo = existingDecisionTree.RevisionNo + 1;
-    }
+    updates.RevisionNo = existingDecisionTree.RevisionNo + 1;
 
     const updatedDecisionTree = await DecisionTree.findByIdAndUpdate(decisionTreeId, updates, { new: true });
 
@@ -299,6 +292,7 @@ router.patch('/approve-decision-tree', async (req, res) => {
     decisionTree.ApprovedBy = approvedBy;
     decisionTree.DisapprovalDate = null; // Set disapproval date to null
     decisionTree.DisapprovedBy = null;
+    decisionTree.Reason = null;
     // Save the updated DecisionTree
     await decisionTree.save();
 

@@ -165,19 +165,12 @@ router.put('/update-conduct-haccp/:haccpId', async (req, res) => {
             console.log(`ConductHaccp document with ID: ${conductHaccpId} not found`);
             return res.status(404).json({ message: `ConductHaccp document with ID: ${conductHaccpId} not found` });
         }
-
-        // If the status is 'Pending', do not increment revision number
-        if (existingConductHaccp.Status === 'Pending') {
-            req.body.RevisionNo = existingConductHaccp.RevisionNo;
-        } else if (existingConductHaccp.Status === 'Disapproved') {
-            // If the status is 'Disapproved', increment revision number
-            req.body.RevisionNo = existingConductHaccp.RevisionNo + 1;
-        }
+        req.body.RevisionNo = existingConductHaccp.RevisionNo + 1;
         const haccpData = req.body;
 
         const createdHazards = await HazardModel.create(haccpData.Hazards.map(hazard => {
-            if(hazard._id){
-                const {_id, ...newHazard} = hazard;
+            if (hazard._id) {
+                const { _id, ...newHazard } = hazard;
                 return newHazard
             } else {
                 return hazard
@@ -185,13 +178,17 @@ router.put('/update-conduct-haccp/:haccpId', async (req, res) => {
         }))
         const hazardsArr = Object.values(createdHazards);
         const hazardsIds = hazardsArr.map(hazardObj => hazardObj._id);
-        console.log(hazardsIds);
 
-        const {_id, ...updates} = {
+        const { _id, ...updates } = {
             ...req.body,
             UpdatedBy: req.body.updatedBy,
             UpdationDate: new Date(),
             Hazards: hazardsIds,
+            ApprovalDate : null,
+            ApprovedBy : null,
+            DisapprovalDate : null,
+            DisapprovedBy : null,
+            Reason : null,
             Status: 'Pending'
         };
 
@@ -233,6 +230,7 @@ router.patch('/approve-conduct-haccp', async (req, res) => {
         conductHaccp.DisapprovalDate = null;
         conductHaccp.DisapprovedBy = null;
         conductHaccp.ApprovedBy = approvedBy;
+        conductHaccp.Reason = null;
 
         // Save the updated ConductHaccp
         await conductHaccp.save();
@@ -276,7 +274,7 @@ router.patch('/disapprove-conduct-haccp', async (req, res) => {
         conductHaccp.Reason = Reason;
         conductHaccp.ApprovalDate = null; // Set approval date to null
         conductHaccp.DisapprovedBy = disapproveBy
-        conductHaccp.ApprovedBy = 'Pending'
+        conductHaccp.ApprovedBy = null
 
         // Save the updated ConductHaccp
         await conductHaccp.save();

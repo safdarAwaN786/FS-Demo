@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { updateTabData } from '../../redux/slices/tabSlice'
 import { changeId } from '../../redux/slices/idToProcessSlice'
 import { setSmallLoading } from '../../redux/slices/loading'
+import dayjs from 'dayjs'
 
 function TechMWR() {
     const [alert, setalert] = useState(false);
@@ -94,25 +95,19 @@ function TechMWR() {
     const nextPage = () => {
         setStartIndex(startIndex + 8);
         setEndIndex(endIndex + 8);
-
     }
-
     const backPage = () => {
         setStartIndex(startIndex - 8);
         setEndIndex(endIndex - 8);
     }
     useEffect(() => {
-
         setRequests(allDataArr?.slice(startIndex, endIndex))
     }, [startIndex, endIndex])
-
 
     const searchFunction = (event) => {
         if (event.target.value !== "") {
             console.log(event.target.value);
-
             const searchedList = allDataArr.filter((obj) =>
-
                 obj.MWRId.includes(event.target.value)
             )
             console.log(searchedList);
@@ -123,43 +118,27 @@ function TechMWR() {
     }
 
     const [alert4, setAlert4] = useState(false);
-
-
-
-    const navigate = useNavigate()
     const [rejectObj, setRejectObj] = useState({});
-
     const formattedTime = (dateString) => {
         console.log(dateString);
-
         if (dateString) {
-
             // Convert the date string to a Date object
             const dateObj = new Date(dateString);
-
             // Get the hours from the Date object
             const hours = dateObj.getHours();
-
             // Convert hours to AM/PM format
             const amPmHours = hours % 12 === 0 ? 12 : hours % 12;
             const amPm = hours < 12 ? 'AM' : 'PM';
-
             // Construct the final string
             const formattedTime = `${amPmHours}:${dateObj.getMinutes().toString().padStart(2, '0')} ${amPm}`;
-
             return formattedTime;
         } else {
             return ("---")
         }
     }
 
-
-
-
-
     return (
         <>
-
             <div className={`${style.searchbar}`}>
                 <div className={style.sec1}>
                     <img src={Search} alt="" />
@@ -180,52 +159,52 @@ function TechMWR() {
                         <p className='text-center'>No any Records Available here.</p>
                     </div>
                 ) : (
-
                     <table className={style.table}>
                         <tr className={style.headers}>
-                            <td>MWR Id</td>
+                            {/* <td>MWR Id</td> */}
                             <td>Date</td>
                             <td>Time</td>
                             <td>Area</td>
+                            <td>Status</td>
                             <td>Department</td>
-                            <td>Machine Id</td>
-                            <td>Priority</td>
+                            <td>Machine Name</td>
+                            <td>Change Priority</td>
                             <td>Description</td>
                             <td>Instruction</td>
                             {tabData?.Approval && (
-                                <td>Action</td>
+                                <>
+                                    <td>Action</td>
+                                    <td></td>
+                                    <td></td>
+                                </>
                             )}
                             <td>Start Time</td>
                             <td>End Time</td>
                             <td>Reason</td>
                             <td>Detail</td>
-                            <td>Status</td>
                             <td>MWR Detail</td>
                         </tr>
                         {
                             requests?.map((request, i) => {
                                 return (
                                     <tr className={style.body} key={i}>
-                                        <td>
+                                        {/* <td>
                                             <p>
                                                 {request.MWRId}
                                             </p>
-                                        </td>
+                                        </td> */}
                                         <td className={style.text1}>{request.Date.slice(0, 10).split('-')[2]}/{request.Date.slice(0, 10).split('-')[1]}/{request.Date.slice(0, 10).split('-')[0]}</td>
                                         <td className={style.text2}>
-                                            {formattedTime(request.Time)}
+                                            {dayjs(request.Time).format('hh:mm:A')}
                                         </td>
                                         <td className={style.text2}>{request.Area}</td>
+                                        <td ><div className={`w-100 text-center ${(request.Status === 'Approved') && (style.blueStatus)} ${(request.Status === 'Pending') && (style.yellowStatus)} ${(request.Status === 'Completed') && (style.greenStatus)} ${request.Status === 'Rejected' && (style.redStatus)}`}><p>{request.Status}</p></div></td>
                                         <td className={style.text2}>{request.Department.DepartmentName}</td>
-                                        <td>
-                                            <p>
-                                                {request.Machinery.machineCode}
-                                            </p>
+                                        <td className={style.text2}>
+                                            {request.Machinery.machineName}
                                         </td>
                                         <td className={style.text3}>
-
                                             {(request.Status === 'Pending') ? (
-
                                                 <select onChange={(e) => {
                                                     setSelectedPriority(e.target.value);
                                                 }} name="" id="">
@@ -251,52 +230,53 @@ function TechMWR() {
                                             setalert(!alert)
                                         }} className={style.viewBtn}>View</button></td>
                                         {tabData?.Approval && (
-
-                                            <td>
-                                                <button className={`${style.accept} ${request.Status === 'Approved' && 'bg-primary text-light'}`} onClick={() => {
-                                                    if (request.Status === 'Pending' || request.Status === 'Rejected') {
-
-                                                        setOpenedRequestId(request._id)
-                                                        setalert3(!alert3)
-                                                    } else {
-                                                        setPopUpData('Sorry! This Job is Already Accepted or Completed');
-                                                        setalert(true)
-                                                    }
-                                                }} >Accept</button>
-                                                <button onClick={() => {
-                                                    if (request.Status === 'Approved' || request.Status === 'Completed' || request.Status === 'Rejected') {
-                                                        setPopUpData('Sorry! Job is not Pending for Rejection')
-                                                        setalert(true)
-                                                    } else {
-                                                        if (selectedPriority) {
-
-                                                            setRejectObj({ ...rejectObj, Priority: selectedPriority })
+                                            <>
+                                                <td>
+                                                    <button className={`${style.accept} ${request.Status === 'Approved' && 'bg-primary text-light'}`} onClick={() => {
+                                                        if (request.Status === 'Pending' || request.Status === 'Rejected') {
+                                                            setOpenedRequestId(request._id)
+                                                            setalert3(!alert3)
                                                         } else {
-                                                            setRejectObj({ ...rejectObj, Priority: request.Priority })
+                                                            setPopUpData('Sorry! This Job is Already Accepted or Completed');
+                                                            setalert(true)
                                                         }
-                                                        setOpenedRequestId(request._id);
-                                                        setalert2(!alert2)
-                                                    }
-                                                }} className={`${style.reject} ${request.Status === 'Rejected' && 'bg-danger text-light'}`}>Reject</button>
-                                                <button onClick={() => {
-                                                    if (request.Status !== 'Approved') {
-                                                        setPopUpData("Kindly Accept job before completing!");
-                                                        setalert(true)
+                                                    }} >Accept</button>
+                                                </td>
+                                                <td>
+                                                    <button onClick={() => {
+                                                        if (request.Status === 'Approved' || request.Status === 'Completed' || request.Status === 'Rejected') {
+                                                            setPopUpData('Sorry! Job is not Pending for Rejection')
+                                                            setalert(true)
+                                                        } else {
+                                                            if (selectedPriority) {
+                                                                setRejectObj({ ...rejectObj, Priority: selectedPriority })
+                                                            } else {
+                                                                setRejectObj({ ...rejectObj, Priority: request.Priority })
+                                                            }
+                                                            setOpenedRequestId(request._id);
+                                                            setalert2(!alert2)
+                                                        }
+                                                    }} className={`${style.reject} ${request.Status === 'Rejected' && 'bg-danger text-light'}`}>Reject</button>
+                                                </td>
+                                                <td>
 
-                                                    } else {
-
-                                                        setOpenedRequestId(request._id)
-                                                        setPopUpData('Do you Really want to complete this request ?');
-                                                        setAlert4(true);
-                                                    }
-                                                }} className={`${style.complete} ${request.Status === 'Completed' && 'bg-success text-light'}`}>Complete</button>
-                                            </td>
+                                                    <button onClick={() => {
+                                                        if (request.Status !== 'Approved') {
+                                                            setPopUpData("Kindly Accept job before completing!");
+                                                            setalert(true)
+                                                        } else {
+                                                            setOpenedRequestId(request._id)
+                                                            setPopUpData('Do you Really want to complete this request ?');
+                                                            setAlert4(true);
+                                                        }
+                                                    }} className={`${style.complete} ${request.Status === 'Completed' && 'bg-success text-light'}`}>Complete</button>
+                                                </td>
+                                            </>
                                         )}
                                         <td className={style.text2}>{formattedTime(request.StartTime)}</td>
                                         <td className={style.text2}>{formattedTime(request.EndTime)}</td>
                                         <td><button onClick={() => {
                                             if (request.Status === 'Rejected') {
-
                                                 setPopUpData(request.Reason)
                                                 setalert(!alert)
                                             } else {
@@ -307,17 +287,13 @@ function TechMWR() {
                                         <td><button className={style.viewBtn} onClick={() => {
                                             dispatch(changeId(request.Machinery._id))
                                             dispatch(updateTabData({ ...tabData, Tab: 'viewCorrectiveMaintenanceForMWR' }))
-
                                         }}>View</button></td>
-                                        <td ><div className={`${style.text2} text-center ${(request.Status === 'Approved') && (style.blueStatus)} ${(request.Status === 'Completed') && (style.greenStatus)} ${request.Status === 'Rejected' && (style.redStatus)}`}><p>{request.Status}</p></div></td>
                                         <td><button onClick={() => {
                                             dispatch(changeId(request._id))
                                             dispatch(updateTabData({ ...tabData, Tab: 'MWRDetails' }))
-
                                         }} className={style.viewBtn}>View</button></td>
                                     </tr>
                                 )
-
                             })
                         }
                     </table>
@@ -325,19 +301,16 @@ function TechMWR() {
             </div>
             <div className={style.next}>
                 {startIndex > 0 && (
-
                     <button className='mx-2' onClick={backPage}>
                         {'<< '}Back
                     </button>
                 )}
                 {allDataArr?.length > endIndex && (
-
                     <button className='mx-2' onClick={nextPage}>
                         next{'>> '}
                     </button>
                 )}
             </div>
-
             {
                 alert ?
                     <div class={style.alertparent}>
@@ -359,7 +332,7 @@ function TechMWR() {
                             <form onSubmit={(e) => {
                                 e.preventDefault();
                                 dispatch(setSmallLoading(true))
-                                axios.patch(`/rejectMWR/${openedRequestId}`, { ...rejectObj, rejectedBy: user.Name }).then(() => {
+                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/rejectMWR/${openedRequestId}`, { ...rejectObj, rejectedBy: user.Name }).then(() => {
                                     dispatch(setSmallLoading(false))
                                     Swal.fire({
                                         title: 'Success',
@@ -381,7 +354,6 @@ function TechMWR() {
                                 })
                                 setalert2(false);
                             }}>
-
                                 <textarea onChange={(e) => {
                                     setRejectObj({ ...rejectObj, [e.target.name]: e.target.value });
                                 }} name="Reason" id="" cols="30" rows="10" placeholder='Comment here' required />
@@ -403,7 +375,7 @@ function TechMWR() {
                             <div className={style.alertbtns}>
                                 <button onClick={() => {
                                     dispatch(setSmallLoading(true))
-                                    axios.patch(`/completeMWR/${openedRequestId}`, { completedBy: user.Name }).then(() => {
+                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/completeMWR/${openedRequestId}`, { completedBy: user.Name }).then(() => {
                                         dispatch(setSmallLoading(false))
                                         Swal.fire({
                                             title: 'Success',
@@ -441,7 +413,7 @@ function TechMWR() {
                                 setalert3(false);
                                 console.log(acceptObj)
                                 dispatch(setSmallLoading(true))
-                                axios.patch(`/acceptMWR/${openedRequestId}`, { ...acceptObj, acceptedBy: user.Name }).then((res) => {
+                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/acceptMWR/${openedRequestId}`, { ...acceptObj, acceptedBy: user.Name }).then((res) => {
                                     dispatch(setSmallLoading(false))
                                     Swal.fire({
                                         title: 'Success',

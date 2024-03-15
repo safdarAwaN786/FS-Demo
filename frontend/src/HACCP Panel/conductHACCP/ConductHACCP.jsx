@@ -181,29 +181,23 @@ function ConductHACCP() {
                                         {tabData?.Approval && (
                                             <td>
                                                 <p onClick={() => {
-                                                    if (HACCP.Status === 'Approved') {
-                                                        setDataToShow('Sorry, Team is already Approved');
-                                                        setShowBox(true);
-                                                    } else if (HACCP.Status === 'Disapproved') {
-                                                        setDataToShow('Sorry, Team is already Disapproved');
-                                                        setShowBox(true);
-                                                    } else {
+                                                    if (HACCP.Status === 'Pending') {
                                                         setIdForAction(HACCP._id);
                                                         setApprove(true);
+                                                    } else {
+                                                        setDataToShow('Sorry, Risk Assessment is not pending!');
+                                                        setShowBox(true);
                                                     }
                                                 }} style={{
                                                     height: '28px'
                                                 }} className={`btn btn-outline-primary pt-0 px-1`}>Approve</p>
                                                 <p onClick={() => {
-                                                    if (HACCP.Status === 'Approved') {
-                                                        setDataToShow('Sorry, Team is already Approved');
-                                                        setShowBox(true);
-                                                    } else if (HACCP.Status === 'Disapproved') {
-                                                        setDataToShow('Sorry, Team is already Disapproved');
-                                                        setShowBox(true);
-                                                    } else {
+                                                    if (HACCP.Status === 'Pending') {
                                                         setIdForAction(HACCP._id);
                                                         setReject(true);
+                                                    } else {
+                                                        setDataToShow('Sorry, Risk Assessment is not pending!');
+                                                        setShowBox(true);
                                                     }
                                                 }} style={{
                                                     height: '28px'
@@ -248,13 +242,11 @@ function ConductHACCP() {
             </div>
             <div className={style.Btns}>
                 {startIndex > 0 && (
-
                     <button onClick={backPage}>
                         {'<< '}Back
                     </button>
                 )}
                 {allDataArr?.length > endIndex && (
-
                     <button onClick={nextPage}>
                         next{'>> '}
                     </button>

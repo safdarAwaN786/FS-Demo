@@ -150,27 +150,30 @@ function FormsList() {
                                 <td>Form Title</td>
                                 <td>Revision No.</td>
                                 {/* <td>Document Type</td> */}
-                                <td>Department</td>
-                                <td>Creation Date</td>
-                                <td>Created By</td>
                                 <td>Status</td>
-                                <td>Reviewed By</td>
-                                <td>Review Date</td>
-                                <td>Approved By</td>
-                                <td>Approval Date</td>
+                                <td>Maintenance Frequency</td>
+                                <td>Department</td>
                                 <td>Results History</td>
                                 <td>Action</td>
                                 <td>Action</td>
                                 {/* <td>Document</td> */}
                                 <td>Reason</td>
                                 {tabData?.Approval && (
-
                                     <td></td>
                                 )}
                                 {tabData?.Review && (
-
                                     <td></td>
                                 )}
+                                <td>Creation Date</td>
+                                <td className='ms-4'>Created By</td>
+                                <td>Approved By</td>
+                                <td>Approval Date</td>
+                                <td>Disapproved By</td>
+                                <td>Disapproval Date</td>
+                                <td>Reviewed By</td>
+                                <td>Review Date</td>
+                                <td>Rejected By</td>
+                                <td>Rejection Date</td>
                             </tr>
                             {
                                 formsList?.map((form, i) => {
@@ -188,49 +191,28 @@ function FormsList() {
                                             }}>{form.FormId}</p></td>
                                             <td className={style.simpleContent}>{form.FormName}</td>
                                             <td>{form.RevisionNo}</td>
-
-                                            <td>{form.Department.DepartmentName}</td>
-                                            <td>{form.CreationDate?.slice(0, 10).split('-')[2]}/{form.CreationDate?.slice(0, 10).split('-')[1]}/{form.CreationDate?.slice(0, 10).split('-')[0]}</td>
-                                            <td>{form.CreatedBy}</td>
                                             <td><div className={`text-center ${form.Status === 'Approved' && style.greenStatus} ${form.Status === 'Disapproved' && style.redStatus} ${form.Status === 'Rejected' && style.redStatus} ${form.Status === 'Pending' && style.yellowStatus} ${form.Status === 'Reviewed' && style.blueStatus} `}><p>{form.Status}</p></div></td>
-                                            <td>{form.ReviewedBy || '--'}</td>
-                                            {form.ReviewDate ? (
-
-                                                <td>{form.ReviewDate?.slice(0, 10).split('-')[2]}/{form.ReviewDate?.slice(0, 10).split('-')[1]}/{form.ReviewDate?.slice(0, 10).split('-')[0]}</td>
-                                            ) : (
-                                                <td>- - -</td>
-                                            )}
-                                            <td>{form.ApprovedBy || '--'}</td>
-                                            {form.ApprovalDate ? (
-
-                                                <td>{form.ApprovalDate?.slice(0, 10).split('-')[2]}/{form.ApprovalDate?.slice(0, 10).split('-')[1]}/{form.ApprovalDate?.slice(0, 10).split('-')[0]}</td>
-                                            ) : (
-                                                <td>---</td>
-                                            )}
+                                            <td className={style.simpleContent}>{form.MaintenanceFrequency}</td>
+                                            <td>{form.Department.DepartmentName}</td>
                                             <td>
                                                 <p onClick={() => {
                                                     dispatch(updateTabData({ ...tabData, Tab: 'viewResultsHistory' }))
                                                     dispatch(changeId(form._id))
                                                 }} className={style.click}>View</p>
                                             </td>
-
-
-                                            <td >
-
+                                            <td>
                                                 <p onClick={() => {
                                                     setFormToProcess(form);
                                                     setSend(true);
                                                 }} className={style.click}>Send</p>
                                             </td>
-                                            <td >
+                                            <td>
                                                 {tabData?.Edit && (
-
                                                     <p onClick={() => {
                                                         dispatch(updateTabData({ ...tabData, Tab: 'editForm' }))
                                                         dispatch(changeId(form._id))
                                                     }} style={{
                                                         height: '28px'
-
                                                     }} className={`btn btn-outline-primary pt-0`}>Edit</p>
                                                 )}
                                                 <p onClick={() => {
@@ -238,7 +220,6 @@ function FormsList() {
                                                     dispatch(changeId(form._id))
                                                 }} style={{
                                                     height: '28px'
-
                                                 }} className={`btn btn-outline-danger pt-0`}>View</p>
                                             </td>
                                             {/* <td >
@@ -260,70 +241,87 @@ function FormsList() {
                                                 }} className={style.redclick}>View</p>
                                             </td>
                                             {tabData?.Approval && (
-
                                                 <td>
-
                                                     <p onClick={() => {
-                                                        if (form.Status === 'Approved' || form.Status === 'Rejected') {
-                                                            setDataToShow('Form is already Approved or Rejected!');
-                                                            setShowBox(true)
-                                                        } else {
-
+                                                        if (form.Status === 'Reviewed') {
                                                             setApprove(true);
                                                             setIdForAction(form._id)
+                                                        } else {
+                                                            setDataToShow('Form is not Reviewed!');
+                                                            setShowBox(true)
                                                         }
                                                     }} style={{
                                                         height: '28px'
-
                                                     }} className={`btn btn-outline-primary pt-0 px-1`}>Approve</p>
                                                     <p onClick={() => {
-                                                        if (form.Status === 'Approved' || form.Status === 'Disapproved' || form.Status === 'Rejected') {
-                                                            setDataToShow(`Form is already ${form.Status}!`);
-                                                            setShowBox(true);
-                                                        } else {
-
+                                                        if (form.Status === 'Reviewed') {
                                                             setDisApprove(true);
                                                             setIdForAction(form._id);
+                                                        } else {
+                                                            setDataToShow(`Form is not Reviewed!`);
+                                                            setShowBox(true);
                                                         }
                                                     }} style={{
                                                         height: '28px'
-
                                                     }} className={`btn btn-outline-danger pt-0 px-1`}>Disaprrove</p>
                                                 </td>
                                             )}
                                             {tabData?.Review && (
-
                                                 <td className='ms-4' >
-
                                                     <p onClick={() => {
-                                                        if (form.Status === 'Reviewed') {
-                                                            setDataToShow('Form is already Reviewed!');
-                                                            setShowBox(true);
-                                                        } else {
-
+                                                        if (form.Status === 'Pending') {
                                                             setReview(true);
                                                             setIdForAction(form._id)
+                                                        } else {
+                                                            setDataToShow('Form is not Pending!');
+                                                            setShowBox(true);
                                                         }
                                                     }} style={{
                                                         height: '28px'
 
                                                     }} className={`btn btn-outline-danger pt-0 px-1`}>Review</p>
                                                     <p onClick={() => {
-                                                        if (form.Status === 'Rejected' || form.Status === 'Reviewed') {
-                                                            setDataToShow('Document is already Rejected or Reviewed');
-                                                            setShowBox(true);
-                                                        } else {
+                                                        if (form.Status === 'Pending' || form.Status === 'Reviewed') {
                                                             setReject(true);
                                                             setIdForAction(form._id);
+                                                        } else {
+                                                            setDataToShow('Form is niether Pending not Reviewed!');
+                                                            setShowBox(true);
                                                         }
                                                     }} style={{
                                                         height: '28px'
-
                                                     }} className={`btn btn-outline-primary pt-0 px-1`}>Reject</p>
                                                 </td>
                                             )}
+                                            <td className='ps-0'>{form.CreationDate?.slice(0, 10).split('-')[2]}/{form.CreationDate?.slice(0, 10).split('-')[1]}/{form.CreationDate?.slice(0, 10).split('-')[0]}</td>
+                                            <td>{form.CreatedBy}</td>
+                                            <td>{form.ApprovedBy || '--'}</td>
+                                            {form.ApprovalDate ? (
+                                                <td>{form.ApprovalDate?.slice(0, 10).split('-')[2]}/{form.ApprovalDate?.slice(0, 10).split('-')[1]}/{form.ApprovalDate?.slice(0, 10).split('-')[0]}</td>
+                                            ) : (
+                                                <td>---</td>
+                                            )}
+                                            <td>{form.DisapprovedBy || '--'}</td>
+                                            {form.DisapprovalDate ? (
 
+                                                <td>{form.DisapprovalDate?.slice(0, 10).split('-')[2]}/{form.DisapprovalDate?.slice(0, 10).split('-')[1]}/{form.DisapprovalDate?.slice(0, 10).split('-')[0]}</td>
+                                            ) : (
+                                                <td>---</td>
+                                            )}
+                                            <td>{form.ReviewedBy || '--'}</td>
+                                            {form.ReviewDate ? (
 
+                                                <td>{form.ReviewDate?.slice(0, 10).split('-')[2]}/{form.ReviewDate?.slice(0, 10).split('-')[1]}/{form.ReviewDate?.slice(0, 10).split('-')[0]}</td>
+                                            ) : (
+                                                <td>- - -</td>
+                                            )}
+                                            <td>{form.RejectedBy || '--'}</td>
+                                            {form.RejectionDate ? (
+
+                                                <td>{form.RejectionDate?.slice(0, 10).split('-')[2]}/{form.RejectionDate?.slice(0, 10).split('-')[1]}/{form.RejectionDate?.slice(0, 10).split('-')[0]}</td>
+                                            ) : (
+                                                <td>- - -</td>
+                                            )}
 
                                         </tr>
 
@@ -463,7 +461,7 @@ function FormsList() {
                                 setDisApprove(false);
                                 dispatch(setSmallLoading(true))
                                 axios.patch(`${process.env.REACT_APP_BACKEND_URL}/disapproveForm`, { formId: idForAction, reason: reason, disapprovedBy : user.Name }).then(() => {
-                                    dispatch(false)
+                                    dispatch(setSmallLoading(false))
                                     Swal.fire({
                                         title: 'Success',
                                         text: 'DisApproved Successfully',
@@ -472,6 +470,7 @@ function FormsList() {
                                     })
                                     refreshData();
                                 }).catch(err => {
+                                    console.log(err)
                                     dispatch(setSmallLoading(false));
                                     Swal.fire({
                                         icon: 'error',

@@ -2,7 +2,6 @@ const express = require('express');
 const Machinery = require('../../models/Tech/MachineryModel');
 const router = new express.Router();
 require('dotenv').config()
-const authMiddleware = require('../../middleware/auth');
 
 // router.use(authMiddleware);
 

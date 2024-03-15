@@ -131,7 +131,6 @@ function GenerateMWR() {
 
     return (
         <>
-
             <div className='d-flex flex-row bg-white px-lg-5 mx-1 px-2 py-2'>
                 <BsArrowLeftCircle
                     role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
@@ -139,7 +138,6 @@ function GenerateMWR() {
                             dispatch(updateTabData({ ...tabData, Tab: 'Generate MWR Corrective' }))
                         }
                     }} />
-
             </div>
             <div className={`${style.headers} mt-1 `}>
                 <div className={style.spans}>
@@ -150,12 +148,9 @@ function GenerateMWR() {
                 <div className={style.para}>
                     Generate MWR
                 </div>
-
             </div>
             <form onSubmit={(e) => {
                 e.preventDefault();
-                console.log(formValues);
-                console.log(discipline)
                 setFormValues({ ...formValues, Discipline: discipline });
                 if (formValues.Area && formValues.Priority && formValues.MachineId && discipline.length !== 0 && formValues.mwrImage) {
                     setPopUpData('Do you want to submit the data ?')

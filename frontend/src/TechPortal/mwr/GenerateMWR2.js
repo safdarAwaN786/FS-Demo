@@ -136,9 +136,9 @@ function GenerateMWR2() {
                     </div>
                     <div className={style.sec2}>
                         <div >
-                            <p className='mt-2'>Equipment Code</p>
+                            <p className='mt-2'>Machine Name</p>
                             <div className={style.dropdownfield}>
-                                <p>{request?.Machinery.machineCode}</p>
+                                <p>{request?.Machinery.machineName}</p>
 
                             </div>
                         </div>
@@ -148,7 +148,6 @@ function GenerateMWR2() {
                             <div className={style.dropdownfield}>
                                 {request?.Discipline?.map((value) => {
                                     return (
-
                                         <p className='d-block w-100'>{value}</p>
                                     )
                                 })}

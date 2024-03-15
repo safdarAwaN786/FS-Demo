@@ -17,7 +17,7 @@ function ShowAddPerson() {
     useEffect(() => {
         dispatch(setSmallLoading(true))
         axios.get(`${process.env.REACT_APP_BACKEND_URL}/readPersonalRecuisition`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
-
+            // console.log(response.data);
             const reqPersonsList = response.data.data;
             setReqPersonData(reqPersonsList.find((person) => person._id === idToWatch));
             dispatch(setSmallLoading(false))
@@ -29,7 +29,7 @@ function ShowAddPerson() {
                 text : 'Something went wrong, Try Again!'
             })
         })
-    })
+    }, [])
     return (
         <>
             <div className='d-flex flex-row bg-white px-lg-5  px-2 py-2'>

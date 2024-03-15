@@ -61,6 +61,9 @@ function EditForm() {
     useEffect(() => {
         console.log(dataToSend);
     }, [dataToSend])
+    useEffect(()=>{
+        setDataToSend({...dataToSend, questions : questions})
+    }, [questions])
 
 
     const [departmentsToShow, SetDepartmentsToShow] = useState(null);
@@ -105,7 +108,7 @@ function EditForm() {
             height: '40px', // Set your desired height here
         }),
     };
-
+    console.log(dataToSend);
     const makeRequest = () => {
         if (dataToSend?.questions.length > 0) {
             dispatch(setSmallLoading(true))
@@ -172,22 +175,17 @@ function EditForm() {
                     <div className={`${style.sec1}  px-3`}>
                         <form encType='multipart/form-data' onSubmit={(event) => {
                             event.preventDefault();
-
+                            setDataToSend({...dataToSend, questions : questions})
                             alertManager();
                         }}>
 
                             <div className='mb-4'>
                                 <p className='text-black'>Department</p>
                                 <div>
-                                    <select value={dataToSend?.Department.DepartmentName} onChange={(e) => {
+                                    <select value={dataToSend?.Department?.DepartmentName} onChange={(e) => {
                                         setDataToSend({ ...dataToSend, [e.target.name]: e.target.value })
-                                    }} name='Department' className={`form-select  form-select-lg `} aria-label="Large select example" required>
-                                        <option disabled>{dataToSend?.Department.DepartmentName}</option>
-                                        {departmentsToShow?.map((depObj) => {
-                                            return (
-                                                <option value={depObj._id}>{depObj.DepartmentName}</option>
-                                            )
-                                        })}
+                                    }} name='Department' className={`form-select  form-select-lg `} aria-label="Large select example"  readonly>
+                                        <option disabled>{dataToSend?.Department?.DepartmentName}</option>
                                     </select>
                                 </div>
                             </div>
@@ -195,13 +193,8 @@ function EditForm() {
                                 <p className='text-black'>Document Type</p>
                                 <select value={dataToSend?.DocumentType} onChange={(e) => {
                                     setDataToSend({ ...dataToSend, [e.target.name]: e.target.value })
-                                }} name='DocumentType' className={`form-select  form-select-lg mb-3`} aria-label="Large select example" required>
+                                }} name='DocumentType' className={`form-select  form-select-lg mb-3`} aria-label="Large select example" readonly>
                                     <option disabled selected>{dataToSend?.DocumentType}</option>
-                                    <option value="Manuals">Manuals</option>
-                                    <option value="Procedures">Procedures</option>
-                                    <option value="SOPs">SOPs</option>
-                                    <option value="Forms">Forms</option>
-
                                 </select>
                             </div>
                             <div>
@@ -308,7 +301,7 @@ function EditForm() {
                                                                 <th style={{
                                                                     minWidth: '120px'
                                                                 }}>R\C</th>
-                                                                {questions[index]?.columns.map((column, colIndex) => {
+                                                                {question?.columns.map((column, colIndex) => {
                                                                     return (
                                                                         <th style={{
                                                                             minWidth: '80px'

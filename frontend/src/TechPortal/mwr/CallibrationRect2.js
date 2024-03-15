@@ -6,6 +6,7 @@ import { BsArrowLeftCircle } from 'react-icons/bs';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { setSmallLoading } from '../../redux/slices/loading';
+import { IoCheckmarkCircleOutline } from "react-icons/io5";
 
 function CallibrationRect2() {
     const [alert, setalert] = useState(false);
@@ -46,7 +47,7 @@ function CallibrationRect2() {
         equipmentId: idToWatch,
         lastDate: JSON.stringify(new Date()),
         nextDate: JSON.stringify(nextdate),
-        CR: 'User'
+        CR: user.Name
     });
     const [submitAlert, setSubmitAlert] = useState(false);
     const [equipment, setEquipment] = useState(null);
@@ -107,7 +108,7 @@ function CallibrationRect2() {
                 <div className='d-flex flex-row bg-white px-lg-5 mx-1 px-2 py-2'>
                     <BsArrowLeftCircle role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
                         {
-                            dispatch(updateTabData({ ...tabData, Tab: 'Measuring Devices' }))
+                            dispatch(updateTabData({ ...tabData, Tab: 'Master List of Monitoring and Measuring Devices' }))
                         }
                     }} />
 
@@ -157,10 +158,10 @@ function CallibrationRect2() {
                     <p>Add</p>
                     <button onClick={() => {
                         setalert2(!alert2)
-                    }} className={style.download}>Internal</button>
+                    }} className={style.download}>Internal {(formValues.Image && formValues.Certificate && formValues.masterCertificate) && <IoCheckmarkCircleOutline className='text-white fs-3' />} </button>
                     <button onClick={() => {
                         setalert3(!alert3)
-                    }} className={style.next}>External</button>
+                    }} className={style.next}>External {(formValues.companyName && formValues.masterReference && formValues.Certificate) && <IoCheckmarkCircleOutline className='text-white fs-3' />}</button>
                 </div>
                 <div className={style.tableParent}>
                     <table className={style.table}>
@@ -181,14 +182,13 @@ function CallibrationRect2() {
 
                         <tr >
                             <td>{new Date().getDate()}/{new Date().getMonth()}/{new Date().getFullYear()}</td>
-                            <td ><input autoComplete='off' className='px-1' onChange={updateFormValues} name='firstReading' type="number" /></td>
-                            <td><input autoComplete='off' className='px-1' onChange={updateFormValues} name='secondReading' type="number" /></td>
-                            <td ><input autoComplete='off' className='px-1' onChange={updateFormValues} name='thirdReading' type="number" /></td>
+                            <td className='px-1' style={{width : '100px'}}><input style={{backgroundColor : '#d6d6d6'}} autoComplete='off' className='px-1 w-100 bg-grey' onChange={updateFormValues} name='firstReading' type="number" /></td>
+                            <td  className='px-1' style={{width : '100px'}}><input style={{backgroundColor : '#d6d6d6'}} autoComplete='off' className='px-1 w-100' onChange={updateFormValues} name='secondReading' type="number" /></td>
+                            <td className='px-1' style={{width : '100px'}} ><input style={{backgroundColor : '#d6d6d6'}} autoComplete='off' className='px-1 w-100' onChange={updateFormValues} name='thirdReading' type="number" /></td>
                             <td>{nextdate.getDate()}/{nextdate.getMonth()}/{nextdate.getFullYear()}</td>
-                            <td ><button onClick={alertManager} className={style.btn}>add</button></td>
-                            <td><input autoComplete='off' className='px-1' value={user.Name} name='CR' type="text" /></td>
+                            <td ><button onClick={alertManager} className={style.btn}>add {formValues.comment && <IoCheckmarkCircleOutline className='text-success fs-4' />}</button></td>
+                            <td className='px-1'><input autoComplete='off' className='px-1 w-100' value={user.Name} name='CR' type="text" /></td>
                         </tr>
-
                     </table>
                 </div>
                 <div className={style.btnparent}>
@@ -319,7 +319,7 @@ function CallibrationRect2() {
                                     setSubmitAlert(false)
                                     const formData = convertStateToFormData(formValues);
                                     dispatch(setSmallLoading(true))
-                                    axios.post(`${process.env.REACT_APP_BACKEND_URL}/addCalibration/${idToWatch}`, {...formData, user : user}, { headers: { Authorization: `${user.Department._id}` } }).then((res) => {
+                                    axios.post(`${process.env.REACT_APP_BACKEND_URL}/addCalibration/${idToWatch}`, formData, { headers: { Authorization: `${user._id}` } }).then((res) => {
                                         dispatch(setSmallLoading(false))
                                         Swal.fire({
                                             title: 'Success',
@@ -328,7 +328,7 @@ function CallibrationRect2() {
                                             confirmButtonText: 'Go!',
                                         }).then((result) => {
                                             if (result.isConfirmed) {
-                                                dispatch(updateTabData({ ...tabData, Tab: 'Measuring Devices' }))
+                                                dispatch(updateTabData({ ...tabData, Tab: 'Master List of Monitoring and Measuring Devices' }))
                                             }
                                         })
                                     }).catch(err => {

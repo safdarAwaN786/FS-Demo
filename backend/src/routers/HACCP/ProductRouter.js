@@ -108,29 +108,21 @@ router.patch('/update-product/:productId', async (req, res) => {
       console.log(`Product document with ID: ${productId} not found`);
       return res.status(404).json({ message: `Product document with ID: ${productId} not found` });
     }
-    // Check the status and handle revisions accordingly
-    if (existingProduct.Status === 'Approved') {
-      // If status is 'Approved', deny the update
-      console.log(`Product document with ID: ${productId} is already approved, cannot be updated.`);
-      return res.status(400).json({ message: `Product document with ID: ${productId} is already approved, cannot be updated.` });
-    }
-    // If status is 'Pending', do not increment revision number
-    if (existingProduct.Status === 'Pending') {
-      req.body.RevisionNo = existingProduct.RevisionNo;
-    } else if (existingProduct.Status === 'Disapproved') {
-      // If status is 'Disapproved', increment revision number
-      req.body.RevisionNo = existingProduct.RevisionNo + 1;
-    }
+
+
+    req.body.RevisionNo = existingProduct.RevisionNo + 1;
+
 
     const updates = {
       ...req.body,
       UpdatedBy: req.body.updatedBy,
       UpdationDate: new Date(),
       Status: 'Pending',
-      ApprovedBy : null,
-      ApprovalDate : null,
-      DisapprovalDate : null,
-      DisapprovedBy : null
+      ApprovedBy: null,
+      ApprovalDate: null,
+      DisapprovalDate: null,
+      DisapprovedBy: null,
+      Reason : null
     };
     // Perform the update
     const updatedProduct = await Product.findByIdAndUpdate(productId, updates, { new: true });
@@ -164,7 +156,8 @@ router.patch('/approve-product', async (req, res) => {
     product.Status = 'Approved';
     product.DisapprovalDate = null; // Set disapproval date to null
     product.DisapprovedBy = null;
-    product.ApprovedBy = approvedBy
+    product.ApprovedBy = approvedBy;
+    product.Reason = null;
     // Save the updated Product
     await product.save();
     // Log successful update

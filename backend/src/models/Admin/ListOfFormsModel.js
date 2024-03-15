@@ -187,7 +187,7 @@ FormSchema.pre('save', async function (next) {
       const parts = latestDocument.FormId.split('/');
       nextNumericPart = parseInt(parts[3]) + 1;
     }
-
+    console.log(nextNumericPart);
     this.FormId = `${department.Company.ShortName}/${department.ShortName}/${documentTypeNumber}/${nextNumericPart.toString().padStart(3, '0')}`;
     console.log('Generated FormId:', this.FormId);
     next();

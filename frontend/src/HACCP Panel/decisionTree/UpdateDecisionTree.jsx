@@ -166,7 +166,7 @@ function AddDecisionTree() {
                         <div className={`${style.myBox} bg-light pb-3`}>
                             <div className={style.formDivider}>
                                 <div className={style.sec1}>
-                                    <div className={style.inputParent}>
+                                    {/* <div className={style.inputParent}>
                                         <div className={style.para}>
                                             <p>Document Type</p>
                                         </div>
@@ -186,9 +186,9 @@ function AddDecisionTree() {
                                             </select>
 
                                         </div>
-                                    </div>
+                                    </div> */}
                                     
-                                    {allConductHaccps?.length > 0 && (
+                                    {/* {allConductHaccps?.length > 0 && (
 
                                         <div className={style.inputParent}>
                                             <div className={style.para}>
@@ -208,10 +208,10 @@ function AddDecisionTree() {
                                                 </select>
                                             </div>
                                         </div>
-                                    )}
+                                    )} */}
                                 </div>
                                 <div className={style.sec2}>
-                                    <div className={style.inputParent}>
+                                    {/* <div className={style.inputParent}>
                                         <div className={style.para}>
                                             <p>Department</p>
                                         </div>
@@ -229,7 +229,7 @@ function AddDecisionTree() {
                                                 })}
                                             </select>
                                         </div>
-                                    </div>
+                                    </div> */}
                                 </div>
                             </div>
                             {dataToSend?.Decisions?.map((decision, index)=>{
@@ -238,12 +238,12 @@ function AddDecisionTree() {
                                     <div className={`bg-danger row mx-lg-4 mx-md-3 mx-1 mt-4 py-3  `}>
                                         <div className=' col-lg-6 col-md-6 col-12'>
                                             <div className={`${style.heading} ms-3 `}>
-                                                {decision?.Hazard.Process.ProcessNum}) {decision?.Hazard.Process.Name}
+                                                {decision?.Hazard.Process.ProcessNum} : {decision?.Hazard.Process.Name}
                                             </div>
                                         </div>
                                         <div className='col-lg-6 col-md-6 col-12 d-flex justify-content-end pe-3'>
                                             <div className={`${style.heading} ms-3 `}>
-                                                {decision?.type} Hazard
+                                                {decision?.Hazard?.type} Hazard
                                             </div>
                                         </div>
                                     </div>

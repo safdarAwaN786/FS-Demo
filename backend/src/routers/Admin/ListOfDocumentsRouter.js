@@ -83,10 +83,6 @@ router.put('/updateDocument', async (req, res) => {
       return res.status(404).json({ status: false, message: 'Document not found' });
     }
 
-    // Check if the user can edit the document based on its status
-    if (document.Status !== 'Pending' || document.Status !== 'Rejected' || document.Status !== 'Disapproved') {
-      return res.status(403).json({ status: false, message: 'Document cannot be edited because of its current status' });
-    }
 
     // Exclude fields that shouldn't be updated
     const fieldsToExclude = ['DocumentId', 'CreationDate', 'ReviewedBy', 'CreatedBy', 'ApprovedBy', 'ApprovalDate', 'Reason', 'Status'];
@@ -95,21 +91,28 @@ router.put('/updateDocument', async (req, res) => {
     });
 
     // Increment the RevisionNo by one
-    document.RevisionNo += 1;
+    req.body.RevisionNo += 1;
 
     // Set the update time to the current time
-    document.UpdationDate = new Date();
-
-    document.UpdatedBy = updatedBy
+    req.body.UpdationDate = new Date();
+    req.body.UpdatedBy = updatedBy;
+    req.body.Status = 'Pending';
+    req.body.ApprovalDate = null;
+    req.body.ApprovedBy = null;
+    req.body.DisapprovalDate = null;
+    req.body.DisapprovedBy = null;
+    req.body.ReviewDate = null;
+    req.body.ReviewedBy = null;
+    req.body.RejectedBy = null;
+    req.body.RejectionDate = null;
+    req.body.Reason = null
 
     // Update the Document fields
     Object.assign(document, req.body);
 
     await document.save();
 
-    console.log(new Date().toLocaleString() + ' ' + 'Updating Document...');
     res.json({ status: true, message: 'The Document is updated!', data: document });
-    console.log(new Date().toLocaleString() + ' ' + 'Update Document Successfully!');
 
   } catch (error) {
     console.error(error);

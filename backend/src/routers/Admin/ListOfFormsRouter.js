@@ -118,30 +118,35 @@ router.put('/update-form', async (req, res) => {
       console.log('Form not found');
       return res.status(404).json({ message: 'Form not found' });
     }
-
-    // Check if the user can update the form based on its status
-    if (form.Status !== 'Pending' && form.Status !== 'Rejected' && form.Status !== 'Disapproved') {
-      return res.status(403).json({ status: false, message: 'Form cannot be updated because of its current status' });
-    }
+    console.log(req.body.questions);
     const createdQuestions = await QuestionModel.create(req.body.questions.map(question => {
       const { _id, ...updatedQuestion } = question;
       return updatedQuestion;
     }));
     const questionsArr = Object.values(createdQuestions);
-    const questionsIds = questionsArr.map(questionObj => questionObj._id);
-    console.log(questionsIds);
+    const questionsIds = createdQuestions.map(questionObj => questionObj._id);
+    console.log(createdQuestions);
 
     const updates = {
       ...req.body,
-      questions: questionsIds
+      questions: questionsIds,
     };
     // Increment the RevisionNo by one
-    form.RevisionNo += 1;
+    updates.RevisionNo += 1;
 
     // Set the update time to the current time
-    form.UpdationDate = new Date();
-
-    form.UpdatedBy = updatedBy
+    updates.UpdationDate = new Date();
+    updates.UpdatedBy = updatedBy;
+    updates.RejectedBy = null;
+    updates.RejectionDate = null;
+    updates.ApprovedBy = null;
+    updates.ApprovalDate = null;
+    updates.DisapprovalDate = null;
+    updates.DisapprovedBy = null;
+    updates.ReviewDate = null;
+    updates.ReviewedBy = null;
+    updates.Reason = null;
+    updates.Status = 'Pending';
 
     // Update the form fields
     Object.assign(form, updates);
@@ -203,17 +208,14 @@ router.patch('/reviewForm', async (req, res) => {
       return res.status(400).json({ error: 'Form status is not eligible for review.' });
     }
 
-    // Ensure the Form status is not already Reviewed or Rejected
-    if (form.Status === 'Reviewed' || form.Status === 'Rejected' || form.Status === 'Approved' || form.Status === 'Disapproved') {
-      console.warn(`Form with ID: ${formId} cannot be reviewed as it is already in 'Reviewed' or 'Rejected' or 'Approved' or 'Disapproved' status.`);
-      return res.status(400).json({ error: 'Form status is not eligible for review.' });
-    }
+
 
     // Update form status to Reviewed
     form.Status = 'Reviewed';
     form.ReviewedBy = reviewedBy;
-    form.RejectedBy = "";
+    form.RejectedBy = null;
     form.RejectionDate = null;
+   
     form.ReviewDate = new Date();
 
     // Save the updated form
@@ -240,21 +242,18 @@ router.patch('/rejectForm', async (req, res) => {
     }
 
     // Ensure the form status is pending
-    if (form.Status !== 'Pending') {
+    if (form.Status !== 'Pending' && form.Status !== 'Reviewed') {
       console.warn(`Form with ID: ${formId} cannot be rejected as it is not in 'Pending' status.`);
       return res.status(400).json({ error: 'Form status is not eligible for rejection.' });
     }
 
-    // Ensure the form status is not already Reviewed or Rejected
-    if (form.Status === 'Reviewed' || form.Status === 'Rejected' || form.Status === 'Approved' || form.Status === 'Disapproved') {
-      console.warn(`Form with ID: ${formId} cannot be rejected as it is already in 'Reviewed' or 'Rejected' or 'Approved' or 'Disapproved' status.`);
-      return res.status(400).json({ error: 'Form status is not eligible for rejected.' });
-    }
+
     // Update form status to Rejected
     form.Reason = reason;
     form.RejectionDate = new Date();
     form.ReviewDate = null;
-    form.ReviewedBy = "";
+    form.ReviewedBy = null;
+   
     form.Status = 'Rejected';
     form.RejectedBy = rejectedBy;
 
@@ -263,6 +262,7 @@ router.patch('/rejectForm', async (req, res) => {
 
     res.status(200).send({ status: true, message: 'Form rejected successfully', data: form });
   } catch (error) {
+    console.log(error);
     res.status(500).send({ status: false, message: 'Failed to update form rejection', error: error.message });
   }
 });
@@ -270,27 +270,23 @@ router.patch('/rejectForm', async (req, res) => {
 // * Approve Form
 router.patch('/approveForm', async (req, res) => {
   try {
-    const { formId, approvedBy } = req.body;
+    const { id, approvedBy } = req.body;
 
     // Find the form by ID
-    const form = await Form.findById(formId);
+    const form = await Form.findById(id);
 
     // If form not found
     if (!form) {
-      console.error(`Form with ID: ${formId} not found.`);
+      console.error(`Form with ID: ${id} not found.`);
       return res.status(404).json({ error: 'Form not found.' });
     }
 
-    // Ensure the form status is not already Approved or Disapproved
-    if (form.Status === 'Approved' || form.Status === 'Disapproved' || form.Status === 'Rejected' || form.Status === 'Pending') {
-      console.warn(`Form with ID: ${formId} cannot be approved as it is already in 'Approved' or 'Disapproved' or 'Rejected' or 'Pending' status.`);
-      return res.status(400).json({ error: 'Form status is not eligible for approval.' });
-    }
 
     // Update form status to Approved
     form.Status = 'Approved';
     form.ApprovedBy = approvedBy;
-    form.DisapprovedBy = "";
+    form.DisapprovedBy = null;
+
     form.DisapprovalDate = null;
     form.ApprovalDate = new Date();
 
@@ -299,6 +295,7 @@ router.patch('/approveForm', async (req, res) => {
 
     res.status(200).send({ status: true, message: 'Form approved successfully', data: form });
   } catch (error) {
+    console.log(error);
     res.status(500).send({ status: false, message: 'Failed to update form approval', error: error.message });
   }
 });
@@ -307,7 +304,7 @@ router.patch('/approveForm', async (req, res) => {
 router.patch('/disapproveForm', async (req, res) => {
   try {
     const { formId, reason, disapprovedBy } = req.body;
-
+    console.log(req.body);
     // Find the form by ID
     const form = await Form.findById(formId);
 
@@ -317,25 +314,22 @@ router.patch('/disapproveForm', async (req, res) => {
       return res.status(404).json({ error: 'Form not found.' });
     }
 
-    // Ensure the form status is not already Approved or Disapproved
-    if (form.Status === 'Approved' || form.Status === 'Disapproved' || form.Status === 'Rejected' || form.Status === 'Pending') {
-      console.warn(`Form with ID: ${formId} cannot be disapproved as it is already in 'Approved' or 'Disapproved' or 'Rejected' or 'Pending' status.`);
-      return res.status(400).json({ error: 'Form status is not eligible for disapproval.' });
-    }
+
 
     // Update form status to Disapproved
     form.DisapprovalDate = new Date();
     form.Status = 'Disapproved';
     form.Reason = reason;
     form.ApprovalDate = null;
-    form.ApprovedBy = "";
+    form.ApprovedBy = null;
     form.DisapprovedBy = disapprovedBy;
 
     // Save the updated form
-    await form.save();
+    await Form.findByIdAndUpdate(form._id, form).then(console.log('success'));
 
     res.status(200).send({ status: true, message: 'Form disapproved successfully', data: form });
   } catch (error) {
+    console.log(error);
     res.status(500).send({ status: false, message: 'Failed to update form disapproval', error: error.message });
   }
 });

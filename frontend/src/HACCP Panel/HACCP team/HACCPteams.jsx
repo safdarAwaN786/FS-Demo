@@ -165,26 +165,23 @@ function HACCPteams() {
                                         {tabData?.Approval && (
                                             <td className='ps-0' >
                                                 <p onClick={() => {
-                                                    if (team.Status === 'Approved') {
-                                                        setDataToShow('Sorry, Team is already Approved');
-                                                        setShowBox(true);
-                                                    } else {
+                                                    if (team.Status === 'Pending') {
                                                         setIdForAction(team._id)
                                                         setApprove(true)
+                                                    } else {
+                                                        setDataToShow('Sorry, Team is not Pending!');
+                                                        setShowBox(true);
                                                     }
                                                 }} style={{
                                                     height: '28px'
                                                 }} className={`btn btn-outline-primary pt-0 px-1`}>Approve</p>
                                                 <p onClick={() => {
-                                                    if (team.Status === 'Approved') {
-                                                        setDataToShow('Sorry, Team is already Approved');
-                                                        setShowBox(true);
-                                                    } else if (team.Status === 'Disapproved') {
-                                                        setDataToShow('Sorry, Team is already DisApproved');
-                                                        setShowBox(true);
-                                                    } else {
+                                                    if (team.Status === 'Pending') {
                                                         setIdForAction(team._id);
                                                         setReject(true);
+                                                    } else {
+                                                        setDataToShow('Sorry, Team is not Pending');
+                                                        setShowBox(true);
                                                     }
                                                 }} style={{
                                                     height: '28px'

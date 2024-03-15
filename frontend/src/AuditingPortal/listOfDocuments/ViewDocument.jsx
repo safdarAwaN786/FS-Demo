@@ -7,6 +7,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { setSmallLoading } from '../../redux/slices/loading';
 import Swal from 'sweetalert2';
+import html2pdf from 'html2pdf.js'
+import dayjs from 'dayjs';
 
 function ViewDocument() {
 
@@ -19,6 +21,85 @@ function ViewDocument() {
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
     const idToWatch = useSelector(state => state.idToProcess);
+
+    const downloadPDF = async () => {
+        var element = document.getElementById('printable');
+        var opt = {
+            margin: [1.3, 0.2, 0.2, 0.2],
+            filename: `${user.Department.DepartmentName}-doc.pdf`,
+            enableLinks: false,
+            pagebreak: { mode: 'avoid-all' },
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 4 },
+            jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+        };
+
+        html2pdf().from(element).set(opt).toPdf().get('pdf').then(async function (pdf) {
+            pdf.insertPage(1);
+            var totalPages = pdf.internal.getNumberOfPages();
+            //print current pdf width & height to console
+            console.log("getHeight:" + pdf.internal.pageSize.getHeight());
+            console.log("getWidth:" + pdf.internal.pageSize.getWidth());
+            for (var i = 1; i <= totalPages; i++) {
+                pdf.setPage(i);
+                pdf.setFillColor(0, 0, 0);
+                if (i === 1) {
+                    try {
+                        console.log(user.Company.CompanyLogo);
+                        const response = await fetch(user.Company.CompanyLogo);
+                        const blob = await response.blob();
+                        const imageBitmap = await createImageBitmap(blob);
+                        // create a canvas element and draw the image bitmap on it
+                        const canvas = document.createElement('canvas');
+                        canvas.width = imageBitmap.width;
+                        canvas.height = imageBitmap.height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(imageBitmap, 0, 0);
+                        // get the data URL of the canvas
+                        const dataURL = canvas.toDataURL('image/jpeg');
+                        // pass the data URL to the pdf.addImage method
+                        pdf.addImage(dataURL, 'JPEG', 1, 2.5, 3, 3);
+                        pdf.setFontSize(20);
+                        pdf.text(`Company : ${user.Company.CompanyName}`, (1), (pdf.internal.pageSize.getHeight() / 2));
+                        pdf.setFontSize(15)
+                        pdf.text(`Address : ${user.Company.Address}`, (1), (pdf.internal.pageSize.getHeight() / 2) + 0.5);
+                        pdf.setLineWidth(0.1); // Example line width
+                        pdf.line(0.1, (pdf.internal.pageSize.getHeight() / 2) + 1, pdf.internal.pageSize.getWidth() - 0.2, (pdf.internal.pageSize.getHeight() / 2) + 1)
+                        // pdf.text("Document Id", 1, (pdf.internal.pageSize.getHeight() / 2) + 1.5);
+                        // pdf.text(`${dataToSend.ChecklistId}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 1.5);
+                        pdf.text("Created By", 1, (pdf.internal.pageSize.getHeight() / 2) + 1.8);
+                        pdf.text(`${documentData.CreatedBy}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 1.8);
+                        pdf.text("Creation Date", 1, (pdf.internal.pageSize.getHeight() / 2) + 2.1);
+                        pdf.text(`${dayjs(documentData.CreationDate).format('DD/MM/YYYY')}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 2.1);
+                        pdf.text("Revision Number", 1, (pdf.internal.pageSize.getHeight() / 2) + 2.4);
+                        pdf.text(`${documentData.RevisionNo}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 2.4);
+                        if (documentData.Status == 'Approved') {
+                            pdf.text("Approved By", 1, (pdf.internal.pageSize.getHeight() / 2) + 2.7);
+                            pdf.text(`${documentData.ApprovedBy}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 2.7);
+                            pdf.text("Approval Date", 1, (pdf.internal.pageSize.getHeight() / 2) + 3.0);
+                            pdf.text(`${dayjs(documentData.ApprovalDate).format('DD/MM/YYYY')}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 3.0);
+                        }
+                        if (documentData.ReviewedBy) {
+                            pdf.text("Reviewed By", 1, (pdf.internal.pageSize.getHeight() / 2) + 3.3);
+                            pdf.text(`${documentData.ReviewedBy}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 3.3);
+                            pdf.text("Reviewed Date", 1, (pdf.internal.pageSize.getHeight() / 2) + 3.6);
+                            pdf.text(`${dayjs(documentData.ReviewDate).format('DD/MM/YYYY')}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 3.6);
+                        }
+                    } catch (error) {
+                        console.log(error);
+                    }
+                } else {
+                    pdf.setFontSize(15)
+                    pdf.text('Powered By Feat Technology', (pdf.internal.pageSize.getWidth() / 2) - 1.3, 0.5);
+                    pdf.setFontSize(10);
+                    pdf.text(`${user.Company.CompanyName}`, pdf.internal.pageSize.getWidth() - 2, 0.3);
+                    pdf.text('Document', pdf.internal.pageSize.getWidth() - 2, 0.5);
+                    pdf.text(`Revision No :${documentData.RevisionNo}`, pdf.internal.pageSize.getWidth() - 2, 0.7);
+                    pdf.text(`Creation : ${dayjs(documentData.CreationDate).format('DD/MM/YYYY')}`, pdf.internal.pageSize.getWidth() - 2, 0.9);
+                }
+            }
+        }).save();
+    }; 
 
     useEffect(() => {
         dispatch(setSmallLoading(true))
@@ -66,7 +147,7 @@ function ViewDocument() {
                         event.preventDefault();
 
                     }}>
-                        <div className={style.myBox}>
+                        <div id='printable' className={style.myBox}>
 
                             <div className={style.formDivider}>
                                 <div className={style.sec1}>
@@ -220,7 +301,9 @@ function ViewDocument() {
                             </div>
                         </div>
 
-
+                        <div className={style.btn}>
+                            <button onClick={downloadPDF} type='button' >Download</button>
+                        </div>
                     </form>
                 </div>
             </div>

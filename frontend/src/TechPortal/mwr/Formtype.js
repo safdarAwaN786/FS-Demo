@@ -44,12 +44,10 @@ function Formtype() {
     const handleImageClick = () => {
         fileInputRef.current.click(); // Trigger the click event on the file input
     };
-
-
     const makeRequest = () => {
         if (formData) {
             dispatch(setSmallLoading(true))
-            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addPreventiveMaintaince/${idToWatch}`, {...formData, submitBy : user.Name}, { headers: { Authorization: `${user.Department._id}` } }).then((res) => {
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addPreventiveMaintaince/${idToWatch}`, formData, { headers: { Authorization: `${user._id}` } }).then((res) => {
                 dispatch(setSmallLoading(false))
                 Swal.fire({
                     title: 'Success',
@@ -58,7 +56,7 @@ function Formtype() {
                     confirmButtonText: 'Go!',
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        dispatch(updateTabData({ ...tabData, Tab: 'Machinery' }))
+                        dispatch(updateTabData({ ...tabData, Tab: 'Master List of Machinery' }))
                     }
                 })
             }).catch(err => {
@@ -79,7 +77,6 @@ function Formtype() {
                             dispatch(updateTabData({ ...tabData, Tab: 'Machinery' }))
                         }
                     }} />
-
                 </div>
                 <div className={`${style.headers} mt-1 `}>
                     <div className={style.spans}>
@@ -90,9 +87,7 @@ function Formtype() {
                     <div className={style.para}>
                         Maintainance Record
                     </div>
-
                 </div>
-
                 <div className={style.form}>
                     <div className={style.sec1}>
                         <div>
@@ -102,47 +97,27 @@ function Formtype() {
                         <div>
                             <p>Machine name</p>
                             <p className={style.value}>{machine?.machineName}</p>
-
                         </div>
-
-
-
-
                     </div>
                     <div className={style.sec2}>
                         <div>
-
                             <p>Machine Location :</p>
                             <p className={style.value}>{machine?.machinaryLocation}</p>
-
                         </div>
-
-
-
-
-
-
                     </div>
                 </div>
-
-
                 <form encType='multipart/form-data' onSubmit={(event) => {
                     event.preventDefault();
                     const data = new FormData(event.target);
-                    console.log(data);
                     setFormData(data);
                     alertManager();
                 }}>
-
                     <div className={style.form}>
                         <div className={style.sec1}>
-
                             <div>
                                 <p>Date type</p>
                                 <input autoComplete='off' name='dateType' value={dateType} type="text" />
                             </div>
-
-
                             <div>
                                 <p>Root Cause of Breakdown</p>
                                 <textarea name='rootCause' type="text" required />
@@ -151,15 +126,12 @@ function Formtype() {
                                 <p>Nature of fault</p>
                                 <textarea name='natureOfFault' type="text" required />
                             </div>
-
                         </div>
                         <div className={style.sec2}>
-
                             <div>
                                 <p>Maintainance type</p>
                                 <input autoComplete='off' name='maintenanceType' value='Preventive' type="text" />
                             </div>
-
                             <div>
                                 <p>Detail of Work :</p>
                                 <textarea name='detailOfWork' type="text" required />
@@ -168,10 +140,6 @@ function Formtype() {
                                 <p>Replacement</p>
                                 <textarea name='replacement' type="text" required />
                             </div>
-
-
-
-
                         </div>
                     </div>
                     <div className={style.btnparent}>
@@ -179,18 +147,15 @@ function Formtype() {
                             handleImageClick();
                             setalert(false);
                         }}>{selectedImage?.name?.slice(0, 15) || "Upload Image"}</a>
-                        <a className='btn btn-outline-danger' onClick={() => {
+                        {/* <a className='btn btn-outline-danger' onClick={() => {
                             // navigate('/tech/maintanancerect2')
-                        }}>Generate Certificate</a>
+                        }}>Generate Certificate</a> */}
                         <input autoComplete='off' onChange={handleImageChange} accept='.jpg, .jpeg, .png' name='Image' type='file' ref={fileInputRef} style={{ display: 'none' }} />
                     </div>
-
                     <div className={style.btnparent2}>
                         <button type='submit' className='btn btn-danger px-3 py-2' >Submit</button>
                     </div>
-
                 </form>
-
             {
                 alert ?
                     <div class={style.alertparent}>
@@ -206,8 +171,6 @@ function Formtype() {
                         </div>
                     </div> : null
             }
-
-
         </>
     )
 }

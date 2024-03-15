@@ -190,29 +190,23 @@ function FoodSafetyPlan() {
                                         {tabData?.Approval && (
                                             <td>
                                                 <p onClick={() => {
-                                                    if (plan.Status === 'Approved') {
-                                                        setDataToShow('Sorry, Plan is already Approved');
-                                                        setShowBox(true);
-                                                    } else if (plan.Status === 'Disapproved') {
-                                                        setDataToShow('Sorry, Plan is already Disapproved');
-                                                        setShowBox(true);
-                                                    } else {
+                                                    if (plan.Status === 'Pending') {
                                                         setIdForAction(plan._id);
                                                         setApprove(true);
+                                                    } else {
+                                                        setDataToShow('Sorry, Plan is not Pending!');
+                                                        setShowBox(true);
                                                     }
                                                 }} style={{
                                                     height: '28px'
                                                 }} className={`btn btn-outline-primary pt-0 px-1`}>Approve</p>
                                                 <p onClick={() => {
-                                                    if (plan.Status === 'Approved') {
-                                                        setDataToShow('Sorry, Plan is already Approved');
-                                                        setShowBox(true);
-                                                    } else if (plan.Status === 'Disapproved') {
-                                                        setDataToShow('Sorry, Plan is already Disapproved');
-                                                        setShowBox(true);
-                                                    } else {
+                                                    if (plan.Status === 'Pending') {
                                                         setIdForAction(plan._id);
                                                         setReject(true);
+                                                    } else {
+                                                        setDataToShow('Sorry, Plan is not Pending!');
+                                                        setShowBox(true);
                                                     }
                                                 }} style={{
                                                     height: '28px'

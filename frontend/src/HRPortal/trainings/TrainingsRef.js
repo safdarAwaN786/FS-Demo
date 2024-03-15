@@ -10,8 +10,6 @@ import { updateTabData } from '../../redux/slices/tabSlice'
 import { setSmallLoading } from '../../redux/slices/loading'
 import Swal from 'sweetalert2'
 
-
-
 function TrainingsRef() {
     const [trainingsList, setTrainingsList] = useState(null);
     const [showBox, setShowBox] = useState(false);
@@ -22,7 +20,6 @@ function TrainingsRef() {
     const user = useSelector(state => state.auth.user);
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
-    const userToken = Cookies.get('userToken');
 
     useEffect(() => {
         dispatch(setSmallLoading(true))
@@ -44,7 +41,6 @@ function TrainingsRef() {
     const nextPage = () => {
         setStartIndex(startIndex + 8);
         setEndIndex(endIndex + 8);
-
     }
 
     const backPage = () => {
@@ -55,7 +51,6 @@ function TrainingsRef() {
     useEffect(() => {
         setTrainingsList(allDataArr?.slice(startIndex, endIndex))
     }, [startIndex, endIndex])
-
 
     const search = (event) => {
         if (event.target.value !== "") {
@@ -133,7 +128,6 @@ function TrainingsRef() {
                         <input autoComplete='off' onChange={search} type="text" placeholder='Search Training by name' />
                     </div>
                     {tabData?.Creation && (
-
                         <div className={style.sec2} onClick={() => {
                             dispatch(updateTabData({ ...tabData, Tab: 'addTraining' }));
                         }}>
@@ -148,10 +142,9 @@ function TrainingsRef() {
                             <p className='text-center'>No any Records Available here.</p>
                         </div>
                     ) : (
-
                         <table className={style.table}>
                             <tr className={style.headers}>
-                                <td>Training ID</td>
+                                {/* <td>Training ID</td> */}
                                 <td>Training Name</td>
                                 <td>Description</td>
                                 <td>Evaluation Criteria </td>
@@ -161,7 +154,7 @@ function TrainingsRef() {
                                 trainingsList?.map((training, i) => {
                                     return (
                                         <tr className={style.tablebody} key={i}>
-                                            <td ><p style={{
+                                            {/* <td ><p style={{
                                                 backgroundColor: "#f0f5f0",
                                                 padding: "2px 5px",
                                                 borderRadius: "10px",
@@ -170,33 +163,26 @@ function TrainingsRef() {
                                                 fontStyle: "normal",
                                                 fontWeight: "400",
                                                 lineHeight: "20px",
-                                            }}>{training.TrainingCode}</p></td>
+                                            }}>{training.TrainingCode}</p></td> */}
                                             <td className={style.simpleContent}>{training.TrainingName}</td>
-                                            <td >
-
+                                            <td>
                                                 <p onClick={() => {
                                                     console.log("clicked")
                                                     setShowBox(true);
                                                     setDataToShow(training.Description)
                                                 }} className={style.click}>View</p>
                                             </td>
-                                            <td >
-
+                                            <td>
                                                 <p onClick={() => {
                                                     setShowBox(true);
                                                     setDataToShow(training.EvaluationCriteria)
                                                 }} className={style.click}>View</p>
                                             </td>
-                                            <td >
+                                            <td>
                                                 <button className='btn px-3 py-1 btn-outline-primary' onClick={() => { handleDownloadImage(training.TrainingMaterial) }} >Download</button>
                                             </td>
-
-
-
                                         </tr>
-
                                     )
-
                                 })
                             }
                         </table>
@@ -204,42 +190,33 @@ function TrainingsRef() {
                 </div>
                 <div className={style.Btns}>
                     {startIndex > 0 && (
-
                         <button onClick={backPage}>
                             {'<< '}Back
                         </button>
                     )}
                     {allDataArr?.length > endIndex && (
-
                         <button onClick={nextPage}>
                             next{'>> '}
                         </button>
                     )}
                 </div>
-
             {
                 showBox && (
-
                     <div class={style.alertparent}>
                         <div class={style.alert}>
-
                             <p class={style.msg}>{dataToShow}</p>
-
                             <div className={style.alertbtns}>
-
                                 <button style={{
                                     marginLeft : '120px',
                                     marginTop : '25px'
                                 }}  onClick={() => {
                                     setShowBox(false);
                                 }} className={style.btn2}>OK</button>
-
                             </div>
                         </div>
                     </div>
                 )
             }
-
         </>
     )
 }

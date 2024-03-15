@@ -96,7 +96,7 @@ function Participants() {
 
                         <table className={style.table}>
                             <tr className={style.headers}>
-                                <td>Participant ID</td>
+                                {/* <td>Participant ID</td> */}
                                 <td>Name</td>
                                 <td>Email</td>
                                 <td>Designation</td>
@@ -109,7 +109,7 @@ function Participants() {
                                 participantsList?.map((participant, i) => {
                                     return (
                                         <tr className={style.tablebody} key={i}>
-                                            <td ><p style={{
+                                            {/* <td ><p style={{
                                                 backgroundColor: "#f0f5f0",
                                                 padding: "2px 5px",
                                                 borderRadius: "10px",
@@ -118,7 +118,7 @@ function Participants() {
                                                 fontStyle: "normal",
                                                 fontWeight: "400",
                                                 lineHeight: "20px",
-                                            }}>{participant.ParticipantId}</p></td>
+                                            }}>{participant.ParticipantId}</p></td> */}
                                             <td className={style.simpleContent}>{participant.Name}</td>
                                             <td>{participant.Email}</td>
                                             <td>{participant.Designation}</td>

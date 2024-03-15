@@ -21,7 +21,6 @@ function Trainers() {
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
     const user = useSelector(state => state.auth.user);
-
     const handleDownloadImage = async (imageURL) => {
         try {
             if (imageURL) {
@@ -111,20 +110,14 @@ function Trainers() {
         }
     }
 
-
-
-
-
     return (
         <>
-            
                 <div className={style.searchbar}>
                     <div className={style.sec1}>
                         <img src={Search} alt="" />
                         <input autoComplete='off' onChange={search} type="text" placeholder='Search Trainer by name or id' />
                     </div>
                     {tabData.Creation && (
-
                         <div onClick={() => {
                             dispatch(updateTabData({ ...tabData, Tab: 'addTrainer' }));
                         }} className={style.sec2} >
@@ -143,7 +136,7 @@ function Trainers() {
 
                         <table className={style.table}>
                             <tr className={style.headers}>
-                                <td>Trainer Code</td>
+                                {/* <td>Trainer Code</td> */}
                                 <td>Name</td>
                                 <td>Age</td>
                                 <td>Email</td>
@@ -151,7 +144,6 @@ function Trainers() {
                                 <td>Qualification</td>
                                 <td>Speciality</td>
                                 <td>Documents</td>
-
                                 {/* <td>Action</td> */}
                                 <td style={{width : '200px'}}>Action</td>
                             </tr>
@@ -159,9 +151,9 @@ function Trainers() {
                                 trainersList?.map((trainer, i) => {
                                     return (
                                         <tr className={style.tablebody} key={i}>
-                                            <td >
+                                            {/* <td>
                                                 <p>{trainer.UserId}</p>
-                                            </td>
+                                            </td> */}
                                             <td><div style={{
                                                 width: "40px",
                                                 height: "40px",

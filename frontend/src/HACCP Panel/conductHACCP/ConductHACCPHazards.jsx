@@ -189,7 +189,7 @@ function ConductHACCPHazards() {
                         event.preventDefault();
                         // alertManager();
                     }}>
-                        <div id='printable' className={`${style.myBox} bg-light pb-3`}>
+                        <div className={`${style.myBox} bg-light pb-3`}>
                             <div className={style.formDivider}>
                                 <div className={style.sec1}>
                                     <div className={style.inputParent}>
@@ -242,79 +242,80 @@ function ConductHACCPHazards() {
                                     </div>
                                 </div>
                             </div>
-
-                            {dataToSend?.Hazards?.map((hazard, index) => {
-                                return (
-                                    <>
-                                        <div className={`${style.headers2} d-flex justify-content-start ps-3 mt-4 align-items-center `}>
-                                            <div className={style.spans}>
-                                                <span></span>
-                                                <span></span>
-                                                <span></span>
-                                            </div>
-                                            <div className={`${style.heading} ms-3 `}>
-                                                {hazard.Process.ProcessNum}: {hazard?.Process?.Name}
-                                            </div>
-                                        </div>
-                                        <div className='bg-white p-1 mx-lg-5 mx-2'>
-                                            <div className='bg-light p-4 my-4'>
-                                                <div className='d-flex justify-content-end'>
-                                                    <div className={style.colorBox}>
-                                                        <span className={`${hazard.SignificanceLevel < 5
-                                                            ? 'bg-success'
-                                                            : hazard.SignificanceLevel > 4 &&
-                                                                hazard.SignificanceLevel < 15
-                                                                ? 'bg-primary'
-                                                                : hazard.SignificanceLevel > 14
-                                                                    ? 'bg-danger'
-                                                                    : ''
-                                                            }`} style={{
-                                                                display: 'block',
-                                                                width: '20px',
-                                                                height: '20px',
-                                                                borderRadius: '20px'
-                                                            }}></span>
-                                                    </div>
+                            <div id='printable'>
+                                {dataToSend?.Hazards?.map((hazard, index) => {
+                                    return (
+                                        <>
+                                            <div className={`${style.headers2} d-flex justify-content-start ps-3 mt-4 align-items-center `}>
+                                                <div className={style.spans}>
+                                                    <span></span>
+                                                    <span></span>
+                                                    <span></span>
                                                 </div>
-                                                <h4 style={{
-                                                    fontFamily: 'Inter'
-                                                }} className='text-center'>{hazard.type} Hazard</h4>
-                                                <div className='row'>
-                                                    <div className='col-lg-6 col-md-12 p-2'>
-                                                        <textarea value={hazard?.Description} rows={3} type='text' name='Description' className='w-100 p-2 my-3  border-0' placeholder='Description' required readOnly />
-                                                        <input autoComplete='off' value={hazard?.ControlMeasures} type='text' name='ControlMeasures' placeholder='Control Measurres' className='w-100 p-2 my-3  border-0' required readOnly />
+                                                <div className={`${style.heading} ms-3 `}>
+                                                    {hazard.Process.ProcessNum}: {hazard?.Process?.Name}
+                                                </div>
+                                            </div>
+                                            <div className='bg-white p-1 mx-lg-5 mx-2'>
+                                                <div className='bg-light p-4 my-4'>
+                                                    <div className='d-flex justify-content-end'>
+                                                        <div className={style.colorBox}>
+                                                            <span className={`${hazard.SignificanceLevel < 5
+                                                                ? 'bg-success'
+                                                                : hazard.SignificanceLevel > 4 &&
+                                                                    hazard.SignificanceLevel < 15
+                                                                    ? 'bg-primary'
+                                                                    : hazard.SignificanceLevel > 14
+                                                                        ? 'bg-danger'
+                                                                        : ''
+                                                                }`} style={{
+                                                                    display: 'block',
+                                                                    width: '20px',
+                                                                    height: '20px',
+                                                                    borderRadius: '20px'
+                                                                }}></span>
+                                                        </div>
                                                     </div>
-                                                    <div className='col-lg-6 col-md-12 p-2'>
-                                                        <select value={hazard?.Occurence} className='p-2 my-2 w-100 border-0' name='Occurence' style={{ width: "100%" }} required>
-                                                            <option value="" selected disabled>{hazard?.Occurence}</option>
+                                                    <h4 style={{
+                                                        fontFamily: 'Inter'
+                                                    }} className='text-center'>{hazard.type} Hazard</h4>
+                                                    <div className='row'>
+                                                        <div className='col-lg-6 col-md-12 p-2'>
+                                                            <textarea value={hazard?.Description} rows={3} type='text' name='Description' className='w-100 p-2 my-3  border-0' placeholder='Description' required readOnly />
+                                                            <input autoComplete='off' value={hazard?.ControlMeasures} type='text' name='ControlMeasures' placeholder='Control Measurres' className='w-100 p-2 my-3  border-0' required readOnly />
+                                                        </div>
+                                                        <div className='col-lg-6 col-md-12 p-2'>
+                                                            <select value={hazard?.Occurence} className='p-2 my-2 w-100 border-0' name='Occurence' style={{ width: "100%" }} required>
+                                                                <option value="" selected disabled>{hazard?.Occurence}</option>
 
 
-                                                            {/* <option value={1}>1</option>
+                                                                {/* <option value={1}>1</option>
                                                             <option value={2}>2</option>
                                                             <option value={3}>3</option>
                                                             <option value={4}>4</option>
                                                             <option value={5}>5</option> */}
 
-                                                        </select>
-                                                        <select value={hazard?.Severity} className='p-2 my-3 w-100 border-0' name='Severity' style={{ width: "100%" }} required>
-                                                            <option value="" selected disabled>{hazard?.Severity}</option>
+                                                            </select>
+                                                            <select value={hazard?.Severity} className='p-2 my-3 w-100 border-0' name='Severity' style={{ width: "100%" }} required>
+                                                                <option value="" selected disabled>{hazard?.Severity}</option>
 
 
-                                                            {/* <option value={1}>1</option>
+                                                                {/* <option value={1}>1</option>
                                                             <option value={2}>2</option>
                                                             <option value={3}>3</option>
                                                             <option value={4}>4</option>
                                                             <option value={5}>5</option> */}
 
-                                                        </select>
-                                                        <input autoComplete='off' type='number' value={hazard.SignificanceLevel} placeholder='Significance Score (Occurence x Severity)' className='w-100 p-2 my-3  border-0' readOnly />
+                                                            </select>
+                                                            <input autoComplete='off' type='number' value={hazard.SignificanceLevel} placeholder='Significance Score (Occurence x Severity)' className='w-100 p-2 my-3  border-0' readOnly />
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </>
-                                )
-                            })}
+                                        </>
+                                    )
+                                })}
+                            </div>
 
                         </div>
                     </form>

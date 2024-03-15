@@ -7,8 +7,8 @@ require('dotenv').config()
 const cloudinary = require('cloudinary').v2;
 const multer = require('multer');
 const { error } = require('console');
+const User = require('../../models/AccountCreation/UserModel');
 const upload = multer();
-const authMiddleware = require('../../middleware/auth');
 
 
 // router.use(authMiddleware);
@@ -44,9 +44,9 @@ const uploadToCloudinary = (buffer) => {
 // * POST route to add a Calibration Record
 router.post('/addPreventiveMaintaince/:MachineId',  upload.fields([{ name: 'Image' }]), async (req, res) => {
   try {
-
+    
     console.log('Received request to add preventive maintenance.');
-
+     const requestUser = await User.findById(req.header('Authorization'));
     const machineId = req.params.MachineId;
     if (!machineId) {
       return res.status(404).json({ error: 'Please Provide Machine ID' });
@@ -59,7 +59,7 @@ router.post('/addPreventiveMaintaince/:MachineId',  upload.fields([{ name: 'Imag
     }
 
     console.log('Machine found.');
-
+    console.log(req.body);
     let {
       maintenanceType,
       natureOfFault,
@@ -136,7 +136,7 @@ router.post('/addPreventiveMaintaince/:MachineId',  upload.fields([{ name: 'Imag
     const submitBy = req.body.submitBy;
     const maintainanceRecord = new Maintainance({
       Machinery: machineId,
-      UserDepartment : req.header('Authorization'),
+      UserDepartment : requestUser.Department,
       lastMaintainanceDate: new Date(),
       nextMaintainanceDate: nextDate,
       maintenanceType,
@@ -147,7 +147,7 @@ router.post('/addPreventiveMaintaince/:MachineId',  upload.fields([{ name: 'Imag
       detailOfWork,
       uploadImage: 'LATER',
       generateCertificate,
-      SubmitBy: submitBy,
+      SubmitBy: requestUser.Name,
       SubmitDate: new Date()
     });
 
@@ -193,10 +193,7 @@ router.get('/getMaintenanceByMachineId/:MachineId',  async (req, res) => {
     console.log(`Received request to fetch maintenance records for Machine ID: ${machineId}`);
 
     const maintenanceRecords = await Maintainance.find({ Machinery: machineId, UserDepartment : req.header('Authorization') }).populate('Machinery');
-    if (maintenanceRecords.length === 0) {
-      console.log('No maintenance records found for the given Machine ID.');
-      return res.status(404).json({ message: 'No maintenance records found for the given Machine ID' });
-    }
+ 
 
     console.log(`Found ${maintenanceRecords.length} maintenance records for the given Machine ID.`);
     res.status(200).json({ message: 'Fetched maintenance records successfully', data: maintenanceRecords });

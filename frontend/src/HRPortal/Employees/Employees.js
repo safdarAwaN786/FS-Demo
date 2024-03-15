@@ -152,7 +152,7 @@ function Employees() {
 
                         <table className={style.table}>
                             <tr className={style.headers}>
-                                <td>Employee ID</td>
+                                <td></td>
                                 <td>Name</td>
                                 <td>CNIC</td>
                                 <td>Phone Number</td>
@@ -169,7 +169,7 @@ function Employees() {
                                     return (
                                         <tr className={style.tablebody} key={i}>
                                             <td className={style.txtStyle1}>
-                                                <p>{employee.UserId}</p>
+                                                {/* <p>{employee.UserId}</p> */}
                                             </td>
                                             <td className={style.txtStyle2}>
                                                 <div style={{

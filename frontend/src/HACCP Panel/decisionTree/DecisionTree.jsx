@@ -177,26 +177,23 @@ function DecisionTree() {
                                         {tabData?.Approval && (
                                             <td>
                                                 <p onClick={() => {
-                                                    if (tree.Status === 'Approved') {
-                                                        setDataToShow('Sorry, Team is already Approved');
-                                                        setShowBox(true);
-                                                    } else {
+                                                    if (tree.Status === 'Pending') {
                                                         setIdForAction(tree._id);
                                                         setApprove(true);
+                                                    } else {
+                                                        setDataToShow('Sorry, Decision Tree is not Pending!');
+                                                        setShowBox(true);
                                                     }
                                                 }} style={{
                                                     height: '28px'
                                                 }} className={`btn btn-outline-primary pt-0 px-1`}>Approve</p>
                                                 <p onClick={() => {
-                                                    if (tree.Status === 'Approved') {
-                                                        setDataToShow('Sorry, Team is already Approved');
-                                                        setShowBox(true);
-                                                    } else if (tree.Status === 'Disapproved') {
-                                                        setDataToShow('Sorry, Team is already Disapproved');
-                                                        setShowBox(true);
-                                                    } else {
+                                                    if (tree.Status === 'Pending') {
                                                         setIdForAction(tree._id);
                                                         setReject(true);
+                                                    } else {
+                                                        setDataToShow('Sorry, Decision Tree is not pending!');
+                                                        setShowBox(true);
                                                     }
                                                 }} style={{
                                                     height: '28px'

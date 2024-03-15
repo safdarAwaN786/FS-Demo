@@ -201,16 +201,11 @@ router.patch('/review-uploaded-document', async (req, res) => {
             return res.status(400).json({ error: 'Document status is not eligible for review.' });
         }
 
-        // Ensure the document status is not already Reviewed or Rejected
-        if (document.Status === 'Reviewed' || document.Status === 'Rejected' || document.Status === 'Approved' || document.Status === 'Disapproved') {
-            console.warn(`Document with ID: ${documentId} cannot be reviewed as it is already in 'Reviewed' or 'Rejected' or 'Approved' or 'Disapproved' status.`);
-            return res.status(400).json({ error: 'Document status is not eligible for review.' });
-        }
 
         document.ReviewDate = new Date(),
-            document.Status = 'Reviewed';
+        document.Status = 'Reviewed';
         document.RejectionDate = null;
-        document.RejectedBy = "";
+        document.RejectedBy = null;
         document.ReviewedBy = reviewBy
 
         document.UploadedDocuments[document.UploadedDocuments.length - 1].ReviewDate = new Date();
@@ -240,21 +235,17 @@ router.patch('/reject-uploaded-document', async (req, res) => {
         }
 
         // Ensure the document status is pending
-        if (document.Status !== 'Pending') {
+        if (document.Status !== 'Pending' && document.Status !== 'Reviewed') {
             console.warn(`Document with ID: ${documentId} cannot be rejected as it is not in 'Pending' status.`);
             return res.status(400).json({ error: 'Document status is not eligible for rejection.' });
         }
 
-        // Ensure the document status is not already Reviewed or Rejected
-        if (document.Status === 'Reviewed' || document.Status === 'Rejected' || document.Status === 'Approved' || document.Status === 'Disapproved') {
-            console.warn(`Document with ID: ${documentId} cannot be rejected as it is already in 'Reviewed' or 'Rejected' or 'Approved' or 'Disapproved' status.`);
-            return res.status(400).json({ error: 'Document status is not eligible for rejected.' });
-        }
+    
 
         document.Reason = reason
         document.RejectionDate = new Date(),
-            document.ReviewDate = null;
-        document.ReviewedBy = "";
+        document.ReviewDate = null;
+        document.ReviewedBy = null;
         document.Status = 'Rejected';
         document.RejectedBy = rejectBy
         document.UploadedDocuments[document.UploadedDocuments.length - 1].ReviewDate = null;
@@ -290,9 +281,9 @@ router.patch('/approve-uploaded-document', async (req, res) => {
         }
 
         document.ApprovalDate = new Date(),
-            document.Status = 'Approved';
+        document.Status = 'Approved';
         document.DisapprovalDate = null;
-        document.DisapprovedBy = "";
+        document.DisapprovedBy = null;
         document.UploadedDocuments[document.UploadedDocuments.length - 1].ApprovalDate = new Date();
         document.UploadedDocuments[document.UploadedDocuments.length - 1].ApprovedBy = approveBy;
 
@@ -329,7 +320,7 @@ router.patch('/disapprove-uploaded-document', async (req, res) => {
         document.Status = 'Disapproved';
         document.Reason = reason;
         document.ApprovalDate = null;
-        document.ApprovedBy = "";
+        document.ApprovedBy = null;
         document.DisapprovedBy = disapproveBy;
         document.UploadedDocuments[document.UploadedDocuments.length - 1].ApprovalDate = null;
 
@@ -405,10 +396,11 @@ router.put('/send-document', async (req, res) => {
 // * Replace updated Document
 router.put('/replaceDocument/:documentId', upload.single('file'), async (req, res) => {
     try {
-        const updatedBy = req.body.user.Name;
+        
+        const requestUser = await user.findById(req.header('Authorization')).populate('Company')
+        const updatedBy = requestUser.Name;
         const { documentId } = req.params;
-
-        const response = await axios.get(req.body.user.Company.CompanyLogo, { responseType: 'arraybuffer' });
+        const response = await axios.get(requestUser.Company.CompanyLogo, { responseType: 'arraybuffer' });
         const pdfDoc = await PDFDocument.load(req.file.buffer);
         const logoImage = Buffer.from(response.data);
         const isJpg = requestUser.Company.CompanyLogo.includes('.jpeg') || requestUser.Company.CompanyLogo.includes('.jpg');
@@ -420,7 +412,7 @@ router.put('/replaceDocument/:documentId', upload.single('file'), async (req, re
             pdfLogoImage = await pdfDoc.embedPng(logoImage);
         }
         const firstPage = pdfDoc.insertPage(0);
-        addFirstPage(firstPage, pdfLogoImage, req.body.user.Company, req.body.user);
+        addFirstPage(firstPage, pdfLogoImage, requestUser.Company, requestUser);
         const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
         pdfDoc.getPages().slice(1).forEach(async (page) => {
             page.translateContent(0, -30);
@@ -431,7 +423,7 @@ router.put('/replaceDocument/:documentId', upload.single('file'), async (req, re
             const centerWatermarkX = width / 2 - watermarkTextWidth / 2;
             const centerWatermarkY = height - 18;
             page.drawText(watermarkText, { x: centerWatermarkX, y: centerWatermarkY, size: watermarkFontSize, color: rgb(0, 0, 0) });
-            const companyText = `${req.body.user.Company.CompanyName}`;
+            const companyText = `${requestUser.Company.CompanyName}`;
             const companyTextFontSize = 10;
             const companyTextWidth = (helveticaFont.widthOfTextAtSize(companyText, companyTextFontSize));
             const centerCompanyTextX = width - companyTextWidth - 20;
@@ -460,9 +452,13 @@ router.put('/replaceDocument/:documentId', upload.single('file'), async (req, re
         // Reset approval-related fields and update revision number
         document.Status = 'Pending';
         document.ApprovalDate = null;
+        document.DisapprovalDate = null;
         document.ReviewDate = null;
+        document.RejectionDate = null;
         document.ApprovedBy = null;
+        document.DisapprovedBy = null;
         document.ReviewedBy = null;
+        document.RejectedBy = null;
         document.UpdationDate = new Date();
         document.UpdatedBy = updatedBy;
         document.RevisionNo += 1;
@@ -474,6 +470,7 @@ router.put('/replaceDocument/:documentId', upload.single('file'), async (req, re
         await document.save();
         res.status(200).send({ status: true, message: 'Document replaced successfully', data: document });
     } catch (error) {
+        console.log(error);
         res.status(500).send({ status: false, message: 'Failed to replace document', error: error.message });
     }
 });

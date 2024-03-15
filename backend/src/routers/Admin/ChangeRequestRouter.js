@@ -108,7 +108,7 @@ router.patch('/review-ChangeRequest', async (req, res) => {
     // Update document status to reviewed
     document.Status = 'Reviewed';
     document.ReviewedBy = reviewedBy;
-    document.RejectedBy = "";
+    document.RejectedBy = null;
     document.RejectionDate = null;
     document.ReviewDate = new Date();
 
@@ -138,20 +138,20 @@ router.patch('/reject-ChangeRequest', async (req, res) => {
     }
 
     // Ensure the document status is pending
-    if (document.Status !== 'Pending') {
+    if (document.Status !== 'Pending' && document.Status !== 'Reviewed') {
       console.warn(`Document with ID: ${documentId} cannot be rejected as it is not in 'Pending' status.`);
       return res.status(400).json({ error: 'Document status is not eligible for rejection.' });
     }
 
     // Ensure the document status is not already Reviewed or Rejected
-    if (document.Status === 'Reviewed' || document.Status === 'Rejected' || document.Status === 'Approved' || document.Status === 'Disapproved') {
+    if ( document.Status === 'Rejected' || document.Status === 'Approved' || document.Status === 'Disapproved') {
       console.warn(`Document with ID: ${documentId} cannot be rejected as it is already in 'Reviewed' or 'Rejected' or 'Approved' or 'Disapproved' status.`);
       return res.status(400).json({ error: 'Document status is not eligible for rejected.' });
     }
     // Update document status to rejected
     document.Status = 'Rejected';
     document.RejectedBy = rejectedBy;
-    document.ReviewedBy = "";
+    document.ReviewedBy = null;
     document.ReviewDate = null;
     document.RejectionDate = new Date();
     document.Reason = reason;
@@ -211,7 +211,7 @@ router.patch('/approve-ChangeRequest', async (req, res) => {
     // Update document status to approved
     document.Status = 'Approved';
     document.ApprovedBy = approvedBy;
-    document.DisapprovedBy = "";
+    document.DisapprovedBy = null;
     document.DisapprovalDate = null;
     document.ApprovalDate = new Date();
 
@@ -249,7 +249,7 @@ router.patch('/disapprove-ChangeRequest', async (req, res) => {
     // Update document status to disapproved
     document.Status = 'Disapproved';
     document.DisapprovedBy = disapprovedBy;
-    document.ApprovedBy = "";
+    document.ApprovedBy = null;
     document.ApprovalDate = null;
     document.DisapprovalDate = new Date();
     document.Reason = reason;

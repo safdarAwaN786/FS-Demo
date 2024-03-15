@@ -140,7 +140,7 @@ function DocumentHistory() {
                         </div>
                         <div>
                             <p>Department</p>
-                            <input autoComplete='off' type="text" value={documentData?.Department} readOnly />
+                            <input autoComplete='off' type="text" value={documentData?.Department?.DepartmentName} readOnly />
                         </div>
 
                     </div>
@@ -168,7 +168,6 @@ function DocumentHistory() {
                             <th>Approved date</th>
                             <th>Document</th>
                             <th>Comment</th>
-
                         </tr>
                         {
                             documentData?.UploadedDocuments?.map((docObj, i) => {
@@ -176,7 +175,7 @@ function DocumentHistory() {
                                     <tr key={i}>
                                         <td>{docObj.RevisionNo}</td>
                                         <td>{docObj.CreatedBy}</td>
-                                        <td>{docObj?.CreationDate.slice(0, 10).split('-')[2]}/{docObj.CreationDate.slice(0, 10).split('-')[1]}/{docObj?.CreationDate.slice(0, 10).split('-')[0]}</td>
+                                        <td>{docObj?.CreationDate?.slice(0, 10).split('-')[2]}/{docObj.CreationDate?.slice(0, 10).split('-')[1]}/{docObj?.CreationDate?.slice(0, 10).split('-')[0]}</td>
                                         <td>{docObj.ReviewedBy}</td>
                                         {docObj.ReviewDate ? (
 

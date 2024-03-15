@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const Processes = require('../../models/HACCP/ProcessesModel').Processes;
-const authMiddleware = require('../../middleware/auth');
 const { ProcessDetailModel } = require('../../models/HACCP/ProcessesModel');
 // router.use(authMiddleware);
 
@@ -239,7 +238,7 @@ router.patch('/update-process/:processId', async (req, res) => {
             const subProcessesArray = Object.values(createdSubProcesses);
             console.log(subProcessesArray);
             const subProcessesIds = subProcessesArray.map(item => item._id);
-            const {_id, ...newProcessObj} = processObj
+            const { _id, ...newProcessObj } = processObj
             const createdProcessDetail = new ProcessDetailModel({
               ...newProcessObj,
               subProcesses: subProcessesIds
@@ -270,16 +269,8 @@ router.patch('/update-process/:processId', async (req, res) => {
       })
     );
 
+    req.body.RevisionNo = existingProcess.RevisionNo + 1;
 
-    console.log(processDetailsIds);
-
-    // If the status is 'Pending', do not increment revision number
-    if (existingProcess.Status === 'Pending') {
-      req.body.RevisionNo = existingProcess.RevisionNo;
-    } else if (existingProcess.Status === 'Disapproved') {
-      // If the status is 'Disapproved', increment revision number
-      req.body.RevisionNo = existingProcess.RevisionNo + 1;
-    }
 
     const updates = {
       ...req.body,
@@ -288,6 +279,9 @@ router.patch('/update-process/:processId', async (req, res) => {
       UpdationDate: new Date(),
       DisapprovalDate: null,
       DisapprovedBy: null,
+      ApprovalDate: null,
+      ApprovedBy: null,
+      Reason :  null,
       Status: 'Pending'
     };
 
@@ -327,6 +321,7 @@ router.patch('/approve-process', async (req, res) => {
     process.ApprovedBy = approvedBy;
     process.DisapprovalDate = null;
     process.DisapprovedBy = null;
+    process.Reason = null
 
     // Save the updated Process
     await process.save();

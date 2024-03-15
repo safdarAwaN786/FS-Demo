@@ -90,10 +90,6 @@ function Machines() {
     const day = today.getDate().toString().padStart(2, '0');
 
     const formattedDate = `${year}-${month}-${day}`;
-    console.log(formattedDate);
-
-
-
     const [alert, setalert] = useState(false)
     const alertManager = () => {
         setalert(!alert)

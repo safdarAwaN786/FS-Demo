@@ -164,13 +164,13 @@ function Main() {
                             <td>Station</td>
                             <td>job title</td>
                             <td>Supervisor</td>
+                            <td>Status</td>
                             <td>Department</td>
                             <td>Action</td>
                             {tabData?.Approval && (
                                 <td>Action</td>
                             )}
                             <td></td>
-                            <td>Status</td>
                             <td>Reason</td>
                         </tr>
                         {
@@ -180,12 +180,11 @@ function Main() {
                                         <td className={style.textStyle2}>{reqPerson.Station}</td>
                                         <td className={style.textStyle3}>{reqPerson.JobTitle}</td>
                                         <td className={style.textStyle3}>{reqPerson.Supervisor}</td>
+                                        <td><div className={` text-center ${reqPerson.Status === 'Pending' && (style.yellowStatus)} ${reqPerson.Status === 'Approved' && (style.greenStatus)} ${reqPerson.Status === 'Disapproved' && (style.redStatus)}`}><p>{reqPerson.Status}</p></div></td>
                                         <td className={style.textStyle3}>{reqPerson.DepartmentText}</td>
                                         <td ><button onClick={() => {
                                             dispatch(changeId(reqPerson._id));
                                             dispatch(updateTabData({ ...tabData, Tab: 'showPersonalRec' }));
-
-
                                         }} className={style.viewBtn}>View</button>
                                         </td>
                                         {tabData?.Approval && (
@@ -198,20 +197,24 @@ function Main() {
                                                     alertManager2();
                                                 }} className={style.viewBtn2}>Approve</button>
                                                 <button onClick={() => {
+                                                    if(reqPerson.Status === 'Pending'){
                                                     setDataToSend({
                                                         personId: reqPerson._id,
                                                         status: "Disapproved"
                                                     });
                                                     alertManager();
+                                                    } else {
+                                                        setPopUpData('This Personal Requisition is not Pending for Disapproval!');
+                                                        setShowBox(true)
+                                                    }
                                                 }} className={style.orangebtn}>Disapprove</button>
                                             </td>
                                         )}
                                         <td className={style.textStyle3}></td>
-                                        <td><div className={` text-center ${reqPerson.Status === 'Pending' && (style.yellowStatus)} ${reqPerson.Status === 'Approved' && (style.greenStatus)} ${reqPerson.Status === 'Disapproved' && (style.redStatus)}`}><p>{reqPerson.Status}</p></div></td>
+                                        
                                         <td ><button onClick={() => {
                                             if (reqPerson.Status === "Approved") {
                                                 setPopUpData("This Application is Approved.");
-
                                             } else if (reqPerson.Status === "Disapproved") {
                                                 setPopUpData(reqPerson.Reason);
                                             } else {
@@ -321,7 +324,6 @@ function Main() {
                     <div class={style.alert}>
                         <p>{popUpData}</p>
                         <div className={style.alertbtns}>
-
                             <button style={{
                                 marginLeft: '120px',
                                 marginTop: '25px'

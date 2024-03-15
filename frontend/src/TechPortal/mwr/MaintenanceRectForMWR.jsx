@@ -24,33 +24,23 @@ function MaintananceRectForMWR() {
         }).catch(err => {
             dispatch(setSmallLoading(false));
             Swal.fire({
-                icon : 'error',
-                title : 'OOps..',
-                text : 'Something went wrong, Try Again!'
+                icon: 'error',
+                title: 'OOps..',
+                text: 'Something went wrong, Try Again!'
             })
         })
-
     }, [])
-
-
     const formattedTime = (dateString) => {
-        console.log(dateString);
-
         if (dateString) {
-
             // Convert the date string to a Date object
             const dateObj = new Date(dateString);
-
             // Get the hours from the Date object
             const hours = dateObj.getHours();
-
             // Convert hours to AM/PM format
             const amPmHours = hours % 12 === 0 ? 12 : hours % 12;
             const amPm = hours < 12 ? 'AM' : 'PM';
-
             // Construct the final string
             const formattedTime = `${amPmHours}:${dateObj.getMinutes().toString().padStart(2, '0')} ${amPm}`;
-
             return formattedTime;
         } else {
             return ("---")
@@ -59,107 +49,97 @@ function MaintananceRectForMWR() {
 
     return (
         <>
-
-                <div className='d-flex flex-row bg-white px-lg-5 mx-1 px-2 py-2'>
-                    <BsArrowLeftCircle role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
-                        {
-                            dispatch(updateTabData({...tabData, Tab : 'Generate MWR Corrective'}));
-                        }
-                    }} />
-
+            <div className='d-flex flex-row bg-white px-lg-5 mx-1 px-2 py-2'>
+                <BsArrowLeftCircle role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
+                    {
+                        dispatch(updateTabData({ ...tabData, Tab: 'Generate MWR Corrective' }));
+                    }
+                }} />
+            </div>
+            <div className={`${style.headers} mt-1 `}>
+                <div className={style.spans}>
+                    <span></span>
+                    <span></span>
+                    <span></span>
                 </div>
-                <div className={`${style.headers} mt-1 `}>
-                    <div className={style.spans}>
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                    </div>
-                    <div className={style.para}>
-                        Maintainance Record
-                    </div>
-
+                <div className={style.para}>
+                    Maintainance Record
                 </div>
-
-                <div className={style.tableParent}>
-                    <table className={style.table}>
-                        <tr className={style.tableHeader}>
-                            <th>MWR ID</th>
-                            <th>Machine Id</th>
-                            <th>Time</th>
-                            <th>Date</th>
-                            <th>Area</th>
-                            <th>Priority</th>
-                            <th>Discipline</th>
-                            <th>Reason of Pending</th>
-
-                            <th>JobAssign</th>
-                            <th>Designation</th>
-                            <th>Detail</th>
-                        </tr>
-                        {
-                            requests?.map((request, i) => {
-                                return (
-                                    <tr key={i}>
-                                        <td>{request.MWRId}</td>
-                                        <td>{request.Machinery.machineCode}</td>
-                                        <td>{formattedTime(request.Time)}</td>
-                                        <td>{request.Date.slice(0, 10).split('-')[2]}/{request.Date.slice(0, 10).split('-')[1]}/{request.Date.slice(0, 10).split('-')[0]}</td>
-                                        <td>{request.Area}</td>
-                                        <td>{request.Priority}</td>
-                                        <td ><button onClick={() => {
-
-                                            setPopUpData(`${request.Discipline[0]}, ${request.Discipline[1]}, ${request.Discipline[2]}`);
+            </div>
+            <div className={style.tableParent}>
+                <table className={style.table}>
+                    <tr className={style.tableHeader}>
+                        {/* <th>MWR ID</th> */}
+                        <th>Machine Name</th>
+                        <th>Time</th>
+                        <th>Date</th>
+                        <th>Area</th>
+                        <th>Priority</th>
+                        <th>Discipline</th>
+                        <th>Reason of Pending</th>
+                        <th>JobAssign</th>
+                        <th>Designation</th>
+                        <th>Detail</th>
+                    </tr>
+                    {
+                        requests?.map((request, i) => {
+                            return (
+                                <tr key={i}>
+                                    {/* <td>{request.MWRId}</td> */}
+                                    <td>{request.Machinery.machineName}</td>
+                                    <td>{formattedTime(request.Time)}</td>
+                                    <td>{request.Date.slice(0, 10).split('-')[2]}/{request.Date.slice(0, 10).split('-')[1]}/{request.Date.slice(0, 10).split('-')[0]}</td>
+                                    <td>{request.Area}</td>
+                                    <td>{request.Priority}</td>
+                                    <td ><button onClick={() => {
+                                        setPopUpData(`${request.Discipline[0]}, ${request.Discipline[1]}, ${request.Discipline[2]}`);
+                                        setAlert(true);
+                                    }} className={style.btn}>View</button></td>
+                                    <td ><button onClick={() => {
+                                        if (request.Status === 'Rejected') {
+                                            setPopUpData(request.Reason);
                                             setAlert(true);
-
-                                        }} className={style.btn}>View</button></td>
-                                        <td ><button onClick={() => {
-                                            if (request.Status === 'Rejected') {
-                                                setPopUpData(request.Reason);
-                                                setAlert(true);
-                                            } else {
-                                                setPopUpData('Job Request is not Rejected');
-                                                setAlert(true);
-                                            }
-                                        }} className={style.btn}>View</button></td>
-                                        <td ><button onClick={() => {
-                                            if (request.Status === 'Approved' || request.Status === 'Completed') {
-                                                setPopUpData(request.JobAssigned);
-                                                setAlert(true);
-                                            } else {
-                                                setPopUpData('Job Request is not Approved');
-                                                setAlert(true);
-                                            }
-                                        }} className={style.btn}>View</button></td>
-                                        <td ><button onClick={() => {
-                                            if (request.Status === 'Approved' || request.Status === 'Completed') {
-                                                setPopUpData(request.Designation);
-                                                setAlert(true);
-                                            } else {
-                                                setPopUpData('Job Request is not Approved');
-                                                setAlert(true);
-                                            }
-                                        }} className={style.btn}>View</button></td>
-                                        <td ><button onClick={() => {
-                                            if (request.Status === 'Approved' || request.Status === 'Completed') {
-                                                setPopUpData(request.DetailOfWork);
-                                                setAlert(true);
-                                            } else {
-                                                setPopUpData('Job Request is not Approved');
-                                                setAlert(true);
-                                            }
-                                        }} className={style.btn}>View</button></td>
-
-
-                                    </tr>
-                                )
-                            })
-                        }
-                    </table>
-                </div>
-                <div className={style.btnparent}>
-                    <button className={style.download}>Download</button>
-                </div>
-
+                                        } else {
+                                            setPopUpData('Job Request is not Rejected');
+                                            setAlert(true);
+                                        }
+                                    }} className={style.btn}>View</button></td>
+                                    <td ><button onClick={() => {
+                                        if (request.Status === 'Approved' || request.Status === 'Completed') {
+                                            setPopUpData(request.JobAssigned);
+                                            setAlert(true);
+                                        } else {
+                                            setPopUpData('Job Request is not Approved');
+                                            setAlert(true);
+                                        }
+                                    }} className={style.btn}>View</button></td>
+                                    <td ><button onClick={() => {
+                                        if (request.Status === 'Approved' || request.Status === 'Completed') {
+                                            setPopUpData(request.Designation);
+                                            setAlert(true);
+                                        } else {
+                                            setPopUpData('Job Request is not Approved');
+                                            setAlert(true);
+                                        }
+                                    }} className={style.btn}>View</button></td>
+                                    <td ><button onClick={() => {
+                                        if (request.Status === 'Approved' || request.Status === 'Completed') {
+                                            setPopUpData(request.DetailOfWork);
+                                            setAlert(true);
+                                        } else {
+                                            setPopUpData('Job Request is not Approved');
+                                            setAlert(true);
+                                        }
+                                    }} className={style.btn}>View</button></td>
+                                </tr>
+                            )
+                        })
+                    }
+                </table>
+            </div>
+            {/* <div className={style.btnparent}>
+                <button className={style.download}>Download</button>
+            </div> */}
             {
                 alert ?
                     <div class={style.alertparent}>
@@ -167,16 +147,15 @@ function MaintananceRectForMWR() {
                             <p class={style.msg}>{popUpData}</p>
                             <div className={style.alertbtns}>
                                 <button style={{
-                                    marginLeft : '120px',
-                                    marginTop : '25px'
-                                }}  onClick={() => {
+                                    marginLeft: '120px',
+                                    marginTop: '25px'
+                                }} onClick={() => {
                                     setAlert(false);
                                 }} className={style.btn2}>Close</button>
                             </div>
                         </div>
                     </div> : null
             }
-
         </>
     )
 }

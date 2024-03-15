@@ -50,7 +50,6 @@ function DocumentsList() {
         dispatch(setSmallLoading(true))
         axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-department/${user?.Company?._id}`).then((res) => {
             SetDepartmentsToShow(res.data.data);
-
         }).catch(err => {
             dispatch(setSmallLoading(false));
             Swal.fire({
@@ -106,207 +105,212 @@ function DocumentsList() {
 
     return (
         <>
-
-                <div className={style.searchbar}>
-                    <div className={style.sec1}>
-                        <img src={Search} alt="" />
-                        <input autoComplete='off' onChange={search} type="text" placeholder='Search Document by name' />
-                    </div>
-                    {tabData?.Creation && (
-
-                        <div className={style.sec2} onClick={() => {
-                            dispatch(updateTabData({ ...tabData, Tab: 'createDocument' }))
-                        }}>
-                            <img src={add} alt="" />
-                            <p>Create document</p>
-                        </div>
-                    )}
+            <div className={style.searchbar}>
+                <div className={style.sec1}>
+                    <img src={Search} alt="" />
+                    <input autoComplete='off' onChange={search} type="text" placeholder='Search Document by name' />
                 </div>
-                <div className={style.tableParent}>
-                    {!documentsList || documentsList?.length === 0 ? (
-                        <div className='w-100 d-flex align-items-center justify-content-center'>
-                            <p className='text-center'>No any Records Available here.</p>
-                        </div>
-                    ) : (
+                {tabData?.Creation && (
 
-                        <table className={style.table}>
-                            <tr className={style.headers}>
-                                <td>Document ID</td>
-                                <td>Document Title</td>
-                                <td>Revision No.</td>
-                                <td>Document Type</td>
-                                <td>Department</td>
-                                <td>Creation Date</td>
-                                <td>Created By</td>
-                                <td>Status</td>
-                                <td>Reviewed By</td>
-                                <td>Review Date</td>
-                                <td>Approved By</td>
-                                <td>Approval Date</td>
-                                <td>Action</td>
-                                <td>Action</td>
-                                <td>Document</td>
-                                <td>Reason</td>
-                                {tabData?.Approval && (
-                                    <td></td>
-                                )}
-                                {tabData?.Review && (
-                                    <td></td>
-                                )}
-                            </tr>
-                            {
-                                documentsList?.map((document, i) => {
-                                    return (
-                                        <tr className={style.tablebody} key={i}>
-                                            <td ><p style={{
-                                                backgroundColor: "#f0f5f0",
-                                                padding: "2px 5px",
-                                                borderRadius: "10px",
-                                                fontFamily: "Inter",
-                                                fontSize: "12px",
-                                                fontStyle: "normal",
-                                                fontWeight: "400",
-                                                lineHeight: "20px",
-                                            }}>{document.DocumentId}</p></td>
-                                            <td className={style.simpleContent}>{document.DocumentTitle}</td>
-                                            <td>{document.RevisionNo}</td>
-                                            <td>{document.DocumentType}</td>
-                                            <td>{document.Department.DepartmentName}</td>
-                                            <td>{document.CreationDate?.slice(0, 10).split('-')[2]}/{document.CreationDate?.slice(0, 10).split('-')[1]}/{document.CreationDate?.slice(0, 10).split('-')[0]}</td>
-                                            <td>{document.CreatedBy}</td>
-                                            <td><div className={`text-center ${document.Status === 'Approved' && style.greenStatus} ${document.Status === 'Disapproved' && style.redStatus} ${document.Status === 'Rejected' && style.redStatus} ${document.Status === 'Pending' && style.yellowStatus} ${document.Status === 'Reviewed' && style.blueStatus} `}><p>{document.Status}</p></div></td>
-                                            <td>{document.ReviewedBy || '--'}</td>
-                                            {document.ReviewDate ? (
+                    <div className={style.sec2} onClick={() => {
+                        dispatch(updateTabData({ ...tabData, Tab: 'createDocument' }))
+                    }}>
+                        <img src={add} alt="" />
+                        <p>Create document</p>
+                    </div>
+                )}
+            </div>
+            <div className={style.tableParent}>
+                {!documentsList || documentsList?.length === 0 ? (
+                    <div className='w-100 d-flex align-items-center justify-content-center'>
+                        <p className='text-center'>No any Records Available here.</p>
+                    </div>
+                ) : (
+                    <table className={style.table}>
+                        <tr className={style.headers}>
+                            <td>Document ID</td>
+                            <td>Document Title</td>
+                            <td>Revision No.</td>
+                            <td>Status</td>
+                            <td>Document Type</td>
+                            <td>Department</td>
 
-                                                <td>{document.ReviewDate?.slice(0, 10).split('-')[2]}/{document.ReviewDate?.slice(0, 10).split('-')[1]}/{document.ReviewDate?.slice(0, 10).split('-')[0]}</td>
-                                            ) : (
-                                                <td>- - -</td>
-                                            )}
-                                            <td>{document.ApprovedBy || '--'}</td>
-                                            {document.ApprovalDate ? (
 
-                                                <td>{document.ApprovalDate?.slice(0, 10).split('-')[2]}/{document.ApprovalDate?.slice(0, 10).split('-')[1]}/{document.ApprovalDate?.slice(0, 10).split('-')[0]}</td>
-                                            ) : (
-                                                <td>---</td>
-                                            )}
-
-                                            <td >
-
+                            <td>Action</td>
+                            <td>Action</td>
+                            <td>Document</td>
+                            <td>Reason</td>
+                            {tabData?.Approval && (
+                                <td></td>
+                            )}
+                            {tabData?.Review && (
+                                <td></td>
+                            )}
+                            <td className='ms-4'>Created By</td>
+                            <td>Creation Date</td>
+                            <td>Reviewed By</td>
+                            <td>Review Date</td>
+                            <td>Rejected By</td>
+                            <td>Rejection Date</td>
+                            <td>Approved By</td>
+                            <td>Approval Date</td>
+                            <td>Disapproved By</td>
+                            <td>Disapproval Date</td>
+                        </tr>
+                        {
+                            documentsList?.map((document, i) => {
+                                return (
+                                    <tr className={style.tablebody} key={i}>
+                                        <td ><p style={{
+                                            backgroundColor: "#f0f5f0",
+                                            padding: "2px 5px",
+                                            borderRadius: "10px",
+                                            fontFamily: "Inter",
+                                            fontSize: "12px",
+                                            fontStyle: "normal",
+                                            fontWeight: "400",
+                                            lineHeight: "20px",
+                                        }}>{document.DocumentId}</p></td>
+                                        <td className={style.simpleContent}>{document.DocumentTitle}</td>
+                                        <td>{document.RevisionNo}</td>
+                                        <td><div className={`text-center ${document.Status === 'Approved' && style.greenStatus} ${document.Status === 'Disapproved' && style.redStatus} ${document.Status === 'Rejected' && style.redStatus} ${document.Status === 'Pending' && style.yellowStatus} ${document.Status === 'Reviewed' && style.blueStatus} `}><p>{document.Status}</p></div></td>
+                                        <td>{document.DocumentType}</td>
+                                        <td>{document.Department.DepartmentName}</td>
+                                        <td>
+                                            <p onClick={() => {
+                                                setSend(true);
+                                                setDocumentToProcess(document)
+                                            }} className={style.click}>Send</p>
+                                        </td>
+                                        <td>
+                                            {tabData?.Edit && (
                                                 <p onClick={() => {
-                                                    setSend(true);
-                                                    setDocumentToProcess(document)
-                                                }} className={style.click}>Send</p>
-                                            </td>
-                                            <td >
-                                                {tabData?.Edit && (
-
-                                                    <p onClick={() => {
-                                                        dispatch(updateTabData({ ...tabData, Tab: 'editDocument' }))
-                                                        dispatch(changeId(document._id))
-                                                    }} style={{
-                                                        height: '28px'
-
-                                                    }} className={`btn btn-outline-primary pt-0`}>Edit</p>
-                                                )}
-                                                <p onClick={() => {
-                                                    dispatch(updateTabData({ ...tabData, Tab: 'viewDocument' }));
+                                                    dispatch(updateTabData({ ...tabData, Tab: 'editDocument' }))
                                                     dispatch(changeId(document._id))
                                                 }} style={{
                                                     height: '28px'
-                                                }} className={`btn btn-outline-danger pt-0`}>View</p>
-                                            </td>
-                                            <td >
-
+                                                }} className={`btn btn-outline-primary pt-0`}>Edit</p>
+                                            )}
+                                            <p onClick={() => {
+                                                dispatch(updateTabData({ ...tabData, Tab: 'viewDocument' }));
+                                                dispatch(changeId(document._id))
+                                            }} style={{
+                                                height: '28px'
+                                            }} className={`btn btn-outline-danger pt-0`}>View</p>
+                                        </td>
+                                        <td>
+                                            <p onClick={() => {
+                                                setDataToShow('Pending feature')
+                                                setShowBox(true);
+                                            }} className={style.click}>Download</p>
+                                        </td>
+                                        <td>
+                                            <p onClick={() => {
+                                                if (document.Status === 'Disapproved' || document.Status === 'Rejected') {
+                                                    setDataToShow(document.Reason)
+                                                } else {
+                                                    setDataToShow('Process is nor DisApproved neither Rejected.')
+                                                }
+                                                setShowBox(true);
+                                            }} className={style.redclick}>View</p>
+                                        </td>
+                                        {tabData?.Approval && (
+                                            <td>
                                                 <p onClick={() => {
-                                                    setDataToShow('Pending feature')
-                                                    setShowBox(true);
-
-                                                }} className={style.click}>Download</p>
-                                            </td>
-                                            <td >
-
-                                                <p onClick={() => {
-                                                    if (document.Status === 'Disapproved' || document.Status === 'Rejected') {
-                                                        setDataToShow(document.Reason)
+                                                    if (document.Status === 'Reviewed') {
+                                                        setApprove(true);
+                                                        setIdForAction(document._id)
                                                     } else {
-                                                        setDataToShow('Process is nor DisApproved neither Rejected.')
+                                                        setDataToShow('Document is not Reviewed!');
+                                                        setShowBox(true)
                                                     }
-                                                    setShowBox(true);
-
-                                                }} className={style.redclick}>View</p>
+                                                }} style={{
+                                                    height: '28px'
+                                                }} className={`btn btn-outline-primary pt-0 px-1`}>Approve</p>
+                                                <p onClick={() => {
+                                                    if (document.Status === 'Reviewed') {
+                                                        setDisApprove(true);
+                                                        setIdForAction(document._id);
+                                                    } else {
+                                                        setDataToShow(`Document is not Reviewed!`);
+                                                        setShowBox(true);
+                                                    }
+                                                }} style={{
+                                                    height: '28px'
+                                                }} className={`btn btn-outline-danger pt-0 px-1`}>Disaprrove</p>
                                             </td>
-                                            {tabData?.Approval && (
-                                                <td>
-                                                    <p onClick={() => {
-                                                        if (document.Status === 'Approved' || document.Status === 'Rejected') {
-                                                            setDataToShow('Document is already Approved or Rejected!');
-                                                            setShowBox(true)
-                                                        } else {
-                                                            setApprove(true);
-                                                            setIdForAction(document._id)
-                                                        }
-                                                    }} style={{
-                                                        height: '28px'
-                                                    }} className={`btn btn-outline-primary pt-0 px-1`}>Approve</p>
-                                                    <p onClick={() => {
-                                                        if (document.Status === 'Approved' || document.Status === 'Disapproved' || document.Status === 'Rejected') {
-                                                            setDataToShow(`Document is already ${document.Status}!`);
-                                                            setShowBox(true);
-                                                        } else {
-                                                            setDisApprove(true);
-                                                            setIdForAction(document._id);
-                                                        }
-                                                    }} style={{
-                                                        height: '28px'
-                                                    }} className={`btn btn-outline-danger pt-0 px-1`}>Disaprrove</p>
-                                                </td>
-                                            )}
-                                            {tabData?.Review && (
-                                                <td className='ms-4' >
-                                                    <p onClick={() => {
-                                                        if (document.Status === 'Reviewed') {
-                                                            setDataToShow('Document is already Reviewed!');
-                                                            setShowBox(true);
-                                                        } else {
-
-                                                            setReview(true);
-                                                            setIdForAction(document._id)
-                                                        }
-                                                    }} style={{
-                                                        height: '28px'
-                                                    }} className={`btn btn-outline-danger pt-0 px-1`}>Review</p>
-                                                    <p onClick={() => {
-                                                        if (document.Status === 'Rejected' || document.Status === 'Reviewed') {
-                                                            setDataToShow('Document is already Rejected or Reviewed');
-                                                            setShowBox(true);
-                                                        } else {
-                                                            setReject(true);
-                                                            setIdForAction(document._id)
-                                                        }
-                                                    }} style={{
-                                                        height: '28px'
-                                                    }} className={`btn btn-outline-primary pt-0 px-1`}>Reject</p>
-                                                </td>
-                                            )}
-                                        </tr>
-                                    )
-                                })
-                            }
-                        </table>
-                    )}
-                </div>
-                <div className={style.Btns}>
-                    {startIndex > 0 && (
-                        <button onClick={backPage}>
-                            {'<< '}Back
-                        </button>
-                    )}
-                    {allDataArr?.length > endIndex && (
-                        <button onClick={nextPage}>
-                            next{'>> '}
-                        </button>
-                    )}
-                </div>
+                                        )}
+                                        {tabData?.Review && (
+                                            <td className='ms-4' >
+                                                <p onClick={() => {
+                                                    if (document.Status === 'Pending') {
+                                                        setReview(true);
+                                                        setIdForAction(document._id)
+                                                    } else {
+                                                        setDataToShow('Document is not Pending!');
+                                                        setShowBox(true);
+                                                    }
+                                                }} style={{
+                                                    height: '28px'
+                                                }} className={`btn btn-outline-danger pt-0 px-1`}>Review</p>
+                                                <p onClick={() => {
+                                                    if (document.Status === 'Pending' || document.Status === 'Reviewed') {
+                                                        setReject(true);
+                                                        setIdForAction(document._id)
+                                                    } else {
+                                                        setDataToShow('Document is niether Pending nor Reviewed');
+                                                        setShowBox(true);
+                                                    }
+                                                }} style={{
+                                                    height: '28px'
+                                                }} className={`btn btn-outline-primary pt-0 px-1`}>Reject</p>
+                                            </td>
+                                        )}
+                                        <td>{document.CreatedBy}</td>
+                                        <td>{document.CreationDate?.slice(0, 10).split('-')[2]}/{document.CreationDate?.slice(0, 10).split('-')[1]}/{document.CreationDate?.slice(0, 10).split('-')[0]}</td>
+                                        <td>{document.ReviewedBy || '--'}</td>
+                                        {document.ReviewDate ? (
+                                            <td>{document.ReviewDate?.slice(0, 10).split('-')[2]}/{document.ReviewDate?.slice(0, 10).split('-')[1]}/{document.ReviewDate?.slice(0, 10).split('-')[0]}</td>
+                                        ) : (
+                                            <td>- - -</td>
+                                        )}
+                                        <td>{document.RejectedBy || '--'}</td>
+                                        {document.RejectionDate ? (
+                                            <td>{document.RejectionDate?.slice(0, 10).split('-')[2]}/{document.RejectionDate?.slice(0, 10).split('-')[1]}/{document.RejectionDate?.slice(0, 10).split('-')[0]}</td>
+                                        ) : (
+                                            <td>- - -</td>
+                                        )}
+                                        <td>{document.ApprovedBy || '--'}</td>
+                                        {document.ApprovalDate ? (
+                                            <td>{document.ApprovalDate?.slice(0, 10).split('-')[2]}/{document.ApprovalDate?.slice(0, 10).split('-')[1]}/{document.ApprovalDate?.slice(0, 10).split('-')[0]}</td>
+                                        ) : (
+                                            <td>---</td>
+                                        )}
+                                        <td>{document.DisapprovedBy || '--'}</td>
+                                        {document.DisapprovalDate ? (
+                                            <td>{document.DisapprovalDate?.slice(0, 10).split('-')[2]}/{document.DisapprovalDate?.slice(0, 10).split('-')[1]}/{document.DisapprovalDate?.slice(0, 10).split('-')[0]}</td>
+                                        ) : (
+                                            <td>---</td>
+                                        )}
+                                    </tr>
+                                )
+                            })
+                        }
+                    </table>
+                )}
+            </div>
+            <div className={style.Btns}>
+                {startIndex > 0 && (
+                    <button onClick={backPage}>
+                        {'<< '}Back
+                    </button>
+                )}
+                {allDataArr?.length > endIndex && (
+                    <button onClick={nextPage}>
+                        next{'>> '}
+                    </button>
+                )}
+            </div>
 
             {
                 showBox && (
@@ -315,9 +319,9 @@ function DocumentsList() {
                             <p class={style.msg}>{dataToShow}</p>
                             <div className={style.alertbtns}>
                                 <button style={{
-                                    marginLeft : '120px',
-                                    marginTop : '25px'
-                                }}  onClick={() => {
+                                    marginLeft: '120px',
+                                    marginTop: '25px'
+                                }} onClick={() => {
                                     setShowBox(false);
                                 }} className={style.btn2}>OK</button>
                             </div>
@@ -333,7 +337,7 @@ function DocumentsList() {
                             <div className={style.alertbtns}>
                                 <button onClick={() => {
                                     dispatch(setSmallLoading(true))
-                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/approve-document`, { id: idForAction, approvedBy : user.Name }).then(() => {
+                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/approve-document`, { id: idForAction, approvedBy: user.Name }).then(() => {
                                         dispatch(setSmallLoading(false))
                                         refreshData();
                                         Swal.fire({
@@ -370,7 +374,7 @@ function DocumentsList() {
                                 <button onClick={() => {
                                     setReview(false);
                                     dispatch(setSmallLoading(true))
-                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/review-document`, { documentId: idForAction, reviewedBy : user.Name }).then(() => {
+                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/review-document`, { documentId: idForAction, reviewedBy: user.Name }).then(() => {
                                         dispatch(setSmallLoading(false))
                                         refreshData();
                                         Swal.fire({
@@ -406,7 +410,7 @@ function DocumentsList() {
                                 e.preventDefault();
                                 setDisApprove(false);
                                 dispatch(setSmallLoading(true))
-                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/disapprove-document`, { documentId: idForAction, reason: reason, disapprovedBy : user.Name }).then(() => {
+                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/disapprove-document`, { documentId: idForAction, reason: reason, disapprovedBy: user.Name }).then(() => {
                                     dispatch(setSmallLoading(false))
                                     Swal.fire({
                                         title: 'Success',
@@ -446,7 +450,7 @@ function DocumentsList() {
                                 e.preventDefault();
                                 setReject(false);
                                 dispatch(setSmallLoading(true))
-                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/reject-document`, { documentId: idForAction, reason: reason, rejectedBy : user.Name }).then(() => {
+                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/reject-document`, { documentId: idForAction, reason: reason, rejectedBy: user.Name }).then(() => {
                                     dispatch(setSmallLoading(false))
                                     Swal.fire({
                                         title: 'Success',

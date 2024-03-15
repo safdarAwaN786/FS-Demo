@@ -487,15 +487,7 @@ router.patch('/update-haccp-team/:teamId', upload.fields(generateMembersDocArray
       })
     );
 
-
-    // If status is 'Pending', do not increment revision number
-    if (existingTeam.Status === 'Pending') {
-      teamData.RevisionNo = existingTeam.RevisionNo;
-    } else if (existingTeam.Status === 'Disapproved') {
-      // If status is 'Disapproved', increment revision number
-      teamData.RevisionNo = existingTeam.RevisionNo + 1;
-    }
-
+    teamData.RevisionNo = existingTeam.RevisionNo + 1;
     // Update the team document
     const updatedTeam = await HaccpTeam.findByIdAndUpdate(
       teamId,
@@ -505,6 +497,11 @@ router.patch('/update-haccp-team/:teamId', upload.fields(generateMembersDocArray
           UpdatedBy: requestUser.Name,
           UpdationDate: new Date(),
           Status: 'Pending',
+          ApprovalDate : null,
+          ApprovedBy : null,
+          DisapprovalDate : null,
+          DisapprovedBy : null,
+          Reason : null,
           TeamMembers: membersIds
         }
       },
@@ -549,6 +546,7 @@ router.patch('/approveHaccpTeam', async (req, res) => {
     haccpTeam.ApprovedBy = approvedBy
     haccpTeam.DisapprovalDate = null;
     haccpTeam.DisapprovedBy = null;
+    haccpTeam.Reason = null;
 
     // Save the updated HaccpTeam
     await haccpTeam.save();
@@ -592,7 +590,7 @@ router.patch('/disapproveHaccpTeam', async (req, res) => {
     haccpTeam.Reason = Reason;
     haccpTeam.DisapprovedBy = disapproveBy;
     haccpTeam.ApprovalDate = null;
-    haccpTeam.ApprovedBy = 'Pending'
+    haccpTeam.ApprovedBy = null
 
     // Save the updated HaccpTeam
     await haccpTeam.save();
@@ -630,54 +628,6 @@ router.patch('/haccpTeam/assign-tabs/:haccpTeamId', async (req, res) => {
   }
 });
 
-// * HaccpTeam Login
-router.post('/haccpTeam/login', async (req, res) => {
-  try {
-    const { userName, password } = req.body;
-    const haccpTeam = await HaccpTeam.findByCredentials(userName, password);
 
-    if (!haccpTeam || haccpTeam.isSuspended) {
-      console.log('HaccpTeam not found or account is suspended. Access denied.');
-      return res.status(403).json({ message: 'Access denied. HaccpTeam not found or account is suspended.' });
-    }
-
-    const token = await haccpTeam.generateAuthToken();
-    res.send({ haccpTeam, token });
-  } catch (error) {
-    console.error(error);
-    res.status(400).json({ message: 'Invalid credentials.' });
-  }
-});
-
-// * HaccpTeam Logout
-router.post('/haccpTeam/logout', async (req, res) => {
-  try {
-    req.haccpTeam.tokens = req.haccpTeam.tokens.filter(token => token.token !== req.token);
-    await req.haccpTeam.save();
-    res.status(200).json({ message: 'HaccpTeam logged out successfully' });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Error logging out HaccpTeam' });
-  }
-});
-
-// * HaccpTeam Change Own Password
-router.put('/haccpTeam/change-password', async (req, res) => {
-  try {
-    const newPassword = req.body.newPassword;
-    req.haccpTeam.TeamMembers[0].Password = newPassword; // Assuming the first member is being updated
-
-    // Hash the new password before saving
-    req.haccpTeam.TeamMembers[0].Password = await bcrypt.hash(newPassword, 8);
-
-    await req.haccpTeam.save();
-
-    console.log(`HaccpTeam document with ID: ${req.haccpTeam._id} password updated successfully`);
-    res.status(200).json({ status: true, message: 'HaccpTeam password updated successfully', data: req.haccpTeam });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Error updating HaccpTeam password', error: error.message });
-  }
-});
 
 module.exports = router;

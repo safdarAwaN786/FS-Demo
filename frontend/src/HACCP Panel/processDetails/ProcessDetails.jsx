@@ -165,29 +165,23 @@ function ProcessDetails() {
                                         {tabData?.Approval && (
                                             <td className='ps-0'>
                                                 <p onClick={() => {
-                                                    if (process.Status === 'Approved') {
-                                                        setDataToShow('Process is already Approved!');
-                                                        setShowBox(true)
-                                                    } else if (process.Status === 'Disapproved') {
-                                                        setDataToShow('Process is already DisApproved!');
-                                                        setShowBox(true)
-                                                    } else {
+                                                    if (process.Status === 'Pending') {
                                                         setIdForAction(process._id);
                                                         setApprove(true);
+                                                    } else {
+                                                        setDataToShow('Flow Diagram is not Pending!');
+                                                        setShowBox(true)
                                                     }
                                                 }} style={{
                                                     height: '28px'
                                                 }} className={`btn btn-outline-primary pt-0 px-1`}>Approve</p>
                                                 <p onClick={() => {
-                                                    if (process.Status === 'Approved') {
-                                                        setDataToShow('Process is already Approved!');
-                                                        setShowBox(true)
-                                                    } else if (process.Status === 'Disapproved') {
-                                                        setDataToShow('Process is already DisApproved!');
-                                                        setShowBox(true)
-                                                    } else {
+                                                    if (process.Status === 'Pending') {
                                                         setIdForAction(process._id);
                                                         setReject(true);
+                                                    } else {
+                                                        setDataToShow('Process is not Pending!');
+                                                        setShowBox(true)
                                                     }
                                                 }} style={{
                                                     height: '28px'
@@ -210,7 +204,7 @@ function ProcessDetails() {
                                             <td>- - -</td>
                                         )}
                                         {process.ApprovalDate ? (
-                                            <td>{dayjs(process.ApprovalDate).format('DD/MM/YYYYY')}</td>
+                                            <td>{dayjs(process.ApprovalDate).format('DD/MM/YYYY')}</td>
                                         ) : (
                                             <td>- - -</td>
                                         )}

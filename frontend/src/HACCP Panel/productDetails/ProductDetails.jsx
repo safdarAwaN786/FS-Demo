@@ -167,29 +167,23 @@ function ProductDetails() {
                                         {tabData?.Approval && (
                                             <td className='ps-0'>
                                                 <p onClick={() => {
-                                                    if (product.Status === 'Approved') {
-                                                        setDataToShow('Sorry, Product is already Approved');
-                                                        setShowBox(true);
-                                                    } else if (product.Status === 'Disapproved') {
-                                                        setDataToShow('Sorry, Product is already Disapproved');
-                                                        setShowBox(true);
-                                                    } else {
+                                                    if (product.Status === 'Pending') {
                                                         setIdForAction(product._id);
                                                         setApprove(true);
+                                                    } else {
+                                                        setDataToShow('Sorry, Product is not Pending');
+                                                        setShowBox(true);
                                                     }
                                                 }} style={{
                                                     height: '28px'
                                                 }} className={`btn btn-outline-primary pt-0 px-1`}>Approve</p>
                                                 <p onClick={() => {
-                                                    if (product.Status === 'Approved') {
-                                                        setDataToShow('Sorry, Product is already Approved');
-                                                        setShowBox(true);
-                                                    } else if (product.Status === 'Disapproved') {
-                                                        setDataToShow('Sorry, Product is already Disapproved');
-                                                        setShowBox(true);
-                                                    } else {
+                                                    if (product.Status === 'Pending') {
                                                         setIdForAction(product._id);
                                                         setReject(true);
+                                                    } else {
+                                                        setDataToShow('Sorry, Product is not Pending!');
+                                                        setShowBox(true);
                                                     }
                                                 }} style={{
                                                     height: '28px'

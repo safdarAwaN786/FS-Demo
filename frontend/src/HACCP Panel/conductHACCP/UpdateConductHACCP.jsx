@@ -210,34 +210,7 @@ function UpdateConductHACCP() {
                                         </div>
                                     </div> */}
 
-                                    {teamsToShow?.length > 0 && (
-                                        <div className='w-75 mx-4 d-flex flex-column justify-content-start'>
-                                            <div className={style.para}>
-                                                <p>Select Teams</p>
-                                            </div>
-                                            {teamsToShow?.map((team) => {
-                                                return (
-                                                    <div className='d-flex flex-row '>
-                                                        <input autoComplete='off' checked={dataToSend?.Teams?.includes(team._id)} onChange={(e) => {
-                                                            const updatedTeams = dataToSend?.Teams || [];
-                                                            if (e.target.checked) {
-                                                                updatedTeams.push(team._id);
-                                                                setDataToSend({ ...dataToSend, Teams: updatedTeams })
-                                                            } else {
-                                                                setDataToSend({ ...dataToSend, Teams: updatedTeams.filter((teamId) => teamId !== teamId) })
-                                                            }
-                                                        }} className='m-1' type='checkbox' />
-                                                        <p style={{
-                                                            fontFamily: 'Inter'
-                                                        }}>{team.DocumentId}</p>
-                                                    </div>
-                                                )
-
-                                            })}
-
-
-                                        </div>
-                                    )}
+                                    
                                 </div>
                                 <div className={style.sec2}>
                                     {/* <div className={style.inputParent}>
