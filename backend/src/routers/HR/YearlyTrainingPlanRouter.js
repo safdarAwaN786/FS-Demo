@@ -11,6 +11,7 @@ router.post('/addYearlyPlan',  async (req, res) => {
 
     const createdBy = req.body.createdBy;
     const yearlyPlan = await YearlyPlan.findOne({
+      UserDepartment : req.header('Authorization'),
       Year: req.body.Year
     });
 

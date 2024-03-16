@@ -50,7 +50,7 @@ router.post('/addMonthlyPlan', async (req, res) => {
 
     const trainerExist = await User.findById(req.body.Trainer);
     const trainingExist = await Training.findById(req.body.Training);
-    const yearlyPlan = await YearlyTrainingPlan.findOne({ Year: req.body.Year });
+    const yearlyPlan = await YearlyTrainingPlan.findOne({ Year: req.body.Year, UserDepartment : req.header('Authorization') });
 
     if (!yearlyPlan) {
       return res.status(404).send({
