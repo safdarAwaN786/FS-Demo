@@ -46,7 +46,7 @@ function FillForm() {
     const makeRequest = () => {
         if (answerData.answers?.length > 0) {
             dispatch(setSmallLoading(true))
-            axios.post(`${process.env.REACT_APP_BACKEND_URL}/submit-response`, {...answerData, filledBy : user.Name}, { headers: { Authorization: `${user.Department._id}` } }).then(() => {
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/submit-response`, { ...answerData, filledBy: user.Name }, { headers: { Authorization: `${user.Department._id}` } }).then(() => {
                 dispatch(setSmallLoading(false))
                 setAnswerData(null);
                 Swal.fire({
@@ -100,16 +100,27 @@ function FillForm() {
                         <form encType='multipart/form-data' onSubmit={(event) => {
                             event.preventDefault();
                             // Check if the form is valid
+                            console.log(questions);
+                            console.log(answers)
                             const isFormValid = questions.every((question, index) => {
                                 if (question.questionType === 'Checkboxgrid' && question.Required) {
                                     const rowHasChecked = questions[index].rows.every((row, rowIndex) => {
-                                        return answers[index]?.checkboxGridAnswers?.some((text) => text.startsWith(`R${rowIndex + 1}`));
+                                        return answers[index]?.checkboxGridAnswers?.some((text) => text.startsWith(`R${rowIndex}`));
                                     });
                                     return rowHasChecked;
                                 }
                                 return true; // For other question types or when not required
                             });
-                            if (!isFormValid) {
+                            const isCheckboxesValid = questions.every((question, index) => {
+                                if (question.questionType === 'Checkbox' && question.Required) {
+                                    console.log(answers[index])
+                                    return answers[index]?.CheckboxesAnswers?.length > 0 ? true : false
+                                } else {
+                                    return true
+                                }
+                            })
+                            console.log(isCheckboxesValid)
+                            if (!isFormValid || !isCheckboxesValid) {
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'Oops...',
