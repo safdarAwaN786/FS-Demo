@@ -168,6 +168,7 @@ function AddPlan() {
             </div>
             <form encType='multipart/form-data' onSubmit={(event) => {
                 event.preventDefault();
+                event.target.reset();
                 setPlanData(dataToSend);
                 alertManager();
                 event.target.reset();
@@ -185,7 +186,7 @@ function AddPlan() {
                                     setSelectedPlan(choosenPlan);
                                     setDataToSend({ ...dataToSend, YearlyTrainingPlan: e.target.value, Year: choosenPlan.Year })
                                 }} placeholder='Choose year' style={{ width: "100%" }} name='Month' required>
-                                    <option value="" selected disabled>Choose Year</option>
+                                    <option value="" selected>Choose Year</option>
                                     {yearlyPlans?.map((plan) => {
                                         return (
                                             <option value={plan._id}>{plan.Year}</option>
@@ -241,7 +242,7 @@ function AddPlan() {
                                 <select className='form-select  form-select-lg' onChange={(e) => {
                                     setDataToSend({ ...dataToSend, DepartmentText: e.target.value })
                                 }} name='DepartmentText' style={{ width: "100%" }} required >
-                                    <option value="" selected disabled>Choose Department</option>
+                                    <option value="" selected>Choose Department</option>
                                     {departmentsToShow?.map((depObj) => {
                                         return (
                                             <option value={depObj.DepartmentName}>{depObj.DepartmentName}</option>
@@ -261,7 +262,7 @@ function AddPlan() {
                                 <select className='form-select  form-select-lg' onChange={(e) => {
                                     setDataToSend({ ...dataToSend, [e.target.name]: e.target.value })
                                 }} name='Trainer' style={{ width: "100%" }} required >
-                                    <option value="" selected disabled>Choose Trainer</option>
+                                    <option value="" selected>Choose Trainer</option>
                                     {trainers?.map((trainer) => {
 
                                         return (
@@ -291,7 +292,7 @@ function AddPlan() {
                                     name='Training'
                                     style={{ width: "100%" }}
                                     required>
-                                    <option value="" selected disabled>Select Training</option>
+                                    <option value="" selected>Select Training</option>
                                     {selectedPlan?.Month.map((obj) => {
                                         return obj.Trainings.map((training) => {
                                             return (

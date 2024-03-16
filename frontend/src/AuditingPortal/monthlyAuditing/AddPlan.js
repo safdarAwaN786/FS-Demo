@@ -149,7 +149,7 @@ function AddPlanAuditing() {
                     </div>
                     <form encType='multipart/form-data' onSubmit={(event) => {
                         event.preventDefault();
-                        console.log(dataToSend);
+                        event.target.reset();
                         setPlanData(dataToSend);
                         alertManager();
                     }}>
@@ -164,8 +164,8 @@ function AddPlanAuditing() {
                                             const choosenPlan = yearlyPlans.find((plan) => plan._id === e.target.value); // Find the selected plan object 
                                             setSelectedPlan(choosenPlan);
                                             setDataToSend({ ...dataToSend, YearlyAuditingPlan: e.target.value, Year: choosenPlan.Year })
-                                        }} placeholder='Choose year' style={{ width: "100%" }} name='Month' required>
-                                            <option value="" selected disabled>Choose Year</option>
+                                        }}  placeholder='Choose year' style={{ width: "100%" }} name='Month' required>
+                                            <option value="" selected>Choose Year</option>
                                             {yearlyPlans?.map((plan) => {
                                                 return (
                                                     <option value={plan._id}>{plan.Year}</option>
@@ -197,7 +197,7 @@ function AddPlanAuditing() {
                                     </div>
                                     <div>
                                         <input autoComplete='off' value={selectedPlanProcess?.Process.ProcessOwner.Name} className='text-black' name='Duration' type="text" readOnly
-                                            required />
+                                            required/>
                                     </div>
                                 </div>
                                 <div className={style.inputParent}>
@@ -207,8 +207,8 @@ function AddPlanAuditing() {
                                     <div>
                                         <select onChange={(e) => {
                                             setDataToSend({ ...dataToSend, Department: e.target.value })
-                                        }} name='Department' style={{ width: "100%" }} required >
-                                            <option value="" selected disabled>Choose Department</option>
+                                        }} name='Department'  style={{ width: "100%" }} required >
+                                            <option value="" selected >Choose Department</option>
                                             {departmentsToShow?.map((depObj) => {
                                                 return (
                                                     <option value={depObj._id}>{depObj.DepartmentName}</option>
@@ -256,7 +256,6 @@ function AddPlanAuditing() {
                                         </select>
                                     </div>
                                 </div>
-
                                 <div className={style.inputParent}>
                                     <div className={style.para}>
                                         <p>Lead Auditor : </p>
@@ -265,7 +264,7 @@ function AddPlanAuditing() {
                                         <select onChange={(e) => {
                                             setDataToSend({ ...dataToSend, LeadAuditor: e.target.value })
                                         }} name='Trainer' style={{ width: "100%" }} >
-                                            <option value="" selected disabled></option>
+                                            <option value="" selected ></option>
                                             {LeadAuditors?.map((auditor) => {
                                                 return (
                                                     <option key={auditor._id} value={auditor._id}>{auditor.Name}</option>
@@ -281,8 +280,8 @@ function AddPlanAuditing() {
                                     <div>
                                         <select onChange={(e) => {
                                             setDataToSend({ ...dataToSend, TeamAuditor: e.target.value })
-                                        }} name='Trainer' style={{ width: "100%" }} >
-                                            <option value="" selected disabled></option>
+                                        }} name='Trainer'  style={{ width: "100%" }} >
+                                            <option value="" selected></option>
                                             {teamAuditors?.map((auditor) => {
                                                 return (
                                                     <option key={auditor._id} value={auditor._id}>{auditor.Name}</option>
