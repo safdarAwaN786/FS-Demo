@@ -233,14 +233,16 @@ function AddEmployee() {
                         </div>
                         <div className={style.sec2}>
                             <div>
-                                <select className='form-select  form-select-lg' name='Department' style={{ width: "100%" }} required>
+                            <input autoComplete='off' name='Department' type="text" placeholder='Department* here' />
+                            <img src={copyp} alt="" />
+                                {/* <select className='form-select  form-select-lg' name='Department' style={{ width: "100%" }} required>
                                     <option value="" selected disabled>Choose Department*</option>
                                     {departmentsToShow?.map((depObj) => {
                                         return (
                                             <option value={depObj.DepartmentName}>{depObj.DepartmentName}</option>
                                         )
                                     })}
-                                </select>
+                                </select> */}
 
                             </div>
                             {/* <div>

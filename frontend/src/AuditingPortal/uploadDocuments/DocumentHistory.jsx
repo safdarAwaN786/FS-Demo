@@ -176,19 +176,19 @@ function DocumentHistory() {
                                         <td>{docObj.RevisionNo}</td>
                                         <td>{docObj.CreatedBy}</td>
                                         <td>{docObj?.CreationDate?.slice(0, 10).split('-')[2]}/{docObj.CreationDate?.slice(0, 10).split('-')[1]}/{docObj?.CreationDate?.slice(0, 10).split('-')[0]}</td>
-                                        <td>{docObj.ReviewedBy}</td>
+                                        <td>{docObj.ReviewedBy ? docObj.ReviewedBy : 'Pending'}</td>
                                         {docObj.ReviewDate ? (
 
                                             <td>{docObj?.ReviewDate?.slice(0, 10).split('-')[2]}/{docObj.ReviewDate.slice(0, 10).split('-')[1]}/{docObj?.ReviewDate.slice(0, 10).split('-')[0]}</td>
                                         ) : (
-                                            <td>- - -</td>
+                                            <td>Pending</td>
                                         )}
-                                        <td>{docObj.ApprovedBy}</td>
+                                        <td>{docObj.ApprovedBy ? docObj.ApprovedBy : 'Pending'}</td>
                                         {docObj.ApprovalDate ? (
 
                                             <td>{docObj?.ApprovalDate.slice(0, 10).split('-')[2]}/{docObj.ApprovalDate.slice(0, 10).split('-')[1]}/{docObj?.ApprovalDate.slice(0, 10).split('-')[0]}</td>
                                         ) : (
-                                            <td>- - -</td>
+                                            <td>Pending</td>
                                         )}
 
 
@@ -213,9 +213,7 @@ function DocumentHistory() {
                         }
                     </table>
                 </div>
-                <div className={style.btnparent}>
-                    <button className={style.download}>Download</button>
-                </div>
+               
             
 
             {

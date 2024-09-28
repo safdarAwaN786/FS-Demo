@@ -137,7 +137,7 @@ app.get('/download-image', async (req, res) => {
     // const fileExtension = imageURL.substring(imageURL.lastIndexOf('.'));
     var imageResponse;
     var imageBuffer;
-    console.log(imageURL);
+    console.log('Image Url:', imageURL);
     imageResponse = await axios.get(imageURL, { responseType: 'arraybuffer' }).catch(err => {
       console.log(err);
     });

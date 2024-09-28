@@ -19,11 +19,11 @@ function Input() {
     const [startIndex, setStartIndex] = useState(0);
     const [endIndex, setEndIndex] = useState(8);
     const user = useSelector(state => state.auth.user);
-    var yearlyPlanData = {
-        Year: year,
+    const [yearlyPlanData, setYearlyPlanData] = useState( {
+        Year: '',
         Month: [
             {
-                MonthName: month,
+                MonthName: '',
                 Trainings: [
                     // {
                     //     Training: "",
@@ -32,7 +32,8 @@ function Input() {
                 ]
             }
         ]
-    }
+    })
+    
     const [showBox, setShowBox] = useState(false)
     const [popUpData, setPopUpData] = useState(null);
     const [alert, setalert] = useState(false)
@@ -42,34 +43,45 @@ function Input() {
     var trainingsArr;
     const handleCheckbox = (event, TrainingId) => {
         const weekNumber = event.target.value;
-        const trainingsArray = yearlyPlanData.Month[0].Trainings;
-        const existingTrainingIndex = trainingsArray.findIndex(obj => obj.Training === TrainingId);
-        if (existingTrainingIndex !== -1) {
+        const updatedTrainings = [...yearlyPlanData.Month[0].Trainings];
+        const existingTraining = updatedTrainings.find(obj => obj.Training === TrainingId);
+        console.log(existingTraining);
+        
+        if (existingTraining) {
+            console.log('found');
+            
             // obj found..
-            const weekExist = trainingsArray[existingTrainingIndex].WeekNumbers.includes(weekNumber);
+            const weekExist = existingTraining.WeekNumbers.includes(weekNumber);
             if (weekExist) {
-                const weekNumIndex = trainingsArray[existingTrainingIndex].WeekNumbers.indexOf(weekNumber);
-                if (weekNumIndex !== -1) {
-                    trainingsArray[existingTrainingIndex].WeekNumbers.splice(weekNumIndex, 1);
+                
+                existingTraining.WeekNumbers = existingTraining.WeekNumbers.filter(weekNum => weekNum !== weekNumber)
+                if(existingTraining.WeekNumbers?.length ==0){
+                    updatedTrainings.filter(obj => obj.Training !== TrainingId)
                 }
+                
             } else {
-                trainingsArray[existingTrainingIndex].WeekNumbers.push(weekNumber);
+                existingTraining.WeekNumbers.push(weekNumber);
             }
         } else {
-            trainingsArray.push({
+            console.log('not found');
+            
+            updatedTrainings.push({
                 Training: TrainingId,
                 WeekNumbers: [weekNumber]
             })
         }
-        trainingsArr = yearlyPlanData.Month[0].Trainings;
-        for (let index = 0; index < trainingsArr.length; index++) {
-            if (trainingsArr[index].WeekNumbers.length === 0) {
-                console.log("length zero");
-                const emptyTrainingIndex = trainingsArr.indexOf(trainingsArr[index]);
-                console.log(emptyTrainingIndex);
-                yearlyPlanData.Month[0].Trainings.splice(emptyTrainingIndex, 1);
-            }
-        }
+        // trainingsArr = trainingsArray;
+        // for (let index = 0; index < updatedTrainings.length; index++) {
+        //     if (updatedTrainings[index].WeekNumbers.length === 0) {
+        //         console.log("length zero");
+        //         const emptyTrainingIndex = trainingsArr.indexOf(trainingsArr[index]);
+        //         console.log(emptyTrainingIndex);
+            
+        //         duplicateYearlyPlanData.Month[0].Trainings.splice(emptyTrainingIndex, 1);
+        //     }
+        // }
+        setYearlyPlanData({...yearlyPlanData, Month : [{...yearlyPlanData.Month[0], Trainings : updatedTrainings}]})
+        
     }
     const [allDataArr, setAllDataArr] = useState(null);
     useEffect(()=>{
@@ -145,6 +157,8 @@ function Input() {
             })
         }
     }
+ 
+    
 
     return (
         <>
@@ -173,16 +187,23 @@ function Input() {
                         <div className={style.sec1}>
 
                             <select className='form-select  form-select-lg' onChange={(event) => {
-                                setYear(event.target.value);
+                                setYearlyPlanData({...yearlyPlanData, Year : event.target.value})
+                               
                             }} style={{ width: "200px" }} name='Year' required>
                                 <option value="" disabled selected>Select Year</option>
                                 <option value="2023">2023</option>
                                 <option value="2024">2024</option>
                                 <option value="2025">2025</option>
+                                <option value="2026">2026</option>
+                                <option value="2027">2027</option>
+                                <option value="2028">2028</option>
+                                <option value="2029">2029</option>
+                                <option value="2030">2030</option>
                             </select>
 
                             <select className='form-select  form-select-lg' onChange={(event) => {
-                                setMonth(event.target.value);
+                                setYearlyPlanData({...yearlyPlanData, Month : [{...yearlyPlanData.Month[0], MonthName : event.target.value}]})
+                                // setMonth(event.target.value);
                             }} style={{ width: "200px" }} name='MonthName' required>
                                 <option value="" disabled selected>Select Month</option>
                                 {months.map((month) => {
@@ -205,28 +226,30 @@ function Input() {
                             </tr>
                             {
                                 trainings?.map((training, i) => {
+                                    ;
+                                    
                                     return (
                                         <tr className={style.tablebody} key={i}>
                                             <td>
                                                 <p>{training.TrainingName}</p>
                                             </td>
                                             <td>
-                                                <input autoComplete='off' onChange={(event) => {
+                                                <input checked={yearlyPlanData.Month[0].Trainings?.find(obj => obj.Training === training._id) !== undefined && yearlyPlanData.Month[0].Trainings?.find(obj => obj.Training === training._id).WeekNumbers.includes('1')} autoComplete='off' onChange={(event) => {
                                                     handleCheckbox(event, training._id)
                                                 }} value={1} type="checkbox" />
                                             </td>
                                             <td>
-                                                <input autoComplete='off' onChange={(event) => {
+                                                <input checked={yearlyPlanData.Month[0].Trainings?.find(obj => obj.Training === training._id) !== undefined && yearlyPlanData.Month[0].Trainings?.find(obj => obj.Training === training._id).WeekNumbers.includes('2')} autoComplete='off' onChange={(event) => {
                                                     handleCheckbox(event, training._id)
                                                 }} value={2} type="checkbox" />
                                             </td>
                                             <td>
-                                                <input autoComplete='off' onChange={(event) => {
+                                                <input checked={yearlyPlanData.Month[0].Trainings?.find(obj => obj.Training === training._id) !== undefined && yearlyPlanData.Month[0].Trainings?.find(obj => obj.Training === training._id).WeekNumbers.includes('3')} autoComplete='off' onChange={(event) => {
                                                     handleCheckbox(event, training._id)
                                                 }} value={3} type="checkbox" />
                                             </td>
                                             <td>
-                                                <input autoComplete='off' onChange={(event) => {
+                                                <input checked={yearlyPlanData.Month[0].Trainings?.find(obj => obj.Training === training._id) !== undefined && yearlyPlanData.Month[0].Trainings?.find(obj => obj.Training === training._id).WeekNumbers.includes('4')} autoComplete='off' onChange={(event) => {
                                                     handleCheckbox(event, training._id)
                                                 }} value={4} type="checkbox" />
                                             </td>

@@ -161,6 +161,8 @@ function MaintananceRect2() {
                     </tr>
                     {
                         maintenances?.map((maintenance, i) => {
+                            console.log(maintenance);
+
                             return (
                                 <tr key={i}>
                                     <td>{maintenance.maintenanceCode}</td>
@@ -187,7 +189,7 @@ function MaintananceRect2() {
                                         alertManager();
 
                                     }}>View</button></td>
-                                    <td ><button onClick={() => { handleDownloadImage(maintenance.uploadImage) }} className={style.btn}>Download</button></td>
+                                    <td ><button onClick={() => { if(maintenance.uploadImage){ handleDownloadImage(maintenance.uploadImage)} }} className={style.btn}>Download</button></td>
                                     {/* <td ><button className={style.btn}>Generate</button></td> */}
                                 </tr>
                             )

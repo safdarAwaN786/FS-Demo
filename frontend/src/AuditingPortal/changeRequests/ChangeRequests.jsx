@@ -239,7 +239,9 @@ function ChangeRequests() {
                                                     height: '28px'
                                                 }} className={`btn btn-outline-danger pt-0 px-1`}>Review</p>
                                                 <p onClick={() => {
-                                                    if (document.Status === 'Pending' || document.Status === 'Reviewed') {
+                                                    console.log(document.Status);
+                                                    
+                                                    if (request.Status === 'Pending' || request.Status === 'Reviewed') {
                                                         setReject(true);
                                                         setIdForAction(request._id)
                                                     } else {

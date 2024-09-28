@@ -542,7 +542,7 @@ function FormsList() {
             {
                 send && (
                     <div class={style.alertparent}>
-                        <div class={`${style.alert} p-3 pt-5`}>
+                        <div style={{ overflowY : 'scroll'}} class={`${style.alert} p-3 pt-5`}>
                             <form onSubmit={(e) => {
                                 e.preventDefault();
                                 if (formToProcess?.SendToDepartments.length > 0) {
@@ -578,7 +578,7 @@ function FormsList() {
                             }}>
                                 {departmentsToShow.map((depObj) => {
                                     return (
-                                        <div className='mx-4 my-4 d-inline'>
+                                        <div className='mx-4 my-4 '>
                                             <input autoComplete='off' type='checkbox' onChange={(e) => {
                                                 const updatedForm = { ...formToProcess }
                                                 if (!updatedForm.SendToDepartments) {

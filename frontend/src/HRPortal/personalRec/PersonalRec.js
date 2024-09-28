@@ -138,7 +138,7 @@ function PersonalRec() {
                                     <div style={{ height: '168px !important' }}>
                                         <textarea  className='text-dark'  onChange={(event) => {
                                            dispatch(updatePersonFormData({ ...personFormData, [event.target.name]: event.target.value }))
-                                        }} value={personFormData?.MainJobresponsibility} name='MainJobResponsibility' type="text" required />
+                                        }} value={personFormData?.MainJobResponsibility} name='MainJobResponsibility' type="text" required />
 
                                     </div>
                                 </div>
@@ -272,7 +272,7 @@ function PersonalRec() {
                                     <div>
                                         <input className='text-black' autoComplete='off' onChange={(event) => {
                                             dispatch(updatePersonFormData({ ...personFormData, [event.target.name]: event.target.value }))
-                                        }} value={personFormData?.others} name='others' type="text" />
+                                        }} value={personFormData?.Others} name='Others' type="text" />
                                     </div>
                                 </div>
                                 <div className={style.inputParentSec2}>

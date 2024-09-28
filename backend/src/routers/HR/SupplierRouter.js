@@ -145,7 +145,7 @@ router.patch('/approve-supplier',  async (req, res) => {
 // * Disapprove Supplier From MongoDB Database
 router.patch('/disapprove-supplier',  async (req, res) => {
     try {
-        const disapprovedBy = req.disapprovedBy;
+        const disapprovedBy = req.body.disapprovedBy;
         const supplierId = req.body.id;
         const Reason = req.body.Reason;
 
@@ -168,7 +168,7 @@ router.patch('/disapprove-supplier',  async (req, res) => {
         supplier.Reason = Reason;
         supplier.ApprovalDate = null;
         supplier.DisapprovedBy = disapprovedBy;
-        supplier.ApprovedBy = 'Pending';
+        supplier.ApprovedBy = null;
 
         // Save the updated Supplier
         await supplier.save();

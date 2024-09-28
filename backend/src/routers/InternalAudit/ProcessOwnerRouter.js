@@ -133,7 +133,7 @@ router.get('/readProcess', async (req, res) => {
     console.log("request made for process")
     try {
 
-        const processOwner = await ProcessOwner.find({ isProcessOwner: true, UserDepartment: req.header('Authorization') }).populate('Department UserDepartment ProcessOwner');
+        const processOwner = await ProcessOwner.find({  UserDepartment: req.header('Authorization') }).populate('Department UserDepartment ProcessOwner');
 
 
 

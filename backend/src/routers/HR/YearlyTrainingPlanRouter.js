@@ -5,28 +5,43 @@ const authMiddleware = require('../../middleware/auth');
 
 // router.use(authMiddleware);
 // * POST YearlyPlan Data Into MongooDB Database
-router.post('/addYearlyPlan',  async (req, res) => {
+router.post('/addYearlyPlan', async (req, res) => {
   console.log(req.body);
   try {
 
     const createdBy = req.body.createdBy;
     const yearlyPlan = await YearlyPlan.findOne({
-      UserDepartment : req.header('Authorization'),
+      UserDepartment: req.header('Authorization'),
       Year: req.body.Year
     });
+    console.log('Already Saved Plan', yearlyPlan);
+
 
     if (yearlyPlan) {
       for (const month of req.body.Month) {
-        const existingMonthIndex = yearlyPlan.Month.findIndex(
+        const existingMonth = yearlyPlan.Month.find(
           (existingMonth) => existingMonth.MonthName === month.MonthName
         );
 
-        if (existingMonthIndex === -1) {
+        if (!existingMonth) {
           yearlyPlan.Month.push(month);
         } else {
-          yearlyPlan.Month[existingMonthIndex] = month;
+          month.Trainings.forEach(trainingObj => {
+
+            const trainingExist = existingMonth.Trainings.find(obj => obj.Training.equals(trainingObj.Training))
+            if (trainingExist) {
+              console.log('updating week numbers');
+              
+              trainingExist.WeekNumbers = trainingObj.WeekNumbers
+            } else {
+              console.log('pushing new training');
+              
+              existingMonth.Trainings.push(trainingObj)
+            }
+          })
         }
       }
+      console.log('updatedYearlyPlan', yearlyPlan);
 
       await yearlyPlan.save();
       res.status(200).send({ status: true, message: "The YearlyPlan is updated!", data: yearlyPlan });
@@ -34,7 +49,7 @@ router.post('/addYearlyPlan',  async (req, res) => {
 
     } else {
       const newYearlyPlan = new YearlyPlan({
-        UserDepartment : req.header('Authorization'),
+        UserDepartment: req.header('Authorization'),
         Year: req.body.Year,
         Month: req.body.Month,
         CreatedBy: createdBy,
@@ -51,13 +66,13 @@ router.post('/addYearlyPlan',  async (req, res) => {
 });
 
 // * GET All YearlyPlan Data From MongooDB Database
-router.get('/readYearlyPlan',  async (req, res) => {
+router.get('/readYearlyPlan', async (req, res) => {
   try {
-    const yearlyPlan = await YearlyPlan.find({UserDepartment : req.header('Authorization')}).populate({
+    const yearlyPlan = await YearlyPlan.find({ UserDepartment: req.header('Authorization') }).populate({
       path: 'Month.Trainings.Training'
     }).populate('UserDepartment');
 
-    res.status(201).send({ status: true, message: "The following are yearlyPlans!",  data: yearlyPlan, });
+    res.status(201).send({ status: true, message: "The following are yearlyPlans!", data: yearlyPlan, });
     console.log(new Date().toLocaleString() + ' ' + 'GET YearlyPlan Successfully!')
 
   } catch (e) {
@@ -66,7 +81,7 @@ router.get('/readYearlyPlan',  async (req, res) => {
 });
 
 // * DELETE YearlyPlan Data By Id From MongooDB Database
-router.delete('/deleteYearlyPlan/:id',  async (req, res) => {
+router.delete('/deleteYearlyPlan/:id', async (req, res) => {
   try {
 
     const yearlyPlan = await YearlyPlan.findOneAndDelete({ _id: req.params.id })
@@ -85,7 +100,7 @@ router.delete('/deleteYearlyPlan/:id',  async (req, res) => {
 })
 
 // * DELETE All YearlyPlan Data From MongooDB Database
-router.delete('/deleteAllYearlyPlans',  async (req, res) => {
+router.delete('/deleteAllYearlyPlans', async (req, res) => {
   try {
 
     const yearlyPlan = await YearlyPlan.deleteMany({})

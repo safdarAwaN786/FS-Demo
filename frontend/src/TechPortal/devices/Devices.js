@@ -201,7 +201,7 @@ function Devices() {
                                                 <td><p>{device.equipmentName}</p></td>
                                                 <td><p>{device.equipmentLocation}</p></td>
                                                 <td></td>
-                                                {device.callibration[selected].Daily ? (
+                                                {device.callibration[selected]?.Daily ? (
                                                     <>
                                                         <td><div className={` text-center ${style.greenStatus} `}><p >Selected</p></div></td>
                                                         <td><button className={`${style.mybtn} btn ${(callibrations?.find(obj => obj.Equipment._id == device._id && obj.dateType === 'Daily' && obj.callibrationType === selected && obj.nextCallibrationDate.slice(0, 10) == formattedDate)) ? ' btn-danger ' : 'btn-outline-primary'} `} onClick={() => {
@@ -232,7 +232,7 @@ function Devices() {
                                                     </>
                                                 )}
                                                 <td></td>
-                                                {device.callibration[selected].Weekly ? (
+                                                {device.callibration[selected]?.Weekly ? (
                                                     <>
 
 
@@ -265,7 +265,7 @@ function Devices() {
                                                 )}
                                                 <td></td>
 
-                                                {device.callibration[selected].Monthly ? (
+                                                {device.callibration[selected]?.Monthly ? (
                                                     <>
 
 
@@ -297,7 +297,7 @@ function Devices() {
                                                     </>
                                                 )}
                                                 <td></td>
-                                                {device.callibration[selected].Quarterly ? (
+                                                {device.callibration[selected]?.Quarterly ? (
                                                     <>
 
 
@@ -330,7 +330,7 @@ function Devices() {
                                                 )}
                                                 <td></td>
 
-                                                {device.callibration[selected].Yearly ? (
+                                                {device.callibration[selected]?.Yearly ? (
                                                     <>
 
 

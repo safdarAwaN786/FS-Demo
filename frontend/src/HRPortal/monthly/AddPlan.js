@@ -182,7 +182,7 @@ function AddPlan() {
                             <div>
                                 <select className='form-select  form-select-lg' onChange={(e) => {
                                     const choosenPlan = yearlyPlans.find((plan) => plan._id === e.target.value); // Find the selected plan object 
-                                    console.log(choosenPlan);
+                        
                                     setSelectedPlan(choosenPlan);
                                     setDataToSend({ ...dataToSend, YearlyTrainingPlan: e.target.value, Year: choosenPlan.Year })
                                 }} placeholder='Choose year' style={{ width: "100%" }} name='Month' required>
@@ -200,7 +200,7 @@ function AddPlan() {
                                 <p>Month : </p>
                             </div>
                             <div>
-                                <select className='form-select  form-select-lg' value={dataToSend?.Month === null ? 'Choose Month' : dataToSend?.Month} onChange={(e) => {
+                                <select className='form-select  form-select-lg' value={dataToSend?.Month  ?  dataToSend?.Month  : 'Choose Month'} onChange={(e) => {
                                     setDataToSend({ ...dataToSend, Month: e.target.value })
                                 }} style={{ width: "100%" }} name='Month' required>
                                     <option value="" selected>Choose Month</option>

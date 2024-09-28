@@ -227,7 +227,7 @@ router.patch('/approve-document', async (req, res) => {
     // Update document status to approved
     document.Status = 'Approved';
     document.ApprovedBy = approvedBy;
-    document.DisapprovedBy = "";
+    document.DisapprovedBy = null;
     document.DisapprovalDate = null;
     document.ApprovalDate = new Date();
 

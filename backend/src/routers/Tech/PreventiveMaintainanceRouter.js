@@ -20,13 +20,13 @@ cloudinary.config({
 });
 
 const uploadToCloudinary = (buffer) => {
-  try {
-
-    return new Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
+    try {
       const uploadStream = cloudinary.uploader.upload_stream(
-        { resource_type: 'auto' },
+        { resource_type: 'auto', timeout: 60000 }, // 60 seconds timeout
         (error, result) => {
           if (error) {
+            console.error('Error from Cloudinary upload:', error);
             reject(new Error('Failed to upload file to Cloudinary'));
           } else {
             resolve(result);
@@ -34,12 +34,19 @@ const uploadToCloudinary = (buffer) => {
         }
       );
 
+      uploadStream.on('error', (err) => {
+        console.error('Stream error:', err);
+        reject(new Error('Stream error occurred during file upload'));
+      });
+
       uploadStream.end(buffer);
-    });
-  } catch (error) {
-    console.log('error inside uploadation' + error);
-  }
+    } catch (error) {
+      console.error('Error inside uploadToCloudinary:', error);
+      reject(error);
+    }
+  });
 };
+
 
 // * POST route to add a Calibration Record
 router.post('/addPreventiveMaintaince/:MachineId',  upload.fields([{ name: 'Image' }]), async (req, res) => {
@@ -145,7 +152,7 @@ router.post('/addPreventiveMaintaince/:MachineId',  upload.fields([{ name: 'Imag
       natureOfFault,
       rootCause,
       detailOfWork,
-      uploadImage: 'LATER',
+      uploadImage: imageUrl || null,
       generateCertificate,
       SubmitBy: requestUser.Name,
       SubmitDate: new Date()

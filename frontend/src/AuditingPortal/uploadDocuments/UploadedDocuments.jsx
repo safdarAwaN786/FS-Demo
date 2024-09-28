@@ -287,10 +287,12 @@ function UploadedDocuments() {
                                                     height: '28px'
                                                 }} className={`btn btn-outline-danger pt-0 px-1`}>Review</p>
                                                 <p onClick={() => {
+                                                    
                                                     if (document.Status === 'Pending' || document.Status === 'Reviewed') {
                                                         setReject(true);
                                                         setIdForAction(document._id)
                                                     } else {
+                                                        console.log(document.Status);
                                                         setDataToShow('Document is niether Pending nor Reviewed');
                                                         setShowBox(true);
                                                     }
@@ -482,7 +484,7 @@ function UploadedDocuments() {
                                 e.preventDefault();
                                 setDisApprove(false);
                                 dispatch(setSmallLoading(true))
-                                axios.patch(`/disapprove-uploaded-document`, { documentId: idForAction, reason: reason, disapprovedBy: user.Name }).then(() => {
+                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/disapprove-uploaded-document`, { documentId: idForAction, reason: reason, disapprovedBy: user.Name }).then(() => {
                                     dispatch(setSmallLoading(false))
                                     Swal.fire({
                                         title: 'Success',
@@ -493,6 +495,7 @@ function UploadedDocuments() {
 
                                     refreshData();
                                 }).catch(err => {
+                                
                                     dispatch(setSmallLoading(false));
                                     Swal.fire({
                                         icon: 'error',
@@ -525,7 +528,7 @@ function UploadedDocuments() {
                                 e.preventDefault();
                                 setReject(false);
                                 dispatch(setSmallLoading(true))
-                                axios.patch(`/reject-uploaded-document`, { documentId: idForAction, reason: reason, rejectBy: user.Name }).then(() => {
+                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/reject-uploaded-document`, { documentId: idForAction, reason: reason, rejectBy: user.Name }).then(() => {
                                     dispatch(setSmallLoading(false))
                                     Swal.fire({
                                         title: 'Success',

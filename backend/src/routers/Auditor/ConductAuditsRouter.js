@@ -102,7 +102,7 @@ router.post('/addConductAudit', upload.fields(generateEvidenceDocArray()), async
     const requestUser = await user.findById(req.header('Authorization')).populate('Company Department')
 
     const auditBy = requestUser.Name;
-    const answers = JSON.parse(req.body.Answers);
+    let answers = JSON.parse(req.body.Answers);
 
     const filesObj = req.files;
     if (filesObj.length !== 0) {
@@ -158,6 +158,7 @@ router.post('/addConductAudit', upload.fields(generateEvidenceDocArray()), async
         console.log('EvidenceDoc:', answers[index].EvidenceDoc)
       }
     }
+    answers = answers.filter(ans => ans !== null)
     console.log(answers);
     const createdAnswers = await ChecklistAnswerModel.create(answers);
     const answersArr = Object.values(createdAnswers);

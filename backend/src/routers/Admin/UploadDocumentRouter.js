@@ -209,7 +209,7 @@ router.patch('/review-uploaded-document', async (req, res) => {
         document.ReviewedBy = reviewBy
 
         document.UploadedDocuments[document.UploadedDocuments.length - 1].ReviewDate = new Date();
-        document.UploadedDocuments[document.UploadedDocuments.length - 1].ReviewedBy = 'Pending';
+        document.UploadedDocuments[document.UploadedDocuments.length - 1].ReviewedBy = reviewBy;
 
         // Save the updated document
         await document.save();
@@ -249,7 +249,7 @@ router.patch('/reject-uploaded-document', async (req, res) => {
         document.Status = 'Rejected';
         document.RejectedBy = rejectBy
         document.UploadedDocuments[document.UploadedDocuments.length - 1].ReviewDate = null;
-
+        document.UploadedDocuments[document.UploadedDocuments.length - 1].ReviewedBy = null;
         // Save the updated document
         await document.save();
         res.status(200).send({ status: true, message: 'Document rejected successfully', data: document });
@@ -281,6 +281,7 @@ router.patch('/approve-uploaded-document', async (req, res) => {
         }
 
         document.ApprovalDate = new Date(),
+        document.ApprovedBy = approveBy,
         document.Status = 'Approved';
         document.DisapprovalDate = null;
         document.DisapprovedBy = null;
@@ -323,6 +324,7 @@ router.patch('/disapprove-uploaded-document', async (req, res) => {
         document.ApprovedBy = null;
         document.DisapprovedBy = disapproveBy;
         document.UploadedDocuments[document.UploadedDocuments.length - 1].ApprovalDate = null;
+        document.UploadedDocuments[document.UploadedDocuments.length - 1].ApprovedBy = null;
 
         // Save the updated document
         await document.save();
@@ -400,7 +402,10 @@ router.put('/replaceDocument/:documentId', upload.single('file'), async (req, re
         const requestUser = await user.findById(req.header('Authorization')).populate('Company')
         const updatedBy = requestUser.Name;
         const { documentId } = req.params;
+        
         const response = await axios.get(requestUser.Company.CompanyLogo, { responseType: 'arraybuffer' });
+        console.log(response);
+        
         const pdfDoc = await PDFDocument.load(req.file.buffer);
         const logoImage = Buffer.from(response.data);
         const isJpg = requestUser.Company.CompanyLogo.includes('.jpeg') || requestUser.Company.CompanyLogo.includes('.jpg');
@@ -438,7 +443,8 @@ router.put('/replaceDocument/:documentId', upload.single('file'), async (req, re
         });
         // Save the modified PDF
         const modifiedPdfBuffer = await pdfDoc.save();
-
+        console.log('uploading ');
+        
         const result = await uploadToCloudinary(modifiedPdfBuffer);
         const document = await uploadDocument.findById(documentId);
         if (!document) {
