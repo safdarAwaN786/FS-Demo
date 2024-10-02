@@ -8,7 +8,7 @@ const Supplier = require('../../models/HR/SupplierModel'); // Replace with the a
 // router.use(auth); // Perform authentication checks using the attached user information
 
 // * Create a new Supplier document
-router.post('/create-supplier',  async (req, res) => {
+router.post('/create-supplier', async (req, res) => {
     try {
         const supplierData = req.body; // The Supplier data sent in the request body
         const createdBy = req.body.createdBy;
@@ -16,7 +16,7 @@ router.post('/create-supplier',  async (req, res) => {
             ...supplierData,
             CreatedBy: createdBy,
             CreationDate: new Date(),
-            UserDepartment : req.header('Authorization')
+            UserDepartment: req.header('Authorization')
         });
 
         await createdSupplier.save();
@@ -32,15 +32,15 @@ router.post('/create-supplier',  async (req, res) => {
 });
 
 // * Get all Supplier documents
-router.get('/get-all-suppliers',  async (req, res) => {
+router.get('/get-all-suppliers', async (req, res) => {
     try {
-        const suppliers = await Supplier.find({UserDepartment : req.header('Authorization')}).populate('UserDepartment');
+        const suppliers = await Supplier.find({ UserDepartment: req.header('Authorization') }).populate('UserDepartment');
         console.log('getting supplier');
         if (!suppliers) {
             console.log('Supplier documents not found');
             return res.status(404).json({ message: 'Supplier documents not found' });
         }
-       
+
         res.status(200).json({ status: true, data: suppliers });
 
     } catch (error) {
@@ -50,7 +50,7 @@ router.get('/get-all-suppliers',  async (req, res) => {
 });
 
 // * Get a Supplier document by ID
-router.get('/get-supplier/:supplierId',  async (req, res) => {
+router.get('/get-supplier/:supplierId', async (req, res) => {
     try {
         const supplierId = req.params.supplierId;
         const supplier = await Supplier.findById(supplierId);
@@ -70,7 +70,7 @@ router.get('/get-supplier/:supplierId',  async (req, res) => {
 });
 
 // * Delete a Supplier document by ID
-router.delete('/delete-supplier',  async (req, res) => {
+router.delete('/delete-supplier', async (req, res) => {
     try {
         const supplierId = req.body.id;
         const deletedSupplier = await Supplier.findByIdAndDelete(supplierId);
@@ -90,7 +90,7 @@ router.delete('/delete-supplier',  async (req, res) => {
 });
 
 // * Delete all Supplier documents
-router.delete('/delete-all-suppliers',  async (req, res) => {
+router.delete('/delete-all-suppliers', async (req, res) => {
     try {
         const result = await Supplier.deleteMany({});
         if (result.deletedCount === 0) {
@@ -106,7 +106,7 @@ router.delete('/delete-all-suppliers',  async (req, res) => {
     }
 });
 // * Approve Supplier From MongoDB Database
-router.patch('/approve-supplier',  async (req, res) => {
+router.patch('/approve-supplier', async (req, res) => {
     try {
         const approvedBy = req.body.approvedBy;
         const supplierId = req.body.id;
@@ -130,8 +130,13 @@ router.patch('/approve-supplier',  async (req, res) => {
         supplier.DisapprovalDate = null;
         supplier.DisapprovedBy = null;
 
+        await Supplier.findByIdAndUpdate(
+            supplier._id,
+            supplier,
+            { new: true }
+        );
         // Save the updated Supplier
-        await supplier.save();
+        // await supplier.save();
 
         // Log successful update
         console.log(`Supplier with ID: ${supplierId} has been approved.`);
@@ -143,7 +148,7 @@ router.patch('/approve-supplier',  async (req, res) => {
 });
 
 // * Disapprove Supplier From MongoDB Database
-router.patch('/disapprove-supplier',  async (req, res) => {
+router.patch('/disapprove-supplier', async (req, res) => {
     try {
         const disapprovedBy = req.body.disapprovedBy;
         const supplierId = req.body.id;
@@ -170,8 +175,13 @@ router.patch('/disapprove-supplier',  async (req, res) => {
         supplier.DisapprovedBy = disapprovedBy;
         supplier.ApprovedBy = null;
 
+        await Supplier.findByIdAndUpdate(
+            supplier._id,
+            supplier,
+            { new: true }
+        );
         // Save the updated Supplier
-        await supplier.save();
+        // await supplier.save();
 
         // Log successful update
         console.log(`Supplier with ID: ${supplierId} has been disapproved.`);

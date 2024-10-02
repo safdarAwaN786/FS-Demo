@@ -294,7 +294,12 @@ router.patch('/approve-decision-tree', async (req, res) => {
     decisionTree.DisapprovedBy = null;
     decisionTree.Reason = null;
     // Save the updated DecisionTree
-    await decisionTree.save();
+    await DecisionTree.findByIdAndUpdate(
+     decisionTree._id,
+      decisionTree,
+      { new: true }
+  );
+    // await decisionTree.save();
 
     // Log successful update
     console.log(`DecisionTree with ID: ${decisionTreeId} has been approved.`);
@@ -345,8 +350,13 @@ router.patch('/disapprove-decision-tree', async (req, res) => {
     decisionTree.DisapprovedBy = disapproveBy
     decisionTree.DisapprovalDate = new Date()
 
+    await DecisionTree.findByIdAndUpdate(
+      decisionTree._id,
+       decisionTree,
+       { new: true }
+   );
     // Save the updated DecisionTree
-    await decisionTree.save();
+    // await decisionTree.save();
 
     // Log successful update
     console.log(`DecisionTree with ID: ${decisionTreeId} has been disapproved.`);

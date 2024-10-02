@@ -412,7 +412,12 @@ router.put('/send-document', async (req, res) => {
         };
         // Update the form fields
         Object.assign(doc, updates);
-        await doc.save();
+        await Document.findByIdAndUpdate(
+            doc._id,
+            doc,
+            { new: true }
+          );
+        // await doc.save();
         console.log(doc);
         console.log('Document Sended successfully');
         res.status(200).json({ status: true, message: 'Form updated successfully', form });

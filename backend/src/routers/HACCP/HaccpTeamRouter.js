@@ -497,11 +497,11 @@ router.patch('/update-haccp-team/:teamId', upload.fields(generateMembersDocArray
           UpdatedBy: requestUser.Name,
           UpdationDate: new Date(),
           Status: 'Pending',
-          ApprovalDate : null,
-          ApprovedBy : null,
-          DisapprovalDate : null,
-          DisapprovedBy : null,
-          Reason : null,
+          ApprovalDate: null,
+          ApprovedBy: null,
+          DisapprovalDate: null,
+          DisapprovedBy: null,
+          Reason: null,
           TeamMembers: membersIds
         }
       },
@@ -548,8 +548,13 @@ router.patch('/approveHaccpTeam', async (req, res) => {
     haccpTeam.DisapprovedBy = null;
     haccpTeam.Reason = null;
 
+    await HaccpTeam.findByIdAndUpdate(
+      haccpTeam._id,
+      haccpTeam,
+      { new: true }
+    );
     // Save the updated HaccpTeam
-    await haccpTeam.save();
+    // await haccpTeam.save();
 
     // Log successful update
     console.log(`HaccpTeam with ID: ${HaccpTeamId} has been approved.`);
@@ -592,8 +597,13 @@ router.patch('/disapproveHaccpTeam', async (req, res) => {
     haccpTeam.ApprovalDate = null;
     haccpTeam.ApprovedBy = null
 
+    await HaccpTeam.findByIdAndUpdate(
+      haccpTeam._id,
+      haccpTeam,
+      { new: true }
+    );
     // Save the updated HaccpTeam
-    await haccpTeam.save();
+    // await haccpTeam.save();
 
     // Log successful update
     console.log(`HaccpTeam with ID: ${HaccpTeamId} has been disapproved.`);
@@ -618,7 +628,12 @@ router.patch('/haccpTeam/assign-tabs/:haccpTeamId', async (req, res) => {
 
     // Assuming req.body.Tabs is an array of tab objects
     updatedHaccpTeam.Tabs = req.body.Tabs;
-    await updatedHaccpTeam.save();
+    await HaccpTeam.findByIdAndUpdate(
+      updatedHaccpTeam._id,
+      updatedHaccpTeam,
+      { new: true }
+    );
+    // await updatedHaccpTeam.save();
 
     console.log(`HaccpTeam document with ID: ${haccpTeamId} updated successfully`);
     res.status(200).json({ status: true, message: 'HaccpTeam document updated successfully', data: updatedHaccpTeam });

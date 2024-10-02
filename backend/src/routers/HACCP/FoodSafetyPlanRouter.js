@@ -267,8 +267,13 @@ router.patch('/approve-food-safety', async (req, res) => {
     foodSafety.Reason = null;
     foodSafety.ApprovedBy = approveBy
 
+    await FoodSafety.findByIdAndUpdate(
+      foodSafety._id,
+       foodSafety,
+       { new: true }
+   );
     // Save the updated FoodSafety
-    await foodSafety.save();
+    // await foodSafety.save();
 
     // Log successful update
     console.log(`FoodSafety with ID: ${foodSafetyId} has been approved.`);
@@ -318,8 +323,13 @@ router.patch('/disapprove-food-safety', async (req, res) => {
     foodSafety.ApprovedBy = null;
     foodSafety.DisapprovedBy = disapproveBy
 
+    await FoodSafety.findByIdAndUpdate(
+      foodSafety._id,
+       foodSafety,
+       { new: true }
+   );
     // Save the updated FoodSafety
-    await foodSafety.save();
+    // await foodSafety.save();
 
     // Log successful update
     console.log(`FoodSafety with ID: ${foodSafetyId} has been disapproved.`);

@@ -126,8 +126,13 @@ router.patch('/rejectMWR/:id', async (req, res) => {
     mwr.CompletedBy = 'Pending',
       mwr.CompletionDate = null
 
+      await WorkRequest.findByIdAndUpdate(
+       mwr._id,
+        mwr,
+        { new: true }
+    );
     // Save the updated MWR
-    await mwr.save();
+    // await mwr.save();
 
     // Log successful update
     console.log(`MWR with ID: ${mwrId} has been rejected.`);
@@ -177,8 +182,14 @@ router.patch('/acceptMWR/:id', async (req, res) => {
     mwr.CompletedBy = 'Pending',
       mwr.CompletionDate = null
 
+      
+      await WorkRequest.findByIdAndUpdate(
+        mwr._id,
+         mwr,
+         { new: true }
+     );
     // Save the updated MWR
-    await mwr.save();
+    // await mwr.save();
 
     // Log successful update
     console.log(`MWR with ID: ${mwrId} has been accepted.`);
@@ -218,8 +229,15 @@ router.patch('/completeMWR/:id', async (req, res) => {
     mwr.CompletedBy = completedBy
     mwr.CompletionDate = new Date();
 
+
+    
+    await WorkRequest.findByIdAndUpdate(
+      mwr._id,
+       mwr,
+       { new: true }
+   );
     // Save the updated MWR
-    await mwr.save();
+    // await mwr.save();
 
     // Log successful update
     console.log(`MWR with ID: ${mwrId} has been completed.`);

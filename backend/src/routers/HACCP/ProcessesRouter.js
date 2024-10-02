@@ -281,7 +281,7 @@ router.patch('/update-process/:processId', async (req, res) => {
       DisapprovedBy: null,
       ApprovalDate: null,
       ApprovedBy: null,
-      Reason :  null,
+      Reason: null,
       Status: 'Pending'
     };
 
@@ -322,9 +322,13 @@ router.patch('/approve-process', async (req, res) => {
     process.DisapprovalDate = null;
     process.DisapprovedBy = null;
     process.Reason = null
-
+    await Processes.findByIdAndUpdate(
+      process._id,
+      process,
+      { new: true }
+    );
     // Save the updated Process
-    await process.save();
+    // await process.save();
 
     // Log successful update
     console.log(`Process with ID: ${processId} has been approved.`);
@@ -367,8 +371,13 @@ router.patch('/disapprove-process', async (req, res) => {
     process.DisapprovedBy = disapprovedBy;
     process.ApprovedBy = null
 
+   await  Processes.findByIdAndUpdate(
+      process._id,
+      process,
+      { new: true }
+    );
     // Save the updated Process
-    await process.save();
+    // await process.save();
 
     // Log successful update
     console.log(`Process with ID: ${processId} has been disapproved.`);

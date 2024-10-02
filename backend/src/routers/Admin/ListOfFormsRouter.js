@@ -150,7 +150,12 @@ router.put('/update-form', async (req, res) => {
 
     // Update the form fields
     Object.assign(form, updates);
-    await form.save();
+    await Form.findByIdAndUpdate(
+      form._id,
+      form,
+      { new: true }
+    );
+    // await form.save();
 
     console.log('Form updated successfully');
     res.status(200).json({ status: true, message: 'Form updated successfully', form });
@@ -177,7 +182,12 @@ router.put('/send-form', async (req, res) => {
     };
     // Update the form fields
     Object.assign(form, updates);
-    await form.save();
+    await Form.findByIdAndUpdate(
+      form._id,
+      form,
+      { new: true }
+    );
+    // await form.save();
     console.log(form);
     console.log('Form Sended successfully');
     res.status(200).json({ status: true, message: 'Form updated successfully', form });
@@ -215,11 +225,15 @@ router.patch('/reviewForm', async (req, res) => {
     form.ReviewedBy = reviewedBy;
     form.RejectedBy = null;
     form.RejectionDate = null;
-   
-    form.ReviewDate = new Date();
 
+    form.ReviewDate = new Date();
+    await Form.findByIdAndUpdate(
+      form._id,
+      form,
+      { new: true }
+    );
     // Save the updated form
-    await form.save();
+    // await form.save();
 
     res.status(200).send({ status: true, message: 'Form reviewed successfully', data: form });
   } catch (error) {
@@ -253,12 +267,16 @@ router.patch('/rejectForm', async (req, res) => {
     form.RejectionDate = new Date();
     form.ReviewDate = null;
     form.ReviewedBy = null;
-   
+
     form.Status = 'Rejected';
     form.RejectedBy = rejectedBy;
-
+    await Form.findByIdAndUpdate(
+      form._id,
+      form,
+      { new: true }
+    );
     // Save the updated form
-    await form.save();
+    // await form.save();
 
     res.status(200).send({ status: true, message: 'Form rejected successfully', data: form });
   } catch (error) {
@@ -289,9 +307,13 @@ router.patch('/approveForm', async (req, res) => {
 
     form.DisapprovalDate = null;
     form.ApprovalDate = new Date();
-
+    await Form.findByIdAndUpdate(
+      form._id,
+      form,
+      { new: true }
+    );
     // Save the updated form
-    await form.save();
+    // await form.save();
 
     res.status(200).send({ status: true, message: 'Form approved successfully', data: form });
   } catch (error) {

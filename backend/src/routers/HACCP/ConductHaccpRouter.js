@@ -184,11 +184,11 @@ router.put('/update-conduct-haccp/:haccpId', async (req, res) => {
             UpdatedBy: req.body.updatedBy,
             UpdationDate: new Date(),
             Hazards: hazardsIds,
-            ApprovalDate : null,
-            ApprovedBy : null,
-            DisapprovalDate : null,
-            DisapprovedBy : null,
-            Reason : null,
+            ApprovalDate: null,
+            ApprovedBy: null,
+            DisapprovalDate: null,
+            DisapprovedBy: null,
+            Reason: null,
             Status: 'Pending'
         };
 
@@ -231,9 +231,13 @@ router.patch('/approve-conduct-haccp', async (req, res) => {
         conductHaccp.DisapprovedBy = null;
         conductHaccp.ApprovedBy = approvedBy;
         conductHaccp.Reason = null;
-
+        await ConductHaccp.findByIdAndUpdate(
+            conductHaccp._id,
+            conductHaccp,
+            { new: true }
+        );
         // Save the updated ConductHaccp
-        await conductHaccp.save();
+        // await conductHaccp.save();
 
         // Log successful update
         console.log(`ConductHaccp with ID: ${conductHaccpId} has been approved.`);
@@ -275,9 +279,13 @@ router.patch('/disapprove-conduct-haccp', async (req, res) => {
         conductHaccp.ApprovalDate = null; // Set approval date to null
         conductHaccp.DisapprovedBy = disapproveBy
         conductHaccp.ApprovedBy = null
-
+        await ConductHaccp.findByIdAndUpdate(
+            conductHaccp._id,
+            conductHaccp,
+            { new: true }
+        );
         // Save the updated ConductHaccp
-        await conductHaccp.save();
+        // await conductHaccp.save();
 
         // Log successful update
         console.log(`ConductHaccp with ID: ${conductHaccpId} has been disapproved.`);

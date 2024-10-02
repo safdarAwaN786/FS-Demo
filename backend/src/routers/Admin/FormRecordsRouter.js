@@ -13,7 +13,7 @@ router.post('/submit-response', async (req, res) => {
     const formId = req.body.Form;
     const departmentId = req.header('Authorization');
     const form = await Form.findById(formId);
-    console.log(form);
+
 
     if (!form) {
       return res.status(404).json({ error: 'Form not found' });
@@ -55,9 +55,13 @@ router.patch('/addComment', async (req, res) => {
     // Find the document by ID
     const response = await FormRecords.findById(resultId);
     response.Comment = comment;
-
+    const updatedDoocument = await FormRecords.findByIdAndUpdate(
+      response._id,
+      response,
+      { new: true }
+  );
     // Save the updated document
-    await response.save();
+    // await response.save();
     res.status(200).send({ status: true, message: 'Document rejected successfully', data: response });
 
   } catch (error) {
@@ -75,9 +79,13 @@ router.patch('/verify-response', async (req, res) => {
     response.Status = 'Verified';
     response.VerifiedBy = req.body.verifiedBy;
     response.VerificationDate = new Date();
-
+    const updatedDoocument = await FormRecords.findByIdAndUpdate(
+      response._id,
+      response,
+      { new: true }
+  );
     // Save the updated document
-    await response.save();
+    // await response.save();
     res.status(200).send({ status: true, message: 'Response Verified successfully', data: response });
 
   } catch (error) {

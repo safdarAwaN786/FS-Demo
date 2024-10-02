@@ -122,7 +122,7 @@ router.patch('/update-product/:productId', async (req, res) => {
       ApprovalDate: null,
       DisapprovalDate: null,
       DisapprovedBy: null,
-      Reason : null
+      Reason: null
     };
     // Perform the update
     const updatedProduct = await Product.findByIdAndUpdate(productId, updates, { new: true });
@@ -159,7 +159,13 @@ router.patch('/approve-product', async (req, res) => {
     product.ApprovedBy = approvedBy;
     product.Reason = null;
     // Save the updated Product
-    await product.save();
+
+    await Product.findByIdAndUpdate(
+      product._id,
+      product,
+      { new: true }
+    );
+    // await product.save();
     // Log successful update
     console.log(`Product with ID: ${productId} has been approved.`);
     res.status(200).send({ status: true, message: 'The Product has been marked as approved.', data: product });
@@ -195,7 +201,13 @@ router.patch('/disapprove-product', async (req, res) => {
     product.DisapprovedBy = disapprovedBy;
     product.ApprovedBy = null
     // Save the updated Product
-    await product.save();
+
+    await Product.findByIdAndUpdate(
+      product._id,
+      product,
+      { new: true }
+    );
+    // await product.save();
     // Log successful update
     console.log(`Product with ID: ${productId} has been disapproved.`);
     res.status(200).send({ status: true, message: 'The Product has been marked as disapproved.', data: product });

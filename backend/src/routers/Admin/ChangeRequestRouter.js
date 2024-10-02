@@ -111,9 +111,13 @@ router.patch('/review-ChangeRequest', async (req, res) => {
     document.RejectedBy = null;
     document.RejectionDate = null;
     document.ReviewDate = new Date();
-
+    const updatedDoocument = await ChangeRequest.findByIdAndUpdate(
+      document._id,
+      document,
+      { new: true }
+  );
     // Save the updated document
-    await document.save();
+    // await document.save();
 
     res.status(200).send({ status: true, message: 'Document reviewed successfully', data: document });
   } catch (error) {
@@ -155,9 +159,13 @@ router.patch('/reject-ChangeRequest', async (req, res) => {
     document.ReviewDate = null;
     document.RejectionDate = new Date();
     document.Reason = reason;
-
+    const updatedDoocument = await ChangeRequest.findByIdAndUpdate(
+      document._id,
+      document,
+      { new: true }
+  );
     // Save the updated document
-    await document.save();
+    // await document.save();
 
     res.status(200).send({ status: true, message: 'Document rejected successfully', data: document });
   } catch (error) {
@@ -214,9 +222,13 @@ router.patch('/approve-ChangeRequest', async (req, res) => {
     document.DisapprovedBy = null;
     document.DisapprovalDate = null;
     document.ApprovalDate = new Date();
-
+    const updatedDoocument = await ChangeRequest.findByIdAndUpdate(
+      document._id,
+      document,
+      { new: true }
+  );
     // Save the updated document
-    await document.save();
+    // await document.save();
 
     res.status(200).send({ status: true, message: 'Document approved successfully', data: document });
   } catch (error) {
@@ -253,9 +265,13 @@ router.patch('/disapprove-ChangeRequest', async (req, res) => {
     document.ApprovalDate = null;
     document.DisapprovalDate = new Date();
     document.Reason = reason;
-
+    const updatedDoocument = await ChangeRequest.findByIdAndUpdate(
+      document._id,
+      document,
+      { new: true }
+  );
     // Save the updated document
-    await document.save();
+    // await document.save();
 
     res.status(200).send({ status: true, message: 'Document disapproved successfully', data: document });
   } catch (error) {

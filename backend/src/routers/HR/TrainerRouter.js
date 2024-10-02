@@ -292,7 +292,12 @@ router.patch('/trainer/assign-tabs/:trainerId', async (req, res) => {
 
     // Assuming req.body.Tabs is an array of tab objects
     updatedTrainer.Tabs = req.body.Tabs;
-    await updatedTrainer.save();
+    await User.findByIdAndUpdate(
+      updatedTrainer._id,
+      updatedTrainer,
+      { new: true }
+  );
+    // await updatedTrainer.save();
 
     console.log(`Trainer document with ID: ${trainerId} updated successfully`);
     res.status(200).json({ status: true, message: 'Trainer document updated successfully', data: updatedTrainer });

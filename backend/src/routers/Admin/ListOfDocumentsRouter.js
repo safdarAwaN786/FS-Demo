@@ -109,8 +109,12 @@ router.put('/updateDocument', async (req, res) => {
 
     // Update the Document fields
     Object.assign(document, req.body);
-
-    await document.save();
+    await Document.findByIdAndUpdate(
+      document._id,
+      document,
+      { new: true }
+    );
+    // await document.save();
 
     res.json({ status: true, message: 'The Document is updated!', data: document });
 
@@ -152,9 +156,13 @@ router.patch('/review-document', async (req, res) => {
     document.RejectedBy = "";
     document.RejectionDate = null;
     document.ReviewDate = new Date();
-
+    await Document.findByIdAndUpdate(
+      document._id,
+      document,
+      { new: true }
+    );
     // Save the updated document
-    await document.save();
+    // await document.save();
 
     res.status(200).send({ status: true, message: 'Document reviewed successfully', data: document });
   } catch (error) {
@@ -194,9 +202,13 @@ router.patch('/reject-document', async (req, res) => {
     document.ReviewDate = null;
     document.RejectionDate = new Date();
     document.Reason = reason;
-
+    await Document.findByIdAndUpdate(
+      document._id,
+      document,
+      { new: true }
+    );
     // Save the updated document
-    await document.save();
+    // await document.save();
 
     res.status(200).send({ status: true, message: 'Document rejected successfully', data: document });
   } catch (error) {
@@ -230,9 +242,13 @@ router.patch('/approve-document', async (req, res) => {
     document.DisapprovedBy = null;
     document.DisapprovalDate = null;
     document.ApprovalDate = new Date();
-
+    await Document.findByIdAndUpdate(
+      document._id,
+      document,
+      { new: true }
+    );
     // Save the updated document
-    await document.save();
+    // await document.save();
 
     res.status(200).send({ status: true, message: 'Document approved successfully', data: document });
   } catch (error) {
@@ -267,9 +283,13 @@ router.patch('/disapprove-document', async (req, res) => {
     document.ApprovalDate = null;
     document.DisapprovalDate = new Date();
     document.Reason = reason;
-
+    await Document.findByIdAndUpdate(
+      document._id,
+      document,
+      { new: true }
+    );
     // Save the updated document
-    await document.save();
+    // await document.save();
 
     res.status(200).send({ status: true, message: 'Document disapproved successfully', data: document });
   } catch (error) {
