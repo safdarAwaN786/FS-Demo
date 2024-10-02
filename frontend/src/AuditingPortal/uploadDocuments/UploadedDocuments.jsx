@@ -232,8 +232,14 @@ function UploadedDocuments() {
                                         </td>
                                         <td>
                                             <p onClick={() => {
-                                                setIdForAction(document._id);
-                                                setUploadDoc(true);
+                                                if(document.Status !== 'Reviewed' && document.Status !== 'Approved'){
+
+                                                    setIdForAction(document._id);
+                                                    setUploadDoc(true);
+                                                } else {
+                                                    setDataToShow(`Document is ${document.Status}!`);
+                                                        setShowBox(true)
+                                                }
                                             }} className='btn btn-outline-primary px-1'>Upload Document</p>
                                         </td>
                                         <td>

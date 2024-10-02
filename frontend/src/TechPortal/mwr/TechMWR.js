@@ -106,7 +106,6 @@ function TechMWR() {
 
     const searchFunction = (event) => {
         if (event.target.value !== "") {
-            console.log(event.target.value);
             const searchedList = allDataArr.filter((obj) =>
                 obj.MWRId.includes(event.target.value)
             )
@@ -120,7 +119,6 @@ function TechMWR() {
     const [alert4, setAlert4] = useState(false);
     const [rejectObj, setRejectObj] = useState({});
     const formattedTime = (dateString) => {
-        console.log(dateString);
         if (dateString) {
             // Convert the date string to a Date object
             const dateObj = new Date(dateString);

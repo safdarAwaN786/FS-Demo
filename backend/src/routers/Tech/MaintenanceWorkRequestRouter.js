@@ -74,7 +74,9 @@ router.post('/createWorkRequest', upload.fields([{ name: 'mwrImage' }]), async (
       Department: requestUser?.Department?._id,
       Machinery: MachineId,
       CreatedBy: createdBy,
-      CreationDate: new Date()
+      CreationDate: new Date(),
+      Date : new Date(),
+      Time : new Date()
     });
 
     const savedWorkRequest = await workRequest.save();

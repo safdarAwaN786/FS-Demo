@@ -96,6 +96,10 @@ function MaintananceRect() {
                         </tr>
                         {
                             requests?.map((request, i) => {
+                                let disciplineLine = '';
+                                request.Discipline.forEach(discipline => {
+                                    disciplineLine = disciplineLine + ' ' + discipline
+                                })
                                 return (
                                     <tr key={i}>
                                         {/* <td>{request.MWRId}</td> */}
@@ -105,7 +109,7 @@ function MaintananceRect() {
                                         <td>{request.Area}</td>
                                         <td>{request.Priority}</td>
                                         <td ><button onClick={() => {
-                                            setPopUpData(`${request.Discipline[0]}, ${request.Discipline[1]}, ${request.Discipline[2]}`);
+                                            setPopUpData(`${disciplineLine}`);
                                             setAlert(true);
                                         }} className={style.btn}>View</button></td>
                                         <td ><button onClick={() => {

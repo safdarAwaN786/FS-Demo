@@ -335,20 +335,21 @@ router.get('/readAllCalibration', async (req, res) => {
 // * GET route to fetch callibration by equipment ID
 router.get('/readCalibrationByEquipmentId/:equipmentId', async (req, res) => {
   try {
-
+    
     const equipmentId = req.params.equipmentId;
     if (!equipmentId) {
       return res.status(404).json({ error: 'Please Provide Machine ID' });
     }
-
-    const calibration = await Calibration.find({ equipment: equipmentId, UserDepartment: req.header('Authorization') }).populate('Equipment');
+    
+    const calibration = await Calibration.find({ Equipment: equipmentId, UserDepartment: req.header('Authorization') }).populate('Equipment');
     if (!calibration) {
       return res.status(404).json({ error: 'calibration not found' });
     }
-
     res.status(201).send({ status: true, message: "The following calibration!", data: calibration });
 
   } catch (error) {
+    console.log(error);
+    
     res.status(500).json({ error: 'Failed to fetch calibration', message: error.message });
   }
 });

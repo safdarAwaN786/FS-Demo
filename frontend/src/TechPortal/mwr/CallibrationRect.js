@@ -26,6 +26,8 @@ function CallibrationRect() {
         dispatch(setSmallLoading(true))
         axios.get(`${process.env.REACT_APP_BACKEND_URL}/readCalibrationByEquipmentId/${idToWatch}`, { headers: { Authorization: `${user.Department._id}` } }).then((res) => {
             if (res.data.data) {
+                console.log(res);
+                
                 const dataArr = res.data.data;
                 setCallibrationsToShow(dataArr.filter((data) => data.dateType === dateType && data.callibrationType === callibrationType))
             }

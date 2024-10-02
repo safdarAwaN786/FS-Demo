@@ -34,11 +34,14 @@ function ViewAudit() {
     useEffect(() => {
         dispatch(setSmallLoading(true))
         axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-conduct-audit-by-auditId/${idToWatch}`).then((response) => {
-            console.log(response.data.data);
-            setChecklistData(response.data.data.Checklist);
-            setAuditData(response.data.data);
-            setDataToSend(response.data.data);
-            setAnswers(response.data.data.Answers);
+            const clonedData = JSON.parse(JSON.stringify(response.data));
+            
+            console.log(clonedData);
+            setDataToSend(clonedData.data);
+            setAuditData(clonedData.data);
+            setChecklistData(clonedData.data.Checklist);
+            setAnswers([...clonedData.data.Answers]);
+            console.log(clonedData);
             dispatch(setSmallLoading(false))
         }).catch(err => {
             dispatch(setSmallLoading(false));
@@ -49,9 +52,7 @@ function ViewAudit() {
             })
         })
     }, [])
-    useEffect(() => {
-        setAuditData({ ...auditData, Answers: answers });
-    }, [answers])
+ 
     const handleDownloadImage = async (imageURL) => {
         try {
             if (imageURL) {
@@ -170,6 +171,7 @@ function ViewAudit() {
 
     };
 
+    
 
     return (
         <>
@@ -220,12 +222,12 @@ function ViewAudit() {
                                             <div>
                                                 {answer.question.ComplianceType === 'GradingSystem' && (
                                                     <div className='d-flex flex-row flex-wrap'>
-                                                        <p className='my-2 fw-bold'> Selected Value : {answers[index]?.GradingSystemAnswer}</p>
+                                                        <p className='my-2 fw-bold'> Selected Value : {answer?.GradingSystemAnswer}</p>
                                                         <div className='d-flex w-100 justify-content-between'>
                                                             <span>1</span>
                                                             <span>10</span></div>
                                                         <Slider
-                                                            value={answers[index].GradingSystemAnswer}
+                                                            value={answer.GradingSystemAnswer}
                                                             min={1} // Set your lower value
                                                             max={10} // Set your higher value
                                                             step={1} // Set the step size
@@ -235,24 +237,24 @@ function ViewAudit() {
                                                 {answer.question.ComplianceType === 'Yes/No' && (
                                                     <div className='d-flex flex-row flex-wrap'>
 
-                                                        <input autoComplete='off' checked={answers[index].YesNoAnswer === 'Yes'} type="radio" class="btn-check" name={answer.question._id} id={`Yes-${index}`} autocomplete="off" readOnly />
+                                                        <input autoComplete='off' checked={answer.YesNoAnswer === 'Yes'} type="radio" class="btn-check" name={answer.question._id} id={`Yes-${index}`} autocomplete="off" readOnly />
                                                         <label class="btn btn-outline-success m-2" for={`Yes-${index}`}>Yes</label>
 
-                                                        <input autoComplete='off' checked={answers[index].YesNoAnswer === 'No'} type="radio" class="btn-check" name={answer.question._id} id={`No-${index}`} autocomplete="off" readOnly />
+                                                        <input autoComplete='off' checked={answer.YesNoAnswer === 'No'} type="radio" class="btn-check" name={answer.question._id} id={`No-${index}`} autocomplete="off" readOnly />
                                                         <label class="btn btn-outline-danger m-2" for={`No-${index}`}>No</label>
-                                                        <input autoComplete='off' checked={answers[index].YesNoAnswer === 'N/A'} type="radio" class="btn-check" name={answer.question._id} id={`N/A-${index}`} autocomplete="off" />
+                                                        <input autoComplete='off' checked={answer.YesNoAnswer === 'N/A'} type="radio" class="btn-check" name={answer.question._id} id={`N/A-${index}`} autocomplete="off" />
                                                         <label class="btn btn-outline-secondary m-2" for={`N/A-${index}`}>N/A</label>
                                                     </div>
                                                 )}
                                                 {answer.question.ComplianceType === 'Safe/AtRisk' && (
                                                     <div className='d-flex flex-row flex-wrap'>
 
-                                                        <input autoComplete='off' checked={answers[index].SafeAtRiskAnswer === 'Safe'} type="radio" class="btn-check" name={answer.question._id} id={`Safe-${index}`} autocomplete="off" />
+                                                        <input autoComplete='off' checked={answer.SafeAtRiskAnswer === 'Safe'} type="radio" class="btn-check" name={answer.question._id} id={`Safe-${index}`} autocomplete="off" />
                                                         <label class="btn btn-outline-success m-2" for={`Safe-${index}`}>Safe</label>
 
-                                                        <input autoComplete='off' checked={answers[index].SafeAtRiskAnswer === 'At Risk'} type="radio" class="btn-check" name={answer.question._id} id={`At Risk-${index}`} autocomplete="off" />
+                                                        <input autoComplete='off' checked={answer.SafeAtRiskAnswer === 'At Risk'} type="radio" class="btn-check" name={answer.question._id} id={`At Risk-${index}`} autocomplete="off" />
                                                         <label class="btn btn-outline-danger m-2" for={`At Risk-${index}`}>At Risk</label>
-                                                        <input autoComplete='off' checked={answers[index].SafeAtRiskAnswer === 'N/A'} type="radio" class="btn-check" name={answer.question._id} id={`N/A-${index}`} autocomplete="off" />
+                                                        <input autoComplete='off' checked={answer.SafeAtRiskAnswer === 'N/A'} type="radio" class="btn-check" name={answer.question._id} id={`N/A-${index}`} autocomplete="off" />
                                                         <label class="btn btn-outline-secondary m-2" for={`N/A-${index}`}>N/A</label>
                                                     </div>
                                                 )}
@@ -260,38 +262,38 @@ function ViewAudit() {
                                                 {answer.question.ComplianceType === 'Pass/Fail' && (
                                                     <div className='d-flex flex-row flex-wrap'>
 
-                                                        <input autoComplete='off' checked={answers[index].PassFailAnswer === 'Pass'} type="radio" class="btn-check" name={answer.question._id} id={`Pass-${index}`} autocomplete="off" />
+                                                        <input autoComplete='off' checked={answer.PassFailAnswer === 'Pass'} type="radio" class="btn-check" name={answer.question._id} id={`Pass-${index}`} autocomplete="off" />
                                                         <label class="btn btn-outline-success m-2" for={`Pass-${index}`}>Pass</label>
 
-                                                        <input autoComplete='off' checked={answers[index].PassFailAnswer === 'Fail'} type="radio" class="btn-check" name={answer.question._id} id={`Fail-${index}`} autocomplete="off" />
+                                                        <input autoComplete='off' checked={answer.PassFailAnswer === 'Fail'} type="radio" class="btn-check" name={answer.question._id} id={`Fail-${index}`} autocomplete="off" />
                                                         <label class="btn btn-outline-danger m-2" for={`Fail-${index}`}>Fail</label>
-                                                        <input autoComplete='off' checked={answers[index].PassFailAnswer === 'N/A'} type="radio" class="btn-check" name={answer.question._id} id={`N/A-${index}`} autocomplete="off" />
+                                                        <input autoComplete='off' checked={answer.PassFailAnswer === 'N/A'} type="radio" class="btn-check" name={answer.question._id} id={`N/A-${index}`} autocomplete="off" />
                                                         <label class="btn btn-outline-secondary m-2" for={`N/A-${index}`}>N/A</label>
                                                     </div>
                                                 )}
                                                 {answer.question.ComplianceType === 'Compliant/NonCompliant' && (
                                                     <div className='d-flex flex-row flex-wrap'>
 
-                                                        <input autoComplete='off' checked={answers[index].CompliantNonCompliantAnswer === 'Compliant'} type="radio" class="btn-check" name={answer.question._id} id={`Compliant-${index}`} autocomplete="off" />
+                                                        <input autoComplete='off' checked={answer.CompliantNonCompliantAnswer === 'Compliant'} type="radio" class="btn-check" name={answer.question._id} id={`Compliant-${index}`} autocomplete="off" />
                                                         <label class="btn btn-outline-success m-2" for={`Compliant-${index}`}>Compliant</label>
 
-                                                        <input autoComplete='off' checked={answers[index].CompliantNonCompliantAnswer === 'Non-Compliant'} type="radio" class="btn-check" name={answer.question._id} id={`Non-Compliant-${index}`} autocomplete="off" />
+                                                        <input autoComplete='off' checked={answer.CompliantNonCompliantAnswer === 'Non-Compliant'} type="radio" class="btn-check" name={answer.question._id} id={`Non-Compliant-${index}`} autocomplete="off" />
                                                         <label class="btn btn-outline-danger m-2" for={`Non-Compliant-${index}`}>Non-Compliant</label>
-                                                        <input autoComplete='off' checked={answers[index].CompliantNonCompliantAnswer === 'N/A'} type="radio" class="btn-check" name={answer.question._id} id={`N/A-${index}`} autocomplete="off" />
+                                                        <input autoComplete='off' checked={answer.CompliantNonCompliantAnswer === 'N/A'} type="radio" class="btn-check" name={answer.question._id} id={`N/A-${index}`} autocomplete="off" />
                                                         <label class="btn btn-outline-secondary m-2" for={`N/A-${index}`}>N/A</label>
                                                     </div>
                                                 )}
                                                 {answer.question.ComplianceType === 'Good/Fair/Poor' && (
                                                     <div className='d-flex flex-row flex-wrap'>
 
-                                                        <input autoComplete='off' checked={answers[index].GoodFairPoorAnswer === 'Good'} type="radio" class="btn-check" name={answer.question._id} id={`Good-${index}`} autocomplete="off" />
+                                                        <input autoComplete='off' checked={answer.GoodFairPoorAnswer === 'Good'} type="radio" class="btn-check" name={answer.question._id} id={`Good-${index}`} autocomplete="off" />
                                                         <label class="btn btn-outline-success m-2" for={`Good-${index}`}>Good</label>
-                                                        <input autoComplete='off' checked={answers[index].GoodFairPoorAnswer === 'Fair'} type="radio" class="btn-check" name={answer.question._id} id={`Fair-${index}`} autocomplete="off" />
+                                                        <input autoComplete='off' checked={answer.GoodFairPoorAnswer === 'Fair'} type="radio" class="btn-check" name={answer.question._id} id={`Fair-${index}`} autocomplete="off" />
                                                         <label class="btn btn-outline-warning m-2" for={`Fair-${index}`}>Fair</label>
 
-                                                        <input autoComplete='off' checked={answers[index].GoodFairPoorAnswer === 'Poor'} type="radio" class="btn-check" name={answer.question._id} id={`Poor-${index}`} autocomplete="off" />
+                                                        <input autoComplete='off' checked={answer.GoodFairPoorAnswer === 'Poor'} type="radio" class="btn-check" name={answer.question._id} id={`Poor-${index}`} autocomplete="off" />
                                                         <label class="btn btn-outline-danger m-2" for={`Poor-${index}`}>Poor</label>
-                                                        <input autoComplete='off' checked={answers[index].GoodFairPoorAnswer === 'N/A'} type="radio" class="btn-check" name={answer.question._id} id={`N/A-${index}`} autocomplete="off" />
+                                                        <input autoComplete='off' checked={answer.GoodFairPoorAnswer === 'N/A'} type="radio" class="btn-check" name={answer.question._id} id={`N/A-${index}`} autocomplete="off" />
                                                         <label class="btn btn-outline-secondary m-2" for={`N/A-${index}`}>N/A</label>
                                                     </div>
                                                 )}
@@ -299,23 +301,23 @@ function ViewAudit() {
                                                 {answer.question.ComplianceType === 'Conform/MinorNonComform/MajorNonConform/CriticalNonConform/Observation' && (
                                                     <div className='d-flex flex-row flex-wrap'>
 
-                                                        <input autoComplete='off' checked={answers[index].ConformObservationAnswer === 'Conform'} type="radio" class="btn-check" name={answer.question._id} id={`Conform-${index}`} autocomplete="off" />
+                                                        <input autoComplete='off' checked={answer.ConformObservationAnswer === 'Conform'} type="radio" class="btn-check" name={answer.question._id} id={`Conform-${index}`} autocomplete="off" />
                                                         <label class="btn btn-outline-success m-2" for={`Conform-${index}`}>Conform</label>
-                                                        <input autoComplete='off' checked={answers[index].ConformObservationAnswer === 'Minor Non-Conform'} type="radio" class="btn-check" name={answer.question._id} id={`Minor Non-Conform-${index}`} autocomplete="off" />
+                                                        <input autoComplete='off' checked={answer.ConformObservationAnswer === 'Minor Non-Conform'} type="radio" class="btn-check" name={answer.question._id} id={`Minor Non-Conform-${index}`} autocomplete="off" />
                                                         <label class="btn btn-outline-warning m-2" for={`Minor Non-Conform-${index}`}>Minor Non-Conform</label>
 
-                                                        <input autoComplete='off' checked={answers[index].ConformObservationAnswer === 'Major Non-Conform'} type="radio" class="btn-check" name={answer.question._id} id={`Major Non-Conform-${index}`} autocomplete="off" />
+                                                        <input autoComplete='off' checked={answer.ConformObservationAnswer === 'Major Non-Conform'} type="radio" class="btn-check" name={answer.question._id} id={`Major Non-Conform-${index}`} autocomplete="off" />
                                                         <label class="btn btn-outline-danger m-2" for={`Major Non-Conform-${index}`}>Major Non-Conform</label>
-                                                        <input autoComplete='off' checked={answers[index].ConformObservationAnswer === 'Critical Non-Conform'} type="radio" class="btn-check" name={answer.question._id} id={`Critical Non-Conform-${index}`} autocomplete="off" />
+                                                        <input autoComplete='off' checked={answer.ConformObservationAnswer === 'Critical Non-Conform'} type="radio" class="btn-check" name={answer.question._id} id={`Critical Non-Conform-${index}`} autocomplete="off" />
                                                         <label class="btn btn-outline-primary m-2" for={`Critical Non-Conform-${index}`}>Critical Non-Conform</label>
 
-                                                        <input autoComplete='off' checked={answers[index].ConformObservationAnswer === 'Observation'} type="radio" class="btn-check" name={answer.question._id} id={`Observation-${index}`} autocomplete="off" />
+                                                        <input autoComplete='off' checked={answer.ConformObservationAnswer === 'Observation'} type="radio" class="btn-check" name={answer.question._id} id={`Observation-${index}`} autocomplete="off" />
                                                         <label class="btn btn-outline-info m-2" for={`Observation-${index}`}>Observation</label>
-                                                        <input autoComplete='off' checked={answers[index].ConformObservationAnswer = 'N/A'} type="radio" class="btn-check" name={answer.question._id} id={`N/A-${index}`} autocomplete="off" />
+                                                        <input autoComplete='off' checked={answer.ConformObservationAnswer === 'N/A'} type="radio" class="btn-check" name={answer.question._id} id={`N/A-${index}`} autocomplete="off" />
                                                         <label class="btn btn-outline-secondary m-2" for={`N/A-${index}`}>N/A</label>
                                                     </div>
                                                 )}
-                                                <textarea value={answers[index].Remarks} rows={3} className='w-100 p-2 my-2' placeholder='Remarks...' required />
+                                                <textarea value={answer.Remarks} rows={3} className='w-100 p-2 my-2' placeholder='Remarks...' required />
                                             </div>
 
                                             <div style={{
@@ -324,12 +326,12 @@ function ViewAudit() {
                                                 <div style={{
                                                     width: '80%'
                                                 }}>
-                                                    {answers[index].EvidenceDoc && (
+                                                    {answer.EvidenceDoc && (
 
                                                         <div className='d-flex flex-column w-50'>
                                                             <label>Evidence Document :</label>
                                                             <a onClick={()=>{
-                                                                handleDownloadImage(answers[index].EvidenceDoc)
+                                                                handleDownloadImage(answer.EvidenceDoc)
                                                             }} className='btn btn-outline-danger' >Download</a>
                                                         </div>
                                                     )}

@@ -159,7 +159,7 @@ router.post('/addConductAudit', upload.fields(generateEvidenceDocArray()), async
       }
     }
     answers = answers.filter(ans => ans !== null)
-    console.log(answers);
+    console.log('recieved ansers', answers);
     const createdAnswers = await ChecklistAnswerModel.create(answers);
     const answersArr = Object.values(createdAnswers);
     const answersIds = answersArr.map(answerObj => answerObj._id);

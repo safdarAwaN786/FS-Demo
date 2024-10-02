@@ -18,12 +18,10 @@ const workRequestSchema = new Schema({
 
   Date: {
     type: Date,
-    default: new Date()
   },
 
   Time: {
     type: Date,
-    default: new Date()
   },
   Area: {
     type: String,

@@ -143,7 +143,7 @@ function ChangeRequests() {
                 ) : (
                     <table className={style.table}>
                         <tr className={style.headers}>
-                            <td>Change Request ID</td>
+                            {/* <td>Change Request ID</td> */}
                             <td>Document Title</td>
                             <td>Department</td>
                             <td>Status</td>
@@ -170,7 +170,7 @@ function ChangeRequests() {
                             requestsList?.map((request, i) => {
                                 return (
                                     <tr className={style.tablebody} key={i}>
-                                        <td ><p style={{
+                                        {/* <td ><p style={{
                                             backgroundColor: "#f0f5f0",
                                             padding: "2px 5px",
                                             borderRadius: "10px",
@@ -179,7 +179,7 @@ function ChangeRequests() {
                                             fontStyle: "normal",
                                             fontWeight: "400",
                                             lineHeight: "20px",
-                                        }}>{request.ChangeRequestId}</p></td>
+                                        }}>{request.ChangeRequestId}</p></td> */}
                                         <td className={style.simpleContent}>{request.Document.DocumentTitle || request.Document.DocumentName}</td>
                                         <td>{request.Department.DepartmentName}</td>
                                         <td><div className={`text-center ${request.Status === 'Approved' && style.greenStatus} ${request.Status === 'Disapproved' && style.redStatus} ${request.Status === 'Rejected' && style.redStatus} ${request.Status === 'Pending' && style.yellowStatus} ${request.Status === 'Reviewed' && style.blueStatus} `}><p>{request.Status}</p></div></td>

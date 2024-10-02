@@ -233,9 +233,15 @@ router.patch('/approveChecklist', async (req, res) => {
             checklist.DisapprovedBy = null;
             checklist.DisapprovalDate = null;
         }
+     
+        const updatedChecklist = await Checklists.findByIdAndUpdate(
+            checklist._id,
+            checklist,
+            { new: true }
+        );
 
         // Save the updated Checklist
-        await checklist.save();
+        // await checklist.save();
 
         // Log successful update
         console.log(`Checklist with ID: ${ChecklistId} has been approved.`);
@@ -280,9 +286,15 @@ router.patch('/disapproveChecklist', async (req, res) => {
             checklist.ApprovedBy = null;
             checklist.ApprovalDate = null;
         }
+        const {_id, ...checkListwithoutId} = checklist;
+        const updatedChecklist = await Checklists.findByIdAndUpdate(
+            checklist._id,
+            checklist,
+            { new: true }
+        );
 
         // Save the updated Checklist
-        await checklist.save();
+        // await checklist.save();
 
         // Log successful update
         console.log(`Checklist with ID: ${ChecklistId} has been disapproved.`);

@@ -82,6 +82,8 @@ const uploadToCloudinary = (buffer) => {
             uploadStream.end(buffer);
         });
     } catch (error) {
+        console.log(error);
+        
         console.log('error inside uploadation' + error);
     }
 };
@@ -138,6 +140,7 @@ router.post('/uploadDocument', upload.single('file'), async (req, res) => {
             Department: Department,
             DocumentType: DocumentType,
             CreatedBy: requestUser.Name,
+            CreationDate: new Date(),
             UserDepartment: requestUser.Department._id,
             UploadedDocuments: [
                 {
@@ -203,7 +206,7 @@ router.patch('/review-uploaded-document', async (req, res) => {
 
 
         document.ReviewDate = new Date(),
-        document.Status = 'Reviewed';
+            document.Status = 'Reviewed';
         document.RejectionDate = null;
         document.RejectedBy = null;
         document.ReviewedBy = reviewBy
@@ -211,8 +214,14 @@ router.patch('/review-uploaded-document', async (req, res) => {
         document.UploadedDocuments[document.UploadedDocuments.length - 1].ReviewDate = new Date();
         document.UploadedDocuments[document.UploadedDocuments.length - 1].ReviewedBy = reviewBy;
 
+        const updatedDoocument = await uploadDocument.findByIdAndUpdate(
+            document._id,
+            document,
+            { new: true }
+        );
+
         // Save the updated document
-        await document.save();
+        // await document.save();
         res.status(200).send({ status: true, message: 'Document reviewed successfully', data: document });
 
     } catch (error) {
@@ -240,18 +249,23 @@ router.patch('/reject-uploaded-document', async (req, res) => {
             return res.status(400).json({ error: 'Document status is not eligible for rejection.' });
         }
 
-    
+
 
         document.Reason = reason
         document.RejectionDate = new Date(),
-        document.ReviewDate = null;
+            document.ReviewDate = null;
         document.ReviewedBy = null;
         document.Status = 'Rejected';
         document.RejectedBy = rejectBy
         document.UploadedDocuments[document.UploadedDocuments.length - 1].ReviewDate = null;
         document.UploadedDocuments[document.UploadedDocuments.length - 1].ReviewedBy = null;
+        const updatedDoocument = await uploadDocument.findByIdAndUpdate(
+            document._id,
+            document,
+            { new: true }
+        );
         // Save the updated document
-        await document.save();
+        // await document.save();
         res.status(200).send({ status: true, message: 'Document rejected successfully', data: document });
 
     } catch (error) {
@@ -264,7 +278,7 @@ router.patch('/approve-uploaded-document', async (req, res) => {
     try {
 
 
-        const { documentId, approveBy } = req.body;
+        const { documentId, approvedBy } = req.body;
 
         // Find the document by ID
         const document = await uploadDocument.findById(documentId);
@@ -280,16 +294,21 @@ router.patch('/approve-uploaded-document', async (req, res) => {
             return res.status(400).json({ error: 'Document status is not eligible for approval.' });
         }
 
+        
         document.ApprovalDate = new Date(),
-        document.ApprovedBy = approveBy,
+        document.ApprovedBy = approvedBy,
         document.Status = 'Approved';
         document.DisapprovalDate = null;
         document.DisapprovedBy = null;
         document.UploadedDocuments[document.UploadedDocuments.length - 1].ApprovalDate = new Date();
-        document.UploadedDocuments[document.UploadedDocuments.length - 1].ApprovedBy = approveBy;
-
+        document.UploadedDocuments[document.UploadedDocuments.length - 1].ApprovedBy = approvedBy;
+        const updatedDoocument = await uploadDocument.findByIdAndUpdate(
+            document._id,
+            document,
+            { new: true }
+        );
         // Save the updated document
-        await document.save();
+        // await document.save();
         res.status(200).send({ status: true, message: 'Document approved successfully', data: document });
 
     } catch (error) {
@@ -301,7 +320,7 @@ router.patch('/approve-uploaded-document', async (req, res) => {
 router.patch('/disapprove-uploaded-document', async (req, res) => {
     try {
 
-        const { documentId, reason, disapproveBy } = req.body;
+        const { documentId, reason, disapprovedBy } = req.body;
 
         // Find the document by ID
         const document = await uploadDocument.findById(documentId);
@@ -322,12 +341,16 @@ router.patch('/disapprove-uploaded-document', async (req, res) => {
         document.Reason = reason;
         document.ApprovalDate = null;
         document.ApprovedBy = null;
-        document.DisapprovedBy = disapproveBy;
+        document.DisapprovedBy = disapprovedBy;
         document.UploadedDocuments[document.UploadedDocuments.length - 1].ApprovalDate = null;
         document.UploadedDocuments[document.UploadedDocuments.length - 1].ApprovedBy = null;
-
+        const updatedDoocument = await uploadDocument.findByIdAndUpdate(
+            document._id,
+            document,
+            { new: true }
+        );
         // Save the updated document
-        await document.save();
+        // await document.save();
         res.status(200).send({ status: true, message: 'Document disapproved successfully', data: document });
 
     } catch (error) {
@@ -351,9 +374,14 @@ router.patch('/comment-document/:documentId', async (req, res) => {
         console.log(document.UploadedDocuments);
         // Save the updated document
         try {
-            await document.save().then(() => {
-                console.log('saved');
-            });
+            const updatedDoocument = await uploadDocument.findByIdAndUpdate(
+                document._id,
+                document,
+                { new: true }
+            );
+            // await document.save().then(() => {
+            //     console.log('saved');
+            // });
             console.log('Document saved successfully.');
         } catch (error) {
             console.error('Error saving document:', error);
@@ -398,14 +426,14 @@ router.put('/send-document', async (req, res) => {
 // * Replace updated Document
 router.put('/replaceDocument/:documentId', upload.single('file'), async (req, res) => {
     try {
-        
+
         const requestUser = await user.findById(req.header('Authorization')).populate('Company')
         const updatedBy = requestUser.Name;
         const { documentId } = req.params;
-        
-        const response = await axios.get(requestUser.Company.CompanyLogo, { responseType: 'arraybuffer' });
-        console.log(response);
-        
+
+        const response = await axios.get(requestUser.Company.CompanyLogo, { responseType: 'arraybuffer' }).catch(err => console.log(err));
+
+
         const pdfDoc = await PDFDocument.load(req.file.buffer);
         const logoImage = Buffer.from(response.data);
         const isJpg = requestUser.Company.CompanyLogo.includes('.jpeg') || requestUser.Company.CompanyLogo.includes('.jpg');
@@ -444,8 +472,10 @@ router.put('/replaceDocument/:documentId', upload.single('file'), async (req, re
         // Save the modified PDF
         const modifiedPdfBuffer = await pdfDoc.save();
         console.log('uploading ');
-        
+
         const result = await uploadToCloudinary(modifiedPdfBuffer);
+
+        
         const document = await uploadDocument.findById(documentId);
         if (!document) {
             return res.status(404).send({ status: false, message: 'Document not found' });
@@ -458,6 +488,8 @@ router.put('/replaceDocument/:documentId', upload.single('file'), async (req, re
         // Reset approval-related fields and update revision number
         document.Status = 'Pending';
         document.ApprovalDate = null;
+        document.CreatedBy = updatedBy;
+        document.CreationDate = new Date()
         document.DisapprovalDate = null;
         document.ReviewDate = null;
         document.RejectionDate = null;
@@ -473,7 +505,14 @@ router.put('/replaceDocument/:documentId', upload.single('file'), async (req, re
             RevisionNo: document.RevisionNo,
             DocumentUrl: result.secure_url,
         });
-        await document.save();
+        console.log('saving');
+        
+        const updatedDoocument = await uploadDocument.findByIdAndUpdate(
+            document._id,
+            document,
+            { new: true }
+        ).catch(err => console.log(err));
+        // await document.save();
         res.status(200).send({ status: true, message: 'Document replaced successfully', data: document });
     } catch (error) {
         console.log(error);

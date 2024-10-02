@@ -33,148 +33,92 @@ function ViewChecklist() {
             })
         })
     }, [])
-    console.log(dataToSend);
-    // const downloadPDF = async () => {
-    //     var element = document.getElementById('printable');
-    //     var opt = {
-    //         margin: [1.3, 0, 0, 0],
-    //         filename: `${user.Department.DepartmentName}-doc.pdf`,
-    //         enableLinks: false,
-    //         pagebreak: { mode: ['avoid-all', 'css', 'legacy'] },
-    //         image: { type: 'jpeg', quality: 0.8 },  // Adjusted image quality
-    //         html2canvas: { scale: 5, useCORS: true, logging: true },  // Higher scale and useCORS for images
-    //         jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
-    //       };
-
-    //     console.log(element);
-    //     if (element) {
-    //         html2pdf().from(element).set(opt).toPdf().get('pdf').then(async function (pdf) {
-    //             pdf.insertPage(1);
-    //             var totalPages = pdf.internal.getNumberOfPages();
-    //             //print current pdf width & height to console
-    //             console.log("getHeight:" + pdf.internal.pageSize.getHeight());
-    //             console.log("getWidth:" + pdf.internal.pageSize.getWidth());
-    //             for (var i = 1; i <= totalPages; i++) {
-    //                 pdf.setPage(i);
-    //                 pdf.setFillColor(0, 0, 0);
-    //                 if (i === 1) {
-    //                     try {
-    //                         console.log(user.Company.CompanyLogo);
-    //                         const response = await fetch(user.Company.CompanyLogo);
-    //                         const blob = await response.blob();
-    //                         const imageBitmap = await createImageBitmap(blob);
-    //                         // create a canvas element and draw the image bitmap on it
-    //                         const canvas = document.createElement('canvas');
-    //                         canvas.width = imageBitmap.width;
-    //                         canvas.height = imageBitmap.height;
-    //                         const ctx = canvas.getContext('2d');
-    //                         ctx.drawImage(imageBitmap, 0, 0);
-    //                         // get the data URL of the canvas
-    //                         const dataURL = canvas.toDataURL('image/jpeg');
-    //                         // pass the data URL to the pdf.addImage method
-    //                         pdf.addImage(dataURL, 'JPEG', 1, 2.5, 3, 3);
-    //                         pdf.setFontSize(20);
-    //                         pdf.text(`Company : ${user.Company.CompanyName}`, (1), (pdf.internal.pageSize.getHeight() / 2));
-    //                         pdf.setFontSize(15)
-    //                         pdf.text(`Address : ${user.Company.Address}`, (1), (pdf.internal.pageSize.getHeight() / 2) + 0.5);
-    //                         pdf.setLineWidth(0.1); // Example line width
-    //                         pdf.line(0.1, (pdf.internal.pageSize.getHeight() / 2) + 1, pdf.internal.pageSize.getWidth() - 0.2, (pdf.internal.pageSize.getHeight() / 2) + 1)
-    //                         pdf.text("Document Id", 1, (pdf.internal.pageSize.getHeight() / 2) + 1.5);
-    //                         pdf.text(`${dataToSend.ChecklistId}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 1.5);
-    //                         pdf.text("Created By", 1, (pdf.internal.pageSize.getHeight() / 2) + 1.8);
-    //                         pdf.text(`${dataToSend.CreatedBy}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 1.8);
-    //                         pdf.text("Creation Date", 1, (pdf.internal.pageSize.getHeight() / 2) + 2.1);
-    //                         pdf.text(`${dayjs(dataToSend.CreationDate).format('DD/MM/YYYY')}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 2.1);
-    //                         pdf.text("Revision Number", 1, (pdf.internal.pageSize.getHeight() / 2) + 2.4);
-    //                         pdf.text(`${dataToSend.RevisionNo}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 2.4);
-    //                         if (dataToSend.Status == 'Approved') {
-    //                             pdf.text("Approved By", 1, (pdf.internal.pageSize.getHeight() / 2) + 2.7);
-    //                             pdf.text(`${dataToSend.ApprovedBy}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 2.7);
-    //                             pdf.text("Approval Date", 1, (pdf.internal.pageSize.getHeight() / 2) + 3.0);
-    //                             pdf.text(`${dayjs(dataToSend.ApprovalDate).format('DD/MM/YYYY')}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 3.0);
-    //                         }
-    //                         if (dataToSend.ReviewedBy) {
-    //                             pdf.text("Reviewed By", 1, (pdf.internal.pageSize.getHeight() / 2) + 3.3);
-    //                             pdf.text(`${dataToSend.ReviewedBy}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 3.3);
-    //                             pdf.text("Reviewed Date", 1, (pdf.internal.pageSize.getHeight() / 2) + 3.6);
-    //                             pdf.text(`${dayjs(dataToSend.ReviewDate).format('DD/MM/YYYY')}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 3.6);
-    //                         }
-    //                     } catch (error) {
-    //                         console.log(error);
-    //                     }
-    //                 } else {
-    //                     pdf.setFontSize(15)
-    //                     pdf.text('Powered By Feat Technology', (pdf.internal.pageSize.getWidth() / 2) - 1.3, 0.5);
-    //                     pdf.setFontSize(10);
-    //                     pdf.text(`${user.Company.CompanyName}`, pdf.internal.pageSize.getWidth() - 2, 0.3);
-    //                     pdf.text('Checklist', pdf.internal.pageSize.getWidth() - 2, 0.5);
-    //                     pdf.text(`${dataToSend.ChecklistId}`, pdf.internal.pageSize.getWidth() - 2, 0.7);
-    //                     pdf.text(`Revision No :${dataToSend.RevisionNo}`, pdf.internal.pageSize.getWidth() - 2, 0.9);
-    //                     pdf.text(`Creation : ${dayjs(dataToSend.CreationDate).format('DD/MM/YYYY')}`, pdf.internal.pageSize.getWidth() - 2, 1.1);
-    //                 }
-    //             }
-    //         }).save();
-    //     }
-    // };
-    console.log(dataToSend);
-
 
     const downloadPDF = async () => {
-        const doc = new jsPDF({
-            orientation: 'portrait',
-            unit: 'in',
-            format: 'a4',
-        });
+        var element = document.getElementById('printable');
+        var opt = {
+            margin: [1.3, 0, 0, 0],
+            filename: `${user.Department.DepartmentName}-doc.pdf`,
+            enableLinks: false,
+            pagebreak: { mode: ['avoid-all', 'css', 'legacy'] },
+            image: { type: 'jpeg', quality: 0.8 },  // Adjusted image quality
+            html2canvas: { scale: 5, useCORS: true, logging: true },  // Higher scale and useCORS for images
+            jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+          };
 
-        // Add a title
-        doc.setFontSize(20);
-        doc.text(`Company: ${user.Company.CompanyName}`, 1, 1);
-
-        // Add a logo
-        if (user.Company.CompanyLogo) {
-            try {
-                const response = await fetch(user.Company.CompanyLogo);
-                const blob = await response.blob();
-                const imageBitmap = await createImageBitmap(blob);
-                // Draw the image into canvas
-                const canvas = document.createElement('canvas');
-                canvas.width = imageBitmap.width;
-                canvas.height = imageBitmap.height;
-                const ctx = canvas.getContext('2d');
-                ctx.drawImage(imageBitmap, 0, 0);
-                // Get the base64 data URL and add the image to the PDF
-                const dataURL = canvas.toDataURL('image/jpeg');
-                doc.addImage(dataURL, 'JPEG', 1, 2.5, 3, 3);
-            } catch (error) {
-                console.log('Error loading image: ', error);
-            }
+        console.log(element);
+        if (element) {
+            html2pdf().from(element).set(opt).toPdf().get('pdf').then(async function (pdf) {
+                pdf.insertPage(1);
+                var totalPages = pdf.internal.getNumberOfPages();
+                //print current pdf width & height to console
+                console.log("getHeight:" + pdf.internal.pageSize.getHeight());
+                console.log("getWidth:" + pdf.internal.pageSize.getWidth());
+                for (var i = 1; i <= totalPages; i++) {
+                    pdf.setPage(i);
+                    pdf.setFillColor(0, 0, 0);
+                    if (i === 1) {
+                        try {
+                            console.log(user.Company.CompanyLogo);
+                            const response = await fetch(user.Company.CompanyLogo);
+                            const blob = await response.blob();
+                            const imageBitmap = await createImageBitmap(blob);
+                            // create a canvas element and draw the image bitmap on it
+                            const canvas = document.createElement('canvas');
+                            canvas.width = imageBitmap.width;
+                            canvas.height = imageBitmap.height;
+                            const ctx = canvas.getContext('2d');
+                            ctx.drawImage(imageBitmap, 0, 0);
+                            // get the data URL of the canvas
+                            const dataURL = canvas.toDataURL('image/jpeg');
+                            // pass the data URL to the pdf.addImage method
+                            pdf.addImage(dataURL, 'JPEG', 1, 2.5, 3, 3);
+                            pdf.setFontSize(20);
+                            pdf.text(`Company : ${user.Company.CompanyName}`, (1), (pdf.internal.pageSize.getHeight() / 2));
+                            pdf.setFontSize(15)
+                            pdf.text(`Address : ${user.Company.Address}`, (1), (pdf.internal.pageSize.getHeight() / 2) + 0.5);
+                            pdf.setLineWidth(0.1); // Example line width
+                            pdf.line(0.1, (pdf.internal.pageSize.getHeight() / 2) + 1, pdf.internal.pageSize.getWidth() - 0.2, (pdf.internal.pageSize.getHeight() / 2) + 1)
+                            pdf.text("Document Id", 1, (pdf.internal.pageSize.getHeight() / 2) + 1.5);
+                            pdf.text(`${dataToSend.ChecklistId}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 1.5);
+                            pdf.text("Created By", 1, (pdf.internal.pageSize.getHeight() / 2) + 1.8);
+                            pdf.text(`${dataToSend.CreatedBy}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 1.8);
+                            pdf.text("Creation Date", 1, (pdf.internal.pageSize.getHeight() / 2) + 2.1);
+                            pdf.text(`${dayjs(dataToSend.CreationDate).format('DD/MM/YYYY')}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 2.1);
+                            pdf.text("Revision Number", 1, (pdf.internal.pageSize.getHeight() / 2) + 2.4);
+                            pdf.text(`${dataToSend.RevisionNo}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 2.4);
+                            if (dataToSend.Status == 'Approved') {
+                                pdf.text("Approved By", 1, (pdf.internal.pageSize.getHeight() / 2) + 2.7);
+                                pdf.text(`${dataToSend.ApprovedBy}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 2.7);
+                                pdf.text("Approval Date", 1, (pdf.internal.pageSize.getHeight() / 2) + 3.0);
+                                pdf.text(`${dayjs(dataToSend.ApprovalDate).format('DD/MM/YYYY')}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 3.0);
+                            }
+                            if (dataToSend.ReviewedBy) {
+                                pdf.text("Reviewed By", 1, (pdf.internal.pageSize.getHeight() / 2) + 3.3);
+                                pdf.text(`${dataToSend.ReviewedBy}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 3.3);
+                                pdf.text("Reviewed Date", 1, (pdf.internal.pageSize.getHeight() / 2) + 3.6);
+                                pdf.text(`${dayjs(dataToSend.ReviewDate).format('DD/MM/YYYY')}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 3.6);
+                            }
+                        } catch (error) {
+                            console.log(error);
+                        }
+                    } else {
+                        pdf.setFontSize(15)
+                        pdf.text('Powered By Feat Technology', (pdf.internal.pageSize.getWidth() / 2) - 1.3, 0.5);
+                        pdf.setFontSize(10);
+                        pdf.text(`${user.Company.CompanyName}`, pdf.internal.pageSize.getWidth() - 2, 0.3);
+                        pdf.text('Checklist', pdf.internal.pageSize.getWidth() - 2, 0.5);
+                        pdf.text(`${dataToSend.ChecklistId}`, pdf.internal.pageSize.getWidth() - 2, 0.7);
+                        pdf.text(`Revision No :${dataToSend.RevisionNo}`, pdf.internal.pageSize.getWidth() - 2, 0.9);
+                        pdf.text(`Creation : ${dayjs(dataToSend.CreationDate).format('DD/MM/YYYY')}`, pdf.internal.pageSize.getWidth() - 2, 1.1);
+                    }
+                }
+            }).save();
         }
-
-        // Add additional information
-        doc.setFontSize(15);
-        doc.text(`Document Id: ${dataToSend.ChecklistId}`, 1, 6);
-        doc.text(`Created By: ${dataToSend.CreatedBy}`, 1, 6.5);
-        doc.text(`Creation Date: ${dayjs(dataToSend.CreationDate).format('DD/MM/YYYY')}`, 1, 7);
-        doc.text(`Revision Number: ${dataToSend.RevisionNo}`, 1, 7.5);
-
-        // Add more details based on conditions
-        if (dataToSend.Status === 'Approved') {
-            doc.text(`Approved By: ${dataToSend.ApprovedBy}`, 1, 8);
-            doc.text(`Approval Date: ${dayjs(dataToSend.ApprovalDate).format('DD/MM/YYYY')}`, 1, 8.5);
-        }
-
-        if (dataToSend.ReviewedBy) {
-            doc.text(`Reviewed By: ${dataToSend.ReviewedBy}`, 1, 9);
-            doc.text(`Review Date: ${dayjs(dataToSend.ReviewDate).format('DD/MM/YYYY')}`, 1, 9.5);
-        }
-
-        // Footer text for every page (e.g., Powered by Feat Technology)
-        doc.setFontSize(10);
-        doc.text('Powered By Feat Technology', doc.internal.pageSize.getWidth() / 2 - 1, 10);
-
-        // Save the PDF
-        doc.save(`${user.Department.DepartmentName}-doc.pdf`);
     };
+   
+
+
 
 
     const alertManager = () => {
