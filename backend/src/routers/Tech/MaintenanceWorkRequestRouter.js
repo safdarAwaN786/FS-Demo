@@ -75,8 +75,8 @@ router.post('/createWorkRequest', upload.fields([{ name: 'mwrImage' }]), async (
       Machinery: MachineId,
       CreatedBy: createdBy,
       CreationDate: new Date(),
-      Date : new Date(),
-      Time : new Date()
+      Date: new Date(),
+      Time: new Date()
     });
 
     const savedWorkRequest = await workRequest.save();
@@ -126,10 +126,10 @@ router.patch('/rejectMWR/:id', async (req, res) => {
     mwr.CompletedBy = 'Pending',
       mwr.CompletionDate = null
 
-      await WorkRequest.findByIdAndUpdate(
-       mwr._id,
-        mwr,
-        { new: true }
+    await WorkRequest.findByIdAndUpdate(
+      mwr._id,
+      mwr,
+      { new: true }
     );
     // Save the updated MWR
     // await mwr.save();
@@ -152,7 +152,7 @@ router.patch('/acceptMWR/:id', async (req, res) => {
     const mwrId = req.params.id;
     const acceptedBy = req.body.acceptedBy
     // Extract fields from the request body
-    const { JobAssigned, Designation, DetailOfWork } = req.body;
+    const { JobAssigned, Designation, DetailOfWork, Priority } = req.body;
 
     // Validation
     if (!JobAssigned || !Designation || !DetailOfWork) {
@@ -180,14 +180,15 @@ router.patch('/acceptMWR/:id', async (req, res) => {
     mwr.RejectedBy = null
     mwr.RejectionDate = null;
     mwr.CompletedBy = 'Pending',
-      mwr.CompletionDate = null
+    mwr.CompletionDate = null
+    mwr.Priority = Priority,
 
-      
+
       await WorkRequest.findByIdAndUpdate(
         mwr._id,
-         mwr,
-         { new: true }
-     );
+        mwr,
+        { new: true }
+      );
     // Save the updated MWR
     // await mwr.save();
 
@@ -230,12 +231,12 @@ router.patch('/completeMWR/:id', async (req, res) => {
     mwr.CompletionDate = new Date();
 
 
-    
+
     await WorkRequest.findByIdAndUpdate(
       mwr._id,
-       mwr,
-       { new: true }
-   );
+      mwr,
+      { new: true }
+    );
     // Save the updated MWR
     // await mwr.save();
 

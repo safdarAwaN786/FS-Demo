@@ -205,6 +205,9 @@ function TechMWR() {
                                             {(request.Status === 'Pending') ? (
                                                 <select onChange={(e) => {
                                                     setSelectedPriority(e.target.value);
+                                                    const updatedRequests = [...requests]
+                                                    updatedRequests[i].Priority = e.target.value
+                                                    setRequests(updatedRequests)
                                                 }} name="" id="">
                                                     <option style={{ display: 'none' }} value={request.Priority} selected disabled>{request.Priority}</option>
                                                     <option value="A">A-Emergency Job</option>
@@ -233,6 +236,7 @@ function TechMWR() {
                                                     <button className={`${style.accept} ${request.Status === 'Approved' && 'bg-primary text-light'}`} onClick={() => {
                                                         if (request.Status === 'Pending' || request.Status === 'Rejected') {
                                                             setOpenedRequestId(request._id)
+                                                            setAcceptObj(request)
                                                             setalert3(!alert3)
                                                         } else {
                                                             setPopUpData('Sorry! This Job is Already Accepted or Completed');
@@ -246,11 +250,9 @@ function TechMWR() {
                                                             setPopUpData('Sorry! Job is not Pending for Rejection')
                                                             setalert(true)
                                                         } else {
-                                                            if (selectedPriority) {
-                                                                setRejectObj({ ...rejectObj, Priority: selectedPriority })
-                                                            } else {
-                                                                setRejectObj({ ...rejectObj, Priority: request.Priority })
-                                                            }
+
+                                                            setRejectObj(request)
+
                                                             setOpenedRequestId(request._id);
                                                             setalert2(!alert2)
                                                         }
