@@ -19,7 +19,7 @@ function InternalExernal() {
     const dispatch = useDispatch();
     const dateType = useSelector(state => state.appData.dateType);
     const callibrationType = useSelector(state => state.appData.callibrationType);
-    const idToWatch = useSelector(state => state.isToProcess);
+    const idToWatch = useSelector(state => state.idToProcess);
 
     useEffect(() => {
         dispatch(setSmallLoading(true))

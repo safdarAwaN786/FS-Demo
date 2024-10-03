@@ -505,10 +505,13 @@ router.put('/replaceDocument/:documentId', upload.single('file'), async (req, re
         document.UpdationDate = new Date();
         document.UpdatedBy = updatedBy;
         document.RevisionNo += 1;
+        
         // Update the document with the new one
         document.UploadedDocuments.push({
             RevisionNo: document.RevisionNo,
             DocumentUrl: result.secure_url,
+            CreatedBy : updatedBy,
+            CreationDate : new Date()
         });
         console.log('saving');
         

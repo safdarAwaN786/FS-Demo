@@ -156,7 +156,7 @@ function CallibrationRect() {
                 </table>
             </div>
             <div className={style.btnparent}>
-                <button className={style.download} >Download</button>
+                {/* <button className={style.download} >Download</button> */}
                 <button className={style.next} onClick={() => {
                     dispatch(updateTabData({ ...tabData, Tab: 'internalExternal' }))
                 }}>Next</button>
