@@ -152,8 +152,15 @@ function Companies() {
 
                                         </div> {company.CompanyName}</td>
                                         <td>{company.ShortName}</td>
-                                        <td>{company.Email}</td>
-                                        <td>{company.Address}</td>
+                                        <td  style={{
+                        wordBreak: 'break-word', // Ensures long text breaks
+                        whiteSpace: 'normal', // Enables text wrapping
+                        maxWidth: '210px', // Limits the cell width
+                    }}>{company.Email}</td>
+                                        <td style={{
+                        wordWrap: 'break-word', // Allows the text to break into multiple lines
+                        whiteSpace: 'normal', // Ensures the content can wrap normally
+                    }}><p>{company.Address}</p></td>
                                         <td>{company.PhoneNo}</td>
                                         <td><button onClick={() => {
                                             setIdToProcess(company._id);

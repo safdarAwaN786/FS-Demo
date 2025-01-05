@@ -26,7 +26,7 @@ function ViewDocument() {
         dispatch(setSmallLoading(true))
         var element = document.getElementById('printable');
         const contentBox = document.getElementById('content-box');
-    
+
         // Clone the contentBox instead of moving it
         const clonedContentBox = contentBox.cloneNode(true);
         element.appendChild(clonedContentBox);
@@ -68,7 +68,14 @@ function ViewDocument() {
                         pdf.setFontSize(20);
                         pdf.text(`Company : ${user.Company.CompanyName}`, (1), (pdf.internal.pageSize.getHeight() / 2));
                         pdf.setFontSize(15)
-                        pdf.text(`Address : ${user.Company.Address}`, (1), (pdf.internal.pageSize.getHeight() / 2) + 0.5);
+                        const address = `Address : ${user.Company.Address}`;
+                        const pageWidth = pdf.internal.pageSize.getWidth();
+                        const margins = 1; // Adjust margins as needed
+                        const maxWidth = pageWidth - margins * 2; // Calculate usable width
+                        const wrappedAddress = pdf.splitTextToSize(address, maxWidth);
+
+                        pdf.text(wrappedAddress, 1, (pdf.internal.pageSize.getHeight() / 2) + 0.5);
+
                         pdf.setLineWidth(0.1); // Example line width
                         pdf.line(0.1, (pdf.internal.pageSize.getHeight() / 2) + 1, pdf.internal.pageSize.getWidth() - 0.2, (pdf.internal.pageSize.getHeight() / 2) + 1)
                         // pdf.text("Document Id", 1, (pdf.internal.pageSize.getHeight() / 2) + 1.5);
@@ -108,7 +115,7 @@ function ViewDocument() {
 
         setTimeout(() => {
             element.removeChild(clonedContentBox); // Remove only the cloned element
-                dispatch(setSmallLoading(false));
+            dispatch(setSmallLoading(false));
         }, 3000);
     };
 

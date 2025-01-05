@@ -108,7 +108,14 @@ function ViewReport() {
                         pdf.setFontSize(20);
                         pdf.text(`Company : ${user.Company.CompanyName}`, 1, (pdf.internal.pageSize.getHeight() / 2));
                         pdf.setFontSize(15);
-                        pdf.text(`Address : ${user.Company.Address}`, 1, (pdf.internal.pageSize.getHeight() / 2) + 0.5);
+                        const address = `Address : ${user.Company.Address}`;
+                        const pageWidth = pdf.internal.pageSize.getWidth();
+                        const margins = 1; // Adjust margins as needed
+                        const maxWidth = pageWidth - margins * 2; // Calculate usable width
+                        const wrappedAddress = pdf.splitTextToSize(address, maxWidth);
+
+                        pdf.text(wrappedAddress, 1, (pdf.internal.pageSize.getHeight() / 2) + 0.5);
+
                         pdf.setFontSize(15);
                         pdf.setLineWidth(0.1); // Example line width
                         pdf.line(0.1, (pdf.internal.pageSize.getHeight() / 2) + 1, pdf.internal.pageSize.getWidth() - 0.2, (pdf.internal.pageSize.getHeight() / 2) + 1)
@@ -286,7 +293,7 @@ function ViewReport() {
                                         {reportData?.SelectedAnswers.some((ansObj) => ansObj.Answer._id === answer._id) && (
                                             <div>
                                                 <label>Target Date : </label>
-                                                <input autoComplete='off' value={formatDate((reportData?.SelectedAnswers?.find((ansObj)=> ansObj.Answer._id === answer._id)).TargetDate)} type='text'  className='p-2' required />
+                                                <input autoComplete='off' value={formatDate((reportData?.SelectedAnswers?.find((ansObj) => ansObj.Answer._id === answer._id)).TargetDate)} type='text' className='p-2' required />
                                             </div>
                                         )}
                                         <div style={{
@@ -329,9 +336,9 @@ function ViewReport() {
                             <p class={style.msg}>{dataToShow}</p>
                             <div className={style.alertbtns}>
                                 <button style={{
-                                    marginLeft : '120px',
-                                    marginTop : '25px'
-                                }}  onClick={() => {
+                                    marginLeft: '120px',
+                                    marginTop: '25px'
+                                }} onClick={() => {
                                     setShowBox(false)
                                 }} className={style.btn1}>Ok.</button>
                             </div>
