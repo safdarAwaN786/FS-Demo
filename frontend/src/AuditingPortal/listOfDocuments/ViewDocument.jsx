@@ -23,7 +23,13 @@ function ViewDocument() {
     const idToWatch = useSelector(state => state.idToProcess);
 
     const downloadPDF = async () => {
+        dispatch(setSmallLoading(true))
         var element = document.getElementById('printable');
+        const contentBox = document.getElementById('content-box');
+    
+        // Clone the contentBox instead of moving it
+        const clonedContentBox = contentBox.cloneNode(true);
+        element.appendChild(clonedContentBox);
         var opt = {
             margin: [1.3, 0.2, 0.2, 0.2],
             filename: `${user.Department.DepartmentName}-doc.pdf`,
@@ -99,7 +105,12 @@ function ViewDocument() {
                 }
             }
         }).save();
-    }; 
+
+        setTimeout(() => {
+            element.removeChild(clonedContentBox); // Remove only the cloned element
+                dispatch(setSmallLoading(false));
+        }, 3000);
+    };
 
     useEffect(() => {
         dispatch(setSmallLoading(true))
@@ -109,9 +120,9 @@ function ViewDocument() {
         }).catch(err => {
             dispatch(setSmallLoading(false));
             Swal.fire({
-                icon : 'error',
-                title : 'OOps..',
-                text : 'Something went wrong, Try Again!'
+                icon: 'error',
+                title: 'OOps..',
+                text: 'Something went wrong, Try Again!'
             })
         })
     }, [])
@@ -125,11 +136,11 @@ function ViewDocument() {
 
 
                 <div className={`${style.subparent} mx-2 mx-sm-4 mt-5 mx-lg-5`}>
-                <div className='d-flex flex-row bg-white px-lg-5 mx-lg-5 mx-3 px-2 py-2'>
+                    <div className='d-flex flex-row bg-white px-lg-5 mx-lg-5 mx-3 px-2 py-2'>
                         <BsArrowLeftCircle
                             role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
                                 {
-                                    dispatch(updateTabData({...tabData, Tab : 'Master List of Documents'}))
+                                    dispatch(updateTabData({ ...tabData, Tab: 'Master List of Documents' }))
                                 }
                             }} />
                     </div>
@@ -147,157 +158,162 @@ function ViewDocument() {
                         event.preventDefault();
 
                     }}>
-                        <div id='printable' className={style.myBox}>
+                        <div className={style.myBox}>
+                            <div id='printable'>
+                                <div className={style.formDivider}>
+                                    <div className={style.sec1}>
+                                        <div className={style.inputParent}>
+                                            <div className={style.para}>
+                                                <p className='text-black'>Document Title</p>
+                                            </div>
+                                            <div>
+                                                <input autoComplete='off' className='text-dark' value={documentData?.DocumentTitle} readOnly />
 
-                            <div className={style.formDivider}>
-                                <div className={style.sec1}>
-                                    <div className={style.inputParent}>
-                                        <div className={style.para}>
-                                            <p className='text-black'>Document Title</p>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <input autoComplete='off' className='text-dark' value={documentData?.DocumentTitle} readOnly />
 
+                                        <div className={style.inputParent}>
+                                            <div className={style.para}>
+                                                <p className='text-black'>Revision No.</p>
+
+                                            </div>
+                                            <div>
+                                                <input autoComplete='off' className='text-dark' value={documentData?.RevisionNo} readOnly />
+                                            </div>
                                         </div>
+                                        <div className={style.inputParent}>
+                                            <div className={style.para}>
+                                                <p className='text-black'>Department</p>
+                                            </div>
+                                            <div>
+                                                <input autoComplete='off' className='text-dark' value={documentData?.Department.DepartmentName} readOnly />
+                                            </div>
+                                        </div>
+                                        <div className={style.inputParent}>
+                                            <div className={style.para}>
+                                                <p className='text-black'>Created Date</p>
+                                            </div>
+                                            <div>
+                                                <input autoComplete='off' className='text-dark' value={`${documentData?.CreationDate?.slice(0, 10).split('-')[2]}/${documentData?.CreationDate?.slice(0, 10).split('-')[1]}/${documentData?.CreationDate?.slice(0, 10).split('-')[0]}`} readOnly />
+                                            </div>
+                                        </div>
+                                        <div className={style.inputParent}>
+                                            <div className={style.para}>
+                                                <p className='text-black'>Review Date</p>
+
+                                            </div>
+                                            <div>
+                                                {documentData?.ReviewDate ? (
+                                                    <input autoComplete='off' className='text-dark' value={`${documentData?.ReviewDate?.slice(0, 10).split('-')[2]}/${documentData?.ReviewDate?.slice(0, 10).split('-')[1]}/${documentData?.ReviewDate?.slice(0, 10).split('-')[0]}`} readOnly />
+                                                ) : (
+                                                    <input autoComplete='off' className='text-dark' value='- - -' />
+                                                )}
+
+                                            </div>
+                                        </div>
+                                        <div className={style.inputParent}>
+                                            <div className={style.para}>
+                                                <p className='text-black'>Approval Date</p>
+
+                                            </div>
+                                            <div>
+                                                {documentData?.ApprovalDate ? (
+
+                                                    <input autoComplete='off' className='text-dark' value={`${documentData?.ApprovalDate?.slice(0, 10).split('-')[2]}/${documentData?.ApprovalDate?.slice(0, 10).split('-')[1]}/${documentData?.ApprovalDate?.slice(0, 10).split('-')[0]}`} readOnly />
+                                                ) : (
+                                                    <input autoComplete='off' className='text-dark' value='- - -' />
+                                                )}
+
+
+                                            </div>
+                                        </div>
+
+
                                     </div>
+                                    <div className={style.sec2}>
+                                        <div className={style.inputParent}>
+                                            <div className={style.para}>
+                                                <p className='text-black'>Document ID</p>
 
-                                    <div className={style.inputParent}>
-                                        <div className={style.para}>
-                                            <p className='text-black'>Revision No.</p>
+                                            </div>
+                                            <div>
+                                                <input autoComplete='off' className='text-dark' value={documentData?.DocumentId} readOnly />
 
+
+                                            </div>
                                         </div>
-                                        <div>
-                                            <input autoComplete='off' className='text-dark'  value={documentData?.RevisionNo} readOnly />
+                                        <div className={style.inputParent}>
+                                            <div className={style.para}>
+                                                <p className='text-black'>Document Type</p>
+
+                                            </div>
+                                            <div>
+                                                <input autoComplete='off' className='text-dark' value={documentData?.DocumentType} readOnly />
+
+
+                                            </div>
                                         </div>
+                                        <div className={style.inputParent}>
+                                            <div className={style.para}>
+                                                <p className='text-black'>Created By</p>
+
+                                            </div>
+                                            <div>
+
+                                                <input autoComplete='off' className='text-dark' value={documentData?.CreatedBy} readOnly />
+
+
+                                            </div>
+                                        </div>
+                                        <div className={style.inputParent}>
+                                            <div className={style.para}>
+                                                <p className='text-black'>Reviewed By</p>
+
+                                            </div>
+                                            <div>
+                                                {documentData?.ReviewedBy ? (
+
+                                                    <input autoComplete='off' className='text-dark' value={documentData?.ReviewedBy} readOnly />
+                                                ) : (
+                                                    <input autoComplete='off' value='- - -' />
+                                                )}
+
+
+                                            </div>
+                                        </div>
+                                        <div className={style.inputParent}>
+                                            <div className={style.para}>
+                                                <p className='text-black'>Approved By</p>
+
+                                            </div>
+                                            <div>
+                                                {documentData?.ApprovedBy ? (
+
+                                                    <input autoComplete='off' className='text-dark' value={documentData?.ApprovedBy} readOnly />
+                                                ) : (
+                                                    <input autoComplete='off' className='text-dark' value='- - -' />
+                                                )}
+
+
+                                            </div>
+                                        </div>
+
+
+
                                     </div>
-                                    <div className={style.inputParent}>
-                                        <div className={style.para}>
-                                            <p className='text-black'>Department</p>
-                                        </div>
-                                        <div>
-                                            <input autoComplete='off' className='text-dark'  value={documentData?.Department.DepartmentName} readOnly />
-                                        </div>
-                                    </div>
-                                    <div className={style.inputParent}>
-                                        <div className={style.para}>
-                                            <p className='text-black'>Created Date</p>
-                                        </div>
-                                        <div>
-                                            <input autoComplete='off' className='text-dark'  value={`${documentData?.CreationDate?.slice(0, 10).split('-')[2]}/${documentData?.CreationDate?.slice(0, 10).split('-')[1]}/${documentData?.CreationDate?.slice(0, 10).split('-')[0]}`} readOnly />
-                                        </div>
-                                    </div>
-                                    <div className={style.inputParent}>
-                                        <div className={style.para}>
-                                            <p className='text-black'>Review Date</p>
-
-                                        </div>
-                                        <div>
-                                            {documentData?.ReviewDate ? (
-                                                <input autoComplete='off' className='text-dark'  value={`${documentData?.ReviewDate?.slice(0, 10).split('-')[2]}/${documentData?.ReviewDate?.slice(0, 10).split('-')[1]}/${documentData?.ReviewDate?.slice(0, 10).split('-')[0]}`} readOnly />
-                                            ) : (
-                                                <input autoComplete='off' className='text-dark'  value='- - -' />
-                                            )}
-
-                                        </div>
-                                    </div>
-                                    <div className={style.inputParent}>
-                                        <div className={style.para}>
-                                            <p className='text-black'>Approval Date</p>
-
-                                        </div>
-                                        <div>
-                                        {documentData?.ApprovalDate ? (
-
-                                            <input autoComplete='off' className='text-dark'  value={`${documentData?.ApprovalDate?.slice(0, 10).split('-')[2]}/${documentData?.ApprovalDate?.slice(0, 10).split('-')[1]}/${documentData?.ApprovalDate?.slice(0, 10).split('-')[0]}`} readOnly />
-                                        ) : (
-                                            <input autoComplete='off' className='text-dark'  value='- - -' />
-                                        )}
-
-
-                                        </div>
-                                    </div>
-
-
-                                </div>
-                                <div className={style.sec2}>
-                                    <div className={style.inputParent}>
-                                        <div className={style.para}>
-                                            <p className='text-black'>Document ID</p>
-
-                                        </div>
-                                        <div>
-                                            <input autoComplete='off' className='text-dark'  value={documentData?.DocumentId} readOnly />
-
-
-                                        </div>
-                                    </div>
-                                    <div className={style.inputParent}>
-                                        <div className={style.para}>
-                                            <p className='text-black'>Document Type</p>
-
-                                        </div>
-                                        <div>
-                                            <input autoComplete='off' className='text-dark'  value={documentData?.DocumentType} readOnly />
-
-
-                                        </div>
-                                    </div>
-                                    <div className={style.inputParent}>
-                                        <div className={style.para}>
-                                            <p className='text-black'>Created By</p>
-
-                                        </div>
-                                        <div>
-                                        
-                                            <input autoComplete='off' className='text-dark'  value={documentData?.CreatedBy} readOnly />
-
-
-                                        </div>
-                                    </div>
-                                    <div className={style.inputParent}>
-                                        <div className={style.para}>
-                                            <p className='text-black'>Reviewed By</p>
-
-                                        </div>
-                                        <div>
-                                        {documentData?.ReviewedBy ? (
-
-                                            <input autoComplete='off' className='text-dark'  value={documentData?.ReviewedBy} readOnly />
-                                        ) : (
-                                            <input autoComplete='off' value='- - -' />
-                                        )}
-
-
-                                        </div>
-                                    </div>
-                                    <div className={style.inputParent}>
-                                        <div className={style.para}>
-                                            <p className='text-black'>Approved By</p>
-
-                                        </div>
-                                        <div>
-                                        {documentData?.ApprovedBy ? (
-
-                                            <input autoComplete='off' className='text-dark'  value={documentData?.ApprovedBy} readOnly />
-                                        ) : (
-                                            <input autoComplete='off' className='text-dark'  value='- - -' />
-                                        )}
-
-
-                                        </div>
-                                    </div>
-
-
-
                                 </div>
                             </div>
-                            <div className='mx-2 p-lg-5 p-3'>
 
-                                <div className='bg-white p-3' style={{
-                                    height: '250px',
+                            <div className='mx-2 p-lg-5 p-2'>
+
+                                <div className='bg-white' style={{
+                                    height: '450px',
                                     overflowY: 'scroll',
                                     border: '2px solid silver'
-                                }} dangerouslySetInnerHTML={{ __html: documentData?.EditorData }} />
+                                }}  >
+
+                                    <div id='content-box' className='p-5' dangerouslySetInnerHTML={{ __html: documentData?.EditorData }} />
+                                </div>
                             </div>
                         </div>
 
@@ -307,7 +323,7 @@ function ViewDocument() {
                     </form>
                 </div>
             </div>
-            
+
 
         </>
     )
