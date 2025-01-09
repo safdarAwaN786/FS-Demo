@@ -43,31 +43,94 @@ const addFirstPage = async (page, logoImage, Company, user) => {
   const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
   const logoDims = { width: 300, height: 300 };
   const centerTextX = width / 2;
-  page.drawImage(logoImage, { x: centerTextX - logoDims.width / 2, y: height - 400, width: logoDims.width, height: logoDims.height });
-  // Add company name (centered)
-  const companyNameText = Company.CompanyName;
-  const companyNameTextWidth = (helveticaFont.widthOfTextAtSize(companyNameText, 25));
-  page.drawText(companyNameText, { x: centerTextX - companyNameTextWidth / 2, y: height - 420, color: rgb(0, 0, 0), fontSize: 25 });
-  // Add company contact (centered)
-  const companyContactText = `Contact # ${Company.PhoneNo}`;
-  const companyContactTextWidth = (helveticaFont.widthOfTextAtSize(companyContactText, 25));
-  page.drawText(companyContactText, { x: centerTextX - companyContactTextWidth / 2, y: height - 450, color: rgb(0, 0, 0), fontSize: 25 });
-  // Add company email (centered)
-  const companyEmailText = `${Company.Email}`;
-  const companyEmailTextWidth = (helveticaFont.widthOfTextAtSize(companyEmailText, 25));
-  page.drawText(companyEmailText, { x: centerTextX - companyEmailTextWidth / 2, y: height - 480, color: rgb(0, 0, 0), fontSize: 25 });
-  // Add company email (centered)
-  const companyAddressText = `${Company.Address}`;
-  const companyAddressTextWidth = (helveticaFont.widthOfTextAtSize(companyAddressText, 25));
-  page.drawText(companyAddressText, { x: centerTextX - companyAddressTextWidth / 2, y: height - 510, color: rgb(0, 0, 0), fontSize: 25 });
 
+  // Function to wrap text to fit within a specific width
+  const wrapText = (text, maxWidth, font, fontSize) => {
+    const words = text.split(' ');
+    let lines = [];
+    let currentLine = '';
+
+    for (const word of words) {
+      const testLine = currentLine ? `${currentLine} ${word}` : word;
+      const testLineWidth = font.widthOfTextAtSize(testLine, fontSize);
+      if (testLineWidth <= maxWidth) {
+        currentLine = testLine;
+      } else {
+        lines.push(currentLine);
+        currentLine = word;
+      }
+    }
+    if (currentLine) lines.push(currentLine);
+    return lines;
+  };
+
+  // Draw company logo
+  page.drawImage(logoImage, { 
+    x: centerTextX - logoDims.width / 2, 
+    y: height - 400, 
+    width: logoDims.width, 
+    height: logoDims.height 
+  });
+
+  // Add company name
+  const fontSize = 25;
+  const maxWidth = width - 100; // Allow some padding
+  const companyNameText = Company.CompanyName;
+  page.drawText(companyNameText, { 
+    x: centerTextX - helveticaFont.widthOfTextAtSize(companyNameText, fontSize) / 2, 
+    y: height - 420, 
+    color: rgb(0, 0, 0), 
+    fontSize 
+  });
+
+  // Add company contact
+  const companyContactText = `Contact # ${Company.PhoneNo}`;
+  page.drawText(companyContactText, { 
+    x: centerTextX - helveticaFont.widthOfTextAtSize(companyContactText, fontSize) / 2, 
+    y: height - 450, 
+    color: rgb(0, 0, 0), 
+    fontSize 
+  });
+
+  // Add company email
+  const companyEmailText = `${Company.Email}`;
+  page.drawText(companyEmailText, { 
+    x: centerTextX - helveticaFont.widthOfTextAtSize(companyEmailText, fontSize) / 2, 
+    y: height - 480, 
+    color: rgb(0, 0, 0), 
+    fontSize 
+  });
+
+  // Add wrapped company address
+  const companyAddressText = `${Company.Address}`;
+  const wrappedAddress = wrapText(companyAddressText, maxWidth, helveticaFont, fontSize);
+  let yPosition = height - 510;
+  for (const line of wrappedAddress) {
+    page.drawText(line, { 
+      x: centerTextX - helveticaFont.widthOfTextAtSize(line, fontSize) / 2, 
+      y: yPosition, 
+      color: rgb(0, 0, 0), 
+      fontSize 
+    });
+    yPosition -= 30; // Adjust line spacing
+  }
+
+  // Add uploaded by and date
   const uploadByText = `Uploaded By : ${user.Name}`;
-  const uploadByTextWidth = (helveticaFont.widthOfTextAtSize(uploadByText, 20));
-  page.drawText(uploadByText, { x: centerTextX - uploadByTextWidth / 2, y: height - 560, color: rgb(0, 0, 0), size: 20 });
+  page.drawText(uploadByText, { 
+    x: centerTextX - helveticaFont.widthOfTextAtSize(uploadByText, 20) / 2, 
+    y: yPosition - 50, 
+    color: rgb(0, 0, 0), 
+    size: 20 
+  });
 
   const uploadDateText = `Uploaded Date : ${formatDate(new Date())}`;
-  const uploadDateTextWidth = (helveticaFont.widthOfTextAtSize(uploadDateText, 20));
-  page.drawText(uploadDateText, { x: centerTextX - uploadDateTextWidth / 2, y: height - 590, color: rgb(0, 0, 0), size: 20 });
+  page.drawText(uploadDateText, { 
+    x: centerTextX - helveticaFont.widthOfTextAtSize(uploadDateText, 20) / 2, 
+    y: yPosition - 80, 
+    color: rgb(0, 0, 0), 
+    size: 20 
+  });
 };
 
 
