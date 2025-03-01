@@ -44,7 +44,7 @@ function ViewChecklist() {
             image: { type: 'jpeg', quality: 0.8 },  // Adjusted image quality
             html2canvas: { scale: 5, useCORS: true, logging: true },  // Higher scale and useCORS for images
             jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
-          };
+        };
 
         console.log(element);
         if (element) {
@@ -81,9 +81,9 @@ function ViewChecklist() {
                             const margins = 1; // Adjust margins as needed
                             const maxWidth = pageWidth - margins * 2; // Calculate usable width
                             const wrappedAddress = pdf.splitTextToSize(address, maxWidth);
-                            
+
                             pdf.text(wrappedAddress, 1, (pdf.internal.pageSize.getHeight() / 2) + 0.5);
-                            
+
                             pdf.setLineWidth(0.1); // Example line width
                             pdf.line(0.1, (pdf.internal.pageSize.getHeight() / 2) + 1, pdf.internal.pageSize.getWidth() - 0.2, (pdf.internal.pageSize.getHeight() / 2) + 1)
                             pdf.text("Document Id", 1, (pdf.internal.pageSize.getHeight() / 2) + 1.5);
@@ -111,19 +111,20 @@ function ViewChecklist() {
                         }
                     } else {
                         pdf.setFontSize(15)
-                        pdf.text('Powered By Feat Technology', (pdf.internal.pageSize.getWidth() / 2) - 1.3, 0.5);
+                        pdf.text('Checklist', (pdf.internal.pageSize.getWidth() / 2) - 1.3, 0.5);
                         pdf.setFontSize(10);
                         pdf.text(`${user.Company.CompanyName}`, pdf.internal.pageSize.getWidth() - 2, 0.3);
-                        pdf.text('Checklist', pdf.internal.pageSize.getWidth() - 2, 0.5);
-                        pdf.text(`${dataToSend.ChecklistId}`, pdf.internal.pageSize.getWidth() - 2, 0.7);
+                        pdf.text(`Checklist ID : ${dataToSend.ChecklistId}`, pdf.internal.pageSize.getWidth() - 2, 0.7);
                         pdf.text(`Revision No :${dataToSend.RevisionNo}`, pdf.internal.pageSize.getWidth() - 2, 0.9);
-                        pdf.text(`Creation : ${dayjs(dataToSend.CreationDate).format('DD/MM/YYYY')}`, pdf.internal.pageSize.getWidth() - 2, 1.1);
+                        if (dataToSend.Status == 'Approved') {
+                            pdf.text(`Issue Date : ${dayjs(dataToSend.ApprovalDate).format('DD/MM/YYYY')}`, pdf.internal.pageSize.getWidth() - 2, 1.1);
+                        }
                     }
                 }
             }).save();
         }
     };
-   
+
 
 
 

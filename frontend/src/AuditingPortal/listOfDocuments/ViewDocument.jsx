@@ -29,12 +29,19 @@ function ViewDocument() {
 
         // Clone the contentBox instead of moving it
         const clonedContentBox = contentBox.cloneNode(true);
-        element.appendChild(clonedContentBox);
+
+        // Add a forced page break div before appending the cloned content
+        const pageBreakDiv = document.createElement('div');
+        pageBreakDiv.style.pageBreakBefore = 'always'; // Ensures a new page starts
+        pageBreakDiv.style.height = '0px'; // Keep it hidden
+
+        element.appendChild(pageBreakDiv); // Insert page break
+        element.appendChild(clonedContentBox); // Now append content after page break
         var opt = {
             margin: [1.3, 0.2, 0.2, 0.2],
             filename: `${user.Department.DepartmentName}-doc.pdf`,
             enableLinks: false,
-            pagebreak: { mode: 'avoid-all' },
+            pagebreak: { mode: ['avoid-all', 'css'] },
             image: { type: 'jpeg', quality: 0.98 },
             html2canvas: { scale: 4 },
             jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
@@ -103,12 +110,14 @@ function ViewDocument() {
                     }
                 } else {
                     pdf.setFontSize(15)
-                    pdf.text('Powered By Feat Technology', (pdf.internal.pageSize.getWidth() / 2) - 1.3, 0.5);
+                    pdf.text('Document', (pdf.internal.pageSize.getWidth() / 2) - 1.3, 0.5);
                     pdf.setFontSize(10);
                     pdf.text(`${user.Company.CompanyName}`, pdf.internal.pageSize.getWidth() - 2, 0.3);
-                    pdf.text('Document', pdf.internal.pageSize.getWidth() - 2, 0.5);
+                    pdf.text(`Doc ID : ${documentData.DocumentId}`, pdf.internal.pageSize.getWidth() - 2, 0.5);
                     pdf.text(`Revision No :${documentData.RevisionNo}`, pdf.internal.pageSize.getWidth() - 2, 0.7);
-                    pdf.text(`Creation : ${dayjs(documentData.CreationDate).format('DD/MM/YYYY')}`, pdf.internal.pageSize.getWidth() - 2, 0.9);
+                    if (documentData.Status == 'Approved') {
+                        pdf.text(`Issue Date : ${dayjs(documentData.ApprovalDate).format('DD/MM/YYYY')}`, pdf.internal.pageSize.getWidth() - 2, 0.9);
+                    }
                 }
             }
         }).save();

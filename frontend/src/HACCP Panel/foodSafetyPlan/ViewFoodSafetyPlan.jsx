@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { setSmallLoading } from '../../redux/slices/loading';
 import html2pdf from 'html2pdf.js';
+import dayjs from 'dayjs';
 
 const formatDate = (date) => {
     const newDate = new Date(date);
@@ -123,13 +124,14 @@ function ViewFoodSafetyPlan() {
                     }
                 } else {
                     pdf.setFontSize(15)
-                    pdf.text('Powered By Feat Technology', (pdf.internal.pageSize.getWidth() / 2) - 1.3, 0.5);
+                    pdf.text('Food Safety Plan', (pdf.internal.pageSize.getWidth() / 2) - 1.3, 0.5);
                     pdf.setFontSize(10);
                     pdf.text(`${user.Company.CompanyName}`, pdf.internal.pageSize.getWidth() - 2, 0.3);
-                    pdf.text('Food Safety Plan', pdf.internal.pageSize.getWidth() - 2, 0.5);
-                    pdf.text(`${dataToSend.DocumentId}`, pdf.internal.pageSize.getWidth() - 2, 0.7);
-                    pdf.text(`Revision No :${dataToSend.RevisionNo}`, pdf.internal.pageSize.getWidth() - 2, 0.9);
-                    pdf.text(`Creation : ${formatDate(dataToSend.CreationDate)}`, pdf.internal.pageSize.getWidth() - 2, 1.1);
+                    pdf.text(`Doc ID : ${dataToSend.DocumentId}`, pdf.internal.pageSize.getWidth() - 2, 0.5);
+                    pdf.text(`Revision No :${dataToSend.RevisionNo}`, pdf.internal.pageSize.getWidth() - 2, 0.7);
+                    if (dataToSend.Status == 'Approved') {
+                        pdf.text(`Issue Date : ${dayjs(dataToSend.ApprovalDate).format('DD/MM/YYYY')}`, pdf.internal.pageSize.getWidth() - 2, 0.9);
+                    }
                 }
             }
         }).save();

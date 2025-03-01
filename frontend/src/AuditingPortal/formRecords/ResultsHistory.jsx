@@ -192,9 +192,9 @@ function ResultsHistory() {
                         }
                     </table>
                 </div>
-                <div className={style.btnparent}>
+                {/* <div className={style.btnparent}>
                     <button className={style.download}>Download</button>
-                </div>
+                </div> */}
             {
                 alert ?
                     <div class={style.alertparent}>

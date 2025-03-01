@@ -16,7 +16,6 @@ function ViewReport() {
 
     const [showBox, setShowBox] = useState(false);
     const [reportData, setReportData] = useState(null);
-    const [alert, setalert] = useState(false);
     const [dataToShow, setDataToShow] = useState(null);
     const [dataToSend, setDataToSend] = useState(null)
     const userToken = Cookies.get('userToken');
@@ -144,13 +143,14 @@ function ViewReport() {
                     }
                 } else {
                     pdf.setFontSize(15)
-                    pdf.text('Powered By Feat Technology', (pdf.internal.pageSize.getWidth() / 2) - 1.3, 0.5);
+                    pdf.text('Non Conformance Report', (pdf.internal.pageSize.getWidth() / 2) - 1.3, 0.5);
                     pdf.setFontSize(10);
                     pdf.text(`${user.Company.CompanyName}`, pdf.internal.pageSize.getWidth() - 2, 0.3);
-                    pdf.text('Non Conformance Report', pdf.internal.pageSize.getWidth() - 2, 0.5);
-                    pdf.text(`Checklist : ${dataToSend.ConductAudit.Checklist.ChecklistId}`, pdf.internal.pageSize.getWidth() - 2, 0.7);
-                    pdf.text(`Revision No :${dataToSend.ConductAudit.Checklist.RevisionNo}`, pdf.internal.pageSize.getWidth() - 2, 0.9);
-                    pdf.text(`Audit Date : ${formatDate(dataToSend.ConductAudit.AuditDate)}`, pdf.internal.pageSize.getWidth() - 2, 1.1);
+                    pdf.text(`Checklist ID : ${dataToSend.ConductAudit.Checklist.ChecklistId}`, pdf.internal.pageSize.getWidth() - 2, 0.5);
+                    pdf.text(`Revision No : ${dataToSend.ConductAudit.Checklist.RevisionNo}`, pdf.internal.pageSize.getWidth() - 2, 0.7);
+                    if (dataToSend.ConductAudit.Checklist.Status == 'Approved') {   
+                        pdf.text(`Issue Date : ${formatDate(dataToSend.ConductAudit.Checklist.ApprovalDate)}`, pdf.internal.pageSize.getWidth() - 2, 0.9);
+                    }
                 }
             }
         }).save();

@@ -77,9 +77,9 @@ function ViewProductDetails() {
                         const margins = 1; // Adjust margins as needed
                         const maxWidth = pageWidth - margins * 2; // Calculate usable width
                         const wrappedAddress = pdf.splitTextToSize(address, maxWidth);
-                        
+
                         pdf.text(wrappedAddress, 1, (pdf.internal.pageSize.getHeight() / 2) + 0.5);
-                        
+
                         pdf.setLineWidth(0.1); // Example line width
                         pdf.line(0.1, (pdf.internal.pageSize.getHeight() / 2) + 1, pdf.internal.pageSize.getWidth() - 0.2, (pdf.internal.pageSize.getHeight() / 2) + 1)
                         // pdf.text("Document Id", 1, (pdf.internal.pageSize.getHeight() / 2) + 1.5);
@@ -107,12 +107,14 @@ function ViewProductDetails() {
                     }
                 } else {
                     pdf.setFontSize(15)
-                    pdf.text('Powered By Feat Technology', (pdf.internal.pageSize.getWidth() / 2) - 1.3, 0.5);
+                    pdf.text('Product Details', (pdf.internal.pageSize.getWidth() / 2) - 1.3, 0.5);
                     pdf.setFontSize(10);
                     pdf.text(`${user.Company.CompanyName}`, pdf.internal.pageSize.getWidth() - 2, 0.3);
-                    pdf.text('Product Details', pdf.internal.pageSize.getWidth() - 2, 0.5);
-                    pdf.text(`Revision No :${dataToSend.RevisionNo}`, pdf.internal.pageSize.getWidth() - 2, 0.7);
-                    pdf.text(`Creation : ${dayjs(dataToSend.CreationDate).format('DD/MM/YYYY')}`, pdf.internal.pageSize.getWidth() - 2, 0.9);
+                    pdf.text(`Doc ID : ${dataToSend.DocumentId}`, pdf.internal.pageSize.getWidth() - 2, 0.5);
+                    pdf.text(`Revision No : ${dataToSend.RevisionNo}`, pdf.internal.pageSize.getWidth() - 2, 0.7);
+                    if (dataToSend.Status == 'Approved') {
+                        pdf.text(`Issue Date : ${dayjs(dataToSend.ApprovalDate).format('DD/MM/YYYY')}`, pdf.internal.pageSize.getWidth() - 2, 0.9);
+                    }
                 }
             }
         }).save();

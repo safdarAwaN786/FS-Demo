@@ -134,11 +134,9 @@ function DocumentsList() {
                             <td>Status</td>
                             <td>Document Type</td>
                             <td>Department</td>
-
-
                             <td>Action</td>
                             <td>Action</td>
-                            <td>Document</td>
+                            {/* <td>Document</td> */}
                             <td>Reason</td>
                             {tabData?.Approval && (
                                 <td></td>
@@ -198,12 +196,12 @@ function DocumentsList() {
                                                 height: '28px'
                                             }} className={`btn btn-outline-danger pt-0`}>View</p>
                                         </td>
-                                        <td>
+                                        {/* <td>
                                             <p onClick={() => {
                                                 setDataToShow('Pending feature')
                                                 setShowBox(true);
                                             }} className={style.click}>Download</p>
-                                        </td>
+                                        </td> */}
                                         <td>
                                             <p onClick={() => {
                                                 if (document.Status === 'Disapproved' || document.Status === 'Rejected') {

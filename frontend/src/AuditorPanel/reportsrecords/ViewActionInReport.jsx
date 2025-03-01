@@ -182,13 +182,12 @@ function ViewActionInReport() {
                     }
                 } else {
                     pdf.setFontSize(15)
-                    pdf.text('Powered By Feat Technology', (pdf.internal.pageSize.getWidth() / 2) - 1.3, 0.5);
+                    pdf.text('Corrective Action', (pdf.internal.pageSize.getWidth() / 2) - 1.3, 0.5);
                     pdf.setFontSize(10);
                     pdf.text(`${user.Company.CompanyName}`, pdf.internal.pageSize.getWidth() - 2, 0.3);
-                    pdf.text('Corrective Action', pdf.internal.pageSize.getWidth() - 2, 0.5);
-                    pdf.text(`Checklist : ${actionData?.Report?.ConductAudit?.Checklist?.ChecklistId}`, pdf.internal.pageSize.getWidth() - 2, 0.7);
-                    pdf.text(`Revision No :${actionData?.Report?.ConductAudit?.Checklist?.RevisionNo}`, pdf.internal.pageSize.getWidth() - 2, 0.9);
-                    pdf.text(`Action Date : ${dayjs(actionData.CorrectionDate).format('DD/MM/YYYY')}`, pdf.internal.pageSize.getWidth() - 2, 1.1)
+                    pdf.text(`Checklist ID : ${actionData?.Report?.ConductAudit?.Checklist?.ChecklistId}`, pdf.internal.pageSize.getWidth() - 2, 0.5);
+                    pdf.text(`Revision No : ${actionData?.Report?.ConductAudit?.Checklist?.RevisionNo}`, pdf.internal.pageSize.getWidth() - 2, 0.7);
+                    pdf.text(`Issue Date : ${dayjs(actionData?.Report?.ConductAudit?.Checklist?.ApprovalDate).format('DD/MM/YYYY')}`, pdf.internal.pageSize.getWidth() - 2, 0.9)
                 }
             }
         }).save();

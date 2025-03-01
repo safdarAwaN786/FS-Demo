@@ -178,27 +178,56 @@ router.post('/uploadDocument', upload.single('file'), async (req, res) => {
         addFirstPage(firstPage, pdfLogoImage, requestUser.Company, requestUser);
         const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
         pdfDoc.getPages().slice(1).forEach(async (page) => {
-            page.translateContent(0, -30);
             const { width, height } = page.getSize();
-            const watermarkText = 'Powered By Feat Technology';
+            const extraSpace = 24; // Increase this value for more space at the top
+            
+            // Resize the page to add extra space at the top
+            page.setSize(width, height + extraSpace);
+        
+            // Move the original content down
+            page.translateContent(0, -extraSpace);
+        
+            // Now add your custom text at the top
+            const watermarkText = 'Document';
             const watermarkFontSize = 15;
-            const watermarkTextWidth = (helveticaFont.widthOfTextAtSize(watermarkText, watermarkFontSize));
+            const watermarkTextWidth = helveticaFont.widthOfTextAtSize(watermarkText, watermarkFontSize);
             const centerWatermarkX = width / 2 - watermarkTextWidth / 2;
-            const centerWatermarkY = height - 18;
-            page.drawText(watermarkText, { x: centerWatermarkX, y: centerWatermarkY, size: watermarkFontSize, color: rgb(0, 0, 0) });
+            const centerWatermarkY = height + extraSpace - 10; // Place in new space
+        
+            page.drawText(watermarkText, { 
+                x: centerWatermarkX, 
+                y: centerWatermarkY, 
+                size: watermarkFontSize, 
+                color: rgb(0, 0, 0) 
+            });
+        
             const companyText = `${requestUser.Company.CompanyName}`;
             const companyTextFontSize = 10;
-            const companyTextWidth = (helveticaFont.widthOfTextAtSize(companyText, companyTextFontSize));
+            const companyTextWidth = helveticaFont.widthOfTextAtSize(companyText, companyTextFontSize);
             const centerCompanyTextX = width - companyTextWidth - 20;
-            const centerCompanyTextY = height - 16;
-            page.drawText(companyText, { x: centerCompanyTextX, y: centerCompanyTextY, size: companyTextFontSize, color: rgb(0, 0, 0) });
+            const centerCompanyTextY = height + extraSpace; // Place in new space
+        
+            page.drawText(companyText, { 
+                x: centerCompanyTextX, 
+                y: centerCompanyTextY, 
+                size: companyTextFontSize, 
+                color: rgb(0, 0, 0) 
+            });
+        
             const dateText = `Upload Date : ${formatDate(new Date())}`;
             const dateTextFontSize = 10;
-            const dateTextWidth = (helveticaFont.widthOfTextAtSize(dateText, dateTextFontSize));
+            const dateTextWidth = helveticaFont.widthOfTextAtSize(dateText, dateTextFontSize);
             const centerDateTextX = width - dateTextWidth - 20;
-            const centerDateTextY = height - 30;
-            page.drawText(dateText, { x: centerDateTextX, y: centerDateTextY, size: dateTextFontSize, color: rgb(0, 0, 0) });
+            const centerDateTextY = height + extraSpace - 12; // Place in new space
+        
+            page.drawText(dateText, { 
+                x: centerDateTextX, 
+                y: centerDateTextY, 
+                size: dateTextFontSize, 
+                color: rgb(0, 0, 0) 
+            });
         });
+        
         // Save the modified PDF
         const modifiedPdfBuffer = await pdfDoc.save();
         const result = await uploadToCloudinary(modifiedPdfBuffer);

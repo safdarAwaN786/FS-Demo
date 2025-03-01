@@ -82,9 +82,9 @@ function ViewCorrectiveAction() {
                         const margins = 1; // Adjust margins as needed
                         const maxWidth = pageWidth - margins * 2; // Calculate usable width
                         const wrappedAddress = pdf.splitTextToSize(address, maxWidth);
-                        
+
                         pdf.text(wrappedAddress, 1, (pdf.internal.pageSize.getHeight() / 2) + 0.5);
-                        
+
                         pdf.setLineWidth(0.1); // Example line width
                         pdf.line(0.1, (pdf.internal.pageSize.getHeight() / 2) + 1, pdf.internal.pageSize.getWidth() - 0.2, (pdf.internal.pageSize.getHeight() / 2) + 1)
                         pdf.text("Checklist ID", 1, (pdf.internal.pageSize.getHeight() / 2) + 1.5);
@@ -96,14 +96,12 @@ function ViewCorrectiveAction() {
                         pdf.text("Revision Number", 1, (pdf.internal.pageSize.getHeight() / 2) + 2.4);
                         pdf.text(`${dataToSend.Report?.ConductAudit?.Checklist?.RevisionNo}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 2.4);
                         // if (dataToSend.Report?.ConductAudit?.Checklist?.Status == 'Approved') {
-
                         //     pdf.text("Checklist Approved By", 1, (pdf.internal.pageSize.getHeight() / 2) + 2.7);
                         //     pdf.text(`${dataToSend.Report?.ConductAudit?.Checklist?.ApprovedBy}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 2.7);
                         //     pdf.text("Approval Date", 1, (pdf.internal.pageSize.getHeight() / 2) + 3.0);
                         //     pdf.text(`${formatDate(dataToSend.Report?.ConductAudit?.Checklist?.ApprovalDate)}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 3.0);
                         // }
                         // if (dataToSend.ReviewedBy) {
-
                         //     pdf.text("Reviewed By", 1, (pdf.internal.pageSize.getHeight() / 2) + 3.3);
                         //     pdf.text(`${dataToSend.ReviewedBy}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 3.3);
                         //     pdf.text("Reviewed Date", 1, (pdf.internal.pageSize.getHeight() / 2) + 3.6);
@@ -114,12 +112,13 @@ function ViewCorrectiveAction() {
                     }
                 } else {
                     pdf.setFontSize(15)
-                    pdf.text('Powered By Feat Technology', (pdf.internal.pageSize.getWidth() / 2) - 1.3, 0.5);
+                    pdf.text('Corrective Action', (pdf.internal.pageSize.getWidth() / 2) - 1.3, 0.5);
                     pdf.setFontSize(10);
                     pdf.text(`${user.Company.CompanyName}`, pdf.internal.pageSize.getWidth() - 2, 0.3);
-                    pdf.text(`Action By : ${dataToSend.CorrectionBy}`, pdf.internal.pageSize.getWidth() - 2, 0.5);
-                    pdf.text(`Checklist Revision No :${dataToSend.Report?.ConductAudit?.Checklist?.RevisionNo}`, pdf.internal.pageSize.getWidth() - 2, 0.7);
-                    pdf.text(`Action Date : ${formatDate(dataToSend.CorrectionDate)}`, pdf.internal.pageSize.getWidth() - 2, 0.9);
+                    pdf.text(`Checklist ID :${dataToSend.Report?.ConductAudit?.Checklist?.RevisionNo}`, pdf.internal.pageSize.getWidth() - 2, 0.7);
+                    pdf.text(`Revision No :${dataToSend.Report?.ConductAudit?.Checklist?.RevisionNo}`, pdf.internal.pageSize.getWidth() - 2, 0.7);
+                    
+                    pdf.text(`Issue Date : ${formatDate(dataToSend.Report?.ConductAudit?.Checklist?.ApprovalDate)}`, pdf.internal.pageSize.getWidth() - 2, 0.9);
                 }
             }
         }).save();

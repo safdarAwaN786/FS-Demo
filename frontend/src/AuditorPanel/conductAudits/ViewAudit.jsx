@@ -2,7 +2,6 @@ import style from './AuditConduction.module.css'
 import { useEffect, useRef, useState } from 'react'
 import axios from "axios";
 import Swal from 'sweetalert2'
-import JoditEditor from 'jodit-react';
 import Select from 'react-select';
 import { BsArrowLeftCircle } from 'react-icons/bs';
 import Cookies from 'js-cookie';
@@ -165,13 +164,12 @@ function ViewAudit() {
                     }
                 } else {
                     pdf.setFontSize(15)
-                    pdf.text('Powered By Feat Technology', (pdf.internal.pageSize.getWidth() / 2) - 1.3, 0.5);
+                    pdf.text('Audit', (pdf.internal.pageSize.getWidth() / 2) - 1.3, 0.5);
                     pdf.setFontSize(10);
                     pdf.text(`${user.Company.CompanyName}`, pdf.internal.pageSize.getWidth() - 2, 0.3);
-                    pdf.text('Audit', pdf.internal.pageSize.getWidth() - 2, 0.5);
-                    pdf.text(`${dataToSend.Checklist.ChecklistId}`, pdf.internal.pageSize.getWidth() - 2, 0.7);
-                    pdf.text(`Revision No :${dataToSend.Checklist.RevisionNo}`, pdf.internal.pageSize.getWidth() - 2, 0.9);
-                    pdf.text(`Checklist Creation : ${dayjs(dataToSend.Checklist.CreationDate).format('DD/MM/YYYY')}`, pdf.internal.pageSize.getWidth() - 2, 1.1);
+                    pdf.text(`Checklist ID : ${dataToSend.Checklist.ChecklistId}`, pdf.internal.pageSize.getWidth() - 2, 0.5);
+                    pdf.text(`Revision No : ${dataToSend.Checklist.RevisionNo}`, pdf.internal.pageSize.getWidth() - 2, 0.7);
+                    pdf.text(`Issue Date : ${dayjs(dataToSend.Checklist.ApprovalDate).format('DD/MM/YYYY')}`, pdf.internal.pageSize.getWidth() - 2, 0.9);
                 }
             }
         }).save();
