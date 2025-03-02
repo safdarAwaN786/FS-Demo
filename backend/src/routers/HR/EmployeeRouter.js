@@ -215,6 +215,7 @@ router.post('/addEmployee', upload.fields([{ name: 'Image' }, { name: 'CV' }]), 
         addFirstPage(firstPage, pdfLogoImage, requestUser.Company, requestUser);
         const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
         pdfDoc.getPages().slice(1).forEach(async (page) => {
+          const { width, height } = page.getSize();
           const extraSpace = 24; // Increase this value for more space at the top
           // Resize the page to add extra space at the top
           page.setSize(width, height + extraSpace);
@@ -243,17 +244,7 @@ router.post('/addEmployee', upload.fields([{ name: 'Image' }, { name: 'CV' }]), 
               size: companyTextFontSize,
               color: rgb(0, 0, 0)
           });
-          const dateText = `Upload Date : ${formatDate(new Date())}`;
-          const dateTextFontSize = 10;
-          const dateTextWidth = helveticaFont.widthOfTextAtSize(dateText, dateTextFontSize);
-          const centerDateTextX = width - dateTextWidth - 20;
-          const centerDateTextY = height + extraSpace - 12; // Place in new space
-          page.drawText(dateText, {
-              x: centerDateTextX,
-              y: centerDateTextY,
-              size: dateTextFontSize,
-              color: rgb(0, 0, 0)
-          });
+         
         });
         // Save the modified PDF
         const modifiedPdfBuffer = await pdfDoc.save();

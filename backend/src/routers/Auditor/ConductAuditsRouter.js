@@ -9,6 +9,7 @@ const { rgb, degrees, PDFDocument, StandardFonts } = require('pdf-lib');
 // const authMiddleware = require('../../middleware/auth');
 const axios = require('axios');
 const user = require('../../models/AccountCreation/UserModel');
+const { Checklists } = require('../../models/Auditor/ChecklistModel');
 // router.use(authMiddleware);
 
 cloudinary.config({
@@ -259,14 +260,16 @@ function generateEvidenceDocArray() {
 
 // * POST ConductAudit Data Into MongoDB Database
 router.post('/addConductAudit', upload.fields(generateEvidenceDocArray()), async (req, res) => {
-
   try {
     const requestUser = await user.findById(req.header('Authorization')).populate('Company Department')
+    console.log(req.body);
 
     const auditBy = requestUser.Name;
     let answers = JSON.parse(req.body.Answers);
-
+    const checklist = await Checklists.findById(req.body.Checklist);
     const filesObj = req.files;
+    console.log(checklist);
+
     if (filesObj.length !== 0) {
 
       // Process each question in the Questions array
@@ -290,14 +293,11 @@ router.post('/addConductAudit', upload.fields(generateEvidenceDocArray()), async
         const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
         pdfDoc.getPages().slice(1).forEach(async (page) => {
           const { width, height } = page.getSize();
-          const extraSpace = 24; // Increase this value for more space at the top
-
+          const extraSpace = 38; // Increase this value for more space at the top
           // Resize the page to add extra space at the top
           page.setSize(width, height + extraSpace);
-
           // Move the original content down
           page.translateContent(0, -extraSpace);
-
           // Now add your custom text at the top
           const watermarkText = 'Evidence Document';
           const watermarkFontSize = 15;
@@ -325,7 +325,7 @@ router.post('/addConductAudit', upload.fields(generateEvidenceDocArray()), async
             color: rgb(0, 0, 0)
           });
 
-          const dateText = `Upload Date : ${formatDate(new Date())}`;
+          const dateText = `Document ID : ${checklist.ChecklistId}`;
           const dateTextFontSize = 10;
           const dateTextWidth = helveticaFont.widthOfTextAtSize(dateText, dateTextFontSize);
           const centerDateTextX = width - dateTextWidth - 20;
@@ -337,6 +337,13 @@ router.post('/addConductAudit', upload.fields(generateEvidenceDocArray()), async
             size: dateTextFontSize,
             color: rgb(0, 0, 0)
           });
+
+        
+
+
+          
+
+
         });
         // Save the modified PDF
         const modifiedPdfBuffer = await pdfDoc.save();
@@ -349,7 +356,6 @@ router.post('/addConductAudit', upload.fields(generateEvidenceDocArray()), async
       }
     }
     answers = answers.filter(ans => ans !== null)
-    console.log('recieved ansers', answers);
     const createdAnswers = await ChecklistAnswerModel.create(answers);
     const answersArr = Object.values(createdAnswers);
     const answersIds = answersArr.map(answerObj => answerObj._id);

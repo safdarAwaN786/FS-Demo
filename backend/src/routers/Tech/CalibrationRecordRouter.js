@@ -56,40 +56,40 @@ const addFirstPage = async (page, logoImage, Company, user) => {
   };
 
   // Draw company logo
-  page.drawImage(logoImage, { 
-    x: centerTextX - logoDims.width / 2, 
-    y: height - 400, 
-    width: logoDims.width, 
-    height: logoDims.height 
+  page.drawImage(logoImage, {
+    x: centerTextX - logoDims.width / 2,
+    y: height - 400,
+    width: logoDims.width,
+    height: logoDims.height
   });
 
   // Add company name
   const fontSize = 25;
   const maxWidth = width - 100; // Allow some padding
   const companyNameText = Company.CompanyName;
-  page.drawText(companyNameText, { 
-    x: centerTextX - helveticaFont.widthOfTextAtSize(companyNameText, fontSize) / 2, 
-    y: height - 420, 
-    color: rgb(0, 0, 0), 
-    fontSize 
+  page.drawText(companyNameText, {
+    x: centerTextX - helveticaFont.widthOfTextAtSize(companyNameText, fontSize) / 2,
+    y: height - 420,
+    color: rgb(0, 0, 0),
+    fontSize
   });
 
   // Add company contact
   const companyContactText = `Contact # ${Company.PhoneNo}`;
-  page.drawText(companyContactText, { 
-    x: centerTextX - helveticaFont.widthOfTextAtSize(companyContactText, fontSize) / 2, 
-    y: height - 450, 
-    color: rgb(0, 0, 0), 
-    fontSize 
+  page.drawText(companyContactText, {
+    x: centerTextX - helveticaFont.widthOfTextAtSize(companyContactText, fontSize) / 2,
+    y: height - 450,
+    color: rgb(0, 0, 0),
+    fontSize
   });
 
   // Add company email
   const companyEmailText = `${Company.Email}`;
-  page.drawText(companyEmailText, { 
-    x: centerTextX - helveticaFont.widthOfTextAtSize(companyEmailText, fontSize) / 2, 
-    y: height - 480, 
-    color: rgb(0, 0, 0), 
-    fontSize 
+  page.drawText(companyEmailText, {
+    x: centerTextX - helveticaFont.widthOfTextAtSize(companyEmailText, fontSize) / 2,
+    y: height - 480,
+    color: rgb(0, 0, 0),
+    fontSize
   });
 
   // Add wrapped company address
@@ -97,30 +97,30 @@ const addFirstPage = async (page, logoImage, Company, user) => {
   const wrappedAddress = wrapText(companyAddressText, maxWidth, helveticaFont, fontSize);
   let yPosition = height - 510;
   for (const line of wrappedAddress) {
-    page.drawText(line, { 
-      x: centerTextX - helveticaFont.widthOfTextAtSize(line, fontSize) / 2, 
-      y: yPosition, 
-      color: rgb(0, 0, 0), 
-      fontSize 
+    page.drawText(line, {
+      x: centerTextX - helveticaFont.widthOfTextAtSize(line, fontSize) / 2,
+      y: yPosition,
+      color: rgb(0, 0, 0),
+      fontSize
     });
     yPosition -= 30; // Adjust line spacing
   }
 
   // Add uploaded by and date
   const uploadByText = `Uploaded By : ${user.Name}`;
-  page.drawText(uploadByText, { 
-    x: centerTextX - helveticaFont.widthOfTextAtSize(uploadByText, 20) / 2, 
-    y: yPosition - 50, 
-    color: rgb(0, 0, 0), 
-    size: 20 
+  page.drawText(uploadByText, {
+    x: centerTextX - helveticaFont.widthOfTextAtSize(uploadByText, 20) / 2,
+    y: yPosition - 50,
+    color: rgb(0, 0, 0),
+    size: 20
   });
 
   const uploadDateText = `Uploaded Date : ${formatDate(new Date())}`;
-  page.drawText(uploadDateText, { 
-    x: centerTextX - helveticaFont.widthOfTextAtSize(uploadDateText, 20) / 2, 
-    y: yPosition - 80, 
-    color: rgb(0, 0, 0), 
-    size: 20 
+  page.drawText(uploadDateText, {
+    x: centerTextX - helveticaFont.widthOfTextAtSize(uploadDateText, 20) / 2,
+    y: yPosition - 80,
+    color: rgb(0, 0, 0),
+    size: 20
   });
 };
 
@@ -166,6 +166,7 @@ router.post('/addCalibration/:EquipmentId', upload.fields([{ name: 'Image' }, { 
     if (!equipment) {
       return res.status(404).json({ error: 'Equipment not found' });
     }
+    console.log(equipment);
 
     let ImageURL = '';
     let CertificateURL = '';
@@ -203,45 +204,46 @@ router.post('/addCalibration/:EquipmentId', upload.fields([{ name: 'Image' }, { 
       addFirstPage(firstPage, pdfLogoImage, requestUser.Company, requestUser);
       const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
       pdfDoc.getPages().slice(1).forEach(async (page) => {
+        const { width, height } = page.getSize();
         const extraSpace = 24; // Increase this value for more space at the top
-                    // Resize the page to add extra space at the top
-                    page.setSize(width, height + extraSpace);
-                    // Move the original content down
-                    page.translateContent(0, -extraSpace);
-                    // Now add your custom text at the top
-                    const watermarkText = 'Certificate';
-                    const watermarkFontSize = 15;
-                    const watermarkTextWidth = helveticaFont.widthOfTextAtSize(watermarkText, watermarkFontSize);
-                    const centerWatermarkX = width / 2 - watermarkTextWidth / 2;
-                    const centerWatermarkY = height + extraSpace - 10; // Place in new space
-                    page.drawText(watermarkText, {
-                        x: centerWatermarkX,
-                        y: centerWatermarkY,
-                        size: watermarkFontSize,
-                        color: rgb(0, 0, 0)
-                    });
-                    const companyText = `${requestUser.Company.CompanyName}`;
-                    const companyTextFontSize = 10;
-                    const companyTextWidth = helveticaFont.widthOfTextAtSize(companyText, companyTextFontSize);
-                    const centerCompanyTextX = width - companyTextWidth - 20;
-                    const centerCompanyTextY = height + extraSpace; // Place in new space
-                    page.drawText(companyText, {
-                        x: centerCompanyTextX,
-                        y: centerCompanyTextY,
-                        size: companyTextFontSize,
-                        color: rgb(0, 0, 0)
-                    });
-                    const dateText = `Upload Date : ${formatDate(new Date())}`;
-                    const dateTextFontSize = 10;
-                    const dateTextWidth = helveticaFont.widthOfTextAtSize(dateText, dateTextFontSize);
-                    const centerDateTextX = width - dateTextWidth - 20;
-                    const centerDateTextY = height + extraSpace - 12; // Place in new space
-                    page.drawText(dateText, {
-                        x: centerDateTextX,
-                        y: centerDateTextY,
-                        size: dateTextFontSize,
-                        color: rgb(0, 0, 0)
-                    });
+        // Resize the page to add extra space at the top
+        page.setSize(width, height + extraSpace);
+        // Move the original content down
+        page.translateContent(0, -extraSpace);
+        // Now add your custom text at the top
+        const watermarkText = 'Certificate';
+        const watermarkFontSize = 15;
+        const watermarkTextWidth = helveticaFont.widthOfTextAtSize(watermarkText, watermarkFontSize);
+        const centerWatermarkX = width / 2 - watermarkTextWidth / 2;
+        const centerWatermarkY = height + extraSpace - 10; // Place in new space
+        page.drawText(watermarkText, {
+          x: centerWatermarkX,
+          y: centerWatermarkY,
+          size: watermarkFontSize,
+          color: rgb(0, 0, 0)
+        });
+        const companyText = `${requestUser.Company.CompanyName}`;
+        const companyTextFontSize = 10;
+        const companyTextWidth = helveticaFont.widthOfTextAtSize(companyText, companyTextFontSize);
+        const centerCompanyTextX = width - companyTextWidth - 20;
+        const centerCompanyTextY = height + extraSpace; // Place in new space
+        page.drawText(companyText, {
+          x: centerCompanyTextX,
+          y: centerCompanyTextY,
+          size: companyTextFontSize,
+          color: rgb(0, 0, 0)
+        });
+        const dateText = `Device ID : ${equipment.equipmentCode}`;
+        const dateTextFontSize = 10;
+        const dateTextWidth = helveticaFont.widthOfTextAtSize(dateText, dateTextFontSize);
+        const centerDateTextX = width - dateTextWidth - 20;
+        const centerDateTextY = height + extraSpace - 12; // Place in new space
+        page.drawText(dateText, {
+          x: centerDateTextX,
+          y: centerDateTextY,
+          size: dateTextFontSize,
+          color: rgb(0, 0, 0)
+        });
       });
       // Save the modified PDF
       const modifiedPdfBuffer = await pdfDoc.save();
@@ -271,6 +273,7 @@ router.post('/addCalibration/:EquipmentId', upload.fields([{ name: 'Image' }, { 
       addFirstPage(firstPage, pdfLogoImage, requestUser.Company, requestUser);
       const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
       pdfDoc.getPages().slice(1).forEach(async (page) => {
+        const { width, height } = page.getSize();
         const extraSpace = 24; // Increase this value for more space at the top
         // Resize the page to add extra space at the top
         page.setSize(width, height + extraSpace);
@@ -283,10 +286,10 @@ router.post('/addCalibration/:EquipmentId', upload.fields([{ name: 'Image' }, { 
         const centerWatermarkX = width / 2 - watermarkTextWidth / 2;
         const centerWatermarkY = height + extraSpace - 10; // Place in new space
         page.drawText(watermarkText, {
-            x: centerWatermarkX,
-            y: centerWatermarkY,
-            size: watermarkFontSize,
-            color: rgb(0, 0, 0)
+          x: centerWatermarkX,
+          y: centerWatermarkY,
+          size: watermarkFontSize,
+          color: rgb(0, 0, 0)
         });
         const companyText = `${requestUser.Company.CompanyName}`;
         const companyTextFontSize = 10;
@@ -294,21 +297,21 @@ router.post('/addCalibration/:EquipmentId', upload.fields([{ name: 'Image' }, { 
         const centerCompanyTextX = width - companyTextWidth - 20;
         const centerCompanyTextY = height + extraSpace; // Place in new space
         page.drawText(companyText, {
-            x: centerCompanyTextX,
-            y: centerCompanyTextY,
-            size: companyTextFontSize,
-            color: rgb(0, 0, 0)
+          x: centerCompanyTextX,
+          y: centerCompanyTextY,
+          size: companyTextFontSize,
+          color: rgb(0, 0, 0)
         });
-        const dateText = `Upload Date : ${formatDate(new Date())}`;
+        const dateText = `Device ID : ${equipment.equipmentCode}`;
         const dateTextFontSize = 10;
         const dateTextWidth = helveticaFont.widthOfTextAtSize(dateText, dateTextFontSize);
         const centerDateTextX = width - dateTextWidth - 20;
         const centerDateTextY = height + extraSpace - 12; // Place in new space
         page.drawText(dateText, {
-            x: centerDateTextX,
-            y: centerDateTextY,
-            size: dateTextFontSize,
-            color: rgb(0, 0, 0)
+          x: centerDateTextX,
+          y: centerDateTextY,
+          size: dateTextFontSize,
+          color: rgb(0, 0, 0)
         });
       });
       // Save the modified PDF
@@ -339,45 +342,46 @@ router.post('/addCalibration/:EquipmentId', upload.fields([{ name: 'Image' }, { 
       addFirstPage(firstPage, pdfLogoImage, requestUser.Company, requestUser);
       const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
       pdfDoc.getPages().slice(1).forEach(async (page) => {
+        const { width, height } = page.getSize();
         const extraSpace = 24; // Increase this value for more space at the top
-                    // Resize the page to add extra space at the top
-                    page.setSize(width, height + extraSpace);
-                    // Move the original content down
-                    page.translateContent(0, -extraSpace);
-                    // Now add your custom text at the top
-                    const watermarkText = 'Master Cerificate';
-                    const watermarkFontSize = 15;
-                    const watermarkTextWidth = helveticaFont.widthOfTextAtSize(watermarkText, watermarkFontSize);
-                    const centerWatermarkX = width / 2 - watermarkTextWidth / 2;
-                    const centerWatermarkY = height + extraSpace - 10; // Place in new space
-                    page.drawText(watermarkText, {
-                        x: centerWatermarkX,
-                        y: centerWatermarkY,
-                        size: watermarkFontSize,
-                        color: rgb(0, 0, 0)
-                    });
-                    const companyText = `${requestUser.Company.CompanyName}`;
-                    const companyTextFontSize = 10;
-                    const companyTextWidth = helveticaFont.widthOfTextAtSize(companyText, companyTextFontSize);
-                    const centerCompanyTextX = width - companyTextWidth - 20;
-                    const centerCompanyTextY = height + extraSpace; // Place in new space
-                    page.drawText(companyText, {
-                        x: centerCompanyTextX,
-                        y: centerCompanyTextY,
-                        size: companyTextFontSize,
-                        color: rgb(0, 0, 0)
-                    });
-                    const dateText = `Upload Date : ${formatDate(new Date())}`;
-                    const dateTextFontSize = 10;
-                    const dateTextWidth = helveticaFont.widthOfTextAtSize(dateText, dateTextFontSize);
-                    const centerDateTextX = width - dateTextWidth - 20;
-                    const centerDateTextY = height + extraSpace - 12; // Place in new space
-                    page.drawText(dateText, {
-                        x: centerDateTextX,
-                        y: centerDateTextY,
-                        size: dateTextFontSize,
-                        color: rgb(0, 0, 0)
-                    });
+        // Resize the page to add extra space at the top
+        page.setSize(width, height + extraSpace);
+        // Move the original content down
+        page.translateContent(0, -extraSpace);
+        // Now add your custom text at the top
+        const watermarkText = 'Master Cerificate';
+        const watermarkFontSize = 15;
+        const watermarkTextWidth = helveticaFont.widthOfTextAtSize(watermarkText, watermarkFontSize);
+        const centerWatermarkX = width / 2 - watermarkTextWidth / 2;
+        const centerWatermarkY = height + extraSpace - 10; // Place in new space
+        page.drawText(watermarkText, {
+          x: centerWatermarkX,
+          y: centerWatermarkY,
+          size: watermarkFontSize,
+          color: rgb(0, 0, 0)
+        });
+        const companyText = `${requestUser.Company.CompanyName}`;
+        const companyTextFontSize = 10;
+        const companyTextWidth = helveticaFont.widthOfTextAtSize(companyText, companyTextFontSize);
+        const centerCompanyTextX = width - companyTextWidth - 20;
+        const centerCompanyTextY = height + extraSpace; // Place in new space
+        page.drawText(companyText, {
+          x: centerCompanyTextX,
+          y: centerCompanyTextY,
+          size: companyTextFontSize,
+          color: rgb(0, 0, 0)
+        });
+        const dateText = `Device ID : ${equipment.equipmentCode}`;
+        const dateTextFontSize = 10;
+        const dateTextWidth = helveticaFont.widthOfTextAtSize(dateText, dateTextFontSize);
+        const centerDateTextX = width - dateTextWidth - 20;
+        const centerDateTextY = height + extraSpace - 12; // Place in new space
+        page.drawText(dateText, {
+          x: centerDateTextX,
+          y: centerDateTextY,
+          size: dateTextFontSize,
+          color: rgb(0, 0, 0)
+        });
       });
       // Save the modified PDF
       const modifiedPdfBuffer = await pdfDoc.save();
@@ -443,7 +447,7 @@ router.get('/readAllCalibration', async (req, res) => {
 
     const callibration = await Calibration.find({ UserDepartment: req.header('Authorization') }).populate('Equipment').populate('UserDepartment');
 
-  
+
 
     res.status(201).send({ status: true, message: "The following are Callibration!", data: callibration });
 
@@ -455,12 +459,12 @@ router.get('/readAllCalibration', async (req, res) => {
 // * GET route to fetch callibration by equipment ID
 router.get('/readCalibrationByEquipmentId/:equipmentId', async (req, res) => {
   try {
-    
+
     const equipmentId = req.params.equipmentId;
     if (!equipmentId) {
       return res.status(404).json({ error: 'Please Provide Machine ID' });
     }
-    
+
     const calibration = await Calibration.find({ Equipment: equipmentId, UserDepartment: req.header('Authorization') }).populate('Equipment');
     if (!calibration) {
       return res.status(404).json({ error: 'calibration not found' });
@@ -469,7 +473,7 @@ router.get('/readCalibrationByEquipmentId/:equipmentId', async (req, res) => {
 
   } catch (error) {
     console.log(error);
-    
+
     res.status(500).json({ error: 'Failed to fetch calibration', message: error.message });
   }
 });

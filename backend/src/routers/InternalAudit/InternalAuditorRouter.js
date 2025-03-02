@@ -33,104 +33,104 @@ const formatDate = (date) => {
         year: 'numeric',
     });
     return formatDate;
-  }
+}
 // Function to add the company logo and information to the first page
 const addFirstPage = async (page, logoImage, Company, user) => {
     const { width, height } = page.getSize();
-  
+
     const pdfDoc = await PDFDocument.create();
     const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
     const logoDims = { width: 300, height: 300 };
     const centerTextX = width / 2;
-  
+
     // Function to wrap text to fit within a specific width
     const wrapText = (text, maxWidth, font, fontSize) => {
-      const words = text.split(' ');
-      let lines = [];
-      let currentLine = '';
-  
-      for (const word of words) {
-        const testLine = currentLine ? `${currentLine} ${word}` : word;
-        const testLineWidth = font.widthOfTextAtSize(testLine, fontSize);
-        if (testLineWidth <= maxWidth) {
-          currentLine = testLine;
-        } else {
-          lines.push(currentLine);
-          currentLine = word;
+        const words = text.split(' ');
+        let lines = [];
+        let currentLine = '';
+
+        for (const word of words) {
+            const testLine = currentLine ? `${currentLine} ${word}` : word;
+            const testLineWidth = font.widthOfTextAtSize(testLine, fontSize);
+            if (testLineWidth <= maxWidth) {
+                currentLine = testLine;
+            } else {
+                lines.push(currentLine);
+                currentLine = word;
+            }
         }
-      }
-      if (currentLine) lines.push(currentLine);
-      return lines;
+        if (currentLine) lines.push(currentLine);
+        return lines;
     };
-  
+
     // Draw company logo
-    page.drawImage(logoImage, { 
-      x: centerTextX - logoDims.width / 2, 
-      y: height - 400, 
-      width: logoDims.width, 
-      height: logoDims.height 
+    page.drawImage(logoImage, {
+        x: centerTextX - logoDims.width / 2,
+        y: height - 400,
+        width: logoDims.width,
+        height: logoDims.height
     });
-  
+
     // Add company name
     const fontSize = 25;
     const maxWidth = width - 100; // Allow some padding
     const companyNameText = Company.CompanyName;
-    page.drawText(companyNameText, { 
-      x: centerTextX - helveticaFont.widthOfTextAtSize(companyNameText, fontSize) / 2, 
-      y: height - 420, 
-      color: rgb(0, 0, 0), 
-      fontSize 
+    page.drawText(companyNameText, {
+        x: centerTextX - helveticaFont.widthOfTextAtSize(companyNameText, fontSize) / 2,
+        y: height - 420,
+        color: rgb(0, 0, 0),
+        fontSize
     });
-  
+
     // Add company contact
     const companyContactText = `Contact # ${Company.PhoneNo}`;
-    page.drawText(companyContactText, { 
-      x: centerTextX - helveticaFont.widthOfTextAtSize(companyContactText, fontSize) / 2, 
-      y: height - 450, 
-      color: rgb(0, 0, 0), 
-      fontSize 
+    page.drawText(companyContactText, {
+        x: centerTextX - helveticaFont.widthOfTextAtSize(companyContactText, fontSize) / 2,
+        y: height - 450,
+        color: rgb(0, 0, 0),
+        fontSize
     });
-  
+
     // Add company email
     const companyEmailText = `${Company.Email}`;
-    page.drawText(companyEmailText, { 
-      x: centerTextX - helveticaFont.widthOfTextAtSize(companyEmailText, fontSize) / 2, 
-      y: height - 480, 
-      color: rgb(0, 0, 0), 
-      fontSize 
+    page.drawText(companyEmailText, {
+        x: centerTextX - helveticaFont.widthOfTextAtSize(companyEmailText, fontSize) / 2,
+        y: height - 480,
+        color: rgb(0, 0, 0),
+        fontSize
     });
-  
+
     // Add wrapped company address
     const companyAddressText = `${Company.Address}`;
     const wrappedAddress = wrapText(companyAddressText, maxWidth, helveticaFont, fontSize);
     let yPosition = height - 510;
     for (const line of wrappedAddress) {
-      page.drawText(line, { 
-        x: centerTextX - helveticaFont.widthOfTextAtSize(line, fontSize) / 2, 
-        y: yPosition, 
-        color: rgb(0, 0, 0), 
-        fontSize 
-      });
-      yPosition -= 30; // Adjust line spacing
+        page.drawText(line, {
+            x: centerTextX - helveticaFont.widthOfTextAtSize(line, fontSize) / 2,
+            y: yPosition,
+            color: rgb(0, 0, 0),
+            fontSize
+        });
+        yPosition -= 30; // Adjust line spacing
     }
-  
+
     // Add uploaded by and date
     const uploadByText = `Uploaded By : ${user.Name}`;
-    page.drawText(uploadByText, { 
-      x: centerTextX - helveticaFont.widthOfTextAtSize(uploadByText, 20) / 2, 
-      y: yPosition - 50, 
-      color: rgb(0, 0, 0), 
-      size: 20 
+    page.drawText(uploadByText, {
+        x: centerTextX - helveticaFont.widthOfTextAtSize(uploadByText, 20) / 2,
+        y: yPosition - 50,
+        color: rgb(0, 0, 0),
+        size: 20
     });
-  
+
     const uploadDateText = `Uploaded Date : ${formatDate(new Date())}`;
-    page.drawText(uploadDateText, { 
-      x: centerTextX - helveticaFont.widthOfTextAtSize(uploadDateText, 20) / 2, 
-      y: yPosition - 80, 
-      color: rgb(0, 0, 0), 
-      size: 20 
+    page.drawText(uploadDateText, {
+        x: centerTextX - helveticaFont.widthOfTextAtSize(uploadDateText, 20) / 2,
+        y: yPosition - 80,
+        color: rgb(0, 0, 0),
+        size: 20
     });
-  };
+};
 // * Upload Documents To Cloudinary
 const uploadToCloudinary = (buffer) => {
     try {
@@ -196,7 +196,7 @@ router.post('/send-email-to-auditor', async (req, res) => {
 // * POST Auditor Data To MongooDB Database
 router.post("/addAuditor", upload.fields([{ name: 'AuditorImage' }, { name: 'AuditorDocument' }, { name: 'ApprovedAuditorLetter' }]), async (req, res) => {
     try {
-    const requestUser = await User.findById(req.header('Authorization')).populate('Company Department')
+        const requestUser = await User.findById(req.header('Authorization')).populate('Company Department')
 
         const userNameExist = await User.findOne({ UserName: req.body.UserName });
         if (userNameExist) {
@@ -234,7 +234,7 @@ router.post("/addAuditor", upload.fields([{ name: 'AuditorImage' }, { name: 'Aud
                     console.log(response);
                     const pdfDoc = await PDFDocument.load(auditorDocumentFile.buffer);
                     const logoImage = Buffer.from(response.data);
-                 
+
                     const isJpg = requestUser.Company.CompanyLogo.includes('.jpeg') || requestUser.Company.CompanyLogo.includes('.jpg');
                     const isPng = requestUser.Company.CompanyLogo.includes('.png');
                     let pdfLogoImage;
@@ -247,6 +247,7 @@ router.post("/addAuditor", upload.fields([{ name: 'AuditorImage' }, { name: 'Aud
                     addFirstPage(firstPage, pdfLogoImage, requestUser.Company, requestUser);
                     const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
                     pdfDoc.getPages().slice(1).forEach(async (page) => {
+                        const { width, height } = page.getSize();
                         const extraSpace = 24; // Increase this value for more space at the top
                         // Resize the page to add extra space at the top
                         page.setSize(width, height + extraSpace);
@@ -275,17 +276,7 @@ router.post("/addAuditor", upload.fields([{ name: 'AuditorImage' }, { name: 'Aud
                             size: companyTextFontSize,
                             color: rgb(0, 0, 0)
                         });
-                        const dateText = `Upload Date : ${formatDate(new Date())}`;
-                        const dateTextFontSize = 10;
-                        const dateTextWidth = helveticaFont.widthOfTextAtSize(dateText, dateTextFontSize);
-                        const centerDateTextX = width - dateTextWidth - 20;
-                        const centerDateTextY = height + extraSpace - 12; // Place in new space
-                        page.drawText(dateText, {
-                            x: centerDateTextX,
-                            y: centerDateTextY,
-                            size: dateTextFontSize,
-                            color: rgb(0, 0, 0)
-                        });
+
                     });
                     // Save the modified PDF
                     const modifiedPdfBuffer = await pdfDoc.save();
@@ -304,7 +295,7 @@ router.post("/addAuditor", upload.fields([{ name: 'AuditorImage' }, { name: 'Aud
 
                     const response = await axios.get(requestUser.Company.CompanyLogo, { responseType: 'arraybuffer' });
                     const pdfDoc = await PDFDocument.load(approvedAuditorDocumentFile.buffer);
-                    const logoImage = Buffer.from(response.data);                   
+                    const logoImage = Buffer.from(response.data);
                     const isJpg = requestUser.Company.CompanyLogo.includes('.jpeg') || requestUser.Company.CompanyLogo.includes('.jpg');
                     const isPng = requestUser.Company.CompanyLogo.includes('.png');
                     let pdfLogoImage;
@@ -317,45 +308,36 @@ router.post("/addAuditor", upload.fields([{ name: 'AuditorImage' }, { name: 'Aud
                     addFirstPage(firstPage, pdfLogoImage, requestUser.Company, requestUser);
                     const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
                     pdfDoc.getPages().slice(1).forEach(async (page) => {
+                        const { width, height } = page.getSize();
                         const extraSpace = 24; // Increase this value for more space at the top
-                    // Resize the page to add extra space at the top
-                    page.setSize(width, height + extraSpace);
-                    // Move the original content down
-                    page.translateContent(0, -extraSpace);
-                    // Now add your custom text at the top
-                    const watermarkText = 'Approved Auditor Document';
-                    const watermarkFontSize = 15;
-                    const watermarkTextWidth = helveticaFont.widthOfTextAtSize(watermarkText, watermarkFontSize);
-                    const centerWatermarkX = width / 2 - watermarkTextWidth / 2;
-                    const centerWatermarkY = height + extraSpace - 10; // Place in new space
-                    page.drawText(watermarkText, {
-                        x: centerWatermarkX,
-                        y: centerWatermarkY,
-                        size: watermarkFontSize,
-                        color: rgb(0, 0, 0)
-                    });
-                    const companyText = `${requestUser.Company.CompanyName}`;
-                    const companyTextFontSize = 10;
-                    const companyTextWidth = helveticaFont.widthOfTextAtSize(companyText, companyTextFontSize);
-                    const centerCompanyTextX = width - companyTextWidth - 20;
-                    const centerCompanyTextY = height + extraSpace; // Place in new space
-                    page.drawText(companyText, {
-                        x: centerCompanyTextX,
-                        y: centerCompanyTextY,
-                        size: companyTextFontSize,
-                        color: rgb(0, 0, 0)
-                    });
-                    const dateText = `Upload Date : ${formatDate(new Date())}`;
-                    const dateTextFontSize = 10;
-                    const dateTextWidth = helveticaFont.widthOfTextAtSize(dateText, dateTextFontSize);
-                    const centerDateTextX = width - dateTextWidth - 20;
-                    const centerDateTextY = height + extraSpace - 12; // Place in new space
-                    page.drawText(dateText, {
-                        x: centerDateTextX,
-                        y: centerDateTextY,
-                        size: dateTextFontSize,
-                        color: rgb(0, 0, 0)
-                    });
+                        // Resize the page to add extra space at the top
+                        page.setSize(width, height + extraSpace);
+                        // Move the original content down
+                        page.translateContent(0, -extraSpace);
+                        // Now add your custom text at the top
+                        const watermarkText = 'Approved Auditor Document';
+                        const watermarkFontSize = 15;
+                        const watermarkTextWidth = helveticaFont.widthOfTextAtSize(watermarkText, watermarkFontSize);
+                        const centerWatermarkX = width / 2 - watermarkTextWidth / 2;
+                        const centerWatermarkY = height + extraSpace - 10; // Place in new space
+                        page.drawText(watermarkText, {
+                            x: centerWatermarkX,
+                            y: centerWatermarkY,
+                            size: watermarkFontSize,
+                            color: rgb(0, 0, 0)
+                        });
+                        const companyText = `${requestUser.Company.CompanyName}`;
+                        const companyTextFontSize = 10;
+                        const companyTextWidth = helveticaFont.widthOfTextAtSize(companyText, companyTextFontSize);
+                        const centerCompanyTextX = width - companyTextWidth - 20;
+                        const centerCompanyTextY = height + extraSpace; // Place in new space
+                        page.drawText(companyText, {
+                            x: centerCompanyTextX,
+                            y: centerCompanyTextY,
+                            size: companyTextFontSize,
+                            color: rgb(0, 0, 0)
+                        });
+
                     });
                     // Save the modified PDF
                     const modifiedPdfBuffer = await pdfDoc.save();
@@ -375,8 +357,8 @@ router.post("/addAuditor", upload.fields([{ name: 'AuditorImage' }, { name: 'Aud
                 ...req.body,
                 ApprovedInternalAuditor: approvedAuditor,
                 AuditorImage: auditorImageUrl,
-                Company : requestUser.Company._id,
-                Department : requestUser.Department._id,
+                Company: requestUser.Company._id,
+                Department: requestUser.Department._id,
                 AuditorDocument: auditorDocumentUrl,
                 ApprovedAuditorLetter: approvedAuditorDocumentUrl,
                 CreatedBy: createdBy,

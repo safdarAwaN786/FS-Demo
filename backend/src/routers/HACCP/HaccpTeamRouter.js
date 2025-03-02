@@ -56,40 +56,40 @@ const addFirstPage = async (page, logoImage, Company, user) => {
   };
 
   // Draw company logo
-  page.drawImage(logoImage, { 
-    x: centerTextX - logoDims.width / 2, 
-    y: height - 400, 
-    width: logoDims.width, 
-    height: logoDims.height 
+  page.drawImage(logoImage, {
+    x: centerTextX - logoDims.width / 2,
+    y: height - 400,
+    width: logoDims.width,
+    height: logoDims.height
   });
 
   // Add company name
   const fontSize = 25;
   const maxWidth = width - 100; // Allow some padding
   const companyNameText = Company.CompanyName;
-  page.drawText(companyNameText, { 
-    x: centerTextX - helveticaFont.widthOfTextAtSize(companyNameText, fontSize) / 2, 
-    y: height - 420, 
-    color: rgb(0, 0, 0), 
-    fontSize 
+  page.drawText(companyNameText, {
+    x: centerTextX - helveticaFont.widthOfTextAtSize(companyNameText, fontSize) / 2,
+    y: height - 420,
+    color: rgb(0, 0, 0),
+    fontSize
   });
 
   // Add company contact
   const companyContactText = `Contact # ${Company.PhoneNo}`;
-  page.drawText(companyContactText, { 
-    x: centerTextX - helveticaFont.widthOfTextAtSize(companyContactText, fontSize) / 2, 
-    y: height - 450, 
-    color: rgb(0, 0, 0), 
-    fontSize 
+  page.drawText(companyContactText, {
+    x: centerTextX - helveticaFont.widthOfTextAtSize(companyContactText, fontSize) / 2,
+    y: height - 450,
+    color: rgb(0, 0, 0),
+    fontSize
   });
 
   // Add company email
   const companyEmailText = `${Company.Email}`;
-  page.drawText(companyEmailText, { 
-    x: centerTextX - helveticaFont.widthOfTextAtSize(companyEmailText, fontSize) / 2, 
-    y: height - 480, 
-    color: rgb(0, 0, 0), 
-    fontSize 
+  page.drawText(companyEmailText, {
+    x: centerTextX - helveticaFont.widthOfTextAtSize(companyEmailText, fontSize) / 2,
+    y: height - 480,
+    color: rgb(0, 0, 0),
+    fontSize
   });
 
   // Add wrapped company address
@@ -97,30 +97,30 @@ const addFirstPage = async (page, logoImage, Company, user) => {
   const wrappedAddress = wrapText(companyAddressText, maxWidth, helveticaFont, fontSize);
   let yPosition = height - 510;
   for (const line of wrappedAddress) {
-    page.drawText(line, { 
-      x: centerTextX - helveticaFont.widthOfTextAtSize(line, fontSize) / 2, 
-      y: yPosition, 
-      color: rgb(0, 0, 0), 
-      fontSize 
+    page.drawText(line, {
+      x: centerTextX - helveticaFont.widthOfTextAtSize(line, fontSize) / 2,
+      y: yPosition,
+      color: rgb(0, 0, 0),
+      fontSize
     });
     yPosition -= 30; // Adjust line spacing
   }
 
   // Add uploaded by and date
   const uploadByText = `Uploaded By : ${user.Name}`;
-  page.drawText(uploadByText, { 
-    x: centerTextX - helveticaFont.widthOfTextAtSize(uploadByText, 20) / 2, 
-    y: yPosition - 50, 
-    color: rgb(0, 0, 0), 
-    size: 20 
+  page.drawText(uploadByText, {
+    x: centerTextX - helveticaFont.widthOfTextAtSize(uploadByText, 20) / 2,
+    y: yPosition - 50,
+    color: rgb(0, 0, 0),
+    size: 20
   });
 
   const uploadDateText = `Uploaded Date : ${formatDate(new Date())}`;
-  page.drawText(uploadDateText, { 
-    x: centerTextX - helveticaFont.widthOfTextAtSize(uploadDateText, 20) / 2, 
-    y: yPosition - 80, 
-    color: rgb(0, 0, 0), 
-    size: 20 
+  page.drawText(uploadDateText, {
+    x: centerTextX - helveticaFont.widthOfTextAtSize(uploadDateText, 20) / 2,
+    y: yPosition - 80,
+    color: rgb(0, 0, 0),
+    size: 20
   });
 };
 
@@ -216,11 +216,25 @@ router.post('/send-email-to-member', async (req, res) => {
 
 // * Create a new HACCP Team document
 router.post('/create-haccp-team', upload.fields(generateMembersDocArray()), async (req, res) => {
-  console.log(req.files);
+
   try {
     const requestUser = await user.findById(req.header('Authorization')).populate('Company Department')
     // The HACCP Team data sent in the request body
     const teamData = JSON.parse(req.body.Data);
+    console.log(teamData);
+    const createdBy = requestUser.Name;
+
+    const createdTeam = new HaccpTeam({
+      DocumentType: teamData.DocumentType,
+      teamName: teamData.teamName,
+      Department: teamData.Department,
+      UserDepartment: requestUser.Department._id,
+      CreatedBy: createdBy,
+      CreationDate: new Date()
+    });
+    await createdTeam.save();
+    console.log(createdTeam);
+    
     const filesObj = req.files;
     if (filesObj.length !== 0) {
       // Process each question in the Questions array
@@ -243,45 +257,60 @@ router.post('/create-haccp-team', upload.fields(generateMembersDocArray()), asyn
         const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
         pdfDoc.getPages().slice(1).forEach(async (page) => {
           const { width, height } = page.getSize();
-                    const extraSpace = 24; // Increase this value for more space at the top
-                    // Resize the page to add extra space at the top
-                    page.setSize(width, height + extraSpace);
-                    // Move the original content down
-                    page.translateContent(0, -extraSpace);
-                    // Now add your custom text at the top
-                    const watermarkText = 'HACCP Team Member Document';
-                    const watermarkFontSize = 15;
-                    const watermarkTextWidth = helveticaFont.widthOfTextAtSize(watermarkText, watermarkFontSize);
-                    const centerWatermarkX = width / 2 - watermarkTextWidth / 2;
-                    const centerWatermarkY = height + extraSpace - 10; // Place in new space
-                    page.drawText(watermarkText, {
-                        x: centerWatermarkX,
-                        y: centerWatermarkY,
-                        size: watermarkFontSize,
-                        color: rgb(0, 0, 0)
-                    });
-                    const companyText = `${requestUser.Company.CompanyName}`;
-                    const companyTextFontSize = 10;
-                    const companyTextWidth = helveticaFont.widthOfTextAtSize(companyText, companyTextFontSize);
-                    const centerCompanyTextX = width - companyTextWidth - 20;
-                    const centerCompanyTextY = height + extraSpace; // Place in new space
-                    page.drawText(companyText, {
-                        x: centerCompanyTextX,
-                        y: centerCompanyTextY,
-                        size: companyTextFontSize,
-                        color: rgb(0, 0, 0)
-                    });
-                    const dateText = `Upload Date : ${formatDate(new Date())}`;
-                    const dateTextFontSize = 10;
-                    const dateTextWidth = helveticaFont.widthOfTextAtSize(dateText, dateTextFontSize);
-                    const centerDateTextX = width - dateTextWidth - 20;
-                    const centerDateTextY = height + extraSpace - 12; // Place in new space
-                    page.drawText(dateText, {
-                        x: centerDateTextX,
-                        y: centerDateTextY,
-                        size: dateTextFontSize,
-                        color: rgb(0, 0, 0)
-                    });
+          const extraSpace = 24; // Increase this value for more space at the top
+          // Resize the page to add extra space at the top
+          page.setSize(width, height + extraSpace);
+          // Move the original content down
+          page.translateContent(0, -extraSpace);
+          // Now add your custom text at the top
+          const watermarkText = 'HACCP Team Member Document';
+          const watermarkFontSize = 15;
+          const watermarkTextWidth = helveticaFont.widthOfTextAtSize(watermarkText, watermarkFontSize);
+          const centerWatermarkX = width / 2 - watermarkTextWidth / 2;
+          const centerWatermarkY = height + extraSpace - 10; // Place in new space
+          page.drawText(watermarkText, {
+            x: centerWatermarkX,
+            y: centerWatermarkY,
+            size: watermarkFontSize,
+            color: rgb(0, 0, 0)
+          });
+          const companyText = `${requestUser.Company.CompanyName}`;
+          const companyTextFontSize = 10;
+          const companyTextWidth = helveticaFont.widthOfTextAtSize(companyText, companyTextFontSize);
+          const centerCompanyTextX = width - companyTextWidth - 20;
+          const centerCompanyTextY = height + extraSpace; // Place in new space
+          page.drawText(companyText, {
+            x: centerCompanyTextX,
+            y: centerCompanyTextY,
+            size: companyTextFontSize,
+            color: rgb(0, 0, 0)
+          });
+          const dateText = `Document ID : ${createdTeam.DocumentId}`;
+          const dateTextFontSize = 10;
+          const dateTextWidth = helveticaFont.widthOfTextAtSize(dateText, dateTextFontSize);
+          const centerDateTextX = width - dateTextWidth - 20;
+          const centerDateTextY = height + extraSpace - 12; // Place in new space
+          page.drawText(dateText, {
+            x: centerDateTextX,
+            y: centerDateTextY,
+            size: dateTextFontSize,
+            color: rgb(0, 0, 0)
+          });
+
+          const revisionNoText = `Revision No : 0`;
+          const revisionNoTextFontSize = 10;
+          const revisionNoTextWidth = helveticaFont.widthOfTextAtSize(revisionNoText, revisionNoTextFontSize);
+          const centerRevisionNoTextX = width - revisionNoTextWidth - 20;
+          const centerRevisionNoTextY = height + extraSpace - 24; // Place in new space
+
+          page.drawText(revisionNoText, {
+              x: centerRevisionNoTextX,
+              y: centerRevisionNoTextY,
+              size: revisionNoTextFontSize,
+              color: rgb(0, 0, 0)
+          });
+
+
         });
         // Save the modified PDF
         const modifiedPdfBuffer = await pdfDoc.save();
@@ -326,17 +355,19 @@ router.post('/create-haccp-team', upload.fields(generateMembersDocArray()), asyn
       })
     );
     console.log(membersIds);
-    teamData.TeamMembers = membersIds;
-    const createdBy = requestUser.Name
-    const createdTeam = new HaccpTeam({
-      ...teamData,
-      UserDepartment: requestUser.Department._id,
-      CreatedBy: createdBy,
-      CreationDate: new Date()
-    });
-    await createdTeam.save().then(() => {
+    // teamData.TeamMembers = membersIds;
+    await HaccpTeam.findByIdAndUpdate(createdTeam._id, { TeamMembers: membersIds }, { new: true }).then(() => {
       res.status(200).json({ status: true, message: "HACCP Team document created successfully", data: createdTeam });
     })
+    // const createdTeam = new HaccpTeam({
+    //   ...teamData,
+    //   UserDepartment: requestUser.Department._id,
+    //   CreatedBy: createdBy,
+    //   CreationDate: new Date()
+    // });
+    // await createdTeam.save().then(() => {
+    //   res.status(200).json({ status: true, message: "HACCP Team document created successfully", data: createdTeam });
+    // })
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Error creating HACCP Team document', error: error.message });
@@ -496,26 +527,59 @@ router.patch('/update-haccp-team/:teamId', upload.fields(generateMembersDocArray
           addFirstPage(firstPage, pdfLogoImage, requestUser.Company, requestUser);
           const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
           pdfDoc.getPages().slice(1).forEach(async (page) => {
-            page.translateContent(0, -30);
             const { width, height } = page.getSize();
-            const watermarkText = 'Powered By Feat Technology';
-            const watermarkFontSize = 15;
-            const watermarkTextWidth = (helveticaFont.widthOfTextAtSize(watermarkText, watermarkFontSize));
-            const centerWatermarkX = width / 2 - watermarkTextWidth / 2;
-            const centerWatermarkY = height - 18;
-            page.drawText(watermarkText, { x: centerWatermarkX, y: centerWatermarkY, size: watermarkFontSize, color: rgb(0, 0, 0) });
-            const companyText = `${requestUser.Company.CompanyName}`;
-            const companyTextFontSize = 10;
-            const companyTextWidth = (helveticaFont.widthOfTextAtSize(companyText, companyTextFontSize));
-            const centerCompanyTextX = width - companyTextWidth - 20;
-            const centerCompanyTextY = height - 16;
-            page.drawText(companyText, { x: centerCompanyTextX, y: centerCompanyTextY, size: companyTextFontSize, color: rgb(0, 0, 0) });
-            const dateText = `Upload Date : ${formatDate(new Date())}`;
-            const dateTextFontSize = 10;
-            const dateTextWidth = (helveticaFont.widthOfTextAtSize(dateText, dateTextFontSize));
-            const centerDateTextX = width - dateTextWidth - 20;
-            const centerDateTextY = height - 30;
-            page.drawText(dateText, { x: centerDateTextX, y: centerDateTextY, size: dateTextFontSize, color: rgb(0, 0, 0) });
+          const extraSpace = 24; // Increase this value for more space at the top
+          // Resize the page to add extra space at the top
+          page.setSize(width, height + extraSpace);
+          // Move the original content down
+          page.translateContent(0, -extraSpace);
+          // Now add your custom text at the top
+          const watermarkText = 'HACCP Team Member Document';
+          const watermarkFontSize = 15;
+          const watermarkTextWidth = helveticaFont.widthOfTextAtSize(watermarkText, watermarkFontSize);
+          const centerWatermarkX = width / 2 - watermarkTextWidth / 2;
+          const centerWatermarkY = height + extraSpace - 10; // Place in new space
+          page.drawText(watermarkText, {
+            x: centerWatermarkX,
+            y: centerWatermarkY,
+            size: watermarkFontSize,
+            color: rgb(0, 0, 0)
+          });
+          const companyText = `${requestUser.Company.CompanyName}`;
+          const companyTextFontSize = 10;
+          const companyTextWidth = helveticaFont.widthOfTextAtSize(companyText, companyTextFontSize);
+          const centerCompanyTextX = width - companyTextWidth - 20;
+          const centerCompanyTextY = height + extraSpace; // Place in new space
+          page.drawText(companyText, {
+            x: centerCompanyTextX,
+            y: centerCompanyTextY,
+            size: companyTextFontSize,
+            color: rgb(0, 0, 0)
+          });
+          const dateText = `Document ID : ${existingTeam.DocumentId}`;
+          const dateTextFontSize = 10;
+          const dateTextWidth = helveticaFont.widthOfTextAtSize(dateText, dateTextFontSize);
+          const centerDateTextX = width - dateTextWidth - 20;
+          const centerDateTextY = height + extraSpace - 12; // Place in new space
+          page.drawText(dateText, {
+            x: centerDateTextX,
+            y: centerDateTextY,
+            size: dateTextFontSize,
+            color: rgb(0, 0, 0)
+          });
+
+          const revisionNoText = `Revision No : ${existingTeam.RevisionNo + 1}`;
+          const revisionNoTextFontSize = 10;
+          const revisionNoTextWidth = helveticaFont.widthOfTextAtSize(revisionNoText, revisionNoTextFontSize);
+          const centerRevisionNoTextX = width - revisionNoTextWidth - 20;
+          const centerRevisionNoTextY = height + extraSpace - 24; // Place in new space
+
+          page.drawText(revisionNoText, {
+              x: centerRevisionNoTextX,
+              y: centerRevisionNoTextY,
+              size: revisionNoTextFontSize,
+              color: rgb(0, 0, 0)
+          });
           });
           // Save the modified PDF
           const modifiedPdfBuffer = await pdfDoc.save();

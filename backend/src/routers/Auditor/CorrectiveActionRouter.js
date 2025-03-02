@@ -2,8 +2,8 @@ const express = require('express');
 const router = express.Router();
 const CorrectiveAction = require('../../models/Auditor/CorrectiveActionModel'); // Import the CorrectiveAction model
 const Reports = require('../../models/Auditor/ReportsModel')
-const ConductAudits = require('../../models/Auditor/ConductAuditsModel')
-const Checklists = require('../../models/Auditor/ChecklistModel')
+const { ConductAudits } = require('../../models/Auditor/ConductAuditsModel')
+const { Checklists } = require('../../models/Auditor/ChecklistModel')
 require('dotenv').config()
 const cloudinary = require('cloudinary').v2;
 const multer = require('multer');
@@ -177,13 +177,15 @@ async function checkQuestionIdExistence(questionId, reportId) {
 
 // * POST CorrectiveAction Data Into MongoDB Database
 router.post('/addCorrectiveAction', upload.fields(generateCorrectiveDocArray()), async (req, res) => {
-    console.log(req.files);
+    console.log(req.body);
     try {
         const requestUser = await user.findById(req.header('Authorization')).populate('Company Department')
-
+        const reportData = await Reports.findById(req.body.Report);
+        const conductAuditData = await ConductAudits.findById(reportData.ConductAudit)
+        const checklist = await Checklists.findById(conductAuditData.Checklist)
+        console.log(checklist);
         const correctionBy = requestUser.Name;
         const answers = JSON.parse(req.body.Answers);
-        console.log(answers);
 
 
         const filesObj = req.files;
@@ -209,7 +211,7 @@ router.post('/addCorrectiveAction', upload.fields(generateCorrectiveDocArray()),
                 const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
                 pdfDoc.getPages().slice(1).forEach(async (page) => {
                     const { width, height } = page.getSize();
-                    const extraSpace = 24; // Increase this value for more space at the top
+                    const extraSpace = 38; // Increase this value for more space at the top
                     // Resize the page to add extra space at the top
                     page.setSize(width, height + extraSpace);
                     // Move the original content down
@@ -220,34 +222,46 @@ router.post('/addCorrectiveAction', upload.fields(generateCorrectiveDocArray()),
                     const watermarkTextWidth = helveticaFont.widthOfTextAtSize(watermarkText, watermarkFontSize);
                     const centerWatermarkX = width / 2 - watermarkTextWidth / 2;
                     const centerWatermarkY = height + extraSpace - 10; // Place in new space
+
                     page.drawText(watermarkText, {
                         x: centerWatermarkX,
                         y: centerWatermarkY,
                         size: watermarkFontSize,
                         color: rgb(0, 0, 0)
                     });
+
                     const companyText = `${requestUser.Company.CompanyName}`;
                     const companyTextFontSize = 10;
                     const companyTextWidth = helveticaFont.widthOfTextAtSize(companyText, companyTextFontSize);
                     const centerCompanyTextX = width - companyTextWidth - 20;
                     const centerCompanyTextY = height + extraSpace; // Place in new space
+
                     page.drawText(companyText, {
                         x: centerCompanyTextX,
                         y: centerCompanyTextY,
                         size: companyTextFontSize,
                         color: rgb(0, 0, 0)
                     });
-                    const dateText = `Upload Date : ${formatDate(new Date())}`;
+
+                    const dateText = `Document ID : ${checklist.ChecklistId}`;
                     const dateTextFontSize = 10;
                     const dateTextWidth = helveticaFont.widthOfTextAtSize(dateText, dateTextFontSize);
                     const centerDateTextX = width - dateTextWidth - 20;
                     const centerDateTextY = height + extraSpace - 12; // Place in new space
+
                     page.drawText(dateText, {
                         x: centerDateTextX,
                         y: centerDateTextY,
                         size: dateTextFontSize,
                         color: rgb(0, 0, 0)
                     });
+
+                   
+
+
+                    
+
+
                 });
                 // Save the modified PDF
                 const modifiedPdfBuffer = await pdfDoc.save();
