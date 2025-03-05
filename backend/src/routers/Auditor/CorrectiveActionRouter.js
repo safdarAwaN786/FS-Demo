@@ -11,6 +11,7 @@ const multer = require('multer');
 const { rgb, degrees, PDFDocument, StandardFonts } = require('pdf-lib');
 const axios = require('axios');
 const user = require('../../models/AccountCreation/UserModel');
+const { addFirstPage } = require('../Admin/UploadDocumentRouter');
 // router.use(authMiddleware);
 
 cloudinary.config({
@@ -55,102 +56,102 @@ const formatDate = (date) => {
     return formatDate;
 }
 // Function to add the company logo and information to the first page
-const addFirstPage = async (page, logoImage, Company, user) => {
-    const { width, height } = page.getSize();
+// const addFirstPage = async (page, logoImage, Company, user, documentId, revisionNo) => {
+//     const { width, height } = page.getSize();
 
-    const pdfDoc = await PDFDocument.create();
-    const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
-    const logoDims = { width: 300, height: 300 };
-    const centerTextX = width / 2;
+//     const pdfDoc = await PDFDocument.create();
+//     const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
+//     const logoDims = { width: 300, height: 300 };
+//     const centerTextX = width / 2;
 
-    // Function to wrap text to fit within a specific width
-    const wrapText = (text, maxWidth, font, fontSize) => {
-        const words = text.split(' ');
-        let lines = [];
-        let currentLine = '';
+//     // Function to wrap text to fit within a specific width
+//     const wrapText = (text, maxWidth, font, fontSize) => {
+//         const words = text.split(' ');
+//         let lines = [];
+//         let currentLine = '';
 
-        for (const word of words) {
-            const testLine = currentLine ? `${currentLine} ${word}` : word;
-            const testLineWidth = font.widthOfTextAtSize(testLine, fontSize);
-            if (testLineWidth <= maxWidth) {
-                currentLine = testLine;
-            } else {
-                lines.push(currentLine);
-                currentLine = word;
-            }
-        }
-        if (currentLine) lines.push(currentLine);
-        return lines;
-    };
+//         for (const word of words) {
+//             const testLine = currentLine ? `${currentLine} ${word}` : word;
+//             const testLineWidth = font.widthOfTextAtSize(testLine, fontSize);
+//             if (testLineWidth <= maxWidth) {
+//                 currentLine = testLine;
+//             } else {
+//                 lines.push(currentLine);
+//                 currentLine = word;
+//             }
+//         }
+//         if (currentLine) lines.push(currentLine);
+//         return lines;
+//     };
 
-    // Draw company logo
-    page.drawImage(logoImage, {
-        x: centerTextX - logoDims.width / 2,
-        y: height - 400,
-        width: logoDims.width,
-        height: logoDims.height
-    });
+//     // Draw company logo
+//     page.drawImage(logoImage, {
+//         x: centerTextX - logoDims.width / 2,
+//         y: height - 400,
+//         width: logoDims.width,
+//         height: logoDims.height
+//     });
 
-    // Add company name
-    const fontSize = 25;
-    const maxWidth = width - 100; // Allow some padding
-    const companyNameText = Company.CompanyName;
-    page.drawText(companyNameText, {
-        x: centerTextX - helveticaFont.widthOfTextAtSize(companyNameText, fontSize) / 2,
-        y: height - 420,
-        color: rgb(0, 0, 0),
-        fontSize
-    });
+//     // Add company name
+//     const fontSize = 25;
+//     const maxWidth = width - 100; // Allow some padding
+//     const companyNameText = Company.CompanyName;
+//     page.drawText(companyNameText, {
+//         x: centerTextX - helveticaFont.widthOfTextAtSize(companyNameText, fontSize) / 2,
+//         y: height - 420,
+//         color: rgb(0, 0, 0),
+//         fontSize
+//     });
 
-    // Add company contact
-    const companyContactText = `Contact # ${Company.PhoneNo}`;
-    page.drawText(companyContactText, {
-        x: centerTextX - helveticaFont.widthOfTextAtSize(companyContactText, fontSize) / 2,
-        y: height - 450,
-        color: rgb(0, 0, 0),
-        fontSize
-    });
+//     // Add company contact
+//     // const companyContactText = `Contact # ${Company.PhoneNo}`;
+//     // page.drawText(companyContactText, {
+//     //     x: centerTextX - helveticaFont.widthOfTextAtSize(companyContactText, fontSize) / 2,
+//     //     y: height - 450,
+//     //     color: rgb(0, 0, 0),
+//     //     fontSize
+//     // });
 
-    // Add company email
-    const companyEmailText = `${Company.Email}`;
-    page.drawText(companyEmailText, {
-        x: centerTextX - helveticaFont.widthOfTextAtSize(companyEmailText, fontSize) / 2,
-        y: height - 480,
-        color: rgb(0, 0, 0),
-        fontSize
-    });
+//     // Add company email
+//     // const companyEmailText = `${Company.Email}`;
+//     // page.drawText(companyEmailText, {
+//     //     x: centerTextX - helveticaFont.widthOfTextAtSize(companyEmailText, fontSize) / 2,
+//     //     y: height - 480,
+//     //     color: rgb(0, 0, 0),
+//     //     fontSize
+//     // });
 
-    // Add wrapped company address
-    const companyAddressText = `${Company.Address}`;
-    const wrappedAddress = wrapText(companyAddressText, maxWidth, helveticaFont, fontSize);
-    let yPosition = height - 510;
-    for (const line of wrappedAddress) {
-        page.drawText(line, {
-            x: centerTextX - helveticaFont.widthOfTextAtSize(line, fontSize) / 2,
-            y: yPosition,
-            color: rgb(0, 0, 0),
-            fontSize
-        });
-        yPosition -= 30; // Adjust line spacing
-    }
+//     // Add wrapped company address
+//     const companyAddressText = `${Company.Address}`;
+//     const wrappedAddress = wrapText(companyAddressText, maxWidth, helveticaFont, fontSize);
+//     let yPosition = height - 510;
+//     for (const line of wrappedAddress) {
+//         page.drawText(line, {
+//             x: centerTextX - helveticaFont.widthOfTextAtSize(line, fontSize) / 2,
+//             y: yPosition,
+//             color: rgb(0, 0, 0),
+//             fontSize
+//         });
+//         yPosition -= 30; // Adjust line spacing
+//     }
 
-    // Add uploaded by and date
-    const uploadByText = `Uploaded By : ${user.Name}`;
-    page.drawText(uploadByText, {
-        x: centerTextX - helveticaFont.widthOfTextAtSize(uploadByText, 20) / 2,
-        y: yPosition - 50,
-        color: rgb(0, 0, 0),
-        size: 20
-    });
+//     // Add uploaded by and date
+//     const uploadByText = `Uploaded By : ${user.Name}`;
+//     page.drawText(uploadByText, {
+//         x: centerTextX - helveticaFont.widthOfTextAtSize(uploadByText, 20) / 2,
+//         y: yPosition - 50,
+//         color: rgb(0, 0, 0),
+//         size: 20
+//     });
 
-    const uploadDateText = `Uploaded Date : ${formatDate(new Date())}`;
-    page.drawText(uploadDateText, {
-        x: centerTextX - helveticaFont.widthOfTextAtSize(uploadDateText, 20) / 2,
-        y: yPosition - 80,
-        color: rgb(0, 0, 0),
-        size: 20
-    });
-};
+//     const uploadDateText = `Uploaded Date : ${formatDate(new Date())}`;
+//     page.drawText(uploadDateText, {
+//         x: centerTextX - helveticaFont.widthOfTextAtSize(uploadDateText, 20) / 2,
+//         y: yPosition - 80,
+//         color: rgb(0, 0, 0),
+//         size: 20
+//     });
+// };
 
 
 function generateCorrectiveDocArray() {
@@ -207,7 +208,7 @@ router.post('/addCorrectiveAction', upload.fields(generateCorrectiveDocArray()),
                     pdfLogoImage = await pdfDoc.embedPng(logoImage);
                 }
                 const firstPage = pdfDoc.insertPage(0);
-                addFirstPage(firstPage, pdfLogoImage, requestUser.Company, requestUser);
+                addFirstPage(firstPage, pdfLogoImage, requestUser.Company, requestUser, checklist.ChecklistId);
                 const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
                 pdfDoc.getPages().slice(1).forEach(async (page) => {
                     const { width, height } = page.getSize();

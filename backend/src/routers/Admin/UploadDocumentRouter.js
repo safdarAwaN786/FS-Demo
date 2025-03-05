@@ -32,7 +32,7 @@ const formatDate = (date) => {
 
 
 
-const addFirstPage = async (page, logoImage, Company, user) => {
+const addFirstPage = async (page, logoImage, Company, user, documentId, revisionNo) => {
     const { width, height } = page.getSize();
 
     const pdfDoc = await PDFDocument.create();
@@ -80,27 +80,27 @@ const addFirstPage = async (page, logoImage, Company, user) => {
     });
 
     // Add company contact
-    const companyContactText = `Contact # ${Company.PhoneNo}`;
-    page.drawText(companyContactText, {
-        x: centerTextX - helveticaFont.widthOfTextAtSize(companyContactText, fontSize) / 2,
-        y: height - 450,
-        color: rgb(0, 0, 0),
-        fontSize
-    });
+    // const companyContactText = `Contact # ${Company.PhoneNo}`;
+    // page.drawText(companyContactText, {
+    //     x: centerTextX - helveticaFont.widthOfTextAtSize(companyContactText, fontSize) / 2,
+    //     y: height - 450,
+    //     color: rgb(0, 0, 0),
+    //     fontSize
+    // });
 
     // Add company email
-    const companyEmailText = `${Company.Email}`;
-    page.drawText(companyEmailText, {
-        x: centerTextX - helveticaFont.widthOfTextAtSize(companyEmailText, fontSize) / 2,
-        y: height - 480,
-        color: rgb(0, 0, 0),
-        fontSize
-    });
+    // const companyEmailText = `${Company.Email}`;
+    // page.drawText(companyEmailText, {
+    //     x: centerTextX - helveticaFont.widthOfTextAtSize(companyEmailText, fontSize) / 2,
+    //     y: height - 480,
+    //     color: rgb(0, 0, 0),
+    //     fontSize
+    // });
 
     // Add wrapped company address
     const companyAddressText = `${Company.Address}`;
     const wrappedAddress = wrapText(companyAddressText, maxWidth, helveticaFont, fontSize);
-    let yPosition = height - 510;
+    let yPosition = height - 450;
     for (const line of wrappedAddress) {
         page.drawText(line, {
             x: centerTextX - helveticaFont.widthOfTextAtSize(line, fontSize) / 2,
@@ -112,7 +112,7 @@ const addFirstPage = async (page, logoImage, Company, user) => {
     }
 
     // Add uploaded by and date
-    const uploadByText = `Uploaded By : ${user.Name}`;
+    const uploadByText = `Created By : ${user.Name}`;
     page.drawText(uploadByText, {
         x: centerTextX - helveticaFont.widthOfTextAtSize(uploadByText, 20) / 2,
         y: yPosition - 50,
@@ -120,13 +120,41 @@ const addFirstPage = async (page, logoImage, Company, user) => {
         size: 20
     });
 
-    const uploadDateText = `Uploaded Date : ${formatDate(new Date())}`;
+    const uploadDateText = `Creation Date : ${formatDate(new Date())}`;
     page.drawText(uploadDateText, {
         x: centerTextX - helveticaFont.widthOfTextAtSize(uploadDateText, 20) / 2,
         y: yPosition - 80,
         color: rgb(0, 0, 0),
         size: 20
     });
+    if (documentId) {
+        const docIdText = `Document ID : ${documentId}`;
+        page.drawText(docIdText, {
+            x: centerTextX - helveticaFont.widthOfTextAtSize(docIdText, 20) / 2,
+            y: yPosition - 110,
+            color: rgb(0, 0, 0),
+            size: 20
+        });
+        if (revisionNo) {
+            const revisionNoText = `Revision No : ${revisionNo}`;
+            page.drawText(revisionNoText, {
+                x: centerTextX - helveticaFont.widthOfTextAtSize(revisionNoText, 20) / 2,
+                y: yPosition - 140,
+                color: rgb(0, 0, 0),
+                size: 20
+            });
+        }
+    } else {
+        if (revisionNo) {
+            const revisionNoText = `Revision No : ${revisionNo}`;
+            page.drawText(revisionNoText, {
+                x: centerTextX - helveticaFont.widthOfTextAtSize(revisionNoText, 20) / 2,
+                y: yPosition - 110,
+                color: rgb(0, 0, 0),
+                size: 20
+            });
+        }
+    }
 };
 
 
@@ -187,7 +215,7 @@ router.post('/uploadDocument', upload.single('file'), async (req, res) => {
             pdfLogoImage = await pdfDoc.embedPng(logoImage);
         }
         const firstPage = pdfDoc.insertPage(0);
-        addFirstPage(firstPage, pdfLogoImage, requestUser.Company, requestUser);
+        addFirstPage(firstPage, pdfLogoImage, requestUser.Company, requestUser, newDocument.DocumentId, 0);
         const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
         pdfDoc.getPages().slice(1).forEach(async (page) => {
             const { width, height } = page.getSize();
@@ -570,7 +598,7 @@ router.put('/replaceDocument/:documentId', upload.single('file'), async (req, re
             pdfLogoImage = await pdfDoc.embedPng(logoImage);
         }
         const firstPage = pdfDoc.insertPage(0);
-        addFirstPage(firstPage, pdfLogoImage, requestUser.Company, requestUser);
+        addFirstPage(firstPage, pdfLogoImage, requestUser.Company, requestUser, document.DocumentId, document.RevisionNo + 1);
         const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
         pdfDoc.getPages().slice(1).forEach(async (page) => {
             const { width, height } = page.getSize();
@@ -688,3 +716,4 @@ router.put('/replaceDocument/:documentId', upload.single('file'), async (req, re
 });
 
 module.exports = router;
+module.exports.addFirstPage = addFirstPage;
