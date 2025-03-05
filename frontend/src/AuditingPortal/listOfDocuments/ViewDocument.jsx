@@ -70,21 +70,23 @@ function ViewDocument() {
                         ctx.drawImage(imageBitmap, 0, 0);
                         // get the data URL of the canvas
                         const dataURL = canvas.toDataURL('image/jpeg');
-                        // pass the data URL to the pdf.addImage method
-                        pdf.addImage(dataURL, 'JPEG', 1, 2.5, 3, 3);
-                        pdf.setFontSize(20);
-                        pdf.text(`Company : ${user.Company.CompanyName}`, (1), (pdf.internal.pageSize.getHeight() / 2));
-                        pdf.setFontSize(15)
-                        const address = `Address : ${user.Company.Address}`;
                         const pageWidth = pdf.internal.pageSize.getWidth();
+                        // pass the data URL to the pdf.addImage method
+                        console.log(pageWidth);
+                        
+                        pdf.addImage(dataURL, 'JPEG', ((pageWidth - 3) / 2), 2.5, 3, 3);
+                        pdf.setFontSize(20);
+                        pdf.text(`${user.Company.CompanyName}`, ((pageWidth - pdf.getTextWidth(user.Company.CompanyName)) / 2), (pdf.internal.pageSize.getHeight() / 2));
+                        pdf.setFontSize(15)
+                        const address = `${user.Company.Address}`;
                         const margins = 1; // Adjust margins as needed
                         const maxWidth = pageWidth - margins * 2; // Calculate usable width
                         const wrappedAddress = pdf.splitTextToSize(address, maxWidth);
 
-                        pdf.text(wrappedAddress, 1, (pdf.internal.pageSize.getHeight() / 2) + 0.5);
+                        pdf.text(wrappedAddress, ((pageWidth - pdf.getTextWidth(address)) / 2), (pdf.internal.pageSize.getHeight() / 2) + 0.4);
 
-                        pdf.setLineWidth(0.1); // Example line width
-                        pdf.line(0.1, (pdf.internal.pageSize.getHeight() / 2) + 1, pdf.internal.pageSize.getWidth() - 0.2, (pdf.internal.pageSize.getHeight() / 2) + 1)
+                        // pdf.setLineWidth(0.01); // Example line width
+                        // pdf.line(0.1, (pdf.internal.pageSize.getHeight() / 2) + 1, pdf.internal.pageSize.getWidth() - 0.2, (pdf.internal.pageSize.getHeight() / 2) + 1)
                         // pdf.text("Document Id", 1, (pdf.internal.pageSize.getHeight() / 2) + 1.5);
                         // pdf.text(`${dataToSend.ChecklistId}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 1.5);
                         pdf.text("Created By", 1, (pdf.internal.pageSize.getHeight() / 2) + 1.8);
@@ -110,13 +112,16 @@ function ViewDocument() {
                     }
                 } else {
                     pdf.setFontSize(15)
-                    pdf.text('Document', (pdf.internal.pageSize.getWidth() / 2) - 1.3, 0.5);
+                    const title = documentData?.DocumentTitle;
+                    const titleWidth = pdf.getTextWidth(title);
+                    const pageWidth = pdf.internal.pageSize.getWidth();
+                    pdf.text(title, (pageWidth - titleWidth) / 2, 0.5); // Centering the title
                     pdf.setFontSize(10);
-                    pdf.text(`${user.Company.CompanyName}`, pdf.internal.pageSize.getWidth() - 2, 0.3);
-                    pdf.text(`Doc ID : ${documentData.DocumentId}`, pdf.internal.pageSize.getWidth() - 2, 0.5);
-                    pdf.text(`Revision No :${documentData.RevisionNo}`, pdf.internal.pageSize.getWidth() - 2, 0.7);
+                    pdf.text(`${user.Company.CompanyName}`, pdf.internal.pageSize.getWidth() - 2, 0.7);
+                    pdf.text(`Doc ID : ${documentData.DocumentId}`, pdf.internal.pageSize.getWidth() - 2, 0.9);
+                    pdf.text(`Revision No :${documentData.RevisionNo}`, pdf.internal.pageSize.getWidth() - 2, 1.1);
                     if (documentData.Status == 'Approved') {
-                        pdf.text(`Issue Date : ${dayjs(documentData.ApprovalDate).format('DD/MM/YYYY')}`, pdf.internal.pageSize.getWidth() - 2, 0.9);
+                        pdf.text(`Issue Date : ${dayjs(documentData.ApprovalDate).format('DD/MM/YYYY')}`, pdf.internal.pageSize.getWidth() - 2, 1.3);
                     }
                 }
             }

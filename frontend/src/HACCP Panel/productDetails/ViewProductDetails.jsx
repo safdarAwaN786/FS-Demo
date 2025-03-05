@@ -67,21 +67,24 @@ function ViewProductDetails() {
                         ctx.drawImage(imageBitmap, 0, 0);
                         // get the data URL of the canvas
                         const dataURL = canvas.toDataURL('image/jpeg');
-                        // pass the data URL to the pdf.addImage method
-                        pdf.addImage(dataURL, 'JPEG', 1, 2.5, 3, 3);
-                        pdf.setFontSize(20);
-                        pdf.text(`Company : ${user.Company.CompanyName}`, (1), (pdf.internal.pageSize.getHeight() / 2));
-                        pdf.setFontSize(15)
-                        const address = `Address : ${user.Company.Address}`;
                         const pageWidth = pdf.internal.pageSize.getWidth();
+                        // pass the data URL to the pdf.addImage method
+                        console.log(pageWidth);
+                        
+                        pdf.addImage(dataURL, 'JPEG', ((pageWidth - 3) / 2), 2.5, 3, 3);
+                        pdf.setFontSize(20);
+                        pdf.text(`${user.Company.CompanyName}`, ((pageWidth - pdf.getTextWidth(user.Company.CompanyName)) / 2), (pdf.internal.pageSize.getHeight() / 2));
+                        pdf.setFontSize(15)
+                        const address = `${user.Company.Address}`;
                         const margins = 1; // Adjust margins as needed
                         const maxWidth = pageWidth - margins * 2; // Calculate usable width
                         const wrappedAddress = pdf.splitTextToSize(address, maxWidth);
 
-                        pdf.text(wrappedAddress, 1, (pdf.internal.pageSize.getHeight() / 2) + 0.5);
+                        pdf.text(wrappedAddress, ((pageWidth - pdf.getTextWidth(address)) / 2), (pdf.internal.pageSize.getHeight() / 2) + 0.4);
 
-                        pdf.setLineWidth(0.1); // Example line width
-                        pdf.line(0.1, (pdf.internal.pageSize.getHeight() / 2) + 1, pdf.internal.pageSize.getWidth() - 0.2, (pdf.internal.pageSize.getHeight() / 2) + 1)
+
+                        // pdf.setLineWidth(0.1); // Example line width
+                        // pdf.line(0.1, (pdf.internal.pageSize.getHeight() / 2) + 1, pdf.internal.pageSize.getWidth() - 0.2, (pdf.internal.pageSize.getHeight() / 2) + 1)
                         // pdf.text("Document Id", 1, (pdf.internal.pageSize.getHeight() / 2) + 1.5);
                         // pdf.text(`${dataToSend.ChecklistId}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 1.5);
                         pdf.text("Created By", 1, (pdf.internal.pageSize.getHeight() / 2) + 1.8);
