@@ -419,7 +419,7 @@ function UploadedDocuments() {
                             <div className={style.alertbtns}>
                                 <button onClick={() => {
                                     dispatch(setSmallLoading(true))
-                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/approve-uploaded-document`, { documentId: idForAction, approvedBy: user.Name }).then(() => {
+                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/approve-uploaded-document`, { documentId: idForAction, approvedBy: user.Name },  { headers: { Authorization: `${user._id}` } }).then(() => {
                                         dispatch(setSmallLoading(false))
                                         refreshData();
                                         Swal.fire({
@@ -455,7 +455,7 @@ function UploadedDocuments() {
                                 <button onClick={() => {
                                     setReview(false);
                                     dispatch(setSmallLoading(true))
-                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/review-uploaded-document`, { documentId: idForAction, reviewBy: user.Name }).then(() => {
+                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/review-uploaded-document`, { documentId: idForAction, reviewBy: user.Name },  { headers: { Authorization: `${user._id}` } }).then(() => {
                                         dispatch(setSmallLoading(false))
                                         refreshData();
                                         Swal.fire({
@@ -490,7 +490,7 @@ function UploadedDocuments() {
                                 e.preventDefault();
                                 setDisApprove(false);
                                 dispatch(setSmallLoading(true))
-                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/disapprove-uploaded-document`, { documentId: idForAction, reason: reason, disapprovedBy: user.Name }).then(() => {
+                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/disapprove-uploaded-document`, { documentId: idForAction, reason: reason, disapprovedBy: user.Name },  { headers: { Authorization: `${user._id}` } }).then(() => {
                                     dispatch(setSmallLoading(false))
                                     Swal.fire({
                                         title: 'Success',
@@ -534,7 +534,7 @@ function UploadedDocuments() {
                                 e.preventDefault();
                                 setReject(false);
                                 dispatch(setSmallLoading(true))
-                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/reject-uploaded-document`, { documentId: idForAction, reason: reason, rejectBy: user.Name }).then(() => {
+                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/reject-uploaded-document`, { documentId: idForAction, reason: reason, rejectBy: user.Name },  { headers: { Authorization: `${user._id}` } }).then(() => {
                                     dispatch(setSmallLoading(false))
                                     Swal.fire({
                                         title: 'Success',

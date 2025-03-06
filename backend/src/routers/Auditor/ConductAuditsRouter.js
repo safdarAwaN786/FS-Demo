@@ -318,7 +318,7 @@ router.post('/addConductAudit', upload.fields(generateEvidenceDocArray()), async
           pdfLogoImage = await pdfDoc.embedPng(logoImage);
         }
         const firstPage = pdfDoc.insertPage(0);
-        addFirstPage(firstPage, pdfLogoImage, requestUser.Company, requestUser, checklist.ChecklistId);
+        addFirstPage(firstPage, pdfLogoImage, requestUser.Company, requestUser, `${checklist.ChecklistId}`);
         const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
         pdfDoc.getPages().slice(1).forEach(async (page) => {
           const { width, height } = page.getSize();

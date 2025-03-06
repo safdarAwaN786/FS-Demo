@@ -29,6 +29,143 @@ const formatDate = (date) => {
     return formatDate;
 }
 
+// Function to create a first page with approval information
+const addFirstPageWithApproval = async (page, logoImage, company, creatorName, createdDate, documentId, revisionNo, reviewedBy, reviewDate, approvedBy, approvalDate) => {
+    try {
+
+
+        const { width, height } = page.getSize();
+
+        const helveticaFont = await page.doc.embedFont(StandardFonts.Helvetica);
+        const logoDims = { width: 300, height: 300 };
+        const centerTextX = width / 2;
+
+        // Function to wrap text to fit within a specific width
+        const wrapText = (text, maxWidth, font, fontSize) => {
+            const words = text.split(' ');
+            let lines = [];
+            let currentLine = '';
+
+            for (const word of words) {
+                const testLine = currentLine ? `${currentLine} ${word}` : word;
+                const testLineWidth = font.widthOfTextAtSize(testLine, fontSize);
+                if (testLineWidth <= maxWidth) {
+                    currentLine = testLine;
+                } else {
+                    lines.push(currentLine);
+                    currentLine = word;
+                }
+            }
+            if (currentLine) lines.push(currentLine);
+            return lines;
+        };
+
+        // Draw company logo
+        page.drawImage(logoImage, {
+            x: centerTextX - logoDims.width / 2,
+            y: height - 400,
+            width: logoDims.width,
+            height: logoDims.height
+        });
+
+        // Add company name
+        const fontSize = 25;
+        const maxWidth = width - 100; // Allow some padding
+        const companyNameText = company.CompanyName;
+        page.drawText(companyNameText, {
+            x: centerTextX - helveticaFont.widthOfTextAtSize(companyNameText, fontSize) / 2,
+            y: height - 420,
+            color: rgb(0, 0, 0),
+            fontSize
+        });
+
+        // Add wrapped company address
+        const companyAddressText = `${company.Address}`;
+        const wrappedAddress = wrapText(companyAddressText, maxWidth, helveticaFont, fontSize);
+        let yPosition = height - 450;
+        for (const line of wrappedAddress) {
+            page.drawText(line, {
+                x: centerTextX - helveticaFont.widthOfTextAtSize(line, fontSize) / 2,
+                y: yPosition,
+                color: rgb(0, 0, 0),
+                fontSize
+            });
+            yPosition -= 30; // Adjust line spacing
+        }
+
+        // Add created by and date
+        const uploadByText = `Created By : ${creatorName}`;
+        page.drawText(uploadByText, {
+            x: centerTextX - helveticaFont.widthOfTextAtSize(uploadByText, 20) / 2,
+            y: yPosition - 50,
+            color: rgb(0, 0, 0),
+            size: 20
+        });
+
+        const uploadDateText = `Creation Date : ${formatDate(new Date(createdDate))}`;
+        page.drawText(uploadDateText, {
+            x: centerTextX - helveticaFont.widthOfTextAtSize(uploadDateText, 20) / 2,
+            y: yPosition - 80,
+            color: rgb(0, 0, 0),
+            size: 20
+        });
+
+        // Add document ID and revision number
+        const docIdText = `Document ID : ${documentId}`;
+        page.drawText(docIdText, {
+            x: centerTextX - helveticaFont.widthOfTextAtSize(docIdText, 20) / 2,
+            y: yPosition - 110,
+            color: rgb(0, 0, 0),
+            size: 20
+        });
+
+        // Add review information
+        const reviewedByText = `Reviewed By : ${reviewedBy}`;
+        page.drawText(reviewedByText, {
+            x: centerTextX - helveticaFont.widthOfTextAtSize(reviewedByText, 20) / 2,
+            y: yPosition - 140,
+            color: rgb(0, 0, 0),
+            size: 20
+        });
+        const reviewDateText = `Review Date : ${reviewDate !== '---' ? formatDate(new Date(reviewDate)) : reviewDate}`;
+        page.drawText(reviewDateText, {
+            x: centerTextX - helveticaFont.widthOfTextAtSize(reviewDateText, 20) / 2,
+            y: yPosition - 170,
+            color: rgb(0, 0, 0),
+            size: 20
+        });
+        // Add approval information with highlighted status
+        const approvedByText = `Approved By : ${approvedBy}`;
+        page.drawText(approvedByText, {
+            x: centerTextX - helveticaFont.widthOfTextAtSize(approvedByText, 20) / 2,
+            y: yPosition - 200,
+            color: rgb(0, 0, 0), // Green color for approval
+            size: 20
+        });
+
+
+        const approvalDateText = `Approval Date : ${approvalDate !== '---' ? formatDate(approvalDate) : approvalDate}`;
+        page.drawText(approvalDateText, {
+            x: centerTextX - helveticaFont.widthOfTextAtSize(approvalDateText, 20) / 2,
+            y: yPosition - 230,
+            color: rgb(0, 0, 0), // Green color for approval
+            size: 20
+        });
+
+        const revisionNoText = `Revision No : ${revisionNo}`;
+        page.drawText(revisionNoText, {
+            x: centerTextX - helveticaFont.widthOfTextAtSize(revisionNoText, 20) / 2,
+            y: yPosition - 260,
+            color: rgb(0, 0, 0),
+            size: 20
+        });
+
+
+
+    } catch (error) {
+        console.log(error);
+    }
+};
 
 
 
@@ -78,24 +215,6 @@ const addFirstPage = async (page, logoImage, Company, user, documentId, revision
         color: rgb(0, 0, 0),
         fontSize
     });
-
-    // Add company contact
-    // const companyContactText = `Contact # ${Company.PhoneNo}`;
-    // page.drawText(companyContactText, {
-    //     x: centerTextX - helveticaFont.widthOfTextAtSize(companyContactText, fontSize) / 2,
-    //     y: height - 450,
-    //     color: rgb(0, 0, 0),
-    //     fontSize
-    // });
-
-    // Add company email
-    // const companyEmailText = `${Company.Email}`;
-    // page.drawText(companyEmailText, {
-    //     x: centerTextX - helveticaFont.widthOfTextAtSize(companyEmailText, fontSize) / 2,
-    //     y: height - 480,
-    //     color: rgb(0, 0, 0),
-    //     fontSize
-    // });
 
     // Add wrapped company address
     const companyAddressText = `${Company.Address}`;
@@ -215,7 +334,7 @@ router.post('/uploadDocument', upload.single('file'), async (req, res) => {
             pdfLogoImage = await pdfDoc.embedPng(logoImage);
         }
         const firstPage = pdfDoc.insertPage(0);
-        addFirstPage(firstPage, pdfLogoImage, requestUser.Company, requestUser, newDocument.DocumentId, 0);
+        addFirstPage(firstPage, pdfLogoImage, requestUser.Company, requestUser, newDocument.DocumentId, '0');
         const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
         pdfDoc.getPages().slice(1).forEach(async (page) => {
             const { width, height } = page.getSize();
@@ -228,7 +347,7 @@ router.post('/uploadDocument', upload.single('file'), async (req, res) => {
             page.translateContent(0, -extraSpace);
 
             // Now add your custom text at the top
-            const watermarkText = 'Document';
+            const watermarkText = newDocument.DocumentName;
             const watermarkFontSize = 15;
             const watermarkTextWidth = helveticaFont.widthOfTextAtSize(watermarkText, watermarkFontSize);
             const centerWatermarkX = width / 2 - watermarkTextWidth / 2;
@@ -343,12 +462,16 @@ router.patch('/review-uploaded-document', async (req, res) => {
             console.error(`Document with ID: ${document} not found.`);
             return res.status(404).json({ error: 'Document not found.' });
         }
+        const requestUser = await user.findById(req.header('Authorization')).populate('Company Department')
         // Ensure the document status is pending
         if (document.Status !== 'Pending') {
             console.warn(`Document with ID: ${documentId} cannot be reviewed as it is not in 'Pending' status.`);
             return res.status(400).json({ error: 'Document status is not eligible for review.' });
         }
 
+        // Get the latest document URL from the uploaded documents array
+        const latestDocIndex = document.UploadedDocuments.length - 1;
+        const documentUrl = document.UploadedDocuments[latestDocIndex].DocumentUrl;
 
         document.ReviewDate = new Date(),
             document.Status = 'Reviewed';
@@ -356,8 +479,79 @@ router.patch('/review-uploaded-document', async (req, res) => {
         document.RejectedBy = null;
         document.ReviewedBy = reviewBy
 
-        document.UploadedDocuments[document.UploadedDocuments.length - 1].ReviewDate = new Date();
-        document.UploadedDocuments[document.UploadedDocuments.length - 1].ReviewedBy = reviewBy;
+        document.UploadedDocuments[latestDocIndex].ReviewDate = new Date();
+        document.UploadedDocuments[latestDocIndex].ReviewedBy = reviewBy;
+
+
+        // Now update the PDF with approval information
+        try {
+            // Fetch the PDF from Cloudinary
+            const response = await axios.get(documentUrl, { responseType: 'arraybuffer' });
+            const pdfBuffer = Buffer.from(response.data);
+
+            // Load the PDF
+            const pdfDoc = await PDFDocument.load(pdfBuffer);
+
+            // Remove the first page (cover page)
+            pdfDoc.removePage(0);
+
+            // Get company logo
+            const logoResponse = await axios.get(requestUser.Company.CompanyLogo, { responseType: 'arraybuffer' });
+            const logoImage = Buffer.from(logoResponse.data);
+
+            // Embed logo based on file type
+            let pdfLogoImage;
+            const isJpg = requestUser.Company.CompanyLogo.includes('.jpeg') || requestUser.Company.CompanyLogo.includes('.jpg');
+            const isPng = requestUser.Company.CompanyLogo.includes('.png');
+
+            if (isJpg) {
+                pdfLogoImage = await pdfDoc.embedJpg(logoImage);
+            } else if (isPng) {
+                pdfLogoImage = await pdfDoc.embedPng(logoImage);
+            }
+
+            // Insert new first page
+            const firstPage = pdfDoc.insertPage(0);
+
+            // Current revision number
+            const currentRevisionNo = document.UploadedDocuments[latestDocIndex].RevisionNo || 0;
+
+            // Get review information (if available)
+            const approvedBy = document.UploadedDocuments[latestDocIndex].ApprovedBy || 'Not Approved';
+            const approveDate = document.UploadedDocuments[latestDocIndex].ApprovalDate || '---';
+
+            const createdBy = document.UploadedDocuments[latestDocIndex].CreatedBy;
+            const creationDate = document.UploadedDocuments[latestDocIndex].CreationDate;
+
+            // Add first page with updated information including approval details
+            await addFirstPageWithApproval(
+                firstPage,
+                pdfLogoImage,
+                requestUser.Company,
+                createdBy,
+                creationDate,
+                document.DocumentId,
+                currentRevisionNo,
+                reviewBy,
+                document.ReviewDate,
+                approvedBy,
+                approveDate
+            );
+
+
+            // Save the modified PDF
+            const modifiedPdfBuffer = await pdfDoc.save();
+
+            // Upload to Cloudinary
+            const result = await uploadToCloudinary(modifiedPdfBuffer);
+            document.UploadedDocuments[latestDocIndex].DocumentUrl = result.secure_url;
+
+
+        } catch (error) {
+            console.error('Error updating PDF with approval:', error);
+            // Continue with approval even if PDF update fails
+            console.warn('Continuing with approval despite PDF update failure');
+        }
 
         const updatedDoocument = await uploadDocument.findByIdAndUpdate(
             document._id,
@@ -387,13 +581,16 @@ router.patch('/reject-uploaded-document', async (req, res) => {
             console.error(`Document with ID: ${document} not found.`);
             return res.status(404).json({ error: 'Document not found.' });
         }
-
+        const requestUser = await user.findById(req.header('Authorization')).populate('Company Department')
         // Ensure the document status is pending
         if (document.Status !== 'Pending' && document.Status !== 'Reviewed') {
             console.warn(`Document with ID: ${documentId} cannot be rejected as it is not in 'Pending' status.`);
             return res.status(400).json({ error: 'Document status is not eligible for rejection.' });
         }
 
+        // Get the latest document URL from the uploaded documents array
+        const latestDocIndex = document.UploadedDocuments.length - 1;
+        const documentUrl = document.UploadedDocuments[latestDocIndex].DocumentUrl;
 
 
         document.Reason = reason
@@ -404,6 +601,110 @@ router.patch('/reject-uploaded-document', async (req, res) => {
         document.RejectedBy = rejectBy
         document.UploadedDocuments[document.UploadedDocuments.length - 1].ReviewDate = null;
         document.UploadedDocuments[document.UploadedDocuments.length - 1].ReviewedBy = null;
+
+
+
+
+        // Now update the PDF with approval information
+        try {
+            // Fetch the PDF from Cloudinary
+            const response = await axios.get(documentUrl, { responseType: 'arraybuffer' });
+            const pdfBuffer = Buffer.from(response.data);
+
+            // Load the PDF
+            const pdfDoc = await PDFDocument.load(pdfBuffer);
+
+            // Remove the first page (cover page)
+            pdfDoc.removePage(0);
+
+            // Get company logo
+            const logoResponse = await axios.get(requestUser.Company.CompanyLogo, { responseType: 'arraybuffer' });
+            const logoImage = Buffer.from(logoResponse.data);
+
+            // Embed logo based on file type
+            let pdfLogoImage;
+            const isJpg = requestUser.Company.CompanyLogo.includes('.jpeg') || requestUser.Company.CompanyLogo.includes('.jpg');
+            const isPng = requestUser.Company.CompanyLogo.includes('.png');
+
+            if (isJpg) {
+                pdfLogoImage = await pdfDoc.embedJpg(logoImage);
+            } else if (isPng) {
+                pdfLogoImage = await pdfDoc.embedPng(logoImage);
+            }
+
+            // Insert new first page
+            const firstPage = pdfDoc.insertPage(0);
+
+            // Current revision number
+            const currentRevisionNo = document.UploadedDocuments[latestDocIndex].RevisionNo || 0;
+
+            // Get review information (if available)
+            const reviewedBy = document.UploadedDocuments[latestDocIndex].ReviewedBy || 'Not Reviewed';
+            const reviewDate = document.UploadedDocuments[latestDocIndex].ReviewDate || '---';
+
+            const approvedBy = document.UploadedDocuments[latestDocIndex].ApprovedBy || 'Not Approved';
+            const approveDate = document.UploadedDocuments[latestDocIndex].ApprovalDate || '---';
+
+            const createdBy = document.UploadedDocuments[latestDocIndex].CreatedBy;
+            const creationDate = document.UploadedDocuments[latestDocIndex].CreationDate;
+
+            // Add first page with updated information including approval details
+            await addFirstPageWithApproval(
+                firstPage,
+                pdfLogoImage,
+                requestUser.Company,
+                createdBy,
+                creationDate,
+                document.DocumentId,
+                currentRevisionNo,
+                'Not Reviewed',
+                '---',
+                approvedBy,
+                approveDate
+            );
+
+            // Embed font for header updates
+            const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
+
+            // Update approval status in header for all subsequent pages
+            pdfDoc.getPages().slice(1).forEach(async (page) => {
+                const { width, height } = page.getSize();
+
+                const approvedText = `Issue Date: ${formatDate(document.ApprovalDate)}`;
+
+                const approvedTextWidth = helveticaFont.widthOfTextAtSize(approvedText, 10);
+                // Add approval text in header - first create a background to cover any existing text
+                page.drawRectangle({
+                    x: width - approvedTextWidth - 20,
+                    y: height - 71,
+                    width: 200,
+                    height: 12,
+                    color: rgb(1, 1, 1), // White color to cover existing text
+                });
+
+
+                // page.drawText(approvedText, {
+                //     x: width - approvedTextWidth - 20,
+                //     y: height - 69,
+                //     size: approvedTextFontSize,
+                //     color: rgb(0, 0, 0), // Green color for approval
+                // });
+            });
+
+            // Save the modified PDF
+            const modifiedPdfBuffer = await pdfDoc.save();
+
+            // Upload to Cloudinary
+            const result = await uploadToCloudinary(modifiedPdfBuffer);
+            document.UploadedDocuments[latestDocIndex].DocumentUrl = result.secure_url;
+
+
+        } catch (error) {
+            console.error('Error updating PDF with approval:', error);
+            // Continue with approval even if PDF update fails
+            console.warn('Continuing with approval despite PDF update failure');
+        }
+
         const updatedDoocument = await uploadDocument.findByIdAndUpdate(
             document._id,
             document,
@@ -421,10 +722,8 @@ router.patch('/reject-uploaded-document', async (req, res) => {
 // * Approve Uploaded Document
 router.patch('/approve-uploaded-document', async (req, res) => {
     try {
-
-
         const { documentId, approvedBy } = req.body;
-
+        const requestUser = await user.findById(req.header('Authorization')).populate('Company Department')
         // Find the document by ID
         const document = await uploadDocument.findById(documentId);
 
@@ -440,14 +739,127 @@ router.patch('/approve-uploaded-document', async (req, res) => {
         }
 
 
+        // Get the latest document URL from the uploaded documents array
+        const latestDocIndex = document.UploadedDocuments.length - 1;
+        const documentUrl = document.UploadedDocuments[latestDocIndex].DocumentUrl;
+
+
+
         document.ApprovalDate = new Date(),
             document.ApprovedBy = approvedBy,
             document.Status = 'Approved';
         document.DisapprovalDate = null;
         document.DisapprovedBy = null;
-        document.UploadedDocuments[document.UploadedDocuments.length - 1].ApprovalDate = new Date();
-        document.UploadedDocuments[document.UploadedDocuments.length - 1].ApprovedBy = approvedBy;
-        const updatedDoocument = await uploadDocument.findByIdAndUpdate(
+        document.UploadedDocuments[latestDocIndex].ApprovalDate = new Date();
+        document.UploadedDocuments[latestDocIndex].ApprovedBy = approvedBy;
+
+
+        // Now update the PDF with approval information
+        try {
+            // Fetch the PDF from Cloudinary
+            const response = await axios.get(documentUrl, { responseType: 'arraybuffer' });
+            const pdfBuffer = Buffer.from(response.data);
+
+            // Load the PDF
+            const pdfDoc = await PDFDocument.load(pdfBuffer);
+
+            // Remove the first page (cover page)
+            pdfDoc.removePage(0);
+
+            // Get company logo
+            const logoResponse = await axios.get(requestUser.Company.CompanyLogo, { responseType: 'arraybuffer' });
+            const logoImage = Buffer.from(logoResponse.data);
+
+            // Embed logo based on file type
+            let pdfLogoImage;
+            const isJpg = requestUser.Company.CompanyLogo.includes('.jpeg') || requestUser.Company.CompanyLogo.includes('.jpg');
+            const isPng = requestUser.Company.CompanyLogo.includes('.png');
+
+            if (isJpg) {
+                pdfLogoImage = await pdfDoc.embedJpg(logoImage);
+            } else if (isPng) {
+                pdfLogoImage = await pdfDoc.embedPng(logoImage);
+            }
+
+            // Insert new first page
+            const firstPage = pdfDoc.insertPage(0);
+
+            // Current revision number
+            const currentRevisionNo = document.UploadedDocuments[latestDocIndex].RevisionNo || 0;
+
+            // Get review information (if available)
+            const reviewedBy = document.UploadedDocuments[latestDocIndex].ReviewedBy || 'Not Reviewed';
+            const reviewDate = document.UploadedDocuments[latestDocIndex].ReviewDate || '---';
+
+            const createdBy = document.UploadedDocuments[latestDocIndex].CreatedBy;
+            const creationDate = document.UploadedDocuments[latestDocIndex].CreationDate;
+
+
+
+            // Add first page with updated information including approval details
+            await addFirstPageWithApproval(
+                firstPage,
+                pdfLogoImage,
+                requestUser.Company,
+                createdBy,
+                creationDate,
+                document.DocumentId,
+                currentRevisionNo,
+                reviewedBy,
+                reviewDate,
+                approvedBy,
+                document.ApprovalDate
+            );
+
+            // Embed font for header updates
+            const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
+
+            // Update approval status in header for all subsequent pages
+            pdfDoc.getPages().slice(1).forEach(async (page) => {
+                const { width, height } = page.getSize();
+
+                const approvedText = `Issue Date: ${formatDate(document.ApprovalDate)}`;
+
+                const approvedTextWidth = helveticaFont.widthOfTextAtSize(approvedText, 10);
+                // Add approval text in header - first create a background to cover any existing text
+                page.drawRectangle({
+                    x: width - approvedTextWidth - 20,
+                    y: height - 71,
+                    width: 200,
+                    height: 12,
+                    color: rgb(1, 1, 1), // White color to cover existing text
+                });
+
+                // Draw approval text
+                const approvedTextFontSize = 10;
+
+                page.drawText(approvedText, {
+                    x: width - approvedTextWidth - 20,
+                    y: height - 69,
+                    size: approvedTextFontSize,
+                    color: rgb(0, 0, 0), // Green color for approval
+                });
+            });
+
+            // Save the modified PDF
+            const modifiedPdfBuffer = await pdfDoc.save();
+
+            // Upload to Cloudinary
+            const result = await uploadToCloudinary(modifiedPdfBuffer);
+
+
+            document.UploadedDocuments[latestDocIndex].DocumentUrl = result.secure_url;
+
+        } catch (error) {
+            console.error('Error updating PDF with approval:', error);
+            // Continue with approval even if PDF update fails
+            console.warn('Continuing with approval despite PDF update failure');
+        }
+
+
+
+        // Save the updated document
+        const updatedDocument = await uploadDocument.findByIdAndUpdate(
             document._id,
             document,
             { new: true }
@@ -466,7 +878,7 @@ router.patch('/disapprove-uploaded-document', async (req, res) => {
     try {
 
         const { documentId, reason, disapprovedBy } = req.body;
-
+        const requestUser = await user.findById(req.header('Authorization')).populate('Company Department')
         // Find the document by ID
         const document = await uploadDocument.findById(documentId);
 
@@ -481,14 +893,123 @@ router.patch('/disapprove-uploaded-document', async (req, res) => {
             return res.status(400).json({ error: 'Document status is not eligible for disapproval.' });
         }
 
+
+        // Get the latest document URL from the uploaded documents array
+        const latestDocIndex = document.UploadedDocuments.length - 1;
+        const documentUrl = document.UploadedDocuments[latestDocIndex].DocumentUrl;
+
+
         document.DisapprovalDate = new Date();
         document.Status = 'Disapproved';
         document.Reason = reason;
         document.ApprovalDate = null;
         document.ApprovedBy = null;
         document.DisapprovedBy = disapprovedBy;
-        document.UploadedDocuments[document.UploadedDocuments.length - 1].ApprovalDate = null;
-        document.UploadedDocuments[document.UploadedDocuments.length - 1].ApprovedBy = null;
+        document.UploadedDocuments[latestDocIndex].ApprovalDate = null;
+        document.UploadedDocuments[latestDocIndex].ApprovedBy = null;
+
+
+        // Now update the PDF with approval information
+        try {
+            // Fetch the PDF from Cloudinary
+            const response = await axios.get(documentUrl, { responseType: 'arraybuffer' });
+            const pdfBuffer = Buffer.from(response.data);
+
+            // Load the PDF
+            const pdfDoc = await PDFDocument.load(pdfBuffer);
+
+            // Remove the first page (cover page)
+            pdfDoc.removePage(0);
+
+            // Get company logo
+            const logoResponse = await axios.get(requestUser.Company.CompanyLogo, { responseType: 'arraybuffer' });
+            const logoImage = Buffer.from(logoResponse.data);
+
+            // Embed logo based on file type
+            let pdfLogoImage;
+            const isJpg = requestUser.Company.CompanyLogo.includes('.jpeg') || requestUser.Company.CompanyLogo.includes('.jpg');
+            const isPng = requestUser.Company.CompanyLogo.includes('.png');
+
+            if (isJpg) {
+                pdfLogoImage = await pdfDoc.embedJpg(logoImage);
+            } else if (isPng) {
+                pdfLogoImage = await pdfDoc.embedPng(logoImage);
+            }
+
+            // Insert new first page
+            const firstPage = pdfDoc.insertPage(0);
+
+            // Current revision number
+            const currentRevisionNo = document.UploadedDocuments[latestDocIndex].RevisionNo || 0;
+
+            // Get review information (if available)
+            const reviewedBy = document.UploadedDocuments[latestDocIndex].ReviewedBy || 'Not Reviewed';
+            const reviewDate = document.UploadedDocuments[latestDocIndex].ReviewDate || '---';
+
+
+
+            const createdBy = document.UploadedDocuments[latestDocIndex].CreatedBy;
+            const creationDate = document.UploadedDocuments[latestDocIndex].CreationDate;
+
+            // Add first page with updated information including approval details
+            await addFirstPageWithApproval(
+                firstPage,
+                pdfLogoImage,
+                requestUser.Company,
+                createdBy,
+                creationDate,
+                document.DocumentId,
+                currentRevisionNo,
+                reviewedBy,
+                reviewDate,
+                'Not Approved',
+                '---'
+            );
+
+            // Embed font for header updates
+            const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
+
+            // Update approval status in header for all subsequent pages
+            pdfDoc.getPages().slice(1).forEach(async (page) => {
+                const { width, height } = page.getSize();
+
+                const approvedText = `Issue Date: ${formatDate(document.ApprovalDate)}`;
+
+                const approvedTextWidth = helveticaFont.widthOfTextAtSize(approvedText, 10);
+                // Add approval text in header - first create a background to cover any existing text
+                page.drawRectangle({
+                    x: width - approvedTextWidth - 20,
+                    y: height - 71,
+                    width: 200,
+                    height: 12,
+                    color: rgb(1, 1, 1), // White color to cover existing text
+                });
+
+
+                // page.drawText(approvedText, {
+                //     x: width - approvedTextWidth - 20,
+                //     y: height - 69,
+                //     size: approvedTextFontSize,
+                //     color: rgb(0, 0, 0), // Green color for approval
+                // });
+            });
+
+            // Save the modified PDF
+            const modifiedPdfBuffer = await pdfDoc.save();
+
+            // Upload to Cloudinary
+            const result = await uploadToCloudinary(modifiedPdfBuffer);
+            document.UploadedDocuments[latestDocIndex].DocumentUrl = result.secure_url;
+
+
+        } catch (error) {
+            console.error('Error updating PDF with approval:', error);
+            // Continue with approval even if PDF update fails
+            console.warn('Continuing with approval despite PDF update failure');
+        }
+
+
+
         const updatedDoocument = await uploadDocument.findByIdAndUpdate(
             document._id,
             document,
@@ -598,7 +1119,7 @@ router.put('/replaceDocument/:documentId', upload.single('file'), async (req, re
             pdfLogoImage = await pdfDoc.embedPng(logoImage);
         }
         const firstPage = pdfDoc.insertPage(0);
-        addFirstPage(firstPage, pdfLogoImage, requestUser.Company, requestUser, document.DocumentId, document.RevisionNo + 1);
+        addFirstPage(firstPage, pdfLogoImage, requestUser.Company, requestUser, document.DocumentId, `${document.RevisionNo + 1}`);
         const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
         pdfDoc.getPages().slice(1).forEach(async (page) => {
             const { width, height } = page.getSize();
@@ -611,7 +1132,7 @@ router.put('/replaceDocument/:documentId', upload.single('file'), async (req, re
             page.translateContent(0, -extraSpace);
 
             // Now add your custom text at the top
-            const watermarkText = 'Document';
+            const watermarkText = document.DocumentName;
             const watermarkFontSize = 15;
             const watermarkTextWidth = helveticaFont.widthOfTextAtSize(watermarkText, watermarkFontSize);
             const centerWatermarkX = width / 2 - watermarkTextWidth / 2;

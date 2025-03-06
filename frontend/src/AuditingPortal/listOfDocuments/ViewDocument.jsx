@@ -82,8 +82,14 @@ function ViewDocument() {
                         const margins = 1; // Adjust margins as needed
                         const maxWidth = pageWidth - margins * 2; // Calculate usable width
                         const wrappedAddress = pdf.splitTextToSize(address, maxWidth);
+                        
+                        const yStart = (pdf.internal.pageSize.getHeight() / 2) + 0.4; // Starting Y position
+                        
 
-                        pdf.text(wrappedAddress, ((pageWidth - pdf.getTextWidth(address)) / 2), (pdf.internal.pageSize.getHeight() / 2) + 0.4);
+                        wrappedAddress.forEach((line, index) => {
+                            const textWidth = pdf.getTextWidth(line);
+                            pdf.text(line, (pageWidth - textWidth) / 2, yStart + index * 0.25);
+                        });
 
                         // pdf.setLineWidth(0.01); // Example line width
                         // pdf.line(0.1, (pdf.internal.pageSize.getHeight() / 2) + 1, pdf.internal.pageSize.getWidth() - 0.2, (pdf.internal.pageSize.getHeight() / 2) + 1)
@@ -93,20 +99,20 @@ function ViewDocument() {
                         pdf.text(`${documentData.CreatedBy}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 1.8);
                         pdf.text("Creation Date", 1, (pdf.internal.pageSize.getHeight() / 2) + 2.1);
                         pdf.text(`${dayjs(documentData.CreationDate).format('DD/MM/YYYY')}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 2.1);
-                        pdf.text("Revision Number", 1, (pdf.internal.pageSize.getHeight() / 2) + 2.4);
-                        pdf.text(`${documentData.RevisionNo}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 2.4);
-                        if (documentData.Status == 'Approved') {
-                            pdf.text("Approved By", 1, (pdf.internal.pageSize.getHeight() / 2) + 2.7);
-                            pdf.text(`${documentData.ApprovedBy}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 2.7);
-                            pdf.text("Approval Date", 1, (pdf.internal.pageSize.getHeight() / 2) + 3.0);
-                            pdf.text(`${dayjs(documentData.ApprovalDate).format('DD/MM/YYYY')}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 3.0);
-                        }
                         if (documentData.ReviewedBy) {
-                            pdf.text("Reviewed By", 1, (pdf.internal.pageSize.getHeight() / 2) + 3.3);
-                            pdf.text(`${documentData.ReviewedBy}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 3.3);
-                            pdf.text("Reviewed Date", 1, (pdf.internal.pageSize.getHeight() / 2) + 3.6);
-                            pdf.text(`${dayjs(documentData.ReviewDate).format('DD/MM/YYYY')}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 3.6);
+                            pdf.text("Reviewed By", 1, (pdf.internal.pageSize.getHeight() / 2) + 2.4);
+                            pdf.text(`${documentData.ReviewedBy}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 2.4);
+                            pdf.text("Reviewed Date", 1, (pdf.internal.pageSize.getHeight() / 2) + 2.7);
+                            pdf.text(`${dayjs(documentData.ReviewDate).format('DD/MM/YYYY')}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 2.7);
                         }
+                        if (documentData.Status == 'Approved') {
+                            pdf.text("Approved By", 1, (pdf.internal.pageSize.getHeight() / 2) + 3.0);
+                            pdf.text(`${documentData.ApprovedBy}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 3.0);
+                            pdf.text("Approval Date", 1, (pdf.internal.pageSize.getHeight() / 2) + 3.3);
+                            pdf.text(`${dayjs(documentData.ApprovalDate).format('DD/MM/YYYY')}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 3.3);
+                        }
+                        pdf.text("Revision Number", 1, (pdf.internal.pageSize.getHeight() / 2) + 3.6);
+                        pdf.text(`${documentData.RevisionNo}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 3.6);
                     } catch (error) {
                         console.log(error);
                     }

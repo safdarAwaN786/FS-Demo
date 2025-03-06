@@ -84,8 +84,14 @@ function ViewCorrectiveAction() {
                         const margins = 1; // Adjust margins as needed
                         const maxWidth = pageWidth - margins * 2; // Calculate usable width
                         const wrappedAddress = pdf.splitTextToSize(address, maxWidth);
+                        
+                        const yStart = (pdf.internal.pageSize.getHeight() / 2) + 0.4; // Starting Y position
+                        
 
-                        pdf.text(wrappedAddress, ((pageWidth - pdf.getTextWidth(address)) / 2), (pdf.internal.pageSize.getHeight() / 2) + 0.4);
+                        wrappedAddress.forEach((line, index) => {
+                            const textWidth = pdf.getTextWidth(line);
+                            pdf.text(line, (pageWidth - textWidth) / 2, yStart + index * 0.25);
+                        });
 
 
                         // pdf.setLineWidth(0.1); // Example line width

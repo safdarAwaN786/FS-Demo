@@ -254,7 +254,7 @@ router.post('/create-haccp-team', upload.fields(generateMembersDocArray()), asyn
           pdfLogoImage = await pdfDoc.embedPng(logoImage);
         }
         const firstPage = pdfDoc.insertPage(0);
-        addFirstPage(firstPage, pdfLogoImage, requestUser.Company, requestUser, createdTeam.DocumentId, 0);
+        addFirstPage(firstPage, pdfLogoImage, requestUser.Company, requestUser, createdTeam.DocumentId, `0`);
         const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
         pdfDoc.getPages().slice(1).forEach(async (page) => {
           const { width, height } = page.getSize();

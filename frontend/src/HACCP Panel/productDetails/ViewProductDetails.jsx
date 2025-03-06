@@ -79,8 +79,14 @@ function ViewProductDetails() {
                         const margins = 1; // Adjust margins as needed
                         const maxWidth = pageWidth - margins * 2; // Calculate usable width
                         const wrappedAddress = pdf.splitTextToSize(address, maxWidth);
+                        
+                        const yStart = (pdf.internal.pageSize.getHeight() / 2) + 0.4; // Starting Y position
+                        
 
-                        pdf.text(wrappedAddress, ((pageWidth - pdf.getTextWidth(address)) / 2), (pdf.internal.pageSize.getHeight() / 2) + 0.4);
+                        wrappedAddress.forEach((line, index) => {
+                            const textWidth = pdf.getTextWidth(line);
+                            pdf.text(line, (pageWidth - textWidth) / 2, yStart + index * 0.25);
+                        });
 
 
                         // pdf.setLineWidth(0.1); // Example line width
@@ -91,20 +97,21 @@ function ViewProductDetails() {
                         pdf.text(`${dataToSend.CreatedBy}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 1.8);
                         pdf.text("Creation Date", 1, (pdf.internal.pageSize.getHeight() / 2) + 2.1);
                         pdf.text(`${dayjs(dataToSend.CreationDate).format('DD/MM/YYYY')}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 2.1);
-                        pdf.text("Revision Number", 1, (pdf.internal.pageSize.getHeight() / 2) + 2.4);
-                        pdf.text(`${dataToSend.RevisionNo}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 2.4);
-                        if (dataToSend.Status == 'Approved') {
-                            pdf.text("Approved By", 1, (pdf.internal.pageSize.getHeight() / 2) + 2.7);
-                            pdf.text(`${dataToSend.ApprovedBy}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 2.7);
-                            pdf.text("Approval Date", 1, (pdf.internal.pageSize.getHeight() / 2) + 3.0);
-                            pdf.text(`${dayjs(dataToSend.ApprovalDate).format('DD/MM/YYYY')}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 3.0);
-                        }
+                    
                         if (dataToSend.ReviewedBy) {
-                            pdf.text("Reviewed By", 1, (pdf.internal.pageSize.getHeight() / 2) + 3.3);
-                            pdf.text(`${dataToSend.ReviewedBy}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 3.3);
-                            pdf.text("Reviewed Date", 1, (pdf.internal.pageSize.getHeight() / 2) + 3.6);
-                            pdf.text(`${dayjs(dataToSend.ReviewDate).format('DD/MM/YYYY')}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 3.6);
+                            pdf.text("Reviewed By", 1, (pdf.internal.pageSize.getHeight() / 2) + 2.4);
+                            pdf.text(`${dataToSend.ReviewedBy}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 2.4);
+                            pdf.text("Reviewed Date", 1, (pdf.internal.pageSize.getHeight() / 2) + 2.7);
+                            pdf.text(`${dayjs(dataToSend.ReviewDate).format('DD/MM/YYYY')}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 2.7);
                         }
+                        if (dataToSend.Status == 'Approved') {
+                            pdf.text("Approved By", 1, (pdf.internal.pageSize.getHeight() / 2) + 3.0);
+                            pdf.text(`${dataToSend.ApprovedBy}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 3.0);
+                            pdf.text("Approval Date", 1, (pdf.internal.pageSize.getHeight() / 2) + 3.3);
+                            pdf.text(`${dayjs(dataToSend.ApprovalDate).format('DD/MM/YYYY')}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 3.3);
+                        }
+                        pdf.text("Revision Number", 1, (pdf.internal.pageSize.getHeight() / 2) + 3.6);
+                        pdf.text(`${dataToSend.RevisionNo}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 3.6);
                     } catch (error) {
                         console.log(error);
                     }

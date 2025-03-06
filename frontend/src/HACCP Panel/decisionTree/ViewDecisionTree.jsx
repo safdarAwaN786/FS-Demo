@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { setSmallLoading } from '../../redux/slices/loading';
 import html2pdf from 'html2pdf.js';
+import dayjs from 'dayjs';
 
 const formatDate = (date) => {
     const newDate = new Date(date);
@@ -68,13 +69,19 @@ function ViewDecisionTree() {
                         pdf.addImage(dataURL, 'JPEG', ((pageWidth - 3) / 2), 2.5, 3, 3);
                         pdf.setFontSize(20);
                         pdf.text(`${user.Company.CompanyName}`, ((pageWidth - pdf.getTextWidth(user.Company.CompanyName)) / 2), (pdf.internal.pageSize.getHeight() / 2));
-                        pdf.setFontSize(15)
+                        pdf.setFontSize(15);
                         const address = `${user.Company.Address}`;
                         const margins = 1; // Adjust margins as needed
                         const maxWidth = pageWidth - margins * 2; // Calculate usable width
                         const wrappedAddress = pdf.splitTextToSize(address, maxWidth);
+                        
+                        const yStart = (pdf.internal.pageSize.getHeight() / 2) + 0.4; // Starting Y position
+                        
 
-                        pdf.text(wrappedAddress, ((pageWidth - pdf.getTextWidth(address)) / 2), (pdf.internal.pageSize.getHeight() / 2) + 0.4);
+                        wrappedAddress.forEach((line, index) => {
+                            const textWidth = pdf.getTextWidth(line);
+                            pdf.text(line, (pageWidth - textWidth) / 2, yStart + index * 0.25);
+                        });
 
 
                         // pdf.setLineWidth(0.1); // Example line width
@@ -85,34 +92,33 @@ function ViewDecisionTree() {
                         pdf.text(`${dataToSend.CreatedBy}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 1.8);
                         pdf.text("Creation Date", 1, (pdf.internal.pageSize.getHeight() / 2) + 2.1);
                         pdf.text(`${formatDate(dataToSend.CreationDate)}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 2.1);
-                        pdf.text("Revision Number", 1, (pdf.internal.pageSize.getHeight() / 2) + 2.4);
-                        pdf.text(`${dataToSend.RevisionNo}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 2.4);
-                        if (dataToSend.Status == 'Approved') {
-
-                            pdf.text("Approved By", 1, (pdf.internal.pageSize.getHeight() / 2) + 2.7);
-                            pdf.text(`${dataToSend.ApprovedBy}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 2.7);
-                            pdf.text("Approval Date", 1, (pdf.internal.pageSize.getHeight() / 2) + 3.0);
-                            pdf.text(`${formatDate(dataToSend.ApprovalDate)}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 3.0);
-                        }
                         if (dataToSend.ReviewedBy) {
-
-                            pdf.text("Reviewed By", 1, (pdf.internal.pageSize.getHeight() / 2) + 3.3);
-                            pdf.text(`${dataToSend.ReviewedBy}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 3.3);
-                            pdf.text("Reviewed Date", 1, (pdf.internal.pageSize.getHeight() / 2) + 3.6);
-                            pdf.text(`${formatDate(dataToSend.ReviewDate)}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 3.6);
+                            pdf.text("Reviewed By", 1, (pdf.internal.pageSize.getHeight() / 2) + 2.4);
+                            pdf.text(`${dataToSend.ReviewedBy}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 2.4);
+                            pdf.text("Reviewed Date", 1, (pdf.internal.pageSize.getHeight() / 2) + 2.7);
+                            pdf.text(`${dayjs(dataToSend.ReviewDate).format('DD/MM/YYYY')}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 2.7);
                         }
+                        if (dataToSend.Status == 'Approved') {
+                            pdf.text("Approved By", 1, (pdf.internal.pageSize.getHeight() / 2) + 3.0);
+                            pdf.text(`${dataToSend.ApprovedBy}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 3.0);
+                            pdf.text("Approval Date", 1, (pdf.internal.pageSize.getHeight() / 2) + 3.3);
+                            pdf.text(`${dayjs(dataToSend.ApprovalDate).format('DD/MM/YYYY')}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 3.3);
+                        }
+                        pdf.text("Revision Number", 1, (pdf.internal.pageSize.getHeight() / 2) + 3.6);
+                        pdf.text(`${dataToSend.RevisionNo}`, 5, (pdf.internal.pageSize.getHeight() / 2) + 3.6);
                     } catch (error) {
                         console.log(error);
                     }
                 } else {
                     pdf.setFontSize(15)
-                    pdf.text('Powered By Feat Technology', (pdf.internal.pageSize.getWidth() / 2) - 1.3, 0.5);
+                    pdf.text('Decision Tree', ((pdf.internal.pageSize.getWidth() - pdf.getTextWidth('Decision Tree'))  / 2), 0.5);
                     pdf.setFontSize(10);
                     pdf.text(`${user.Company.CompanyName}`, pdf.internal.pageSize.getWidth() - 2, 0.3);
-                    pdf.text('Decision Tree', pdf.internal.pageSize.getWidth() - 2, 0.5);
-                    pdf.text(`${dataToSend.DocumentId}`, pdf.internal.pageSize.getWidth() - 2, 0.7);
-                    pdf.text(`Revision No :${dataToSend.RevisionNo}`, pdf.internal.pageSize.getWidth() - 2, 0.9);
-                    pdf.text(`Creation : ${formatDate(dataToSend.CreationDate)}`, pdf.internal.pageSize.getWidth() - 2, 1.1);
+                    pdf.text(`${dataToSend.DocumentId}`, pdf.internal.pageSize.getWidth() - 2, 0.5);
+                    pdf.text(`Revision No :${dataToSend.RevisionNo}`, pdf.internal.pageSize.getWidth() - 2, 0.7);
+                    if(dataToSend.Status === 'Approved'){
+                        pdf.text(`Isssue Date : ${formatDate(dataToSend.ApprovalDate)}`, pdf.internal.pageSize.getWidth() - 2, 0.9);
+                    }
                 }
             }
         }).save();
