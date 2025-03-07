@@ -123,11 +123,11 @@ function ViewDocument() {
                     const pageWidth = pdf.internal.pageSize.getWidth();
                     pdf.text(title, (pageWidth - titleWidth) / 2, 0.5); // Centering the title
                     pdf.setFontSize(10);
-                    pdf.text(`${user.Company.CompanyName}`, pdf.internal.pageSize.getWidth() - 2, 0.7);
-                    pdf.text(`Doc ID : ${documentData.DocumentId}`, pdf.internal.pageSize.getWidth() - 2, 0.9);
-                    pdf.text(`Revision No :${documentData.RevisionNo}`, pdf.internal.pageSize.getWidth() - 2, 1.1);
+                    pdf.text(`${user.Company.CompanyName}`, pdf.internal.pageSize.getWidth() - 2, 0.3);
+                    pdf.text(`Doc ID : ${documentData.DocumentId}`, pdf.internal.pageSize.getWidth() - 2, 0.5);
+                    pdf.text(`Revision No :${documentData.RevisionNo}`, pdf.internal.pageSize.getWidth() - 2, 0.7);
                     if (documentData.Status == 'Approved') {
-                        pdf.text(`Issue Date : ${dayjs(documentData.ApprovalDate).format('DD/MM/YYYY')}`, pdf.internal.pageSize.getWidth() - 2, 1.3);
+                        pdf.text(`Issue Date : ${dayjs(documentData.ApprovalDate).format('DD/MM/YYYY')}`, pdf.internal.pageSize.getWidth() - 2, 0.9);
                     }
                 }
             }

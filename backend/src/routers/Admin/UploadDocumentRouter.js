@@ -94,67 +94,129 @@ const addFirstPageWithApproval = async (page, logoImage, company, creatorName, c
         }
 
         // Add created by and date
-        const uploadByText = `Created By : ${creatorName}`;
+        const uploadByText = `Created By : `;
         page.drawText(uploadByText, {
-            x: centerTextX - helveticaFont.widthOfTextAtSize(uploadByText, 20) / 2,
+            x: 80,
             y: yPosition - 50,
             color: rgb(0, 0, 0),
             size: 20
         });
 
-        const uploadDateText = `Creation Date : ${formatDate(new Date(createdDate))}`;
+
+        page.drawText(creatorName, {
+            x: 330,
+            y: yPosition - 50,
+            color: rgb(0, 0, 0),
+            size: 20
+        });
+
+        const uploadDateText = `Creation Date : `;
         page.drawText(uploadDateText, {
-            x: centerTextX - helveticaFont.widthOfTextAtSize(uploadDateText, 20) / 2,
+            x: 80,
+            y: yPosition - 80,
+            color: rgb(0, 0, 0),
+            size: 20
+        });
+
+
+
+        page.drawText(formatDate(new Date(createdDate)), {
+            x: 330,
             y: yPosition - 80,
             color: rgb(0, 0, 0),
             size: 20
         });
 
         // Add document ID and revision number
-        const docIdText = `Document ID : ${documentId}`;
+        const docIdText = `Document ID : `;
         page.drawText(docIdText, {
-            x: centerTextX - helveticaFont.widthOfTextAtSize(docIdText, 20) / 2,
+            x: 80,
+            y: yPosition - 110,
+            color: rgb(0, 0, 0),
+            size: 20
+        });
+
+        page.drawText(documentId, {
+            x: 330,
             y: yPosition - 110,
             color: rgb(0, 0, 0),
             size: 20
         });
 
         // Add review information
-        const reviewedByText = `Reviewed By : ${reviewedBy}`;
+        const reviewedByText = `Reviewed By : `;
         page.drawText(reviewedByText, {
-            x: centerTextX - helveticaFont.widthOfTextAtSize(reviewedByText, 20) / 2,
+            x: 80,
             y: yPosition - 140,
             color: rgb(0, 0, 0),
             size: 20
         });
-        const reviewDateText = `Review Date : ${reviewDate !== '---' ? formatDate(new Date(reviewDate)) : reviewDate}`;
+
+        page.drawText(reviewedBy, {
+            x: 330,
+            y: yPosition - 140,
+            color: rgb(0, 0, 0),
+            size: 20
+        });
+
+        const reviewDateText = `Review Date : `;
         page.drawText(reviewDateText, {
-            x: centerTextX - helveticaFont.widthOfTextAtSize(reviewDateText, 20) / 2,
+            x: 80,
             y: yPosition - 170,
             color: rgb(0, 0, 0),
             size: 20
         });
+
+        page.drawText(reviewDate !== '---' ? formatDate(new Date(reviewDate)) : reviewDate, {
+            x: 330,
+            y: yPosition - 170,
+            color: rgb(0, 0, 0),
+            size: 20
+        });
+
+
         // Add approval information with highlighted status
-        const approvedByText = `Approved By : ${approvedBy}`;
+        const approvedByText = `Approved By : `;
         page.drawText(approvedByText, {
-            x: centerTextX - helveticaFont.widthOfTextAtSize(approvedByText, 20) / 2,
+            x: 80,
+            y: yPosition - 200,
+            color: rgb(0, 0, 0), // Green color for approval
+            size: 20
+        });
+
+        page.drawText(approvedBy, {
+            x: 330,
             y: yPosition - 200,
             color: rgb(0, 0, 0), // Green color for approval
             size: 20
         });
 
 
-        const approvalDateText = `Approval Date : ${approvalDate !== '---' ? formatDate(approvalDate) : approvalDate}`;
+        const approvalDateText = `Approval Date : `;
         page.drawText(approvalDateText, {
-            x: centerTextX - helveticaFont.widthOfTextAtSize(approvalDateText, 20) / 2,
+            x: 80,
             y: yPosition - 230,
             color: rgb(0, 0, 0), // Green color for approval
             size: 20
         });
 
-        const revisionNoText = `Revision No : ${revisionNo}`;
+        page.drawText(approvalDate !== '---' ? formatDate(approvalDate) : approvalDate, {
+            x: 330,
+            y: yPosition - 230,
+            color: rgb(0, 0, 0), // Green color for approval
+            size: 20
+        });
+
+        const revisionNoText = `Revision No : `;
         page.drawText(revisionNoText, {
-            x: centerTextX - helveticaFont.widthOfTextAtSize(revisionNoText, 20) / 2,
+            x: 80,
+            y: yPosition - 260,
+            color: rgb(0, 0, 0),
+            size: 20
+        });
+
+        page.drawText(`${revisionNo}`, {
+            x: 330,
             y: yPosition - 260,
             color: rgb(0, 0, 0),
             size: 20
@@ -229,35 +291,68 @@ const addFirstPage = async (page, logoImage, Company, user, documentId, revision
         });
         yPosition -= 30; // Adjust line spacing
     }
-
+    console.log(width);
+    
     // Add uploaded by and date
-    const uploadByText = `Created By : ${user.Name}`;
+    const uploadByText = `Created By : `;
     page.drawText(uploadByText, {
-        x: centerTextX - helveticaFont.widthOfTextAtSize(uploadByText, 20) / 2,
+        // x: centerTextX - helveticaFont.widthOfTextAtSize(uploadByText, 20) / 2,
+        x: 80,
         y: yPosition - 50,
         color: rgb(0, 0, 0),
         size: 20
     });
 
-    const uploadDateText = `Creation Date : ${formatDate(new Date())}`;
+    page.drawText(user.Name, {
+       
+        x: 330,
+        y: yPosition - 50,
+        color: rgb(0, 0, 0),
+        size: 20
+    });
+
+    const uploadDateText = `Creation Date : `;
     page.drawText(uploadDateText, {
-        x: centerTextX - helveticaFont.widthOfTextAtSize(uploadDateText, 20) / 2,
+        x: 80,
+        y: yPosition - 80,
+        color: rgb(0, 0, 0),
+        size: 20
+    });
+
+
+    page.drawText(formatDate(new Date()), {
+        x: 330,
         y: yPosition - 80,
         color: rgb(0, 0, 0),
         size: 20
     });
     if (documentId) {
-        const docIdText = `Document ID : ${documentId}`;
+        const docIdText = `Document ID : `;
         page.drawText(docIdText, {
-            x: centerTextX - helveticaFont.widthOfTextAtSize(docIdText, 20) / 2,
+            x: 80,
+            y: yPosition - 110,
+            color: rgb(0, 0, 0),
+            size: 20
+        });
+
+
+        page.drawText(documentId, {
+            x: 330,
             y: yPosition - 110,
             color: rgb(0, 0, 0),
             size: 20
         });
         if (revisionNo) {
-            const revisionNoText = `Revision No : ${revisionNo}`;
+            const revisionNoText = `Revision No : `;
             page.drawText(revisionNoText, {
-                x: centerTextX - helveticaFont.widthOfTextAtSize(revisionNoText, 20) / 2,
+                x: 80,
+                y: yPosition - 140,
+                color: rgb(0, 0, 0),
+                size: 20
+            });
+
+            page.drawText(revisionNo, {
+                x: 330,
                 y: yPosition - 140,
                 color: rgb(0, 0, 0),
                 size: 20
@@ -265,9 +360,16 @@ const addFirstPage = async (page, logoImage, Company, user, documentId, revision
         }
     } else {
         if (revisionNo) {
-            const revisionNoText = `Revision No : ${revisionNo}`;
+            const revisionNoText = `Revision No : `;
             page.drawText(revisionNoText, {
-                x: centerTextX - helveticaFont.widthOfTextAtSize(revisionNoText, 20) / 2,
+                x: 80,
+                y: yPosition - 110,
+                color: rgb(0, 0, 0),
+                size: 20
+            });
+
+            page.drawText(revisionNo, {
+                x: 330,
                 y: yPosition - 110,
                 color: rgb(0, 0, 0),
                 size: 20
