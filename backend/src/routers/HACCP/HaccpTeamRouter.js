@@ -10,12 +10,14 @@ const nodemailer = require('nodemailer');
 const smtpTransport = require('nodemailer-smtp-transport');
 const emailTemplates = require('../../EmailTemplates/userEmail.json');
 const UserModel = require('../../models/AccountCreation/UserModel');
+const TeamMember = require('../../models/HACCP/TeamMember') 
 const template = emailTemplates.registrationConfirmation;
 require('dotenv').config()
 const { rgb, degrees, PDFDocument, StandardFonts } = require('pdf-lib');
 const axios = require('axios');
 const user = require('../../models/AccountCreation/UserModel');
 const { addFirstPage } = require('../Admin/UploadDocumentRouter');
+const haccpTeamMember = require('../../models/HACCP/TeamMember');
 
 // router.use(authMiddleWare); // Perform authentication checks using the attached user information
 
@@ -327,27 +329,27 @@ router.post('/create-haccp-team', upload.fields(generateMembersDocArray()), asyn
     const membersIds = await Promise.all(
       teamData.TeamMembers.map(async (member) => {
         try {
-          const addedUser = new UserModel({ ...member, Company: requestUser.Company._id, Department: requestUser.Department._id, DepartmentText: member.Department, Email: member.Email, Password: CryptoJS.AES.encrypt(member.Password, process.env.PASS_CODE).toString(), });
-          const emailBody = template.body
-            .replace('{{name}}', member.Name)
-            .replace('{{username}}', member.UserName)
-            .replace('{{password}}', member.Password);
-          const mailOptions = {
-            from: process.env.email, // Sender email address
-            to: member.Email, // Recipient's email address
-            subject: template.subject,
-            text: emailBody,
-          };
-          transporter.sendMail(mailOptions, async function (error, info) {
-            if (error) {
-              console.error('Error sending email:', error);
-            } else {
-              console.log('Email sent: ' + info.response);
+          const addedUser = new TeamMember({ ...member, Company: requestUser.Company._id, Department: requestUser.Department._id, DepartmentText: member.Department, Email: member.Email });
+          // const emailBody = template.body
+          //   .replace('{{name}}', member.Name)
+          //   .replace('{{username}}', member.UserName)
+          //   .replace('{{password}}', member.Password);
+          // const mailOptions = {
+          //   from: process.env.email, // Sender email address
+          //   to: member.Email, // Recipient's email address
+          //   subject: template.subject,
+          //   text: emailBody,
+          // };
+          // transporter.sendMail(mailOptions, async function (error, info) {
+          //   if (error) {
+          //     console.error('Error sending email:', error);
+          //   } else {
+          //     console.log('Email sent: ' + info.response);
               await addedUser.save().then(() => {
                 console.log('userAdded');
               })
-            }
-          });
+          //   }
+          // });
           return addedUser._id;
         } catch (error) {
           console.log(error);
@@ -383,7 +385,7 @@ router.get('/get-all-haccp-teams', async (req, res) => {
       model: 'Department'
     }).populate({
       path: 'TeamMembers',
-      model: 'User',
+      model: 'haccpTeamMember',
       populate: ({
         path: 'Department',
         model: 'Department'
@@ -408,7 +410,7 @@ router.get('/get-approved-haccp-teams', async (req, res) => {
       model: 'Department'
     }).populate({
       path: 'TeamMembers',
-      model: 'User'
+      model: 'haccpTeamMember'
     });
     if (!teams) {
       console.log('HACCP Team documents not found');
@@ -428,7 +430,7 @@ router.get('/get-haccp-team/:teamId', async (req, res) => {
     const teamId = req.params.teamId;
     const team = await HaccpTeam.findById(teamId).populate('UserDepartment').populate('Department').populate({
       path: 'TeamMembers',
-      model: 'User',
+      model: 'haccpTeamMember',
       populate: ({
         path: 'Department',
         model: 'Department'
@@ -602,31 +604,35 @@ router.patch('/update-haccp-team/:teamId', upload.fields(generateMembersDocArray
         try {
           let updateduser;
           if (member._id) {
-            updateduser = await UserModel.findByIdAndUpdate(member._id, { ...member, Password: CryptoJS.AES.encrypt(member.Password, process.env.PASS_CODE).toString() })
+            updateduser = await haccpTeamMember.findByIdAndUpdate(member._id, { ...member, 
+              // Password: CryptoJS.AES.encrypt(member.Password, process.env.PASS_CODE).toString()
+             })
           } else {
             const { _id, ...user } = member
-            updateduser = new UserModel({ ...user, Company: requestUser.Company, Department: requestUser.Department, DepartmentText: user.DepartmentText, Password: CryptoJS.AES.encrypt(user.Password, process.env.PASS_CODE).toString() });
+            updateduser = new haccpTeamMember({ ...user, Company: requestUser.Company, Department: requestUser.Department, DepartmentText: user.DepartmentText,
+              //  Password: CryptoJS.AES.encrypt(user.Password, process.env.PASS_CODE).toString()
+             });
             await updateduser.save();
           }
           console.log(updateduser);
-          const emailBody = template.body
-            .replace('{{name}}', member.Name)
-            .replace('{{username}}', member.UserName)
-            .replace('{{password}}', member.Password);
-          const mailOptions = {
-            from: process.env.email, // Sender email address
-            to: member.Email, // Recipient's email address
-            subject: template.subject,
-            text: emailBody,
-          };
+          // const emailBody = template.body
+          //   .replace('{{name}}', member.Name)
+          //   .replace('{{username}}', member.UserName)
+          //   .replace('{{password}}', member.Password);
+          // const mailOptions = {
+          //   from: process.env.email, // Sender email address
+          //   to: member.Email, // Recipient's email address
+          //   subject: template.subject,
+          //   text: emailBody,
+          // };
 
-          transporter.sendMail(mailOptions, async function (error, info) {
-            if (error) {
-              console.error('Error sending email:', error);
-            } else {
-              console.log('Email sent: ' + info.response);
-            }
-          });
+          // transporter.sendMail(mailOptions, async function (error, info) {
+          //   if (error) {
+          //     console.error('Error sending email:', error);
+          //   } else {
+          //     console.log('Email sent: ' + info.response);
+          //   }
+          // });
           return (updateduser._id);
         } catch (error) {
           console.log(error);

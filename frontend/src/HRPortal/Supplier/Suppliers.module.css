@@ -172,12 +172,18 @@
   .headers > td:nth-child(1) {
     width: 144px;
   }
+  .headers > td:nth-child(13) {
+    width: 300px !important;
+  }
   .headers > td:nth-child(n + 1) {
     width: 188px;
   }
   
   .tablebody > td:nth-child(1) {
     width: 144px;
+  }
+  .tablebody > td:nth-child(13) {
+    width: 300px !important;
   }
   .tablebody > td:nth-child(n + 1) {
     width: 188px;
@@ -190,6 +196,7 @@
     align-items: center;
     gap: 12px;
     align-self: stretch;
+    overflow-x: auto;
   }
   
   .tablebody {

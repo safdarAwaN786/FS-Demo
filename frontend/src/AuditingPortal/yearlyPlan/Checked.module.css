@@ -115,10 +115,13 @@
 .headers > td:nth-child(1),
 .tablebody > td:nth-child(1) {
   width: 270px;
+
 }
 .headers > td:nth-child(n+2),
 .tablebody > td:nth-child(n+2) {
   width: 200px;
+
+
 }
 
 
@@ -136,6 +139,8 @@
   font-style: normal;
   font-weight: 500;
   line-height: 18px;
+  overflow-x: auto;
+
 }
 
 .tablebody {

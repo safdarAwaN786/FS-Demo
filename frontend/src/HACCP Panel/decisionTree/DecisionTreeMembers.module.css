@@ -222,6 +222,7 @@
     align-items: center;
     gap: 12px;
     align-self: stretch;
+    overflow-x: auto;
   }
   .greenStatus{
     background-color: #c9ffc2c5;

@@ -18,7 +18,6 @@ router.post('/create-document', async (req, res) => {
       ...req.body,
       CreatedBy: createdBy,
       UserDepartment: req.header('Authorization'),
-
     });
 
     // * Save the document to the database

@@ -197,8 +197,16 @@
     width: 200px;
   }
 
+  .headers > td:nth-child(10) {
+    width: 300px !important;
+  }
+
   .tablebody > td:nth-child(n) {
     width: 200px;
+  }
+
+  .tablebody > td:nth-child(10) {
+    width: 300px !important;
   }
   
   /* .headers > td:nth-child(3) {
@@ -262,6 +270,8 @@
     align-items: center;
     gap: 12px;
     align-self: stretch;
+    overflow-x: auto;
+
   }
   .greenStatus{
     background-color: #c9ffc2c5;

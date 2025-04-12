@@ -156,7 +156,7 @@
 
 
   .headers > td:nth-child(1) {
-    width: 130px;
+    width: 200px;
   }
   .headers > td:nth-child(2) {
     width: 200px;
@@ -175,7 +175,7 @@
   }
 
   .tablebody > td:nth-child(1) {
-    width: 130px;
+    width: 200px;
   }
   .tablebody > td:nth-child(2) {
     width: 200px;
@@ -254,6 +254,8 @@
     align-items: center;
     gap: 12px;
     align-self: stretch;
+    overflow-x: auto;
+
   }
   .greenStatus{
     background-color: #c9ffc2c5;

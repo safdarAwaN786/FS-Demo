@@ -182,12 +182,25 @@
 
 
 
+
+
 .headers > td:nth-child(n) {
   width: 200px;
 }
 
+.headers > td:nth-child(10) {
+  width: 250px !important;
+}
+
+
+.tablebody > td:nth-child(10) {
+  width: 250px !important;
+
+}
 .tablebody > td:nth-child(n) {
   width: 200px;
+  overflow-x: auto;
+
 }
 
 

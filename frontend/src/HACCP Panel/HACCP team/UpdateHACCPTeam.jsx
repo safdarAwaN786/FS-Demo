@@ -319,9 +319,9 @@ function UpdateHACCPTeam() {
                                                 <input autoComplete='off' onChange={(event) => {
                                                     updateMembers(event, index)
                                                 }} value={member.Email} name='Email' type='email' className='p-3 bg-light my-3 w-100 border-0' placeholder='Email' required />
-                                                <input autoComplete='off' onChange={(event) => {
+                                                {/* <input autoComplete='off' onChange={(event) => {
                                                     updateMembers(event, index)
-                                                }} value={member.UserName} name='UserName' type='text' className='p-3 bg-light my-3 w-100 border-0' placeholder='User Name' required />
+                                                }} value={member.UserName} name='UserName' type='text' className='p-3 bg-light my-3 w-100 border-0' placeholder='User Name' required /> */}
                                             </div>
                                             <div className='col-lg-6 col-md-12 p-2'>
                                                 <input autoComplete='off' onChange={(event) => {
@@ -343,7 +343,7 @@ function UpdateHACCPTeam() {
                                                         updateMembers(event, index)
                                                     }} value={member.TrainingDate} name='TrainingDate' className='bg-light border-0' type='date' placeholder='Training Date' />
                                                 </div>
-                                                <div className='d-flex flex-row'>
+                                                {/* <div className='d-flex flex-row'>
                                                     <input autoComplete='off' onChange={(event) => {
                                                         updateMembers(event, index);
                                                         CheckPassword(member.Password, index);
@@ -355,11 +355,11 @@ function UpdateHACCPTeam() {
                                                         updatedMembers[index].Password = newPassword;
                                                         setMembers(updatedMembers);
                                                     }} className='btn btn-outline-primary my-4'>Generate</a>
-                                                </div>
-                                                <span className='text-danger'>Password Updation required , for each already added Memeber.</span>
+                                                </div> */}
+                                                {/* <span className='text-danger'>Password Updation required , for each already added Memeber.</span>
                                                 {member.validationMessage && (
                                                     <p className={`${member.validationMessage === 'Password is valid!' ? 'text-success' : 'text-danger'} ms-2`}>{user.validationMessage}</p>
-                                                )}
+                                                )} */}
                                             </div>
                                         </div>
                                         <div className='d-flex w-100 justify-content-center align-items-center'>

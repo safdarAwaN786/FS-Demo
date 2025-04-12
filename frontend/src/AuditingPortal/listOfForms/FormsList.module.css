@@ -187,8 +187,17 @@
     width: 200px;
   }
 
+  .headers > td:nth-child(11) {
+    width: 300px !important;
+  }
+
+  .tablebody > td:nth-child(11) {
+    width: 300px !important;
+  }
+
   .tablebody > td:nth-child(n) {
     width: 200px;
+    overflow-x: auto;
   }
 
 

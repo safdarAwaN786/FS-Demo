@@ -123,7 +123,7 @@ function InfoForPlanned() {
                                     <img src={calender} alt="" />
                                     <div>
                                         <p className={style.card1para}>Plan Date</p>
-                                        <p className={style.card1para2}>{plannedTrainingData?.Date}-{plannedTrainingData?.Month}-{plannedTrainingData?.Year}</p>
+                                        <p className={`${style.card1para2} overflow-x-handler`}>{plannedTrainingData?.Date}-{plannedTrainingData?.Month}-{plannedTrainingData?.Year}</p>
                                     </div>
                                 </div>
                                 {plannedTrainingData?.ActualDate !== null && (
@@ -134,7 +134,7 @@ function InfoForPlanned() {
                                             <p className={style.card1para}>Actual Date</p>
                                             {plannedTrainingData?.ActualDate ? (
 
-                                            <p className={style.card1para2}>{plannedTrainingData?.ActualDate?.slice(0, 10).split('-')[2]}-{plannedTrainingData?.ActualDate.slice(0, 10).split('-')[1]}-{plannedTrainingData?.ActualDate.slice(0, 10).split('-')[0]}</p>
+                                            <p className={`${style.card1para2} overflow-x-handler`}>{plannedTrainingData?.ActualDate?.slice(0, 10).split('-')[2]}-{plannedTrainingData?.ActualDate.slice(0, 10).split('-')[1]}-{plannedTrainingData?.ActualDate.slice(0, 10).split('-')[0]}</p>
                                             ) : (
                                                 <p>- - -</p>
                                             )}
@@ -145,14 +145,14 @@ function InfoForPlanned() {
                                     <img src={clock} alt="" />
                                     <div>
                                         <p className={style.card1para}>Time</p>
-                                        <p className={style.card1para2}>{plannedTrainingData?.Time}</p>
+                                        <p className={`${style.card1para2} overflow-x-handler`}>{plannedTrainingData?.Time}</p>
                                     </div>
                                 </div>
                                 <div>
                                     <img src={star} alt="" />
                                     <div>
                                         <p className={style.card1para}>Month Name</p>
-                                        <p className={style.card1para2}>{plannedTrainingData?.Month}</p>
+                                        <p className={`${style.card1para2} overflow-x-handler`}>{plannedTrainingData?.Month}</p>
                                     </div>
                                 </div>
                                 <div>
@@ -174,7 +174,7 @@ function InfoForPlanned() {
                                     <img src={mos} alt="" />
                                     <div>
                                         <p className={style.card1para}>Venue </p>
-                                        <p className={style.card1para2}>{plannedTrainingData?.Venue}</p>
+                                        <p className={`${style.card1para2} overflow-x-handler`}>{plannedTrainingData?.Venue}</p>
                                     </div>
                                 </div>
                                 <div>
@@ -191,7 +191,7 @@ function InfoForPlanned() {
                                     <img src={copy} alt="" />
                                     <div>
                                         <p className={style.card1para}>Internal/External</p>
-                                        <p className={style.card1para2}>{plannedTrainingData?.InternalExternal}</p>
+                                        <p className={`${style.card1para2} overflow-x-handler`}>{plannedTrainingData?.InternalExternal}</p>
                                     </div>
                                 </div>
 
@@ -199,7 +199,7 @@ function InfoForPlanned() {
                                     <img src={office} alt="" />
                                     <div>
                                         <p className={style.card1para}>Trainer Name</p>
-                                        <p className={style.card1para2}>{plannedTrainingData?.Trainer.Name}</p>
+                                        <p className={`${style.card1para2} overflow-x-handler`}>{plannedTrainingData?.Trainer.Name}</p>
                                     </div>
                                 </div>
                                 <div>

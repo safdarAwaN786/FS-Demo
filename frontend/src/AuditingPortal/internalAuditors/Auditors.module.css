@@ -137,6 +137,8 @@
 
 .tablebody > td:nth-child(n) {
   width: 200px;
+  overflow-x: auto;
+
 }
 
 
@@ -154,6 +156,8 @@
   font-style: normal;
   font-weight: 500;
   line-height: 18px;
+  overflow-x: auto;
+
 }
 
 .tablebody {

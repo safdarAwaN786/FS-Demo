@@ -13,6 +13,10 @@
   }
 }
 
+.overflow-x-handler {
+  overflow-x: auto !important;
+}
+
 .App-header {
   background-color: #75787d;
   min-height: 100vh;

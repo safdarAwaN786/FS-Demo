@@ -40,67 +40,14 @@ function AddHACCPTeam() {
     const alertManager = () => {
         setalert(!alert)
     }
-    function CheckPassword(submittedPassword, index) {
-        if (submittedPassword?.length < 8) {
-            const updatedMembers = [...members];
-            updatedMembers[index].validationMessage = 'Password must be at least 8 characters long.'
-            setMembers(updatedMembers);
-            return;
-        }
-
-        if (
-            !/[a-z]/.test(submittedPassword) ||
-            !/[A-Z]/.test(submittedPassword) ||
-            !/[0-9]/.test(submittedPassword)
-        ) {
-            const updatedMembers = [...members];
-            updatedMembers[index].validationMessage = 'Password must contain at least one uppercase letter, one lowercase letter, and one number.'
-            setMembers(updatedMembers);
-
-            return;
-        }
-
-        // Password is valid
-        const updatedMembers = [...members];
-        updatedMembers[index].validationMessage = 'Password is valid!'
-        setMembers(updatedMembers);
-
-    }
+ 
     const tabData = useSelector(state => state.tab);
     const dispatch = useDispatch();
 
     const [departmentsToShow, SetDepartmentsToShow] = useState(null);
 
     const user = useSelector(state => state.auth.user);
-    function generateRandomPassword(index) {
-        const lowercaseCharset = 'abcdefghijklmnopqrstuvwxyz';
-        const uppercaseCharset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        const numberCharset = '0123456789';
-
-        let password = '';
-
-        // Ensure at least one lowercase character
-        password += lowercaseCharset.charAt(Math.floor(Math.random() * lowercaseCharset.length));
-
-        // Ensure at least one uppercase character
-        password += uppercaseCharset.charAt(Math.floor(Math.random() * uppercaseCharset.length));
-
-        // Ensure at least one number
-        password += numberCharset.charAt(Math.floor(Math.random() * numberCharset.length));
-
-        // Generate the remaining characters
-        for (let i = 3; i < 8; i++) {
-            const charset = lowercaseCharset + uppercaseCharset + numberCharset;
-            const randomIndex = Math.floor(Math.random() * charset.length);
-            password += charset.charAt(randomIndex);
-        }
-
-        // Shuffle the password characters to randomize their positions
-        password = password.split('').sort(() => Math.random() - 0.5).join('');
-
-        CheckPassword(password, index)
-        return password;
-    }
+  
     const userToken = Cookies.get('userToken');
 
     useEffect(() => {
@@ -254,9 +201,9 @@ function AddHACCPTeam() {
                                                 <input autoComplete='off' onChange={(event) => {
                                                     updateMembers(event, index)
                                                 }} value={member.Email} name='Email' type='email' className='p-3 bg-light my-3 w-100 border-0' placeholder='Email' required />
-                                                <input autoComplete='off' onChange={(event) => {
+                                                {/* <input autoComplete='off' onChange={(event) => {
                                                     updateMembers(event, index)
-                                                }} value={member.userName} name='UserName' type='text' className='p-3 bg-light my-3 w-100 border-0' placeholder='User Name' required />
+                                                }} value={member.userName} name='UserName' type='text' className='p-3 bg-light my-3 w-100 border-0' placeholder='User Name' required /> */}
                                             </div>
                                             <div className='col-lg-6 col-md-12 p-2'>
                                                 <input autoComplete='off' onChange={(event) => {
@@ -274,7 +221,7 @@ function AddHACCPTeam() {
                                                         updateMembers(event, index)
                                                     }} value={member.TrainingDate} name='TrainingDate' className='bg-light border-0' type='date' placeholder='Training Date' required />
                                                 </div>
-                                                <div className='d-flex flex-row'>
+                                                {/* <div className='d-flex flex-row'>
                                                     <input autoComplete='off' onChange={(event) => {
                                                         updateMembers(event, index);
                                                         CheckPassword(member.Password, index);
@@ -286,10 +233,10 @@ function AddHACCPTeam() {
                                                         updatedMembers[index].Password = newPassword;
                                                         setMembers(updatedMembers);
                                                     }} className='btn btn-outline-primary my-4'>Generate</a>
-                                                </div>
-                                                {member.validationMessage && (
+                                                </div> */}
+                                                {/* {member.validationMessage && (
                                                     <p className={`${member.validationMessage === 'Password is valid!' ? 'text-success' : 'text-danger'} ms-2`}>{user.validationMessage}</p>
-                                                )}
+                                                )} */}
                                             </div>
                                         </div>
                                         <div className='d-flex w-100 justify-content-center align-items-center'>

@@ -129,7 +129,7 @@ function InfoForAssigned() {
                                 <img src={calender} alt="" />
                                 <div>
                                     <p className={style.card1para}>Plan Date</p>
-                                    <p className={style.card1para2}>{assignedTrainingData?.Date}-{assignedTrainingData?.Month}-{assignedTrainingData?.Year}</p>
+                                    <p className={`${style.card1para2} overflow-x-handler`}>{assignedTrainingData?.Date}-{assignedTrainingData?.Month}-{assignedTrainingData?.Year}</p>
                                 </div>
                             </div>
                             {assignedTrainingData?.ActualDate !== null && (
@@ -138,7 +138,7 @@ function InfoForAssigned() {
                                     <img src={calender} alt="" />
                                     <div>
                                         <p className={style.card1para}>Actual Date</p>
-                                        <p className={style.card1para2}>{assignedTrainingData?.ActualDate?.slice(0, 10).split('-')[2]}-{assignedTrainingData?.ActualDate?.slice(0, 10).split('-')[1]}-{assignedTrainingData?.ActualDate?.slice(0, 10).split('-')[0]}</p>
+                                        <p className={`${style.card1para2} overflow-x-handler`}>{assignedTrainingData?.ActualDate?.slice(0, 10).split('-')[2]}-{assignedTrainingData?.ActualDate?.slice(0, 10).split('-')[1]}-{assignedTrainingData?.ActualDate?.slice(0, 10).split('-')[0]}</p>
                                     </div>
                                 </div>
                             )}
@@ -146,14 +146,14 @@ function InfoForAssigned() {
                                 <img src={clock} alt="" />
                                 <div>
                                     <p className={style.card1para}>Time</p>
-                                    <p className={style.card1para2}>{assignedTrainingData?.Time}</p>
+                                    <p className={`${style.card1para2} overflow-x-handler`}>{assignedTrainingData?.Time}</p>
                                 </div>
                             </div>
                             <div>
                                 <img src={star} alt="" />
                                 <div>
                                     <p className={style.card1para}>Month Name</p>
-                                    <p className={style.card1para2}>{assignedTrainingData?.Month}</p>
+                                    <p className={`${style.card1para2} overflow-x-handler`}>{assignedTrainingData?.Month}</p>
                                 </div>
                             </div>
                             <div>
@@ -175,7 +175,7 @@ function InfoForAssigned() {
                                 <img src={mos} alt="" />
                                 <div>
                                     <p className={style.card1para}>Venue </p>
-                                    <p className={style.card1para2}>{assignedTrainingData?.Venue}</p>
+                                    <p className={`${style.card1para2} overflow-x-handler`}>{assignedTrainingData?.Venue}</p>
                                 </div>
                             </div>
                             <div>
@@ -192,7 +192,7 @@ function InfoForAssigned() {
                                 <img src={copy} alt="" />
                                 <div>
                                     <p className={style.card1para}>Internal/External</p>
-                                    <p className={style.card1para2}>{assignedTrainingData?.InternalExternal}</p>
+                                    <p className={`${style.card1para2} overflow-x-handler`}>{assignedTrainingData?.InternalExternal}</p>
                                 </div>
                             </div>
 
@@ -200,7 +200,7 @@ function InfoForAssigned() {
                                 <img src={office} alt="" />
                                 <div>
                                     <p className={style.card1para}>Trainer Name</p>
-                                    <p className={style.card1para2}>{assignedTrainingData?.Trainer?.Name}</p>
+                                    <p className={`${style.card1para2} overflow-x-handler`}>{assignedTrainingData?.Trainer?.Name}</p>
                                 </div>
                             </div>
                             <div>

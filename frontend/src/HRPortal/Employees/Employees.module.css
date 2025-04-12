@@ -187,7 +187,7 @@
   width: 162px;
 }
 .headers > td:nth-child(9) {
-  width: 130px;
+  width: 200px;
 }
 .headers > td:nth-child(10) {
   width: 230px;
@@ -199,6 +199,7 @@
   padding: 12px 24px;
   align-items: center;
   gap: 12px;
+  overflow-x: auto;
 }
 
 .tablebody {
@@ -267,7 +268,7 @@
   line-height: normal;
 }
 .tablebody > td:nth-child(9) {
-  width: 130px;
+  width: 200px;
 }
 .tablebody > td:nth-child(9) button,
 .downloadD {

@@ -177,6 +177,7 @@
   align-items: center;
   gap: 12px;
   align-self: stretch;
+  overflow-x: auto;
 }
 .textStyle3 {
   color: var(--foundation-blue-b-200, #6b788e);

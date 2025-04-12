@@ -169,10 +169,10 @@ function HACCPTeamMembers() {
                             <td>Trainings Attended</td>
                             <td>Date of Training</td>
                             <td>Email</td>
-                            <td>UserName</td>
+                            {/* <td>UserName</td> */}
                             {/* <td>Password</td> */}
-                            <td>Action</td>
-                            <td>Assigned</td>
+                            {/* <td>Action</td> */}
+                            {/* <td>Assigned</td> */}
                             <td>Document</td>
                             <td>Action</td>
                         </tr>
@@ -198,20 +198,20 @@ function HACCPTeamMembers() {
                                         <td>{member.TrainingsAttended}</td>
                                         <td>{dayjs(member.TrainingDate).format('DD/MM/YYYY')}</td>
                                         <td>{member.Email}</td>
-                                        <td>{member.UserName}</td>
-                                        <td>
+                                        {/* <td>{member.UserName}</td> */}
+                                        {/* <td>
                                             <p onClick={() => {
                                                 dispatch(updateTabData({ ...tabData, Tab: 'assignTabsToMember' }));
                                                 dispatch(changeId(member._id));
                                             }} className='btn btn-outline-success p-1 m-2'>Assign Tabs</p>
-                                        </td>
-                                        <td>
+                                        </td> */}
+                                        {/* <td>
                                             <p onClick={() => {
                                                 setShowTabs(true);
                                                 setUserTabs(member.Tabs)
 
                                             }} className='btn btn-outline-success p-1 m-2'>Current Tabs</p>
-                                        </td>
+                                        </td> */}
                                         <td><button onClick={() => {
                                             if (member.Document) {
                                                 console.log(member.Document)

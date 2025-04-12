@@ -132,7 +132,10 @@
   font-size: 17px;
   font-style: normal;
   font-weight: 400;
+  width: 250px;
   line-height: normal;
+  overflow-x: auto;
+
 }
 
 .tableParent {

@@ -229,40 +229,55 @@
 }
 .tablebody > td:nth-child(1) {
   width: 150px;
+  overflow-x: auto;
 }
 .tablebody > td:nth-child(2) {
   width: 200px;
+  overflow-x: auto;
+
 }
 .tablebody > td:nth-child(3) {
   width: 150px;
+  overflow-x: auto;
+
 }
 
 .tablebody > td:nth-child(4) {
   width: 200px;
+  overflow-x: auto;
+
 }
 .tablebody > td:nth-child(5) {
+  overflow-x: auto;
   width: 200px;
 }
 .tablebody > td:nth-child(5) {
+  overflow-x: auto;
   width: 200px;
 }
 .tablebody > td:nth-child(6) {
   width: 200px;
+  overflow-x: auto;
 }
 .tablebody > td:nth-child(7) {
   width: 200px;
+  overflow-x: auto;
 }
 .tablebody > td:nth-child(8) {
   width: 200px;
+  overflow-x: auto;
 }
 .tablebody > td:nth-child(9) {
   width: 200px;
+  overflow-x: auto;
 }
 .tablebody > td:nth-child(10) {
   width: 200px;
+  overflow-x: auto;
 }
 .tablebody > td:nth-child(11) {
   width: 200px;
+  overflow-x: auto;
 }
 .tablebody > td {
   display: flex;
@@ -271,6 +286,8 @@
   align-items: center;
   gap: 12px;
   align-self: stretch;
+  overflow-x: auto;
+
 }
 .alertparentemail {
   width: 100%;

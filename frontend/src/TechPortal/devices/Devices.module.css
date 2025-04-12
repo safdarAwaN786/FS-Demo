@@ -195,6 +195,7 @@
   align-items: center;
   gap: 20px;
   align-self: stretch;
+  overflow-x: auto;
 }
 
 .tablebody {

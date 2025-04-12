@@ -174,9 +174,15 @@
   .headers > td:nth-child(n) {
     width: 200px;
   }
+  .headers > td:nth-child(9) {
+    width: 300px !important;
+  }
 
   .tablebody > td:nth-child(n) {
     width: 200px;
+  }
+  .tablebody > td:nth-child(9) {
+    width: 300px !important;
   }
   
   /* .headers > td:nth-child(3) {
@@ -235,11 +241,12 @@
     display: flex;
     font-family: 'Inter';
     font-size: 13px;
-    height: 72px;
+    height: 76px;
     padding: 12px 24px;
     align-items: center;
     gap: 12px;
     align-self: stretch;
+    overflow-x: auto;
   }
   .greenStatus{
     background-color: #c9ffc2c5;

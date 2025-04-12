@@ -134,31 +134,31 @@ function FillForm() {
                             <div className='w-100'>
                                 <p className='text-black'>Document Type</p>
                                 <div>
-                                    <input autoComplete='off' value={dataToSend?.DocumentType} className='w-100' name='FormName' type="text" readOnly />
+                                    <input autoComplete='off' value={dataToSend?.DocumentType} className='w-100 overflow-x-handler' name='FormName' type="text" readOnly />
                                 </div>
                             </div>
                             <div className='w-100'>
                                 <p className='text-black'>Department</p>
                                 <div>
-                                    <input autoComplete='off' value={dataToSend?.Department.DepartmentName} className='w-100' name='FormName' type="text" readOnly />
+                                    <input autoComplete='off' value={dataToSend?.Department.DepartmentName} className='w-100 overflow-x-handler' name='FormName' type="text" readOnly />
                                 </div>
                             </div>
                             <div className='w-100'>
                                 <p className='text-black'>Maintenance Frequency</p>
                                 <div>
-                                    <input autoComplete='off' value={dataToSend?.MaintenanceFrequency} className='w-100' name='FormName' type="text" readOnly />
+                                    <input autoComplete='off' value={dataToSend?.MaintenanceFrequency} className='w-100 overflow-x-handler' name='FormName' type="text" readOnly />
                                 </div>
                             </div>
                             <div className='w-100'>
                                 <p className='text-black'>Form Name</p>
                                 <div>
-                                    <input autoComplete='off' value={dataToSend?.FormName} className='w-100' name='FormName' type="text" readOnly />
+                                    <input autoComplete='off' value={dataToSend?.FormName} className='w-100 overflow-x-handler' name='FormName' type="text" readOnly />
                                 </div>
                             </div>
                             <div className='w-100'>
                                 <p className='text-black'>Form Description</p>
                                 <div>
-                                    <input autoComplete='off' value={dataToSend?.FormDescription} className='w-100' name='FormDescription' type="text" readOnly />
+                                    <input autoComplete='off' value={dataToSend?.FormDescription} className='w-100 overflow-x-handler' name='FormDescription' type="text" readOnly />
                                 </div>
                             </div>
                             {questions.map((question, index) => {
@@ -172,7 +172,7 @@ function FillForm() {
                                             }} className=' me-3 d-flex flex-column'>
                                                 <input autoComplete='off' value={dataToSend?.questions[index]?.questionText} style={{
                                                     borderRadius: '0px'
-                                                }} name='questionText' className='border-bottom border-secondary bg-light mt-2 mb-3 w-100 p-3' readOnly />
+                                                }} name='questionText' className='border-bottom overflow-x-handler border-secondary bg-light mt-2 mb-3 w-100 p-3' readOnly />
                                             </div>
                                         </div>
                                         {(questions[index].questionType === 'ShortText') && (
@@ -188,7 +188,7 @@ function FillForm() {
                                                     setAnswers(updatedAnswers);
                                                 }} style={{
                                                     borderRadius: '0px'
-                                                }} className='bg-light border-bottom border-secondary p-1 my-1  w-100' type='text' {...(questions[index].Required ? { required: true } : {})} />
+                                                }} className='bg-light overflow-x-handler border-bottom border-secondary p-1 my-1  w-100' type='text' {...(questions[index].Required ? { required: true } : {})} />
                                             </div>
                                         )}
                                         {(questions[index].questionType === 'LongText') && (
@@ -202,7 +202,7 @@ function FillForm() {
                                                     updatedAnswers[index].question = questions[index]._id;
                                                     updatedAnswers[index].longTextAnswer = e.target.value;
                                                     setAnswers(updatedAnswers);
-                                                }} rows={3} name='longTextAnswer' className='w-100 bg-light border-0 p-1 border-bottom border-secondary' {...(questions[index].Required ? { required: true } : {})} />
+                                                }} rows={3} name='longTextAnswer' className='w-100 overflow-x-handler bg-light border-0 p-1 border-bottom border-secondary' {...(questions[index].Required ? { required: true } : {})} />
                                             </div>
                                         )}
                                         {(questions[index].questionType === 'Multiplechoicegrid') && (
@@ -219,7 +219,7 @@ function FillForm() {
                                                                         <th style={{
                                                                             minWidth: '80px'
                                                                         }}>
-                                                                            <input autoComplete='off' value={dataToSend?.questions[index].columns[colIndex].colTitle} className={`bg-light border-bottom border-secondary d-inline py-0 px-1 mx-1 ${style.noRadius}`} type='text' readOnly />
+                                                                            <input autoComplete='off' value={dataToSend?.questions[index].columns[colIndex].colTitle} className={`bg-light overflow-x-handler border-bottom border-secondary d-inline py-0 px-1 mx-1 ${style.noRadius}`} type='text' readOnly />
                                                                         </th>
                                                                     )
                                                                 })}

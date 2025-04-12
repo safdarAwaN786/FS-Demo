@@ -6,6 +6,7 @@ import { BsArrowLeftCircle } from 'react-icons/bs';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../redux/slices/tabSlice';
 import { setSmallLoading } from '../../redux/slices/loading';
+import dayjs from 'dayjs';
 
 function DocumentHistory() {
     const [commentBox, setCommentBox] = useState(false);
@@ -175,18 +176,18 @@ function DocumentHistory() {
                                     <tr key={i}>
                                         <td>{docObj.RevisionNo}</td>
                                         <td>{docObj.CreatedBy}</td>
-                                        <td>{docObj?.CreationDate?.slice(0, 10).split('-')[2]}/{docObj.CreationDate?.slice(0, 10).split('-')[1]}/{docObj?.CreationDate?.slice(0, 10).split('-')[0]}</td>
+                                        <td>{docObj?.CreationDate ? dayjs(docObj?.CreationDate).format('DD/MM/YYYY') : '---' }</td>
                                         <td>{docObj.ReviewedBy ? docObj.ReviewedBy : 'Pending'}</td>
                                         {docObj.ReviewDate ? (
 
-                                            <td>{docObj?.ReviewDate?.slice(0, 10).split('-')[2]}/{docObj.ReviewDate.slice(0, 10).split('-')[1]}/{docObj?.ReviewDate.slice(0, 10).split('-')[0]}</td>
+                                            <td>{docObj?.ReviewDate ? dayjs(docObj?.ReviewDate).format('DD/MM/YYYY') : '---' }</td>
                                         ) : (
                                             <td>Pending</td>
                                         )}
                                         <td>{docObj.ApprovedBy ? docObj.ApprovedBy : 'Pending'}</td>
                                         {docObj.ApprovalDate ? (
 
-                                            <td>{docObj?.ApprovalDate.slice(0, 10).split('-')[2]}/{docObj.ApprovalDate.slice(0, 10).split('-')[1]}/{docObj?.ApprovalDate.slice(0, 10).split('-')[0]}</td>
+                                            <td>{docObj?.ApprovalDate ? dayjs(docObj?.ApprovalDate).format('DD/MM/YYYY') : '---' }</td>
                                         ) : (
                                             <td>Pending</td>
                                         )}

@@ -188,7 +188,7 @@
   width: 159px;
 }
 .headers > td:nth-child(7) {
-  width: 136px;
+  width: 300px;
 }
 .headers > td:nth-child(8) {
   width: 161px;
@@ -212,7 +212,7 @@
   width: 159px;
 }
 .tablebody > td:nth-child(7) {
-  width: 136px;
+  width: 300px;
 }
 .tablebody > td:nth-child(8) {
   width: 161px;
@@ -224,6 +224,7 @@
   align-items: center;
   gap: 12px;
   align-self: stretch;
+  overflow-x: auto;
 }
 
 .tablebody {

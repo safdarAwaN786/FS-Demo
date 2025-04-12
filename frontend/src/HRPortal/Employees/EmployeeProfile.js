@@ -188,35 +188,35 @@ function EmployeeProfile() {
                                     <img src={man} alt="" />
                                     <div>
                                         <p className={style2.card1para}>Name</p>
-                                        <p className={style2.card1para2}>{employeeData?.Name}</p>
+                                        <p className={`${style2.card1para2} overflow-x-handler`}>{employeeData?.Name}</p>
                                     </div>
                                 </div>
                                 <div>
                                     <img src={mail} alt="" />
                                     <div>
                                         <p className={style2.card1para}>Email</p>
-                                        <p className={style2.card1para2}>{employeeData?.Email}</p>
+                                        <p className={`${style2.card1para2} overflow-x-handler`}>{employeeData?.Email}</p>
                                     </div>
                                 </div>
                                 <div>
                                     <img src={Phone} alt="" />
                                     <div>
                                         <p className={style2.card1para}>Phone</p>
-                                        <p className={style2.card1para2}>{employeeData?.PhoneNumber}</p>
+                                        <p className={`${style2.card1para2} overflow-x-handler`}>{employeeData?.PhoneNumber}</p>
                                     </div>
                                 </div>
                                 <div>
                                     <img src={Office} alt="" />
                                     <div>
                                         <p className={style2.card1para}>Department</p>
-                                        <p className={style2.card1para2}>{employeeData?.DepartmentText}</p>
+                                        <p className={`${style2.card1para2} overflow-x-handler`}>{employeeData?.DepartmentText}</p>
                                     </div>
                                 </div>
                                 <div>
                                     <img src={Office} alt="" />
                                     <div>
                                         <p className={style2.card1para}>Designation</p>
-                                        <p className={style2.card1para2}>{employeeData?.Designation}</p>
+                                        <p className={`${style2.card1para2} overflow-x-handler`}>{employeeData?.Designation}</p>
                                     </div>
                                 </div>
                             </div>
@@ -232,21 +232,21 @@ function EmployeeProfile() {
                                     <img src={UserCard} alt="" />
                                     <div>
                                         <p className={style2.card1para}>CNIC</p>
-                                        <p className={style2.card1para2}>{employeeData?.CNIC}</p>
+                                        <p className={`${style2.card1para2} overflow-x-handler`}>{employeeData?.CNIC}</p>
                                     </div>
                                 </div>
                                 <div>
                                     <img src={copyp} alt="" />
                                     <div>
                                         <p className={style2.card1para}>Qualification</p>
-                                        <p className={style2.card1para2}>{employeeData?.Qualification}</p>
+                                        <p className={`${style2.card1para2} overflow-x-handler`}>{employeeData?.Qualification}</p>
                                     </div>
                                 </div>
                                 <div>
                                     <img src={Location} alt="" />
                                     <div>
                                         <p className={style2.card1para}>Address</p>
-                                        <p className={style2.card1para2}>{employeeData?.Address}</p>
+                                        <p className={`${style2.card1para2} overflow-x-handler`}>{employeeData?.Address}</p>
                                     </div>
                                 </div>
                             </div>
