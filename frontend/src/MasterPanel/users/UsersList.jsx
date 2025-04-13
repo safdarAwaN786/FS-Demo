@@ -147,7 +147,7 @@ function UsersList() {
                                             <p onClick={() => {
                                                 dispatch(updateTabData({ ...tabData, Tab: 'assignTabs' }));
                                                 dispatch(changeId(user._id));
-                                            }} className='btn btn-outline-success p-1 m-2'>Assign Tabs</p>
+                                            }} className='btn btn-outline-success p-1'>Assign Tabs</p>
                                         </td>
                                         <td>
                                             {user.isSuspended ? (

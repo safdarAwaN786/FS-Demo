@@ -188,13 +188,13 @@ function Processes() {
                                             <p onClick={() => {
                                                 dispatch(updateTabData({ ...tabData, Tab: 'assignTabsToOwner' }));
                                                 dispatch(changeId(process.ProcessOwner._id));
-                                            }} className={'btn btn-outline-danger px-2 py-1  m-1'}>Assign Tabs</p>
+                                            }} className={'btn btn-outline-danger px-2 py-1'}>Assign Tabs</p>
                                         </td>
                                         <td>
                                             <p onClick={() => {
                                                 setUserToDel(process._id);
                                                 setDeleteUser(true)
-                                            }} className={'btn btn-outline-danger px-2 py-1  m-1'}>Delete</p>
+                                            }} className={'btn btn-outline-danger px-2 py-1 '}>Delete</p>
                                         </td>
                                     </tr>
                                 )

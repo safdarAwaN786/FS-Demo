@@ -140,15 +140,23 @@
   overflow-x: auto;
 
 }
+.simpleContent {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 24px;
+  height: 100px;
+  box-sizing: border-box;
+}
 
 
 .tablebody > td {
-  display: flex;
+
   height: 72px;
   padding: 12px 24px;
-  align-items: center;
+ 
   gap: 12px;
-  align-self: stretch;
+
   color: var(--foundation-blue-b-500, #42526d);
   color: #000;
   font-size: 12px;
@@ -157,7 +165,7 @@
   font-weight: 500;
   line-height: 18px;
   overflow-x: auto;
-
+  overflow-y: auto;
 }
 
 .tablebody {

@@ -186,7 +186,7 @@ function DecisionTree() {
                                                     }
                                                 }} style={{
                                                     height: '28px'
-                                                }} className={`btn btn-outline-primary pt-0 px-1`}>Approve</p>
+                                                }} className={`btn btn-outline-primary pt-0 px-1 mx-1`}>Approve</p>
                                                 <p onClick={() => {
                                                     if (tree.Status === 'Pending') {
                                                         setIdForAction(tree._id);
@@ -197,7 +197,7 @@ function DecisionTree() {
                                                     }
                                                 }} style={{
                                                     height: '28px'
-                                                }} className={`btn btn-outline-danger pt-0 px-1`}>Disapprove</p>
+                                                }} className={`btn btn-outline-danger pt-0 px-1 mx-1`}>Disapprove</p>
                                             </td>
                                         )}
                                         <td></td>

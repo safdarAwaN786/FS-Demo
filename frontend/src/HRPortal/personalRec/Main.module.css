@@ -217,14 +217,13 @@
 .tablebody > td:nth-child(8) {
   width: 161px;
 }
-.tablebody > td {
-  display: flex;
-  height: 72px;
-  padding: 12px 24px;
-  align-items: center;
-  gap: 12px;
-  align-self: stretch;
+.tablebody>td {
+  padding: 30px 24px;
+  font-family: 'Inter';
+  font-size: 13px;
+  height: 100px;
   overflow-x: auto;
+  overflow-y: auto; 
 }
 
 .tablebody {

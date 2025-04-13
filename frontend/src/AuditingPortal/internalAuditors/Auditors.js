@@ -147,19 +147,20 @@ function Auditors() {
                                         {/* <td >
                                                 <p>{auditor.UserId}</p>
                                             </td> */}
-                                        <td><div style={{
+                                        <td className={style.simpleContent}><div style={{
                                             width: "40px",
                                             height: "40px",
                                             borderRadius: "50%",
-                                            overflow: "hidden",
                                             backgroundImage: `url(${profile})`,
-                                            backgroundSize: 'cover',
-                                            backgroundPosition: 'center',
+                                            backgroundSize: "cover",
+                                            backgroundPosition: "center",
+                                            flexShrink: 0,
                                         }}>
                                             <img style={{
                                                 width: "100%",
                                                 height: "100%",
-                                                objectFit: "cover"
+                                                objectFit: "cover",
+                                                borderRadius: "50%", // in case image doesn't match div radius
                                             }} onError={(e) => {
                                                 e.target.style.display = 'none'; // Hide the img tag on error
                                             }} src={auditor.AuditorImage || profile} alt={profile} />
@@ -194,14 +195,14 @@ function Auditors() {
                                             }} style={{
                                                 cursor: "pointer",
                                                 width: '130px'
-                                            }} className={`px-2 py-1 btn btn-outline-danger`}>Assign Tabs</button>
+                                            }} className={`px-2 py-1 btn btn-outline-danger mx-1`}>Assign Tabs</button>
                                             <button onClick={() => {
                                                 setUserTabs(auditor.Tabs);
                                                 setShowBox(true)
                                             }} style={{
                                                 cursor: "pointer",
                                                 width: '130px'
-                                            }} className={`px-2 py-1 btn btn-outline-success`}>Current Tabs</button>
+                                            }} className={`px-2 py-1 btn btn-outline-success mx-1`}>Current Tabs</button>
                                         </td>
                                     </tr>
                                 )

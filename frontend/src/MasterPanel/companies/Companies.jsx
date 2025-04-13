@@ -132,35 +132,38 @@ function Companies() {
                                             fontWeight: "400",
                                             lineHeight: "20px",
                                         }}>{company.CompanyId}</p></td>
-                                        <td className={style.simpleContent}><div style={{
-                                            width: "40px",
-                                            height: "40px",
-                                            borderRadius: "50%",
-                                            overflow: "hidden",
-                                            backgroundImage: `url(${profile})`,
-                                            backgroundSize: 'cover',
-                                            backgroundPosition: 'center',
+                                        <td className={style.simpleContent}>
+                                            <div
+                                                style={{
+                                                    width: "40px",
+                                                    height: "40px",
+                                                    borderRadius: "50%",
+                                                    backgroundImage: `url(${profile})`,
+                                                    backgroundSize: "cover",
+                                                    backgroundPosition: "center",
+                                                    flexShrink: 0,
+                                                }}
+                                            >
+                                                <img
+                                                    style={{
+                                                        width: "100%",
+                                                        height: "100%",
+                                                        objectFit: "cover",
+                                                        borderRadius: "50%", // in case image doesn't match div radius
+                                                    }}
+                                                    onError={(e) => {
+                                                        e.target.style.display = "none";
+                                                    }}
+                                                    src={company.CompanyLogo || profile}
+                                                    alt="Image"
+                                                />
+                                            </div>
+                                            <span>{company.CompanyName}</span>
+                                        </td>
 
-                                        }}>
-                                            <img style={{
-                                                width: "100%",
-                                                height: "100%",
-                                                objectFit: "cover"
-                                            }} onError={(e) => {
-                                                e.target.style.display = 'none'; // Hide the img tag on error
-                                            }} src={company.CompanyLogo || profile} alt="Image" />
-
-                                        </div> {company.CompanyName}</td>
                                         <td>{company.ShortName}</td>
-                                        <td  style={{
-                        wordBreak: 'break-word', // Ensures long text breaks
-                        whiteSpace: 'normal', // Enables text wrapping
-                        maxWidth: '210px', // Limits the cell width
-                    }}>{company.Email}</td>
-                                        <td style={{
-                        wordWrap: 'break-word', // Allows the text to break into multiple lines
-                        whiteSpace: 'normal', // Ensures the content can wrap normally
-                    }}><p>{company.Address}</p></td>
+                                        <td >{company.Email}</td>
+                                        <td >{company.Address}</td>
                                         <td>{company.PhoneNo}</td>
                                         <td><button onClick={() => {
                                             setIdToProcess(company._id);
@@ -193,16 +196,16 @@ function Companies() {
 
                     <div class={style.alertparent}>
                         <div class={style.alert}>
-                        <div className='overflow-y-handler'>
-                            <p class={style.msg}>{dataToShow}</p>
-                        </div>
+                            <div className='overflow-y-handler'>
+                                <p class={style.msg}>{dataToShow}</p>
+                            </div>
 
                             <div className={style.alertbtns}>
 
                                 <button style={{
-                                    marginLeft : '120px',
-                                    marginTop : '25px'
-                                }}  onClick={() => {
+                                    marginLeft: '120px',
+                                    marginTop: '25px'
+                                }} onClick={() => {
                                     setShowBox(false);
 
                                 }} className={style.btn2}>OK</button>

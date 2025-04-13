@@ -50,7 +50,7 @@ router.get('/readAllChangeRequest', async (req, res) => {
     const companyId = req.header('Authorization');
     const changeRequest = await ChangeRequest.find().populate("Document Department UserDepartment");
     
-    const changeRequestsToSend = changeRequest.filter(request => request.UserDepartment.Company.equals(companyId))
+    const changeRequestsToSend = changeRequest.filter(request => request?.UserDepartment?.Company.equals(companyId))
     res.status(201).send({ status: true, message: "The following are ChangeRequests!", data: changeRequestsToSend });
     console.log(new Date().toLocaleString() + ' ' + 'READ ChangeRequest Successfully!')
 

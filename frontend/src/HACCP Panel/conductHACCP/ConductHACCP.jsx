@@ -190,7 +190,7 @@ function ConductHACCP() {
                                                     }
                                                 }} style={{
                                                     height: '28px'
-                                                }} className={`btn btn-outline-primary pt-0 px-1`}>Approve</p>
+                                                }} className={`btn btn-outline-primary pt-0 px-1 mx-1`}>Approve</p>
                                                 <p onClick={() => {
                                                     if (HACCP.Status === 'Pending') {
                                                         setIdForAction(HACCP._id);
@@ -201,7 +201,7 @@ function ConductHACCP() {
                                                     }
                                                 }} style={{
                                                     height: '28px'
-                                                }} className={`btn btn-outline-danger pt-0 px-1`}>Disapprove</p>
+                                                }} className={`btn btn-outline-danger pt-0 px-1 mx-1`}>Disapprove</p>
                                             </td>
                                         )}
                                         <td></td>

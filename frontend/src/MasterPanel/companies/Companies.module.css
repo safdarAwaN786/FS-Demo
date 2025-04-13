@@ -306,13 +306,13 @@
 }
 
 .tablebody>td {
-  display: flex;
-  /* height: 72px; */
-  padding: 12px 24px;
-  align-items: center;
-  gap: 12px;
-  align-self: stretch;
+ 
+  padding: 30px 24px;
+    height: 100px;
   overflow-x: auto;
+  overflow-y: auto;
+  
+  
 }
 
 .alertparentemail {
@@ -458,6 +458,11 @@
   font-style: normal;
   font-weight: 500;
   line-height: 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 100px;
+  box-sizing: border-box;
 }
 
 .download:hover {

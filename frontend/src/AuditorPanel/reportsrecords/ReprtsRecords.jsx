@@ -114,11 +114,11 @@ function ReportsRecords() {
                                             
 
                                             <td><div className={`text-center ${style.greenStatus}  `}><p>{audit.Checklist.Status}</p></div></td>
-                                            <td>
+                                            <td className='d-flex'>
                                                 <p onClick={() => {
                                                     dispatch(changeId(audit._id))
                                                     dispatch(updateTabData({...tabData, Tab : 'recordReport'}))
-                                                }} className='btn btn-outline-success p-1 m-0'>Generate Report</p>
+                                                }} className='btn btn-outline-success p-1 mx-1'>Generate Report</p>
                                                 <p onClick={() => {
                                                     dispatch(updateTabData({...tabData, Tab : 'viewReportsList'}));
                                                     dispatch(changeId(audit._id));

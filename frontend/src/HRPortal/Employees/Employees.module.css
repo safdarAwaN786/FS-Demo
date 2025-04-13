@@ -163,7 +163,7 @@
   line-height: 18px;
 }
 .headers > td:nth-child(1) {
-  width: 141px;
+  width: 20px;
 }
 .headers > td:nth-child(2) {
   width: 198px;
@@ -193,13 +193,13 @@
   width: 230px;
 }
 
-.tablebody > td {
-  display: flex;
-  height: 72px;
-  padding: 12px 24px;
-  align-items: center;
-  gap: 12px;
+.tablebody>td {
+  padding: 30px 24px;
+  font-family: 'Inter';
+  font-size: 13px;
+  height: 100px;
   overflow-x: auto;
+  overflow-y: auto; 
 }
 
 .tablebody {
@@ -224,6 +224,10 @@
   width: 198px;
 }
 
+.tablebody > td:nth-child(1) {
+  width: 20px;
+}
+
 .tablebody > td:nth-child(3) {
   width: 172px;
 }
@@ -240,6 +244,18 @@
   font-weight: 400;
   line-height: 20px;
 }
+
+
+.simpleContent {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 24px;
+  height: 100px;
+  box-sizing: border-box;
+}
+
+
 .tablebody > td:nth-child(6) {
   width: 162px;
 }

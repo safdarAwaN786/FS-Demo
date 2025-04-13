@@ -398,7 +398,7 @@ function Devices() {
                     <div class={style.alertparent}>
                         <div class={style.alert}>
                         <div className='overflow-y-handler'>
-                            <p class={style.msg}>{popUpData}</p>
+                            <p class={style.msg}>{popUpData}ssdsdsdsd sd dfdfkd feer trkg fg fk grkg rk grk grk gk g ssdsdsdsd sd dfdfkd feer trkg fg fk grkg rk grk grk gk g ssdsdsdsd sd dfdfkd feer trkg fg fk grkg rk grk grk gk g ssdsdsdsd sd dfdfkd feer trkg fg fk grkg rk grk grk gk g ssdsdsdsd sd dfdfkd feer trkg fg fk grkg rk grk grk gk gssdsdsdsd sd dfdfkd feer trkg fg fk grkg rk grk grk gk gssdsdsdsd sd dfdfkd feer trkg fg fk grkg rk grk grk gk g ssdsdsdsd sd dfdfkd feer trkg fg fk grkg rk grk grk gk gssdsdsdsd sd dfdfkd feer trkg fg fk grkg rk grk grk gk g ssdsdsdsd sd dfdfkd feer trkg fg fk grkg rk grk grk gk g ssdsdsdsd sd dfdfkd feer trkg fg fk grkg rk grk grk gk g ssdsdsdsd sd dfdfkd feer trkg fg fk grkg rk grk grk gk g</p>
                         </div>
                             <div className={style.alertbtns}>
                                 <button onClick={() => {

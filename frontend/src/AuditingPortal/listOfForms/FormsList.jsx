@@ -213,14 +213,14 @@ function FormsList() {
                                                     dispatch(changeId(form._id))
                                                 }} style={{
                                                     height: '28px'
-                                                }} className={`btn btn-outline-primary pt-0`}>Edit</p>
+                                                }} className={`btn btn-outline-primary pt-0 mx-1`}>Edit</p>
                                             )}
                                             <p onClick={() => {
                                                 dispatch(updateTabData({ ...tabData, Tab: 'viewForm' }));
                                                 dispatch(changeId(form._id))
                                             }} style={{
                                                 height: '28px'
-                                            }} className={`btn btn-outline-danger pt-0`}>View</p>
+                                            }} className={`btn btn-outline-danger pt-0 mx-1`}>View</p>
                                         </td>
                                         {/* <td >
 
@@ -252,7 +252,7 @@ function FormsList() {
                                                     }
                                                 }} style={{
                                                     height: '28px'
-                                                }} className={`btn btn-outline-primary pt-0 px-1`}>Approve</p>
+                                                }} className={`btn btn-outline-primary pt-0 px-1 mx-1`}>Approve</p>
                                                 <p onClick={() => {
                                                     if (form.Status === 'Reviewed') {
                                                         setDisApprove(true);
@@ -263,7 +263,7 @@ function FormsList() {
                                                     }
                                                 }} style={{
                                                     height: '28px'
-                                                }} className={`btn btn-outline-danger pt-0 px-1`}>Disaprrove</p>
+                                                }} className={`btn btn-outline-danger pt-0 px-1 mx-1`}>Disaprrove</p>
                                             </td>
                                         )}
                                         {tabData?.Review && (
@@ -279,7 +279,7 @@ function FormsList() {
                                                 }} style={{
                                                     height: '28px'
 
-                                                }} className={`btn btn-outline-danger pt-0 px-1`}>Review</p>
+                                                }} className={`btn btn-outline-danger pt-0 px-1 mx-1`}>Review</p>
                                                 <p onClick={() => {
                                                     if (form.Status === 'Pending' || form.Status === 'Reviewed') {
                                                         setReject(true);
@@ -290,7 +290,7 @@ function FormsList() {
                                                     }
                                                 }} style={{
                                                     height: '28px'
-                                                }} className={`btn btn-outline-primary pt-0 px-1`}>Reject</p>
+                                                }} className={`btn btn-outline-primary pt-0 px-1 mx-1`}>Reject</p>
                                             </td>
                                         )}
                                         <td className='ps-0'>{form.CreationDate?.slice(0, 10).split('-')[2]}/{form.CreationDate?.slice(0, 10).split('-')[1]}/{form.CreationDate?.slice(0, 10).split('-')[0]}</td>

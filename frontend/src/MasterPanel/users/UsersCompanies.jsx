@@ -133,18 +133,17 @@ function UsersCompanies() {
                                                 width: "40px",
                                                 height: "40px",
                                                 borderRadius: "50%",
-                                                overflow: "hidden",
-
-
                                                 backgroundImage: `url(${profile})`,
-                                                backgroundSize: 'cover',
-                                                backgroundPosition: 'center',
+                                                backgroundSize: "cover",
+                                                backgroundPosition: "center",
+                                                flexShrink: 0,
 
                                             }}>
                                                 <img style={{
                                                     width: "100%",
                                                     height: "100%",
-                                                    objectFit: "cover"
+                                                    objectFit: "cover",
+                                                    borderRadius: "50%", // in case image doesn't match div radius
                                                 }} onError={(e) => {
                                                     e.target.style.display = 'none'; // Hide the img tag on error
                                                 }} src={user?.Company?.CompanyLogo || profile} alt="Image" />

@@ -195,7 +195,7 @@ function Main() {
                                                         status: "Approved"
                                                     });
                                                     alertManager2();
-                                                }} className={style.viewBtn2}>Approve</button>
+                                                }} className={`${style.viewBtn2} mx-1`}>Approve</button>
                                                 <button onClick={() => {
                                                     if(reqPerson.Status === 'Pending'){
                                                     setDataToSend({
@@ -207,7 +207,7 @@ function Main() {
                                                         setPopUpData('This Personal Requisition is not Pending for Disapproval!');
                                                         setShowBox(true)
                                                     }
-                                                }} className={style.orangebtn}>Disapprove</button>
+                                                }} className={`${style.orangebtn} mx-1`}>Disapprove</button>
                                             </td>
                                         )}
                                         <td className={style.textStyle3}></td>

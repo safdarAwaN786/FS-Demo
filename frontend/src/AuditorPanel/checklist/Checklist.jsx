@@ -178,7 +178,7 @@ function Checklist() {
                                                 }} style={{
                                                     height: '28px'
 
-                                                }} className={`btn btn-outline-primary pt-0`}>Edit</p>
+                                                }} className={`btn btn-outline-primary pt-0 mx-1`}>Edit</p>
                                             )}
                                             <p onClick={() => {
                                                 dispatch(updateTabData({ ...tabData, Tab: 'viewChecklist' }))
@@ -186,7 +186,7 @@ function Checklist() {
                                             }} style={{
                                                 height: '28px'
 
-                                            }} className={`btn btn-outline-danger pt-0`}>View</p>
+                                            }} className={`btn btn-outline-danger pt-0 mx-1`}>View</p>
                                         </td>
                                         {tabData?.Approval && (
 
@@ -205,7 +205,7 @@ function Checklist() {
                                                 }} style={{
                                                     height: '28px'
 
-                                                }} className={`btn btn-outline-primary pt-0 px-1`}>Approve</p>
+                                                }} className={`btn btn-outline-primary pt-0 px-1 mx-1`}>Approve</p>
                                                 <p onClick={() => {
                                                     if (checklist.Status === 'Pending') {
 
@@ -221,7 +221,7 @@ function Checklist() {
                                                 }} style={{
                                                     height: '28px'
 
-                                                }} className={`btn btn-outline-danger pt-0 px-1`}>Disapprove</p>
+                                                }} className={`btn btn-outline-danger pt-0 px-1 mx-1`}>Disapprove</p>
                                             </td>
                                         )}
                                         <td></td>

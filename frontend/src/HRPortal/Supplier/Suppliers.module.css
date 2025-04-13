@@ -156,12 +156,12 @@
     background: var(--foundation-blue-b-10, #fafbfb);
   }
   .headers > td {
-    display: flex;
+  
     height: 44px;
     padding: 12px 24px;
-    align-items: center;
+
     gap: 12px;
-    align-self: stretch;
+
     color: var(--foundation-blue-b-500, #42526d);
     font-size: 12px;
     font-family: Inter;
@@ -189,14 +189,13 @@
     width: 188px;
   }
   
-  .tablebody > td {
-    display: flex;
-    height: 72px;
-    padding: 12px 24px;
-    align-items: center;
-    gap: 12px;
-    align-self: stretch;
+  .tablebody>td {
+    padding: 30px 24px;
+    font-family: 'Inter';
+    font-size: 13px;
+    height: 100px;
     overflow-x: auto;
+    overflow-y: auto; 
   }
   
   .tablebody {

@@ -159,7 +159,7 @@ function HACCPteams() {
                                                 <p onClick={() => {
                                                     dispatch(changeId(team._id))
                                                     dispatch(updateTabData({ ...tabData, Tab: 'updateHACCPTeam' }));
-                                                }} className='btn btn-outline-success p-1 m-2'>Update</p>
+                                                }} className='btn btn-outline-success p-1'>Update</p>
                                             </td>
                                         )}
                                         {tabData?.Approval && (
@@ -174,7 +174,7 @@ function HACCPteams() {
                                                     }
                                                 }} style={{
                                                     height: '28px'
-                                                }} className={`btn btn-outline-primary pt-0 px-1`}>Approve</p>
+                                                }} className={`btn btn-outline-primary pt-0 px-1 mx-1`}>Approve</p>
                                                 <p onClick={() => {
                                                     if (team.Status === 'Pending') {
                                                         setIdForAction(team._id);
@@ -185,7 +185,7 @@ function HACCPteams() {
                                                     }
                                                 }} style={{
                                                     height: '28px'
-                                                }} className={`btn btn-outline-danger pt-0 px-1`}>Disapprove</p>
+                                                }} className={`btn btn-outline-danger pt-0 px-1 mx-1`}>Disapprove</p>
                                             </td>
                                         )}
                                         <td>

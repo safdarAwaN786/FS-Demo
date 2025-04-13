@@ -145,7 +145,7 @@
   font-weight: 500;
   line-height: 18px;
   overflow-x: auto;
-
+  overflow-y: auto;
 }
 
 .tablebody {

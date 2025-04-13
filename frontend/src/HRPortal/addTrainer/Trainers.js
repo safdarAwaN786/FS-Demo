@@ -154,19 +154,20 @@ function Trainers() {
                                             {/* <td>
                                                 <p>{trainer.UserId}</p>
                                             </td> */}
-                                            <td><div style={{
-                                                width: "40px",
-                                                height: "40px",
-                                                borderRadius: "50%",
-                                                overflow: "hidden",
-                                                backgroundImage: `url(${profile})`,
-                                                backgroundSize: 'cover',
-                                                backgroundPosition: 'center',
+                                            <td className={style.simpleContent}><div style={{
+                                               width: "40px",
+                                               height: "40px",
+                                               borderRadius: "50%",
+                                               backgroundImage: `url(${profile})`,
+                                               backgroundSize: "cover",
+                                               backgroundPosition: "center",
+                                               flexShrink: 0,
                                             }}>
                                                 <img style={{
                                                     width: "100%",
                                                     height: "100%",
-                                                    objectFit: "cover"
+                                                    objectFit: "cover",
+                                                    borderRadius: "50%", // in case image doesn't match div radius
                                                 }} onError={(e) => {
                                                     e.target.style.display = 'none'; // Hide the img tag on error
                                                 }} src={trainer.TrainerImage || profile} alt={profile} />

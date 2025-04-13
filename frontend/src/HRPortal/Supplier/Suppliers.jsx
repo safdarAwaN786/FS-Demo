@@ -182,7 +182,7 @@ export default function Suppliers() {
                                                         id: supplier._id,
                                                     });
                                                     alertManager2();
-                                                }} className={style.viewBtn2}>Approve</button>
+                                                }} className={`${style.viewBtn2} mx-1`}>Approve</button>
                                                 <button onClick={() => {
                                                     if (supplier.Status === 'Approved') {
                                                         setPopUpData('Sorry! Supplier is already Approved!')
@@ -196,7 +196,7 @@ export default function Suppliers() {
                                                     }
 
 
-                                                }} className={style.orangebtn}>Disapprove</button>
+                                                }} className={`${style.orangebtn} mx-1`}>Disapprove</button>
 
 
 

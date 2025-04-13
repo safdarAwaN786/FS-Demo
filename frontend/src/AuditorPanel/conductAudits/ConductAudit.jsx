@@ -104,11 +104,11 @@ function ConductAudits() {
                                             lineHeight: "20px",
                                         }}>{checklist.ChecklistId}</p></td>
                                         <td className={`${style.simpleContent} ms-5`}>{checklist.Department.DepartmentName}</td>
-                                        <td>
+                                        <td className='d-flex '>
                                             <p onClick={() => {
                                                 dispatch(updateTabData({ ...tabData, Tab: 'auditConduction' }))
                                                 dispatch(changeId(checklist._id))
-                                            }} className='btn btn-outline-success p-1 m-0'>Conduct</p>
+                                            }} className='btn btn-outline-success p-1 mx-1'>Conduct</p>
                                             <p onClick={() => {
                                                 dispatch(updateTabData({ ...tabData, Tab: 'viewAuditsHistory' }))
                                                 dispatch(changeId(checklist._id))

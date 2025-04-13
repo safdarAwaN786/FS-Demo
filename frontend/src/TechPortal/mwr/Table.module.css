@@ -160,6 +160,7 @@
   height: 72px;
   padding: 0% 24px;
   overflow-x: auto;
+  overflow-y: auto;
 }
 .headers > td {
   color: var(--foundation-blue-b-500, #42526d);

@@ -159,7 +159,7 @@ function ProcessDetails() {
                                                 <p onClick={() => {
                                                     dispatch(updateTabData({ ...tabData, Tab: 'updateProcessDetails' }))
                                                     dispatch(changeId(process._id))
-                                                }} className='btn btn-outline-success p-1 m-2'>Update</p>
+                                                }} className='btn btn-outline-success p-1'>Update</p>
                                             </td>
                                         )}
                                         {tabData?.Approval && (
@@ -174,7 +174,7 @@ function ProcessDetails() {
                                                     }
                                                 }} style={{
                                                     height: '28px'
-                                                }} className={`btn btn-outline-primary pt-0 px-1`}>Approve</p>
+                                                }} className={`btn btn-outline-primary pt-0 px-1 mx-1`}>Approve</p>
                                                 <p onClick={() => {
                                                     if (process.Status === 'Pending') {
                                                         setIdForAction(process._id);
@@ -185,7 +185,7 @@ function ProcessDetails() {
                                                     }
                                                 }} style={{
                                                     height: '28px'
-                                                }} className={`btn btn-outline-danger pt-0 px-1`}>Disapprove</p>
+                                                }} className={`btn btn-outline-danger pt-0 px-1 mx-1`}>Disapprove</p>
                                             </td>
                                         )}
                                         <td>

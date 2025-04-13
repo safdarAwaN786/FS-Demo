@@ -265,7 +265,7 @@ function UploadedDocuments() {
                                                     }
                                                 }} style={{
                                                     height: '28px'
-                                                }} className={`btn btn-outline-primary pt-0 px-1`}>Approve</p>
+                                                }} className={`btn btn-outline-primary pt-0 px-1 mx-1`}>Approve</p>
                                                 <p onClick={() => {
                                                     if (document.Status === 'Reviewed') {
                                                         setDisApprove(true);
@@ -276,7 +276,7 @@ function UploadedDocuments() {
                                                     }
                                                 }} style={{
                                                     height: '28px'
-                                                }} className={`btn btn-outline-danger pt-0 px-1`}>Disapprove</p>
+                                                }} className={`btn btn-outline-danger pt-0 px-1 mx-1`}>Disapprove</p>
                                             </td>
                                         )}
                                         {tabData?.Review && (
@@ -291,7 +291,7 @@ function UploadedDocuments() {
                                                     }
                                                 }} style={{
                                                     height: '28px'
-                                                }} className={`btn btn-outline-danger pt-0 px-1`}>Review</p>
+                                                }} className={`btn btn-outline-danger pt-0 px-1 mx-1`}>Review</p>
                                                 <p onClick={() => {
 
                                                     if (document.Status === 'Pending' || document.Status === 'Reviewed') {
@@ -304,7 +304,7 @@ function UploadedDocuments() {
                                                     }
                                                 }} style={{
                                                     height: '28px'
-                                                }} className={`btn btn-outline-primary pt-0 px-1`}>Reject</p>
+                                                }} className={`btn btn-outline-primary pt-0 px-1mx-1`}>Reject</p>
                                             </td>
                                         )}
                                         <td>{document.CreatedBy}</td>

@@ -120,11 +120,11 @@ function CorrectiveActions() {
 
 
                                             <td><div className={`text-center ${style.greenStatus}  `}><p>{report.ConductAudit.Checklist.Status}</p></div></td>
-                                            <td style={{width : '230px'}}>
+                                            <td style={{width : '230px', display: 'flex'}}>
                                                 <p onClick={() => {
                                                     dispatch(updateTabData({...tabData, Tab : 'actionOnCorrective'}));
                                                     dispatch(changeId(report._id))
-                                                }} className='btn btn-outline-success p-1 m-0'>Take Action</p>
+                                                }} className='btn btn-outline-success p-1 mx-1'>Take Action</p>
                                                 <p onClick={() => {
                                                     dispatch(updateTabData({...tabData, Tab : 'viewCorrectiveActionsList'}))
                                                     dispatch(changeId(report._id))

@@ -187,14 +187,14 @@ function DocumentsList() {
                                                     dispatch(changeId(document._id))
                                                 }} style={{
                                                     height: '28px'
-                                                }} className={`btn btn-outline-primary pt-0`}>Edit</p>
+                                                }} className={`btn btn-outline-primary pt-0 mx-1`}>Edit</p>
                                             )}
                                             <p onClick={() => {
                                                 dispatch(updateTabData({ ...tabData, Tab: 'viewDocument' }));
                                                 dispatch(changeId(document._id))
                                             }} style={{
                                                 height: '28px'
-                                            }} className={`btn btn-outline-danger pt-0`}>View</p>
+                                            }} className={`btn btn-outline-danger pt-0 mx-1`}>View</p>
                                         </td>
                                         {/* <td>
                                             <p onClick={() => {
@@ -224,7 +224,7 @@ function DocumentsList() {
                                                     }
                                                 }} style={{
                                                     height: '28px'
-                                                }} className={`btn btn-outline-primary pt-0 px-1`}>Approve</p>
+                                                }} className={`btn btn-outline-primary pt-0 px-1 mx-1`}>Approve</p>
                                                 <p onClick={() => {
                                                     if (document.Status === 'Reviewed') {
                                                         setDisApprove(true);
@@ -235,7 +235,7 @@ function DocumentsList() {
                                                     }
                                                 }} style={{
                                                     height: '28px'
-                                                }} className={`btn btn-outline-danger pt-0 px-1`}>Disaprrove</p>
+                                                }} className={`btn btn-outline-danger pt-0 px-1 mx-1`}>Disaprrove</p>
                                             </td>
                                         )}
                                         {tabData?.Review && (
@@ -250,7 +250,7 @@ function DocumentsList() {
                                                     }
                                                 }} style={{
                                                     height: '28px'
-                                                }} className={`btn btn-outline-danger pt-0 px-1`}>Review</p>
+                                                }} className={`btn btn-outline-danger pt-0 px-1 mx-1`}>Review</p>
                                                 <p onClick={() => {
                                                     if (document.Status === 'Pending' || document.Status === 'Reviewed') {
                                                         setReject(true);
@@ -261,7 +261,7 @@ function DocumentsList() {
                                                     }
                                                 }} style={{
                                                     height: '28px'
-                                                }} className={`btn btn-outline-primary pt-0 px-1`}>Reject</p>
+                                                }} className={`btn btn-outline-primary pt-0 px-1 mx-1`}>Reject</p>
                                             </td>
                                         )}
                                         <td>{document.CreatedBy}</td>
