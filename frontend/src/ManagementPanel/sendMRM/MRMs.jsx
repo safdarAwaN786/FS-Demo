@@ -31,9 +31,9 @@ function MRMs() {
         }).catch(err => {
             dispatch(setSmallLoading(false));
             Swal.fire({
-                icon : 'error',
-                title : 'OOps..',
-                text : 'Something went wrong, Try Again!'
+                icon: 'error',
+                title: 'OOps..',
+                text: 'Something went wrong, Try Again!'
             })
         })
     }, [])
@@ -91,88 +91,90 @@ function MRMs() {
     return (
         <>
 
-           
 
-                <div className={style.searchbar}>
-                    <div className={style.sec1}>
-                        <img src={Search} alt="" />
-                        <input autoComplete='off' onChange={search} type="text" placeholder='Search MRM by MRM no' />
+
+            <div className={style.searchbar}>
+                <div className={style.sec1}>
+                    <img src={Search} alt="" />
+                    <input autoComplete='off' onChange={search} type="text" placeholder='Search MRM by MRM no' />
+                </div>
+                {tabData?.Creation && (
+
+                    <div className={style.sec2} onClick={() => {
+                        dispatch(updateTabData({
+                            ...tabData
+                            , Tab: 'sendMRM'
+                        }))
+                    }}>
+                        <img src={add} alt="" />
+                        <p>Send New</p>
                     </div>
-                    {tabData?.Creation && (
+                )}
+            </div>
+            <div className={style.tableParent}>
+                {!MRMsList || MRMsList?.length === 0 ? (
+                    <div className='w-100 d-flex align-items-center justify-content-center'>
+                        <p className='text-center'>No any Records Available here.</p>
+                    </div>
+                ) : (
 
-                        <div className={style.sec2} onClick={() => {
-                            dispatch(updateTabData({...tabData
-                            , Tab : 'sendMRM'}))
-                        }}>
-                            <img src={add} alt="" />
-                            <p>Send New</p>
-                        </div>
-                    )}
-                </div>
-                <div className={style.tableParent}>
-                    {!MRMsList || MRMsList?.length === 0 ? (
-                        <div className='w-100 d-flex align-items-center justify-content-center'>
-                            <p className='text-center'>No any Records Available here.</p>
-                        </div>
-                    ) : (
+                    <table className={style.table}>
+                        <tr className={style.headers}>
+                            <td>MRM #</td>
+                            <td>MRM Details</td>
 
-                        <table className={style.table}>
-                            <tr className={style.headers}>
-                                <td>MRM #</td>
-                                <td>MRM Details</td>
-
-                            </tr>
-                            {
-                                MRMsList?.map((MRM, i) => {
-                                    return (
-                                        <tr className={style.tablebody} key={i}>
-                                            <td ><p style={{
-                                                backgroundColor: "#f0f5f0",
-                                                padding: "2px 5px",
-                                                borderRadius: "10px",
-                                                fontFamily: "Inter",
-                                                fontSize: "12px",
-                                                fontStyle: "normal",
-                                                fontWeight: "400",
-                                                lineHeight: "20px",
-                                            }}>{MRM.Notification.MRMNo}</p></td>
-
-                                            
+                        </tr>
+                        {
+                            MRMsList?.map((MRM, i) => {
+                                return (
+                                    <tr className={style.tablebody} key={i}>
+                                        <td ><p style={{
+                                            backgroundColor: "#f0f5f0",
+                                            padding: "2px 5px",
+                                            borderRadius: "10px",
+                                            fontFamily: "Inter",
+                                            fontSize: "12px",
+                                            fontStyle: "normal",
+                                            fontWeight: "400",
+                                            lineHeight: "20px",
+                                        }}>{MRM.Notification.MRMNo}</p></td>
 
 
-                                            <td >
 
-                                                <p onClick={() => {
-                                                    dispatch(updateTabData({...tabData, Tab : 'viewMRMDetails'}));
-                                                    dispatch(changeId(MRM._id))
-                                                }} className={style.click}>View</p>
-                                            </td>
-                                        
-                    
-                                        </tr>
 
-                                    )
+                                        <td >
 
-                                })
-                            }
-                        </table>
-                    )}
-                </div>
-                <div className={style.Btns}>
-                    {startIndex > 0 && (
+                                            <p onClick={() => {
+                                                dispatch(updateTabData({ ...tabData, Tab: 'viewMRMDetails' }));
+                                                dispatch(changeId(MRM._id))
+                                            }} className={style.click}>View</p>
+                                        </td>
 
-                        <button onClick={backPage}>
-                            {'<< '}Back
-                        </button>
-                    )}
-                    {allDataArr?.length > endIndex && (
 
-                        <button onClick={nextPage}>
-                            next{'>> '}
-                        </button>
-                    )}
-                </div>
-        
+                                    </tr>
+
+                                )
+
+                            })
+                        }
+                    </table>
+                )}
+            </div>
+            <div className={style.Btns}>
+                {startIndex > 0 && (
+
+                    <button onClick={backPage}>
+                        {'<< '}Back
+                    </button>
+                )}
+                {allDataArr?.length > endIndex && (
+
+                    <button onClick={nextPage}>
+                        next{'>> '}
+                    </button>
+                )}
+            </div>
+
 
 
 
@@ -182,15 +184,16 @@ function MRMs() {
 
                     <div class={style.alertparent}>
                         <div class={style.alert}>
-
-                            <p class={style.msg}>{dataToShow}</p>
+                            <div className='overflow-y-handler'>
+                                <p class={style.msg}>{dataToShow}</p>
+                            </div>
 
                             <div className={style.alertbtns}>
 
                                 <button style={{
-                                    marginLeft : '120px',
-                                    marginTop : '25px'
-                                }}  onClick={() => {
+                                    marginLeft: '120px',
+                                    marginTop: '25px'
+                                }} onClick={() => {
                                     setShowBox(false);
 
                                 }} className={style.btn2}>OK</button>

@@ -75,7 +75,7 @@ function ViewCorrectiveAction() {
                         const pageWidth = pdf.internal.pageSize.getWidth();
                         // pass the data URL to the pdf.addImage method
                         console.log(pageWidth);
-                        
+
                         pdf.addImage(dataURL, 'JPEG', ((pageWidth - 3) / 2), 2.5, 3, 3);
                         pdf.setFontSize(20);
                         pdf.text(`${user.Company.CompanyName}`, ((pageWidth - pdf.getTextWidth(user.Company.CompanyName)) / 2), (pdf.internal.pageSize.getHeight() / 2));
@@ -84,9 +84,9 @@ function ViewCorrectiveAction() {
                         const margins = 1; // Adjust margins as needed
                         const maxWidth = pageWidth - margins * 2; // Calculate usable width
                         const wrappedAddress = pdf.splitTextToSize(address, maxWidth);
-                        
+
                         const yStart = (pdf.internal.pageSize.getHeight() / 2) + 0.4; // Starting Y position
-                        
+
 
                         wrappedAddress.forEach((line, index) => {
                             const textWidth = pdf.getTextWidth(line);
@@ -126,7 +126,7 @@ function ViewCorrectiveAction() {
                     pdf.text(`${user.Company.CompanyName}`, pdf.internal.pageSize.getWidth() - 2, 0.3);
                     pdf.text(`Checklist ID :${dataToSend.Report?.ConductAudit?.Checklist?.RevisionNo}`, pdf.internal.pageSize.getWidth() - 2, 0.7);
                     pdf.text(`Revision No :${dataToSend.Report?.ConductAudit?.Checklist?.RevisionNo}`, pdf.internal.pageSize.getWidth() - 2, 0.7);
-                    
+
                     pdf.text(`Issue Date : ${formatDate(dataToSend.Report?.ConductAudit?.Checklist?.ApprovalDate)}`, pdf.internal.pageSize.getWidth() - 2, 0.9);
                 }
             }
@@ -419,7 +419,9 @@ function ViewCorrectiveAction() {
                 showBox ?
                     <div class={style.alertparent}>
                         <div class={style.alert}>
-                            <p class={style.msg}>{dataToShow}</p>
+                            <div className='overflow-y-handler'>
+                                <p class={style.msg}>{dataToShow}</p>
+                            </div>
                             <div className={style.alertbtns}>
                                 <button style={{
                                     marginLeft: '120px',

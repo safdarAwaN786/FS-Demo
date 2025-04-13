@@ -21,7 +21,14 @@ p {
   border-radius: 5px;
   border: 1px solid #7e7e7e;
 }
+.overflow-y-handler{
+  height: 70% !important;
+  overflow-y: auto;
+}
 
+.alertbtns {
+  margin-top: 0px !important;
+}
 .next > button:hover{
   background-color: #7e7e7e;
   color: #fff;

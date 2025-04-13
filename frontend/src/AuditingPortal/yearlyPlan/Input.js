@@ -61,7 +61,7 @@ function AddAuditingYearlyPlan() {
         dispatch(setSmallLoading(true))
         axios.get(`${process.env.REACT_APP_BACKEND_URL}/readProcess`, { headers: { Authorization: `${user.Department._id}` } }).then((response) => {
             console.log(response);
-            
+
             setProcesses(response.data.data.slice(startIndex, endIndex));
             dispatch(setSmallLoading(false))
         }).catch(err => {
@@ -241,7 +241,9 @@ function AddAuditingYearlyPlan() {
                 showBox ?
                     <div class={style.alertparent}>
                         <div class={style.alert}>
-                            <p class={style.msg}>{popUpData}</p>
+                            <div className='overflow-y-hanldler'>
+                                <p class={style.msg}>{popUpData}</p>
+                            </div>
                             <div className={style.alertbtns}>
                                 <button style={{
                                     marginLeft: '120px',

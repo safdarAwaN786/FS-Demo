@@ -240,7 +240,7 @@ function ChangeRequests() {
                                                 }} className={`btn btn-outline-danger pt-0 px-1`}>Review</p>
                                                 <p onClick={() => {
                                                     console.log(document.Status);
-                                                    
+
                                                     if (request.Status === 'Pending' || request.Status === 'Reviewed') {
                                                         setReject(true);
                                                         setIdForAction(request._id)
@@ -302,7 +302,9 @@ function ChangeRequests() {
                 showBox && (
                     <div class={style.alertparent}>
                         <div class={style.alert}>
-                            <p class={style.msg}>{dataToShow}</p>
+                            <div className='overflow-y-handler'>
+                                <p class={style.msg}>{dataToShow}</p>
+                            </div>
                             <div className={style.alertbtns}>
                                 <button style={{
                                     marginLeft: '120px',

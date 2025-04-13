@@ -676,6 +676,7 @@
   font-weight: 400;
   line-height: normal;
   margin-bottom: 68px !important;
+  padding-bottom: 20px;
 }
 .alertbtns {
   display: flex;
@@ -689,7 +690,7 @@
     width: 95%;
   }
   .alertbtns {
-    margin-top: 74px;
+    /* margin-top: 74px; */
     margin-left: 37px;
   }
 }
@@ -853,7 +854,7 @@
     width: 95%;
   }
   .alertbtns {
-    margin-top: 33px;
+    /* margin-top: 33px; */
     margin-left: 0;
   }
 }

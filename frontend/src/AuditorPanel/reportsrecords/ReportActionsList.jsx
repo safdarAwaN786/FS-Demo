@@ -47,79 +47,78 @@ function ReportActionsList() {
                     confirmButtonText: 'OK.'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        dispatch(updateTabData({...tabData, Tab : 'Corrective Action Plan'}))
+                        dispatch(updateTabData({ ...tabData, Tab: 'Corrective Action Plan' }))
                     }
                 })
             }
         }).catch(err => {
             dispatch(setSmallLoading(false));
             Swal.fire({
-                icon : 'error',
-                title : 'OOps..',
-                text : 'Something went wrong, Try Again!'
+                icon: 'error',
+                title: 'OOps..',
+                text: 'Something went wrong, Try Again!'
             })
         })
     }, [])
-   
+
 
 
     return (
         <>
-                <div className='mx-lg-5 px-2 mx-md-4 mx-2 mt-5 mb-1 '>
-                    <BsArrowLeftCircle onClick={(e) => {
-                        dispatch(updateTabData({ ...tabData, Tab: 'Non-Conformity Report' }))
-                    }} className='fs-3 text-danger mx-1' role='button' />
+            <div className='mx-lg-5 px-2 mx-md-4 mx-2 mt-5 mb-1 '>
+                <BsArrowLeftCircle onClick={(e) => {
+                    dispatch(updateTabData({ ...tabData, Tab: 'Non-Conformity Report' }))
+                }} className='fs-3 text-danger mx-1' role='button' />
+            </div>
+            <div className={`${style.headers} mt-0`}>
+                <div className={style.spans}>
+                    <span></span>
+                    <span></span>
+                    <span></span>
                 </div>
-                <div className={`${style.headers} mt-0`}>
-                    <div className={style.spans}>
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                    </div>
-                    <div className={style.para}>
-                        Corrective Actions List
-                    </div>
+                <div className={style.para}>
+                    Corrective Actions List
                 </div>
-                <div className={style.tableParent}>
-                    <table className={style.table}>
-                        <tr className={style.tableHeader}>
-                            <th>Action Date</th>
-                            <th>Action By</th>
-                            <th>Action</th>
-                        </tr>
-                        {
-                            actions?.map((action, index) => {
-                                return (
-                                    <tr key={index}>
-                                        
-                                        <td>{formatDate(action?.CorrectionDate)}</td>
-                                       
-                                        <td>{action?.CorrectionBy}</td>
-                                        
-                                        <td><button className={style.btn} onClick={() => {
-                                            dispatch(updateTabData({ ...tabData, Tab: 'viewCorrectiveActionInReport' }))
-                                            dispatch(changeId(action._id));
-                                        }}>View Action</button></td>
-                                       
-                                        
+            </div>
+            <div className={style.tableParent}>
+                <table className={style.table}>
+                    <tr className={style.tableHeader}>
+                        <th>Action Date</th>
+                        <th>Action By</th>
+                        <th>Action</th>
+                    </tr>
+                    {
+                        actions?.map((action, index) => {
+                            return (
+                                <tr key={index}>
 
-                                    </tr>
-                                )
-                            })
-                        }
-                    </table>
-                </div>
+                                    <td>{formatDate(action?.CorrectionDate)}</td>
+
+                                    <td>{action?.CorrectionBy}</td>
+
+                                    <td><button className={style.btn} onClick={() => {
+                                        dispatch(updateTabData({ ...tabData, Tab: 'viewCorrectiveActionInReport' }))
+                                        dispatch(changeId(action._id));
+                                    }}>View Action</button></td>
+                                </tr>
+                            )
+                        })
+                    }
+                </table>
+            </div>
 
             {
                 alert ?
                     <div class={style.alertparent}>
                         <div class={style.alert}>
-                            <p class={style.msg}>{popUpData}</p>
+                            <div className='overflow-y-handler'>
+                                <p class={style.msg}>{popUpData}</p>
+                            </div>
                             <div className={style.alertbtns}>
                                 <button style={{
-                                    marginLeft : '120px',
-                                    marginTop : '25px'
-                                }}  onClick={alertManager} className={style.btn2}>OK.</button>
+                                    marginLeft: '120px',
+                                    marginTop: '25px'
+                                }} onClick={alertManager} className={style.btn2}>OK.</button>
                             </div>
                         </div>
                     </div> : null

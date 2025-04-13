@@ -13,8 +13,9 @@
   }
 }
 
-.overflow-x-handler {
-  overflow-x: auto !important;
+.overflow-y-handler{
+  height: 70% !important;
+  overflow-y: auto;
 }
 
 .App-header {

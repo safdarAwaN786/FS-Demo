@@ -414,7 +414,7 @@
     line-height: normal;
   }
   .alertbtns {
-    margin-top: 33px;
+    /* margin-top: 33px; */
     margin-left: 165px;
   }
   @media (max-width: 500px) {

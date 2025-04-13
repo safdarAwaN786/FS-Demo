@@ -377,6 +377,7 @@
   font-style: normal;
   font-weight: 400;
   line-height: normal;
+  padding-bottom: 20px;
 }
 .alertbtns {
   margin-top: 84px;
@@ -387,7 +388,7 @@
     width: 95%;
   }
   .alertbtns {
-    margin-top: 74px;
+    /* margin-top: 74px; */
     margin-left: 37px;
   }
 }
@@ -1035,6 +1036,7 @@
   font-style: normal;
   font-weight: 400;
   line-height: normal;
+  padding-bottom: 20px;
 }
 .alertbtns {
   margin-top: 84px;
@@ -1045,7 +1047,7 @@
     width: 95%;
   }
   .alertbtns {
-    margin-top: 74px;
+    /* margin-top: 74px; */
     margin-left: 37px;
   }
 }

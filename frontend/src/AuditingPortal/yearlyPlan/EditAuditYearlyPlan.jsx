@@ -36,16 +36,16 @@ function EditAuditYearlyPlan() {
         axios.get(`${process.env.REACT_APP_BACKEND_URL}/readYearlyAuditPlanById/${planId}`).then((response) => {
             // setPlanToShow(response.data.data);
             response.data.data.Selected = response.data.data.Selected.map(obj => {
-                return {...obj, Process : obj.Process._id}
+                return { ...obj, Process: obj.Process._id }
             })
             setYearlyPlanData(response.data.data);
             dispatch(setSmallLoading(false))
         }).catch(err => {
             dispatch(setSmallLoading(false));
             Swal.fire({
-                icon : 'error',
-                title : 'OOps..',
-                text : 'Something went wrong, Try Again!'
+                icon: 'error',
+                title: 'OOps..',
+                text: 'Something went wrong, Try Again!'
             })
         })
     }, [])
@@ -185,7 +185,7 @@ function EditAuditYearlyPlan() {
                 </div>
                 <div className={`${style.searchbar} mt-1 `}>
                     <div className={style.sec1}>
-                        <select className='bg-body-secondary px-2'  style={{
+                        <select className='bg-body-secondary px-2' style={{
                             width: "200px",
                             border: 'none',
                             borderRadius: '50px'
@@ -254,7 +254,9 @@ function EditAuditYearlyPlan() {
                 showBox ?
                     <div class={style.alertparent}>
                         <div class={style.alert}>
-                            <p class={style.msg}>{popUpData}</p>
+                            <div className='overflow-y-handler'>
+                                <p class={style.msg}>{popUpData}</p>
+                            </div>
                             <div className={style.alertbtns}>
                                 <button style={{
                                     marginLeft: '120px',

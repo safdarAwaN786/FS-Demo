@@ -31,9 +31,9 @@ function ViewSubProcessDetails() {
         }).catch(err => {
             dispatch(setSmallLoading(false));
             Swal.fire({
-                icon : 'error',
-                title : 'OOps..',
-                text : 'Something went wrong, Try Again!'
+                icon: 'error',
+                title: 'OOps..',
+                text: 'Something went wrong, Try Again!'
             })
         })
     }, [])
@@ -78,88 +78,88 @@ function ViewSubProcessDetails() {
     return (
         <>
 
-      
-                <div className='d-flex flex-row bg-white px-lg-5  px-2 py-2'>
-                    <BsArrowLeftCircle
-                        role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
-                            {
-                                dispatch(updateTabData({...tabData, Tab : 'Construct Flow Diagram'}))
-                            }
-                        }} />
 
+            <div className='d-flex flex-row bg-white px-lg-5  px-2 py-2'>
+                <BsArrowLeftCircle
+                    role='button' className='fs-3 mt-1 text-danger' onClick={(e) => {
+                        {
+                            dispatch(updateTabData({ ...tabData, Tab: 'Construct Flow Diagram' }))
+                        }
+                    }} />
+
+            </div>
+            <div className={`${style.searchbar} mt-1 `}>
+                <div className={style.sec1}>
+                    <img src={Search} alt="" />
+                    <input autoComplete='off' onChange={search} type="text" placeholder='Search document by name' />
                 </div>
-                <div className={`${style.searchbar} mt-1 `}>
-                    <div className={style.sec1}>
-                        <img src={Search} alt="" />
-                        <input autoComplete='off' onChange={search} type="text" placeholder='Search document by name' />
+
+            </div>
+            <div className={style.tableParent}>
+                {!processes || processes?.length === 0 ? (
+                    <div className='w-100 d-flex align-items-center justify-content-center'>
+                        <p className='text-center'>No any Records Available here.</p>
                     </div>
+                ) : (
 
-                </div>
-                <div className={style.tableParent}>
-                    {!processes || processes?.length === 0 ? (
-                        <div className='w-100 d-flex align-items-center justify-content-center'>
-                            <p className='text-center'>No any Records Available here.</p>
-                        </div>
-                    ) : (
+                    <table className={style.table}>
+                        <tr className={style.headers}>
+                            <td>Process Number</td>
+                            <td>Name</td>
+                            <td>Process Description</td>
+                        </tr>
+                        {
+                            processes?.map((process, i) => {
+                                return (
+                                    <tr className={style.tablebody} key={i}>
 
-                        <table className={style.table}>
-                            <tr className={style.headers}>
-                                <td>Process Number</td>
-                                <td>Name</td>
-                                <td>Process Description</td>
-                            </tr>
-                            {
-                                processes?.map((process, i) => {
-                                    return (
-                                        <tr className={style.tablebody} key={i}>
+                                        <td className={style.simpleContent}>{process.ProcessNum}</td>
+                                        <td className={style.simpleContent}>{process.Name}</td>
+                                        <td >
+                                            <p onClick={() => {
+                                                setShowBox(true);
+                                                setDataToShow(process.Description)
+                                            }} className={style.redclick}>View</p>
+                                        </td>
 
-                                            <td className={style.simpleContent}>{process.ProcessNum}</td>
-                                            <td className={style.simpleContent}>{process.Name}</td>
-                                            <td >
-                                                <p onClick={() => {
-                                                    setShowBox(true);
-                                                    setDataToShow(process.Description)
-                                                }} className={style.redclick}>View</p>
-                                            </td>
-                                            
-                                        </tr>
+                                    </tr>
 
-                                    )
+                                )
 
-                                })
-                            }
-                        </table>
-                    )}
-                </div>
-                <div className={style.Btns}>
-                    {startIndex > 0 && (
+                            })
+                        }
+                    </table>
+                )}
+            </div>
+            <div className={style.Btns}>
+                {startIndex > 0 && (
 
-                        <button onClick={backPage}>
-                            {'<< '}Back
-                        </button>
-                    )}
-                    {processListData?.subProcesses.length > endIndex && (
+                    <button onClick={backPage}>
+                        {'<< '}Back
+                    </button>
+                )}
+                {processListData?.subProcesses.length > endIndex && (
 
-                        <button onClick={nextPage}>
-                            next{'>> '}
-                        </button>
-                    )}
-                </div>
+                    <button onClick={nextPage}>
+                        next{'>> '}
+                    </button>
+                )}
+            </div>
 
             {
                 showBox && (
 
                     <div class={style.alertparent}>
                         <div class={style.alert}>
-
-                            <p class={style.msg}>{dataToShow}</p>
-
+                            <div className='overflow-y-handler'>
+                                <p class={style.msg}>{dataToShow}</p>
+                            </div>
+                            
                             <div className={style.alertbtns}>
-
                                 <button style={{
-                                    marginLeft : '120px',
-                                    marginTop : '25px'
-                                }}  onClick={() => {
+                                    marginLeft: '120px',
+                                    marginTop: '25px'
+                                }} onClick={() => {
                                     setShowBox(false);
 
                                 }} className={style.btn2}>OK</button>

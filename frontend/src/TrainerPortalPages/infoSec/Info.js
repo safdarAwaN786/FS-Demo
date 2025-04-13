@@ -317,7 +317,9 @@ function Info() {
                 alert ?
                     <div class={style.alertparent}>
                         <div class={style.alert}>
+                        <div className='overflow-y-handler'>
                             <p class={style.msg}>{popUpData}</p>
+                        </div>
                             <div className={style.alertbtns}>
 
                                 <button style={{

@@ -452,7 +452,7 @@
   
   .alert {
     width: 438px;
-    height: 224px;
+    height: 250px;
     flex-shrink: 0;
     border-radius: 10px;
     background: #fff;
@@ -474,10 +474,11 @@
     font-style: normal;
     font-weight: 400;
     line-height: normal;
+    padding-bottom: 20px;
   }
   
   .alertbtns {
-    margin-top: 84px;
+    /* margin-top: 84px; */
     margin-left: 190px;
   }
   

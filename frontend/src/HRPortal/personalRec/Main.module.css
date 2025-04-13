@@ -442,7 +442,7 @@
   line-height: normal;
 }
 .alertbtns {
-  margin-top: 33px;
+  /* margin-top: 33px; */
   margin-left: 165px;
 }
 @media (max-width: 500px) {
@@ -450,7 +450,7 @@
     width: 95%;
   }
   .alertbtns {
-    margin-top: 33px;
+    /* margin-top: 33px; */
     margin-left: 0;
     display: flex;
     justify-content: center;
@@ -471,6 +471,18 @@
   font-weight: 400;
   line-height: normal;
   border: 0;
+}
+
+.msg {
+  margin-top: 25px;
+  margin-left: 37px;
+  color: #000;
+  font-family: Poppins;
+  font-size: 17px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  padding-bottom: 20px;
 }
 
 .btn1:hover {

@@ -293,9 +293,10 @@
     font-style: normal;
     font-weight: 400;
     line-height: normal;
+    padding-bottom: 20px;
   }
   .alertbtns {
-    margin-top: 173px;
+    /* margin-top: 173px; */
     margin-left: 245px;
   }
   

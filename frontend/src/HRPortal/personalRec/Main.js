@@ -322,7 +322,9 @@ function Main() {
                 showBox &&
                 <div class={style.alertparent}>
                     <div class={style.alert}>
-                        <p>{popUpData}</p>
+                    <div className='overflow-y-handler'>
+                        <p className={style.msg}>{popUpData}</p>
+                    </div>
                         <div className={style.alertbtns}>
                             <button style={{
                                 marginLeft: '120px',

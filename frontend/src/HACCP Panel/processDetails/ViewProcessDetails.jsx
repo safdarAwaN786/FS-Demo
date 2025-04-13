@@ -158,8 +158,9 @@ function ViewProcessDetails() {
 
                     <div class={style.alertparent}>
                         <div class={style.alert}>
-
+                        <div className='overflow-y-handler'>
                             <p class={style.msg}>{dataToShow}</p>
+                        </div>
 
                             <div className={style.alertbtns}>
 

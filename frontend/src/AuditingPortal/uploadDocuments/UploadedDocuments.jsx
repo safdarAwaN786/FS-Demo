@@ -232,13 +232,13 @@ function UploadedDocuments() {
                                         </td>
                                         <td>
                                             <p onClick={() => {
-                                                if(document.Status !== 'Reviewed' && document.Status !== 'Approved'){
+                                                if (document.Status !== 'Reviewed' && document.Status !== 'Approved') {
 
                                                     setIdForAction(document._id);
                                                     setUploadDoc(true);
                                                 } else {
                                                     setDataToShow(`Document is ${document.Status}!`);
-                                                        setShowBox(true)
+                                                    setShowBox(true)
                                                 }
                                             }} className='btn btn-outline-primary px-1'>Upload Document</p>
                                         </td>
@@ -293,7 +293,7 @@ function UploadedDocuments() {
                                                     height: '28px'
                                                 }} className={`btn btn-outline-danger pt-0 px-1`}>Review</p>
                                                 <p onClick={() => {
-                                                    
+
                                                     if (document.Status === 'Pending' || document.Status === 'Reviewed') {
                                                         setReject(true);
                                                         setIdForAction(document._id)
@@ -356,7 +356,9 @@ function UploadedDocuments() {
                 showBox && (
                     <div class={style.alertparent}>
                         <div class={style.alert}>
-                            <p class={style.msg}>{dataToShow}</p>
+                            <div className='overflow-y-handler'>
+                                <p class={style.msg}>{dataToShow}</p>
+                            </div>
                             <div className={style.alertbtns}>
                                 <button style={{
                                     marginLeft: '120px',
@@ -378,7 +380,7 @@ function UploadedDocuments() {
                                 setUploadDoc(false)
                                 dispatch(setSmallLoading(true))
                                 const formData = new FormData(e.target);
-                                axios.put(`${process.env.REACT_APP_BACKEND_URL}/replaceDocument/${idForAction}`, formData,  { headers: { Authorization: `${user._id}` } } ).then(() => {
+                                axios.put(`${process.env.REACT_APP_BACKEND_URL}/replaceDocument/${idForAction}`, formData, { headers: { Authorization: `${user._id}` } }).then(() => {
                                     dispatch(setSmallLoading(false))
                                     refreshData();
                                     Swal.fire({
@@ -419,7 +421,7 @@ function UploadedDocuments() {
                             <div className={style.alertbtns}>
                                 <button onClick={() => {
                                     dispatch(setSmallLoading(true))
-                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/approve-uploaded-document`, { documentId: idForAction, approvedBy: user.Name },  { headers: { Authorization: `${user._id}` } }).then(() => {
+                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/approve-uploaded-document`, { documentId: idForAction, approvedBy: user.Name }, { headers: { Authorization: `${user._id}` } }).then(() => {
                                         dispatch(setSmallLoading(false))
                                         refreshData();
                                         Swal.fire({
@@ -455,7 +457,7 @@ function UploadedDocuments() {
                                 <button onClick={() => {
                                     setReview(false);
                                     dispatch(setSmallLoading(true))
-                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/review-uploaded-document`, { documentId: idForAction, reviewBy: user.Name },  { headers: { Authorization: `${user._id}` } }).then(() => {
+                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/review-uploaded-document`, { documentId: idForAction, reviewBy: user.Name }, { headers: { Authorization: `${user._id}` } }).then(() => {
                                         dispatch(setSmallLoading(false))
                                         refreshData();
                                         Swal.fire({
@@ -490,7 +492,7 @@ function UploadedDocuments() {
                                 e.preventDefault();
                                 setDisApprove(false);
                                 dispatch(setSmallLoading(true))
-                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/disapprove-uploaded-document`, { documentId: idForAction, reason: reason, disapprovedBy: user.Name },  { headers: { Authorization: `${user._id}` } }).then(() => {
+                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/disapprove-uploaded-document`, { documentId: idForAction, reason: reason, disapprovedBy: user.Name }, { headers: { Authorization: `${user._id}` } }).then(() => {
                                     dispatch(setSmallLoading(false))
                                     Swal.fire({
                                         title: 'Success',
@@ -501,7 +503,7 @@ function UploadedDocuments() {
 
                                     refreshData();
                                 }).catch(err => {
-                                
+
                                     dispatch(setSmallLoading(false));
                                     Swal.fire({
                                         icon: 'error',
@@ -534,7 +536,7 @@ function UploadedDocuments() {
                                 e.preventDefault();
                                 setReject(false);
                                 dispatch(setSmallLoading(true))
-                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/reject-uploaded-document`, { documentId: idForAction, reason: reason, rejectBy: user.Name },  { headers: { Authorization: `${user._id}` } }).then(() => {
+                                axios.patch(`${process.env.REACT_APP_BACKEND_URL}/reject-uploaded-document`, { documentId: idForAction, reason: reason, rejectBy: user.Name }, { headers: { Authorization: `${user._id}` } }).then(() => {
                                     dispatch(setSmallLoading(false))
                                     Swal.fire({
                                         title: 'Success',

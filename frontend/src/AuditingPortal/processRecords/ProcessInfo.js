@@ -177,7 +177,9 @@ function ProcessInfo() {
                 alert ?
                     <div class={style.alertparent}>
                         <div class={style.alert}>
-                            <p class={style.msg}>{popUpData}</p>
+                            <div className='overflow-y-handler'>
+                                <p class={style.msg}>{popUpData}</p>
+                            </div>
                             <div className={style.alertbtns}>
                                 <button style={{
                                     marginLeft: '120px',
