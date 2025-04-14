@@ -5,10 +5,7 @@ const { Schema } = mongoose;
 // * Creation of User Schema
 const TeamMemberSchema = new mongoose.Schema({
 
-    Department: {
-        type: Schema.Types.ObjectId,
-        ref: 'Department',
-    },
+  
 
 
     UserId: {
@@ -23,7 +20,7 @@ const TeamMemberSchema = new mongoose.Schema({
         type: String
     },
 
-    DepartmentText: {
+    Department: {
         type: String
     },
 

@@ -329,7 +329,7 @@ router.post('/create-haccp-team', upload.fields(generateMembersDocArray()), asyn
     const membersIds = await Promise.all(
       teamData.TeamMembers.map(async (member) => {
         try {
-          const addedUser = new TeamMember({ ...member, Company: requestUser.Company._id, Department: requestUser.Department._id, DepartmentText: member.Department, Email: member.Email });
+          const addedUser = new TeamMember({ ...member });
           // const emailBody = template.body
           //   .replace('{{name}}', member.Name)
           //   .replace('{{username}}', member.UserName)
@@ -386,10 +386,6 @@ router.get('/get-all-haccp-teams', async (req, res) => {
     }).populate({
       path: 'TeamMembers',
       model: 'haccpTeamMember',
-      populate: ({
-        path: 'Department',
-        model: 'Department'
-      })
     });
     if (!teams) {
       console.log('HACCP Team documents not found');
@@ -430,11 +426,7 @@ router.get('/get-haccp-team/:teamId', async (req, res) => {
     const teamId = req.params.teamId;
     const team = await HaccpTeam.findById(teamId).populate('UserDepartment').populate('Department').populate({
       path: 'TeamMembers',
-      model: 'haccpTeamMember',
-      populate: ({
-        path: 'Department',
-        model: 'Department'
-      })
+      model: 'haccpTeamMember'
     });
     if (!team) {
       console.log(`HACCP Team document with ID: ${teamId} not found`);
@@ -609,7 +601,7 @@ router.patch('/update-haccp-team/:teamId', upload.fields(generateMembersDocArray
              })
           } else {
             const { _id, ...user } = member
-            updateduser = new haccpTeamMember({ ...user, Company: requestUser.Company, Department: requestUser.Department, DepartmentText: user.DepartmentText,
+            updateduser = new haccpTeamMember({ ...user
               //  Password: CryptoJS.AES.encrypt(user.Password, process.env.PASS_CODE).toString()
              });
             await updateduser.save();

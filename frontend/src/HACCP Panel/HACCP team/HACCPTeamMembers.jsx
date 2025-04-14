@@ -193,7 +193,7 @@ function HACCPTeamMembers() {
                                         <td className={style.simpleContent}>{member.Education}</td>
                                         <td>{member.Designation}</td>
                                         <td>{member.Experience}</td>
-                                        <td>{member.Department.DepartmentName}</td>
+                                        <td>{member.Department}</td>
                                         <td>{member.RoleInTeam}</td>
                                         <td>{member.TrainingsAttended}</td>
                                         <td>{dayjs(member.TrainingDate).format('DD/MM/YYYY')}</td>

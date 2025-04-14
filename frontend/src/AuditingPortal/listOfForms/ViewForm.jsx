@@ -361,9 +361,7 @@ function ViewForm() {
                                                                 </div>
 
 
-                                                                <input autoComplete='off' type='text' value={dataToSend?.questions[index]?.options[optindex].optionText} style={{
-                                                                    borderRadius: '0px'
-                                                                }} name='optionText' className='bg-light border-bottom border-secondary w-50 px-2 py-0 d-inline' readOnly />
+                                                                
                                                             </div>
                                                         )
                                                     })}

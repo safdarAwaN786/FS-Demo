@@ -37,28 +37,28 @@ p {
 
 
 .custom-input-like-scrollable {
-
   border-radius: 10px;
   padding: 10px 14px;
-  background-color: #ffffff; /* mimic input bg */
-  color: #212529;            /* mimic input text color */
+  background-color: #ffffff;
+  color: #212529;
   font-size: 1rem;
   font-family: inherit;
 
   width: 100%;
-  overflow-x: auto;
-  white-space: nowrap;
 
-  /* Optional: scrollbar styles */
-  scrollbar-width: auto; /* Firefox */
-  scrollbar-color: rgba(100, 100, 100, 0.5) transparent;
+  /* ✅ Let text wrap */
+  overflow: visible;
+  white-space: normal;
+
+  /* ❌ Remove scrollbar styles since scroll is gone */
 }
 
-.custom-input-like-scrollable::-webkit-scrollbar {
+
+/* .custom-input-like-scrollable::-webkit-scrollbar {
   height: 6px;
 }
 
 .custom-input-like-scrollable::-webkit-scrollbar-thumb {
   background: rgba(100, 100, 100, 0.5);
   border-radius: 3px;
-}
+} */
