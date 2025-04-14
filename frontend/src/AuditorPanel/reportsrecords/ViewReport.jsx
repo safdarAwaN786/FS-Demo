@@ -105,7 +105,7 @@ function ViewReport() {
                         const pageWidth = pdf.internal.pageSize.getWidth();
                         // pass the data URL to the pdf.addImage method
                         console.log(pageWidth);
-                        
+
                         pdf.addImage(dataURL, 'JPEG', ((pageWidth - 3) / 2), 2.5, 3, 3);
                         pdf.setFontSize(20);
                         pdf.text(`${user.Company.CompanyName}`, ((pageWidth - pdf.getTextWidth(user.Company.CompanyName)) / 2), (pdf.internal.pageSize.getHeight() / 2));
@@ -150,7 +150,7 @@ function ViewReport() {
                     pdf.text(`${user.Company.CompanyName}`, pdf.internal.pageSize.getWidth() - 2, 0.3);
                     pdf.text(`Checklist ID : ${dataToSend.ConductAudit.Checklist.ChecklistId}`, pdf.internal.pageSize.getWidth() - 2, 0.5);
                     pdf.text(`Revision No : ${dataToSend.ConductAudit.Checklist.RevisionNo}`, pdf.internal.pageSize.getWidth() - 2, 0.7);
-                    if (dataToSend.ConductAudit.Checklist.Status == 'Approved') {   
+                    if (dataToSend.ConductAudit.Checklist.Status == 'Approved') {
                         pdf.text(`Issue Date : ${formatDate(dataToSend.ConductAudit.Checklist.ApprovalDate)}`, pdf.internal.pageSize.getWidth() - 2, 0.9);
                     }
                 }
@@ -189,9 +189,14 @@ function ViewReport() {
                                         <div style={{
                                             width: '100%'
                                         }} className=' me-3 d-flex flex-row'>
-                                            <input autoComplete='off' value={answer.question.questionText} style={{
-                                                borderRadius: '0px'
-                                            }} name='questionText' placeholder='Untitled Question' className='border-0  border-secondary bg-light mt-2 mb-3 w-100 p-3' required readOnly />
+
+
+
+                                            <div className={`custom-input-like-scrollable border-0  border-secondary bg-light mt-2 mb-3 w-100 p-3`}>
+                                                {answer.question.questionText}
+                                            </div>
+
+
                                             <input autoComplete='off' checked={reportData.SelectedAnswers?.some((ansObj) => ansObj.Answer._id === answer._id)} style={{
                                                 cursor: 'pointer'
                                             }} className='mt-2' type='checkbox' />
@@ -336,7 +341,7 @@ function ViewReport() {
                     <div class={style.alertparent}>
                         <div class={style.alert}>
                             <div className='overflow-y-handler'>
-                            <p class={style.msg}>{dataToShow}</p>
+                                <p class={style.msg}>{dataToShow}</p>
                             </div>
                             <div className={style.alertbtns}>
                                 <button style={{

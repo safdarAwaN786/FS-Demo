@@ -105,7 +105,7 @@ function ViewActionInReport() {
     }, [])
     console.log(actionData);
     const downloadPDF = async () => {
-        
+
         setDownloadingPdf(true)
         var element = document.getElementById('printable');
         var opt = {
@@ -144,7 +144,7 @@ function ViewActionInReport() {
                         const pageWidth = pdf.internal.pageSize.getWidth();
                         // pass the data URL to the pdf.addImage method
                         console.log(pageWidth);
-                        
+
                         pdf.addImage(dataURL, 'JPEG', ((pageWidth - 3) / 2), 2.5, 3, 3);
                         pdf.setFontSize(20);
                         pdf.text(`${user.Company.CompanyName}`, ((pageWidth - pdf.getTextWidth(user.Company.CompanyName)) / 2), (pdf.internal.pageSize.getHeight() / 2));
@@ -153,16 +153,16 @@ function ViewActionInReport() {
                         const margins = 1; // Adjust margins as needed
                         const maxWidth = pageWidth - margins * 2; // Calculate usable width
                         const wrappedAddress = pdf.splitTextToSize(address, maxWidth);
-                        
+
                         const yStart = (pdf.internal.pageSize.getHeight() / 2) + 0.4; // Starting Y position
-                        
+
 
                         wrappedAddress.forEach((line, index) => {
                             const textWidth = pdf.getTextWidth(line);
                             pdf.text(line, (pageWidth - textWidth) / 2, yStart + index * 0.25);
                         });
 
-                        
+
                         pdf.setFontSize(15);
                         // pdf.setLineWidth(0.1); // Example line width
                         // pdf.line(0.1, (pdf.internal.pageSize.getHeight() / 2) + 1, pdf.internal.pageSize.getWidth() - 0.2, (pdf.internal.pageSize.getHeight() / 2) + 1)
@@ -238,9 +238,13 @@ function ViewActionInReport() {
                                         <div style={{
                                             width: '100%'
                                         }} className=' me-3 d-flex flex-column'>
-                                            <input autoComplete='off' value={correctiveAnswer.question.question.questionText} style={{
-                                                borderRadius: '0px'
-                                            }} name='questionText' placeholder='Untitled Question' className='border-0  border-secondary bg-light mt-2 mb-3 w-100 p-3' required readOnly />
+
+
+                                            <div className={`custom-input-like-scrollable border-0  border-secondary bg-light mt-2 mb-3 w-100 p-3`}>
+                                            {correctiveAnswer.question.question.questionText}
+                                            </div>
+
+                                            
                                         </div>
                                         <div>
                                             {correctiveAnswer.question.question.ComplianceType === 'GradingSystem' && (
@@ -408,7 +412,7 @@ function ViewActionInReport() {
                     <div class={style.alertparent}>
                         <div class={style.alert}>
                             <div className='overflow-y-handler'>
-                            <p class={style.msg}>{dataToShow}</p>
+                                <p class={style.msg}>{dataToShow}</p>
                             </div>
                             <div className={style.alertbtns}>
                                 <button style={{

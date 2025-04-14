@@ -80,119 +80,130 @@ function ResultsHistory() {
 
     return (
         <>
-            
-                <div className='mx-lg-5 px-2 mx-md-4 mx-2 mt-5 mb-1 '>
-                    <BsArrowLeftCircle onClick={(e) => {
-                        dispatch(updateTabData({ ...tabData, Tab: 'Master List of Records/Forms' }))
-                    }} className='fs-3 text-danger mx-1' role='button' />
-                </div>
-                <div className={`${style.headers} mt-0`}>
-                    <div className={style.spans}>
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                    </div>
-                    <div className={style.para}>
-                        Record Keeping
-                    </div>
-                </div>
-                <div className={style.form}>
-                    <div className={style.sec1}>
-                        <div>
-                            <p>Form Id</p>
-                            <input autoComplete='off' value={formData?.FormId} type="text" readOnly />
-                        </div>
-                        <div>
-                            <p>Created By</p>
-                            <input autoComplete='off' value={formData?.CreatedBy} type="text" readOnly />
-                        </div>
-                        <div>
-                            <p>Creation Date</p>
-                            {formData?.CreationDate ? (
-                                <input autoComplete='off' value={`${formData?.CreationDate?.slice(0, 10).split('-')[2]}/${formData?.CreationDate?.slice(0, 10).split('-')[1]}/${formData?.CreationDate?.slice(0, 10).split('-')[0]}`} type="text" readOnly />
-                            ) : (
-                                <input autoComplete='off' value='- - -' />
-                            )}
-                        </div>
-                    </div>
-                    <div className={style.sec2}>
-                        <div>
-                            <p>Form Name</p>
-                            <input autoComplete='off' value={formData?.FormName} type="text" />
-                        </div>
-                        <div>
-                            <p>Approved By</p>
-                            <input autoComplete='off' value={formData?.ApprovedBy || '- - -'} type="text" readOnly />
-                        </div>
-                        <div>
-                            <p>Approval Date</p>
-                            {formData?.ApprovalDate !== undefined ? (
 
-                                <input autoComplete='off' type="text" value={`${formData?.ApprovalDate?.slice(0, 10).split('-')[2]}/${formData?.ApprovalDate?.slice(0, 10).split('-')[1]}/${formData?.ApprovalDate?.slice(0, 10).split('-')[0]}`} />
-                            ) : (
-                                <input autoComplete='off' type="text" value={`- - -`} />
-                            )}
+            <div className='mx-lg-5 px-2 mx-md-4 mx-2 mt-5 mb-1 '>
+                <BsArrowLeftCircle onClick={(e) => {
+                    dispatch(updateTabData({ ...tabData, Tab: 'Master List of Records/Forms' }))
+                }} className='fs-3 text-danger mx-1' role='button' />
+            </div>
+            <div className={`${style.headers} mt-0`}>
+                <div className={style.spans}>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                <div className={style.para}>
+                    Record Keeping
+                </div>
+            </div>
+            <div className={style.form}>
+                <div className={style.sec1}>
+                    <div>
+                        <p>Form Id</p>
+                        <div className="custom-input-like-scrollable">
+                            {formData?.FormId}
                         </div>
+
+                    </div>
+                    <div>
+                        <p>Created By</p>
+                        <div className="custom-input-like-scrollable">
+                            {formData?.CreatedBy}
+                        </div>
+
+                    </div>
+                    <div>
+                        <p>Creation Date</p>
+                        {formData?.CreationDate ? (
+                            <input autoComplete='off' value={`${formData?.CreationDate?.slice(0, 10).split('-')[2]}/${formData?.CreationDate?.slice(0, 10).split('-')[1]}/${formData?.CreationDate?.slice(0, 10).split('-')[0]}`} type="text" readOnly />
+                        ) : (
+                            <input autoComplete='off' value='- - -' />
+                        )}
                     </div>
                 </div>
-                <div className={style.tableParent}>
-                    <table className={style.table}>
-                        <tr className={style.tableHeader}>
-                            <th>Time</th>
-                            <th>Maintenance Frequency</th>
-                            <th>Filled By</th>
-                            <th>Fill Date</th>
-                            <th>Status</th>
-                            <th>Verified By</th>
-                            <th>Verification Date</th>
-                            <th>Department</th>
-                            {/* <th>Designation</th> */}
-                            <th>Action</th>
-                            {tabData?.Verification && (
-                                <th>Action</th>
-                            )}
-                            <th>Comment</th>
-                        </tr>
-                        {
-                            formResults?.map((result, index) => {
-                                return (
-                                    <tr key={index}>
-                                        <td>{extractTimeFromDate(result.FillDate)}</td>
-                                        <td>{formData?.MaintenanceFrequency}</td>
-                                        <td>{result?.FillBy}</td>
-                                        <td>{result?.FillDate?.slice(0, 10).split('-')[2]}/{result?.FillDate?.slice(0, 10).split('-')[1]}/{result?.FillDate?.slice(0, 10).split('-')[0]}</td>
-                                        <td><div className={`text-center ${result.Status === 'Verified' && style.greenStatus} ${result.Status === 'Rejected' && style.redStatus}  ${result.Status === 'Pending' && style.yellowStatus}  `}><p>{result.Status}</p></div></td>
-                                        <td>{result?.verifiedBy || 'Pending'}</td>
-                                        <td>{result?.verificationDate || 'Pending'}</td>
-                                        <td>{formData?.Department.DepartmentName}</td>
-                                        {/* <td>{result?.User?.Designation}</td> */}
-                                        <td><button className={style.btn} onClick={() => {
-                                            dispatch(updateTabData({ ...tabData, Tab: 'viewFormAnswers' }))
-                                            dispatch(changeId(result._id));
-                                        }}>View Form</button></td>
-                                        {tabData?.Verification && (
-                                            <td><button className={style.btn} onClick={() => {
-                                                setIdForAction(result._id)
-                                                setVerify(true)
-                                            }}>Verify</button></td>
-                                        )}
-                                        <td >
-                                            <button className={`${style.btn} my-1`} onClick={() => {
-                                                setIdForAction(result._id);
-                                                setCommentBox(true)
-                                            }}>Add</button>
-                                            <button className={`${style.btn} my-1`} onClick={() => {
-                                                setPopUpData(result.Comment || 'No comment added');
-                                                alertManager();
-                                            }}>View</button>
-                                        </td>
-                                    </tr>
-                                )
-                            })
-                        }
-                    </table>
+                <div className={style.sec2}>
+                    <div>
+                        <p>Form Name</p>
+                        <div className="custom-input-like-scrollable">
+                            {formData?.FormName}
+                        </div>
+                    </div>
+                    <div>
+                        <p>Approved By</p>
+                        <div className="custom-input-like-scrollable">
+                            {formData?.ApprovedBy}
+                        </div>
+
+                    </div>
+                    <div>
+                        <p>Approval Date</p>
+                        {formData?.ApprovalDate !== undefined ? (
+
+                            <input autoComplete='off' type="text" value={`${formData?.ApprovalDate?.slice(0, 10).split('-')[2]}/${formData?.ApprovalDate?.slice(0, 10).split('-')[1]}/${formData?.ApprovalDate?.slice(0, 10).split('-')[0]}`} />
+                        ) : (
+                            <input autoComplete='off' type="text" value={`- - -`} />
+                        )}
+                    </div>
                 </div>
-                {/* <div className={style.btnparent}>
+            </div>
+            <div className={style.tableParent}>
+                <table className={style.table}>
+                    <tr className={style.tableHeader}>
+                        <th>Time</th>
+                        <th>Maintenance Frequency</th>
+                        <th>Filled By</th>
+                        <th>Fill Date</th>
+                        <th>Status</th>
+                        <th>Verified By</th>
+                        <th>Verification Date</th>
+                        <th>Department</th>
+                        {/* <th>Designation</th> */}
+                        <th>Action</th>
+                        {tabData?.Verification && (
+                            <th>Action</th>
+                        )}
+                        <th>Comment</th>
+                    </tr>
+                    {
+                        formResults?.map((result, index) => {
+                            return (
+                                <tr key={index}>
+                                    <td>{extractTimeFromDate(result.FillDate)}</td>
+                                    <td>{formData?.MaintenanceFrequency}</td>
+                                    <td>{result?.FillBy}</td>
+                                    <td>{result?.FillDate?.slice(0, 10).split('-')[2]}/{result?.FillDate?.slice(0, 10).split('-')[1]}/{result?.FillDate?.slice(0, 10).split('-')[0]}</td>
+                                    <td><div className={`text-center ${result.Status === 'Verified' && style.greenStatus} ${result.Status === 'Rejected' && style.redStatus}  ${result.Status === 'Pending' && style.yellowStatus}  `}><p>{result.Status}</p></div></td>
+                                    <td>{result?.verifiedBy || 'Pending'}</td>
+                                    <td>{result?.verificationDate || 'Pending'}</td>
+                                    <td>{formData?.Department.DepartmentName}</td>
+                                    {/* <td>{result?.User?.Designation}</td> */}
+                                    <td><button className={style.btn} onClick={() => {
+                                        dispatch(updateTabData({ ...tabData, Tab: 'viewFormAnswers' }))
+                                        dispatch(changeId(result._id));
+                                    }}>View Form</button></td>
+                                    {tabData?.Verification && (
+                                        <td><button className={style.btn} onClick={() => {
+                                            setIdForAction(result._id)
+                                            setVerify(true)
+                                        }}>Verify</button></td>
+                                    )}
+                                    <td >
+                                        <button className={`${style.btn} my-1`} onClick={() => {
+                                            setIdForAction(result._id);
+                                            setCommentBox(true)
+                                        }}>Add</button>
+                                        <button className={`${style.btn} my-1`} onClick={() => {
+                                            setPopUpData(result.Comment || 'No comment added');
+                                            alertManager();
+                                        }}>View</button>
+                                    </td>
+                                </tr>
+                            )
+                        })
+                    }
+                </table>
+            </div>
+            {/* <div className={style.btnparent}>
                     <button className={style.download}>Download</button>
                 </div> */}
             {
@@ -201,13 +212,13 @@ function ResultsHistory() {
                         <div class={style.alert}>
                             <div className='overflow-y-handler'>
 
-                            <p class={style.msg}>{popUpData}</p>
+                                <p class={style.msg}>{popUpData}</p>
                             </div>
                             <div className={style.alertbtns}>
                                 <button style={{
-                                    marginLeft : '120px',
-                                    marginTop : '25px'
-                                }}  onClick={alertManager} className={style.btn2}>OK.</button>
+                                    marginLeft: '120px',
+                                    marginTop: '25px'
+                                }} onClick={alertManager} className={style.btn2}>OK.</button>
                             </div>
                         </div>
                     </div> : null
@@ -221,7 +232,7 @@ function ResultsHistory() {
                                 <button onClick={() => {
                                     setVerify(false);
                                     dispatch(setSmallLoading(true))
-                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/verify-response`, { resultId: idForAction, verifiedBy : user.Name }).then(() => {
+                                    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/verify-response`, { resultId: idForAction, verifiedBy: user.Name }).then(() => {
                                         dispatch(setSmallLoading(false))
                                         Swal.fire({
                                             title: 'Success',

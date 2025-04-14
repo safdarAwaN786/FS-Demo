@@ -181,6 +181,9 @@ function ViewDecisionTree() {
                                         <div style={{
                                             border: '1px solid silver'
                                         }}>
+
+                                            
+
                                             <input autoComplete='off' value={dataToSend?.DocumentType} type='text' className='w-100 text-dark' readOnly />
 
                                         </div>

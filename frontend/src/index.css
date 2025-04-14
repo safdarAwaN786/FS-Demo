@@ -33,3 +33,32 @@ p {
   background-color: #7e7e7e;
   color: #fff;
 }
+
+
+
+.custom-input-like-scrollable {
+
+  border-radius: 10px;
+  padding: 10px 14px;
+  background-color: #ffffff; /* mimic input bg */
+  color: #212529;            /* mimic input text color */
+  font-size: 1rem;
+  font-family: inherit;
+
+  width: 100%;
+  overflow-x: auto;
+  white-space: nowrap;
+
+  /* Optional: scrollbar styles */
+  scrollbar-width: auto; /* Firefox */
+  scrollbar-color: rgba(100, 100, 100, 0.5) transparent;
+}
+
+.custom-input-like-scrollable::-webkit-scrollbar {
+  height: 6px;
+}
+
+.custom-input-like-scrollable::-webkit-scrollbar-thumb {
+  background: rgba(100, 100, 100, 0.5);
+  border-radius: 3px;
+}

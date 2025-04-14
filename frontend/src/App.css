@@ -17,7 +17,20 @@
   height: 70% !important;
   overflow-y: auto;
 }
+input[readonly] {
+  overflow-x: auto !important;
+  white-space: nowrap !important;
+  text-overflow: ellipsis !important;
+}
+/* Optional: Make sure scrollbar is visible across browsers */
+input[readonly]::-webkit-scrollbar {
+  height: 6px;
+}
 
+input[readonly]::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 3px;
+}
 .App-header {
   background-color: #75787d;
   min-height: 100vh;

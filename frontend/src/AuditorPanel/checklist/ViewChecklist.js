@@ -74,24 +74,24 @@ function ViewChecklist() {
                             const pageWidth = pdf.internal.pageSize.getWidth();
                             // pass the data URL to the pdf.addImage method
                             console.log(pageWidth);
-                            
+
                             pdf.addImage(dataURL, 'JPEG', ((pageWidth - 3) / 2), 2.5, 3, 3);
                             pdf.setFontSize(20);
                             pdf.text(`${user.Company.CompanyName}`, ((pageWidth - pdf.getTextWidth(user.Company.CompanyName)) / 2), (pdf.internal.pageSize.getHeight() / 2));
                             pdf.setFontSize(15)
-                        const address = `${user.Company.Address}`;
-                        const margins = 1; // Adjust margins as needed
-                        const maxWidth = pageWidth - margins * 2; // Calculate usable width
-                        const wrappedAddress = pdf.splitTextToSize(address, maxWidth);
-                        
-                        const yStart = (pdf.internal.pageSize.getHeight() / 2) + 0.4; // Starting Y position
-                        
+                            const address = `${user.Company.Address}`;
+                            const margins = 1; // Adjust margins as needed
+                            const maxWidth = pageWidth - margins * 2; // Calculate usable width
+                            const wrappedAddress = pdf.splitTextToSize(address, maxWidth);
 
-                        wrappedAddress.forEach((line, index) => {
-                            const textWidth = pdf.getTextWidth(line);
-                            pdf.text(line, (pageWidth - textWidth) / 2, yStart + index * 0.25);
-                        });
-    
+                            const yStart = (pdf.internal.pageSize.getHeight() / 2) + 0.4; // Starting Y position
+
+
+                            wrappedAddress.forEach((line, index) => {
+                                const textWidth = pdf.getTextWidth(line);
+                                pdf.text(line, (pageWidth - textWidth) / 2, yStart + index * 0.25);
+                            });
+
 
                             // pdf.setLineWidth(0.1); // Example line width
                             // pdf.line(0.1, (pdf.internal.pageSize.getHeight() / 2) + 1, pdf.internal.pageSize.getWidth() - 0.2, (pdf.internal.pageSize.getHeight() / 2) + 1)
@@ -222,13 +222,12 @@ function ViewChecklist() {
                                                 <div style={{
                                                     width: '100%'
                                                 }} className=' me-3 d-flex flex-column'>
-                                                    <input autoComplete='off' value={question.questionText} onChange={(e) => {
-                                                        const updatedQuestions = [...questions];
-                                                        updatedQuestions[index][e.target.name] = e.target.value;
-                                                        setQuestions(updatedQuestions);
-                                                    }} style={{
-                                                        borderRadius: '0px'
-                                                    }} name='questionText' placeholder='Untitled Question' className='border-0  border-secondary bg-light mt-2 mb-3 w-100 p-3' required readOnly />
+
+                                                    <div className={`custom-input-like-scrollable border-0  border-secondary bg-light mt-2 mb-3 w-100 p-3`}>
+                                                    {question.questionText}
+                                                    </div>
+
+                                                   
                                                 </div>
                                                 <div>
                                                     <b>Compliance Type :</b> {question.ComplianceType}

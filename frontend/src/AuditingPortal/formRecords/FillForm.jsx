@@ -134,33 +134,47 @@ function FillForm() {
                             <div className='w-100'>
                                 <p className='text-black'>Document Type</p>
                                 <div>
-                                    <input autoComplete='off' value={dataToSend?.DocumentType} className='w-100 overflow-x-handler' name='FormName' type="text" readOnly />
+                                    <div className="custom-input-like-scrollable">
+                                        {dataToSend?.DocumentType}
+                                    </div>
+
                                 </div>
                             </div>
                             <div className='w-100'>
                                 <p className='text-black'>Department</p>
                                 <div>
-                                    <input autoComplete='off' value={dataToSend?.Department.DepartmentName} className='w-100 overflow-x-handler' name='FormName' type="text" readOnly />
+                                    <div className="custom-input-like-scrollable">
+                                        {dataToSend?.Department?.DepartmentName}
+                                    </div>
+
                                 </div>
                             </div>
                             <div className='w-100'>
                                 <p className='text-black'>Maintenance Frequency</p>
                                 <div>
-                                    <input autoComplete='off' value={dataToSend?.MaintenanceFrequency} className='w-100 overflow-x-handler' name='FormName' type="text" readOnly />
+                                    <div className="custom-input-like-scrollable">
+                                        {dataToSend?.MaintenanceFrequency}
+                                    </div>
+
                                 </div>
                             </div>
                             <div className='w-100'>
                                 <p className='text-black'>Form Name</p>
                                 <div>
-                                    <input autoComplete='off' value={dataToSend?.FormName} className='w-100 overflow-x-handler' name='FormName' type="text" readOnly />
+                                    <div className="custom-input-like-scrollable">
+                                        {dataToSend?.FormName}
+                                    </div>
+
                                 </div>
                             </div>
                             <div className='w-100'>
                                 <p className='text-black'>Form Description</p>
-                                <div>
-                                    <input autoComplete='off' value={dataToSend?.FormDescription} className='w-100 overflow-x-handler' name='FormDescription' type="text" readOnly />
+                                <div className="custom-input-like-scrollable">
+                                    {dataToSend?.FormDescription}
                                 </div>
                             </div>
+
+
                             {questions.map((question, index) => {
                                 return (
                                     <div style={{

@@ -248,9 +248,11 @@ function ViewCorrectiveAction() {
                                         <div style={{
                                             width: '100%'
                                         }} className=' me-3 d-flex flex-column'>
-                                            <input autoComplete='off' value={correctiveAnswer.question.question.questionText} style={{
-                                                borderRadius: '0px'
-                                            }} name='questionText' placeholder='Untitled Question' className='border-0  border-secondary bg-light mt-2 mb-3 w-100 p-3' required readOnly />
+                                            <div className={`custom-input-like-scrollable border-0  border-secondary bg-light mt-2 mb-3 w-100 p-3`}>
+                                                {correctiveAnswer.question.question.questionText}
+                                            </div>
+
+                                           
 
                                         </div>
                                         <div>

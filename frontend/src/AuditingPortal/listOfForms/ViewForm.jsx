@@ -60,7 +60,7 @@ function ViewForm() {
                         const pageWidth = pdf.internal.pageSize.getWidth();
                         // pass the data URL to the pdf.addImage method
                         console.log(pageWidth);
-                        
+
                         pdf.addImage(dataURL, 'JPEG', ((pageWidth - 3) / 2), 2.5, 3, 3);
                         pdf.setFontSize(20);
                         pdf.text(`${user.Company.CompanyName}`, ((pageWidth - pdf.getTextWidth(user.Company.CompanyName)) / 2), (pdf.internal.pageSize.getHeight() / 2));
@@ -69,9 +69,9 @@ function ViewForm() {
                         const margins = 1; // Adjust margins as needed
                         const maxWidth = pageWidth - margins * 2; // Calculate usable width
                         const wrappedAddress = pdf.splitTextToSize(address, maxWidth);
-                        
+
                         const yStart = (pdf.internal.pageSize.getHeight() / 2) + 0.4; // Starting Y position
-                        
+
 
                         wrappedAddress.forEach((line, index) => {
                             const textWidth = pdf.getTextWidth(line);
@@ -195,7 +195,10 @@ function ViewForm() {
                                 <div className='w-100'>
                                     <p className='text-black'>Form Description</p>
                                     <div>
-                                        <input autoComplete='off' value={dataToSend?.FormDescription} className='w-100' name='FormDescription' type="text" readOnly />
+                                        <div className="custom-input-like-scrollable">
+                                            {dataToSend?.FormDescription}
+                                        </div>
+
                                     </div>
                                 </div>
                                 {questions.map((question, index) => {
@@ -207,9 +210,11 @@ function ViewForm() {
                                                 <div style={{
                                                     width: '100%'
                                                 }} className=' me-3 d-flex flex-column'>
-                                                    <input autoComplete='off' value={dataToSend?.questions[index]?.questionText} style={{
-                                                        borderRadius: '0px'
-                                                    }} name='questionText' className='border-bottom border-secondary bg-light mt-2 mb-3 w-100 p-3' readOnly />
+
+                                                    <div className="custom-input-like-scrollable border-bottom border-secondary bg-light mt-2 mb-3 w-100 p-3">
+                                                        {dataToSend?.questions[index]?.questionText}
+                                                    </div>
+
 
                                                 </div>
 
@@ -239,7 +244,12 @@ function ViewForm() {
                                                                             <th style={{
                                                                                 minWidth: '80px'
                                                                             }}>
-                                                                                <input autoComplete='off' value={dataToSend?.questions[index].columns[colIndex].colTitle} className={`bg-light border-bottom border-secondary d-inline py-0 px-1 mx-1 ${style.noRadius}`} type='text' required readOnly />
+
+                                                                                <div className={`custom-input-like-scrollable bg-light border-bottom border-secondary d-inline py-0 px-1 mx-1 ${style.noRadius}`}>
+                                                                                    {dataToSend?.questions[index].columns[colIndex].colTitle}
+                                                                                </div>
+
+
                                                                             </th>
                                                                         )
                                                                     })}
@@ -252,9 +262,12 @@ function ViewForm() {
                                                                         <tr>
                                                                             <td>
                                                                                 <span>{rowIndex + 1}.</span>
-                                                                                <input autoComplete='off' value={dataToSend?.questions[index].rows[rowIndex].rowTitle} name='rowTitle' type='text' style={{
-                                                                                    borderRadius: '0px'
-                                                                                }} className='bg-light border-bottom border-secondary  px-2 py-0 d-inline' readOnly />
+
+                                                                                <div className={`custom-input-like-scrollable bg-light border-bottom border-secondary  px-2 py-0 d-inline`}>
+                                                                                    {dataToSend?.questions[index].rows[rowIndex].rowTitle}
+                                                                                </div>
+
+
                                                                             </td>
                                                                             {questions[index]?.columns.map((colnum, colIndex) => {
                                                                                 return (
@@ -290,7 +303,12 @@ function ViewForm() {
                                                                             <th style={{
                                                                                 minWidth: '80px'
                                                                             }}>
-                                                                                <input autoComplete='off' value={dataToSend?.questions[index].columns[colIndex].colTitle} className={`bg-light border-bottom border-secondary d-inline py-0 px-1 mx-1 ${style.noRadius}`} type='text' required readOnly />
+
+                                                                                <div className={`custom-input-like-scrollable bg-light border-bottom border-secondary d-inline py-0 px-1 mx-1 ${style.noRadius}`}>
+                                                                                    {dataToSend?.questions[index].columns[colIndex].colTitle}
+                                                                                </div>
+
+
                                                                             </th>
                                                                         )
                                                                     })}
@@ -303,9 +321,12 @@ function ViewForm() {
                                                                         <tr>
                                                                             <td>
                                                                                 <span>{rowIndex + 1}.</span>
-                                                                                <input autoComplete='off' value={dataToSend?.questions[index].rows[rowIndex].rowTitle} name='rowTitle' type='text' style={{
-                                                                                    borderRadius: '0px'
-                                                                                }} className='bg-light border-bottom border-secondary  px-2 py-0 d-inline' readOnly />
+
+                                                                                <div className={`custom-input-like-scrollable bg-light border-bottom border-secondary  px-2 py-0 d-inline`}>
+                                                                                    {dataToSend?.questions[index].rows[rowIndex].rowTitle}
+                                                                                </div>
+
+
                                                                             </td>
                                                                             {questions[index]?.columns.map((colnum, colIndex) => {
                                                                                 return (
@@ -334,6 +355,11 @@ function ViewForm() {
 
 
                                                                 <span>{optindex + 1}.</span>
+
+                                                                <div className={`custom-input-like-scrollable bg-light border-bottom border-secondary w-50 px-2 py-0 d-inline`}>
+                                                                {dataToSend?.questions[index]?.options[optindex].optionText}
+                                                                </div>
+
 
                                                                 <input autoComplete='off' type='text' value={dataToSend?.questions[index]?.options[optindex].optionText} style={{
                                                                     borderRadius: '0px'

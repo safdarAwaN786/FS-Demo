@@ -198,9 +198,12 @@ function ActionOnCorrective() {
                                         <div style={{
                                             width: '100%'
                                         }} className=' me-3 d-flex flex-column'>
-                                            <input autoComplete='off' value={answer.Answer.question.questionText} style={{
-                                                borderRadius: '0px'
-                                            }} name='questionText' placeholder='Untitled Question' className='border-0  border-secondary bg-light mt-2 mb-3 w-100 p-3' required readOnly />
+
+                                            <div className={`custom-input-like-scrollable border-0  border-secondary bg-light mt-2 mb-3 w-100 p-3`}>
+                                            {answer.Answer.question.questionText}
+                                            </div>
+
+                                            
 
                                         </div>
                                         <div>
@@ -332,7 +335,7 @@ function ActionOnCorrective() {
                                         <div className='row p-3 mt-4'>
                                             <div className='col-lg-6 col-md-12'>
                                                 <p className='fw-bold'>Target Date : </p>
-                                                <input placeholder='write here..' value={dayjs(answer?.TargetDate).format('DD/MM/YYYY')}  rows={4} className='w-100 border-0 p-2 m-2' type='text' required />
+                                                <input placeholder='write here..' value={dayjs(answer?.TargetDate).format('DD/MM/YYYY')} rows={4} className='w-100 border-0 p-2 m-2' type='text' required />
                                             </div>
                                             <div className='col-lg-6 col-md-12'>
                                                 <p className='fw-bold'>Correction : </p>
@@ -391,7 +394,7 @@ function ActionOnCorrective() {
                     <div class={style.alertparent}>
                         <div class={style.alert}>
                             <div className='overflow-y-handler'>
-                            <p class={style.msg}>{dataToShow}</p>
+                                <p class={style.msg}>{dataToShow}</p>
                             </div>
                             <div className={style.alertbtns}>
                                 <button style={{

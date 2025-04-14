@@ -30,16 +30,16 @@ function RecordReport() {
 
 
     const makeRequest = () => {
-        if(selectedAnswers.length > 0){
+        if (selectedAnswers.length > 0) {
             dispatch(setSmallLoading(true))
-            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addReport`, { ConductAudit: idToWatch, SelectedAnswers: selectedAnswers, reportBy : user.Name }, { headers: { Authorization: `${user.Department._id}` } }).then(() => {
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addReport`, { ConductAudit: idToWatch, SelectedAnswers: selectedAnswers, reportBy: user.Name }, { headers: { Authorization: `${user.Department._id}` } }).then(() => {
                 dispatch(setSmallLoading(false))
                 Swal.fire({
                     title: 'Success',
                     text: 'Submitted Successfully',
                     icon: 'success',
                     confirmButtonText: 'Go!',
-                    
+
                 }).then((result) => {
                     if (result.isConfirmed) {
                         dispatch(updateTabData({ ...tabData, Tab: 'Non-Conformity Report' }))
@@ -60,7 +60,7 @@ function RecordReport() {
                 text: 'Kindly choose at least one question for Corrective Action!'
             })
         }
-            
+
     }
 
 
@@ -163,9 +163,12 @@ function RecordReport() {
                                         <div style={{
                                             width: '100%'
                                         }} className=' me-3 w-100 d-flex justify-content-between flex-row'>
-                                            <input autoComplete='off' value={answer.question.questionText} style={{
-                                                borderRadius: '0px'
-                                            }} name='questionText' placeholder='Untitled Question' className='border-0  border-secondary bg-light mt-2 mb-3 w-75 p-3' required readOnly />
+
+                                            <div className={`custom-input-like-scrollable border-0  border-secondary bg-light mt-2 mb-3 w-75 p-3`}>
+                                                {answer.question.questionText}
+                                            </div>
+
+
                                             <input autoComplete='off' style={{
                                                 cursor: 'pointer'
                                             }} className='mt-2' type='checkbox' onChange={(e) => {
@@ -277,7 +280,7 @@ function RecordReport() {
                                                     <label class="btn btn-outline-secondary m-2" for={`N/A-${index}`}>N/A</label>
                                                 </div>
                                             )}
-                                            <textarea value={answers[index].Remarks} rows={3} className='w-100 p-2 my-2' placeholder='Remarks...'  />
+                                            <textarea value={answers[index].Remarks} rows={3} className='w-100 p-2 my-2' placeholder='Remarks...' />
                                         </div>
                                         {selectedAnswers.some((ansObj) => ansObj.Answer === answer._id) && (
                                             <div>
@@ -303,9 +306,9 @@ function RecordReport() {
                                                 {answers[index].EvidenceDoc && (
                                                     <div className='d-flex flex-column w-50'>
                                                         <label>Evidence Document :</label>
-                                                        <a onClick={()=>{
-                                                                handleDownloadImage(answers[index].EvidenceDoc)
-                                                            }} className='btn btn-outline-danger' download>Download</a>
+                                                        <a onClick={() => {
+                                                            handleDownloadImage(answers[index].EvidenceDoc)
+                                                        }} className='btn btn-outline-danger' download>Download</a>
                                                     </div>
                                                 )}
                                             </div>
@@ -354,13 +357,13 @@ function RecordReport() {
                     <div class={style.alertparent}>
                         <div class={style.alert}>
                             <div className='overflow-y-handler'>
-                            <p class={style.msg}>{dataToShow}</p>
+                                <p class={style.msg}>{dataToShow}</p>
                             </div>
                             <div className={style.alertbtns}>
                                 <button style={{
-                                    marginLeft : '120px',
-                                    marginTop : '25px'
-                                }}  onClick={() => {
+                                    marginLeft: '120px',
+                                    marginTop: '25px'
+                                }} onClick={() => {
                                     setShowBox(false)
 
                                 }} className={style.btn1}>Ok.</button>

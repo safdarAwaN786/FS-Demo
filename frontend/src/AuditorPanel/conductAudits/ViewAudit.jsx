@@ -34,7 +34,7 @@ function ViewAudit() {
         dispatch(setSmallLoading(true))
         axios.get(`${process.env.REACT_APP_BACKEND_URL}/get-conduct-audit-by-auditId/${idToWatch}`).then((response) => {
             const clonedData = JSON.parse(JSON.stringify(response.data));
-            
+
             console.log(clonedData);
             setDataToSend(clonedData.data);
             setAuditData(clonedData.data);
@@ -51,7 +51,7 @@ function ViewAudit() {
             })
         })
     }, [])
- 
+
     const handleDownloadImage = async (imageURL) => {
         try {
             if (imageURL) {
@@ -140,7 +140,7 @@ function ViewAudit() {
                         const pageWidth = pdf.internal.pageSize.getWidth();
                         // pass the data URL to the pdf.addImage method
                         console.log(pageWidth);
-                        
+
                         pdf.addImage(dataURL, 'JPEG', ((pageWidth - 3) / 2), 2.5, 3, 3);
                         pdf.setFontSize(20);
                         pdf.text(`${user.Company.CompanyName}`, ((pageWidth - pdf.getTextWidth(user.Company.CompanyName)) / 2), (pdf.internal.pageSize.getHeight() / 2));
@@ -152,7 +152,7 @@ function ViewAudit() {
 
                         pdf.text(wrappedAddress, ((pageWidth - pdf.getTextWidth(address)) / 2), (pdf.internal.pageSize.getHeight() / 2) + 0.4);
 
-                        
+
                         pdf.setFontSize(15);
                         // pdf.setLineWidth(0.1); // Example line width
                         // pdf.line(0.1, (pdf.internal.pageSize.getHeight() / 2) + 1, pdf.internal.pageSize.getWidth() - 0.2, (pdf.internal.pageSize.getHeight() / 2) + 1)
@@ -179,7 +179,7 @@ function ViewAudit() {
 
     };
 
-    
+
 
     return (
         <>
@@ -222,9 +222,12 @@ function ViewAudit() {
                                             <div style={{
                                                 width: '100%'
                                             }} className=' me-3 d-flex flex-column'>
-                                                <input autoComplete='off' value={answer.question.questionText} style={{
-                                                    borderRadius: '0px'
-                                                }} name='questionText' placeholder='Untitled Question' className='border-0  border-secondary bg-light mt-2 mb-3 w-100 p-3' required readOnly />
+
+                                                <div className={`custom-input-like-scrollable border-0  border-secondary bg-light mt-2 mb-3 w-100 p-3`}>
+                                                {answer.question.questionText}
+                                                </div>
+
+                                                
 
                                             </div>
                                             <div>
@@ -338,7 +341,7 @@ function ViewAudit() {
 
                                                         <div className='d-flex flex-column w-50'>
                                                             <label>Evidence Document :</label>
-                                                            <a onClick={()=>{
+                                                            <a onClick={() => {
                                                                 handleDownloadImage(answer.EvidenceDoc)
                                                             }} className='btn btn-outline-danger' >Download</a>
                                                         </div>
@@ -364,7 +367,7 @@ function ViewAudit() {
                     </div>
                 </div>
             </div>
-            
+
         </>
     )
 }

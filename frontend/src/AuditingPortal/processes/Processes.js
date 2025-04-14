@@ -236,10 +236,15 @@ function Processes() {
                                 </div>
                                 <div className={`mx-auto my-2 ${style.ownerInput}`}>
                                     <p>Designation</p>
-                                    <input autoComplete='off' value={ownerInfo.Designation} className={`p-2 w-100`} readOnly />
+                                    <div className="custom-input-like-scrollable">
+                                        {ownerInfo.Designation}
+                                    </div>
+
                                 </div>
                                 <div className={`mx-auto my-2 ${style.ownerInput}`}>
                                     <p>Phone</p>
+                                    
+
                                     <input autoComplete='off' className={`p-2 w-100`} value={ownerInfo.PhoneNumber} readOnly />
                                 </div>
                                 <div className={`mx-auto my-2 ${style.ownerInput}`}>

@@ -73,7 +73,10 @@ function ShowFormAnswers() {
                             <div className='w-100'>
                                 <p className='text-black'>Form Description</p>
                                 <div>
-                                    <input autoComplete='off' value={dataToSend?.Form.FormDescription} className='w-100' name='FormDescription' type="text" readOnly />
+                                    <div className="custom-input-like-scrollable">
+                                        {dataToSend?.Form?.FormDescription}
+                                    </div>
+
                                 </div>
                             </div>
                             {answers?.map((answer, index) => {
@@ -94,13 +97,19 @@ function ShowFormAnswers() {
                                         {(answer.question.questionType === 'ShortText') && (
                                             <div className='pe-4'>
                                                 <span>Short Answer :</span>
-                                                <input autoComplete='off' value={answer.shortTextAnswer} className='bg-light border-bottom border-secondary py-1 my-1  w-100' type='text' readOnly />
+                                                <div className="custom-input-like-scrollable bg-light border-bottom border-secondary py-1 my-1  w-100">
+                                                    {answer.shortTextAnswer}
+                                                </div>
+
                                             </div>
                                         )}
                                         {(answer.question.questionType === 'LongText') && (
                                             <div className='pe-4'>
                                                 <span>Long Answer :</span>
-                                                <textarea value={answer.longTextAnswer} rows={3} name='longTextAnswer' className='w-100 bg-light border-0 p-1 border-bottom border-secondary' readOnly />
+                                                <div className='custom-input-like-scrollable w-100 bg-light border-0 p-1 border-bottom border-secondary'>
+                                                    {answer.longTextAnswer}
+                                                </div>
+
                                             </div>
                                         )}
                                         {(answer.question.questionType === 'Multiplechoicegrid') && (
@@ -117,7 +126,10 @@ function ShowFormAnswers() {
                                                                         <th style={{
                                                                             minWidth: '80px'
                                                                         }}>
-                                                                            <input autoComplete='off' value={column.colTitle} className={`bg-light border-bottom border-secondary d-inline py-0 px-1 mx-1 ${style.noRadius}`} type='text' readOnly />
+                                                                            <div className={`custom-input-like-scrollable bg-light border-bottom border-secondary d-inline py-0 px-1 mx-1 ${style.noRadius}`}>
+                                                                                {column.colTitle}
+                                                                            </div>
+
                                                                         </th>
                                                                     )
                                                                 })}
@@ -129,13 +141,15 @@ function ShowFormAnswers() {
                                                                     <tr>
                                                                         <td>
                                                                             <span>{rowIndex + 1}.</span>
-                                                                            <input autoComplete='off' value={row.rowTitle} name='rowTitle' type='text' style={{
-                                                                                borderRadius: '0px'
-                                                                            }} className='bg-light border-bottom border-secondary  px-2 py-0 d-inline' readOnly />
+                                                                            <div className={`custom-input-like-scrollable bg-light border-bottom border-secondary  px-2 py-0 d-inline`}>
+                                                                                {row.rowTitle}
+                                                                            </div>
+
                                                                         </td>
                                                                         {answer.question?.columns.map((colnum, colIndex) => {
                                                                             return (
                                                                                 <td>
+
                                                                                     <input autoComplete='off' style={{
                                                                                         width: '20px',
                                                                                         height: '20px'
@@ -165,7 +179,10 @@ function ShowFormAnswers() {
                                                                         <th style={{
                                                                             minWidth: '80px'
                                                                         }}>
-                                                                            <input autoComplete='off' value={column.colTitle} className={`bg-light border-bottom border-secondary d-inline py-0 px-1 mx-1 ${style.noRadius}`} type='text' readOnly />
+                                                                            <div className={`custom-input-like-scrollable bg-light border-bottom border-secondary d-inline py-0 px-1 mx-1 ${style.noRadius}`}>
+                                                                                {column.colTitle}
+                                                                            </div>
+
                                                                         </th>
                                                                     )
                                                                 })}
@@ -177,9 +194,10 @@ function ShowFormAnswers() {
                                                                     <tr>
                                                                         <td>
                                                                             <span>{rowIndex + 1}.</span>
-                                                                            <input autoComplete='off' value={row.rowTitle} type='text' style={{
-                                                                                borderRadius: '0px'
-                                                                            }} className='bg-light border-bottom border-secondary  px-2 py-0 d-inline' readOnly />
+                                                                            <div className={`custom-input-like-scrollable bg-light border-bottom border-secondary  px-2 py-0 d-inline`}>
+                                                                                {row.rowTitle}
+                                                                            </div>
+
                                                                         </td>
                                                                         {answer.question?.columns.map((colnum, colIndex) => {
                                                                             return (
@@ -216,9 +234,11 @@ function ShowFormAnswers() {
                                                 {answer.question?.options?.map((option, optindex) => {
                                                     return (
                                                         <div className='my-2 d-flex flex-row'>
-                                                            <input autoComplete='off' checked={answer.CheckboxesAnswers.includes(option.optionText)} className='mx-2 mt-1' type='checkbox' readOnly />                                               <input autoComplete='off' type='text' value={option.optionText} style={{
-                                                                borderRadius: '0px'
-                                                            }} name='optionText' className='bg-light border-bottom border-secondary w-50 px-2 py-0 d-inline' readOnly />
+                                                            <input autoComplete='off' checked={answer.CheckboxesAnswers.includes(option.optionText)} className='mx-2 mt-1' type='checkbox' readOnly />
+                                                            <div className={`custom-input-like-scrollable bg-light border-bottom border-secondary w-50 px-2 py-0 d-inline`}>
+                                                                {option.optionText}
+                                                            </div>
+
                                                         </div>
                                                     )
                                                 })}
@@ -232,9 +252,12 @@ function ShowFormAnswers() {
                                                             <input autoComplete='off' checked={(answer.multipleChoiceAnswer === option.optionText)} style={{
                                                                 width: '23px'
                                                             }} className='mx-2' type='radio' name={`question-${index}`} readOnly />
-                                                            <input autoComplete='off' type='text' value={option.optionText} style={{
-                                                                borderRadius: '0px'
-                                                            }} name='optionText' className='bg-light border-bottom border-secondary w-50 px-2 py-0 d-inline' readOnly />
+
+
+                                                            <div className={`custom-input-like-scrollable bg-light border-bottom border-secondary w-50 px-2 py-0 d-inline`}>
+                                                                {option.optionText}
+                                                            </div>
+
                                                         </div>
                                                     )
                                                 })}
