@@ -51,7 +51,15 @@ function Checked() {
             setMonthTrainings(monthToShow?.Trainings)
         }
     }
+    const nextPage = () => {
+        setStartIndex(startIndex + 8);
+        setEndIndex(endIndex + 8);
+    }
 
+    const backPage = () => {
+        setStartIndex(startIndex - 8);
+        setEndIndex(endIndex - 8);
+    }
 
 
 
@@ -123,6 +131,18 @@ function Checked() {
                     }
                 </table>
             </div>
+                <div className={style.Btns}>
+                    {startIndex > 0 && (
+                        <button onClick={backPage}>
+                            {'<< '}Back
+                        </button>
+                    )}
+                    {monthTrainings?.length > endIndex && (
+                        <button onClick={nextPage}>
+                            next{'>> '}
+                        </button>
+                    )}
+                </div>
             
 
         </>
