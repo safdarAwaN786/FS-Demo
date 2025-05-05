@@ -189,6 +189,25 @@ function ViewChecklist() {
                     }}>
                         <div className={`${style.myBox} pb-4`}>
                             <div className={style.formDivider}>
+                                <div className={style.sec2}>
+                                    <div className={style.inputParent}>
+                                        <div className={style.para}>
+                                            <p>Title</p>
+                                        </div>
+                                        <div className="border border-dark-subtle">
+                                            <input
+                                                type="text"
+                                                className="form-control form-control-lg"
+                                                name="title"
+                                                autoComplete="off"
+                                                placeholder="Enter title"
+                                                required
+                                                readOnly
+                                                value={dataToSend?.title}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
                                 <div className={style.sec1}>
                                     <div className={style.inputParent}>
                                         <div className={style.para}>
@@ -224,10 +243,10 @@ function ViewChecklist() {
                                                 }} className=' me-3 d-flex flex-column'>
 
                                                     <div className={`custom-input-like-scrollable border-0  border-secondary bg-light mt-2 mb-3 w-100 p-3`}>
-                                                    {question.questionText}
+                                                        {question.questionText}
                                                     </div>
 
-                                                   
+
                                                 </div>
                                                 <div>
                                                     <b>Compliance Type :</b> {question.ComplianceType}

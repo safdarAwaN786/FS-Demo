@@ -2,90 +2,102 @@ const express = require('express');
 const router = express.Router();
 const Notification = require('../../models/ManagementRev/NotificationModel').Notification;
 const { Agenda } = require('../../models/ManagementRev/NotificationModel');
-require('dotenv').config()
 const nodemailer = require('nodemailer');
 const smtpTransport = require('nodemailer-smtp-transport');
-const emailTemplates = require('../../EmailTemplates/userNotification.json');
-const template = emailTemplates.newNotification;
+const ejs = require('ejs');
 const authMiddleware = require('../../middleware/auth');
 const Participants = require('../../models/ManagementRev/ParticipantsModel');
+require('dotenv').config();
 
-// router.use(authMiddleware);
-
+// Email transporter setup
 const transporter = nodemailer.createTransport(smtpTransport({
   host: process.env.host,
-  port: process.env.port,
+  port: Number(process.env.port) || 587,
+  secure: false,
   auth: {
     user: process.env.email,
     pass: process.env.pass
   }
 }));
 
-// * Create a new Notification document
 router.post('/create-notification', async (req, res) => {
-  console.log('request To Create Notification');
   try {
-    const notificationToCreate = {
-      ...req.body
-    }
+    const notificationData = req.body;
 
-    console.log(notificationToCreate);
+    // Format agenda details for email
+    const agendaDetails = notificationData.Agendas.map(item =>
+      `\nAgenda Name:  ${item.Name}\nAgenda Description:  ${item.Description}`
+    ).join('\n\n');
 
-    const agendaDetails = notificationToCreate.Agendas.map(item => `\nAgenda Name:  ${item.Name}\nAgenda Description:  ${item.Description}`).join('\n\n');
-
-    // Send emails to participants
-    const participantEmails = await Promise.all(
-      notificationToCreate.Participants.map(async (participantId) => {
-        const participantObj = await Participants.findById(participantId);
-        console.log(participantObj);
-        return participantObj.Email
-      }))
-    console.log(participantEmails);
-    const mailOptions = {
-      from: process.env.email,
-      to: participantEmails.join(','),
-      subject: template.subject,
-      text: template.body
-        .replace('{{venue}}', notificationToCreate.Venue)
-        .replace('{{mrmNo}}', notificationToCreate.MRMNo)
-        .replace('{{date}}', notificationToCreate.Date)
-        .replace('{{time}}', notificationToCreate.Time)
-        .replace('{{agenda}}', agendaDetails)
-    };
-
-    // Send emails
-    transporter.sendMail(mailOptions, async function (error, info) {
-      if (error) {
-        console.error('Error sending email:', error);
-        return res.status(500).json({ message: 'Error sending email', error: error.message });
-      } else {
-        console.log('Email sent: ' + info.response);
-      }
+    // Fetch participant emails
+    const participants = await Participants.find({
+      _id: { $in: notificationData.Participants }
     });
-    let agendaIds = [];
 
-    Agenda.create(notificationToCreate.Agendas, (err, createdAgendas) => {
+    const participantEmails = participants.map(p => p.Email);
+
+    // Path to the EJS email template
+    const templatePath = 'src/EmailTemplates/notificationEmail.ejs';  // Update this to your template path
+console.log("notificationData", notificationData);
+
+    // Render the EJS template with dynamic data
+    ejs.renderFile(templatePath, {
+      venue: notificationData.Venue,
+      mrmNo: notificationData.MRMNo,
+      date: notificationData.Date,
+      time: notificationData.Time,
+      agendas: notificationData.Agendas,  // Array of agendas
+    }, (err, emailBody) => {
       if (err) {
-        console.log(err);
-        return res.status(500).json({ message: 'Error sending email', error: err.message });
-      } else {
-        console.log(createdAgendas);
-        agendaIds = createdAgendas.map(agenda => agenda._id);
-        const notificationToSave = new Notification({
-          ...notificationToCreate,
-          Agendas: agendaIds,
-          UserDepartment: req.header('Authorization')
-        })
-        notificationToSave.save().then(() => {
-          console.log('Saved' + notificationToSave);
-          res.status(201).json({ status: true, message: "Notification document created and Email Sent successfully", data: notificationToSave });
-        })
+        console.error('Error rendering EJS template:', err);
+        return res.status(500).json({ message: 'Error rendering email template', error: err.message });
       }
-    })
+
+      // Set up the mail options
+      const mailOptions = {
+        from: process.env.email, // Sender email address
+        to: participantEmails.join(','), // Recipient's email address
+        subject: 'New Meeting Notification', // Email subject
+        html: emailBody // Use the rendered HTML from EJS
+      };
+
+      // Send the email
+      transporter.sendMail(mailOptions, async function (error, info) {
+        if (error) {
+          console.error('Error sending email:', error);
+          return res.status(500).json({ message: 'Error sending email', error: error.message });
+        } else {
+          console.log('Email sent: ' + info.response);
+
+          // Save Agendas
+          const createdAgendas = await Agenda.create(notificationData.Agendas);
+          const agendaIds = createdAgendas.map(a => a._id);
+
+          // Create notification document
+          const notificationToSave = new Notification({
+            ...notificationData,
+            Agendas: agendaIds,
+            UserDepartment: req.header('Authorization') // or get it from auth middleware
+          });
+
+          await notificationToSave.save();
+
+          return res.status(201).json({
+            status: true,
+            message: 'Notification created and emails sent successfully',
+            data: notificationToSave
+          });
+        }
+      });
+    });
 
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Error creating Notification document', error: error.message });
+    console.error('Error in /create-notification:', error);
+    return res.status(500).json({
+      status: false,
+      message: 'Failed to create notification',
+      error: error.message
+    });
   }
 });
 
@@ -93,7 +105,7 @@ router.post('/create-notification', async (req, res) => {
 router.get('/get-all-notifications', async (req, res) => {
   try {
 
-    const notifications = await Notification.find({UserDepartment : req.header('Authorization')}).populate('Agendas').populate('Participants').populate('UserDepartment').select('-__v').sort({ createdAt: -1 });
+    const notifications = await Notification.find({ UserDepartment: req.header('Authorization') }).populate('Agendas').populate('Participants').populate('UserDepartment').select('-__v').sort({ createdAt: -1 });
 
     if (!notifications) {
       console.log('Notification documents not found');

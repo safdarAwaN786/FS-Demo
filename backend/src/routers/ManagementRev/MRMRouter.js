@@ -7,11 +7,11 @@ const { Agenda } = require('../../models/ManagementRev/NotificationModel');
 const ParticipantModel = require('../../models/ManagementRev/ParticipantsModel');
 const nodemailer = require('nodemailer');
 const smtpTransport = require('nodemailer-smtp-transport');
+const ejs = require('ejs');
 const emailTemplates = require('../../EmailTemplates/userMRM.json');
 const template = emailTemplates.newMRMDiscussion;
 
-// router.use(authMiddleware);
-
+// Create transporter for sending email
 const transporter = nodemailer.createTransport(smtpTransport({
   host: process.env.host,
   port: process.env.port,
@@ -22,11 +22,12 @@ const transporter = nodemailer.createTransport(smtpTransport({
 }));
 
 // * Create a new MRM document
+
 router.post('/create-mrm', async (req, res) => {
   try {
     const { Notification, AgendaDetails } = req.body;
 
-    // Find the Notification by ID and populate relevant fields
+    // Find the Notification by ID
     const notification = await NotificationModel.findById(Notification);
 
     // Create a new MRM document
@@ -36,12 +37,22 @@ router.post('/create-mrm', async (req, res) => {
       AgendaDetails,
     });
 
+    // Process each agenda and send emails to participants
     for (let index = 0; index < createdMRM.AgendaDetails.length; index++) {
-
       const agenda = createdMRM.AgendaDetails[index];
-      const agendaData = await Agenda.findById(agenda.Agenda);
-      const mrmDetails = (`\nAgenda Name:  ${agendaData.Name} \nTarget Date:  ${agenda.TargetDate} \nDiscussion : ${agenda.Discussion} \nResponsibilities : ${agenda.Responsibilities}`);
+      
+      // Correct population - get the Agenda document
+      const agendaData = await Agenda.findById(agenda.Agenda)
+        .select('Name Description');  // Only these fields exist in Agenda schema
 
+      const mrmDetails = {
+        agendaName: agendaData.Name || 'No agenda name provided',
+        targetDate: agenda.TargetDate || 'No target date provided',  // Note: TargetDate comes from agenda, not agendaData
+        discussion: agenda.Discussion || 'No discussion provided',   // These fields are in AgendaDetails
+        responsibilities: agenda.Responsibilities || 'No responsibilities provided'
+      };
+
+      // Fetch participant emails
       const participantEmails = await Promise.all(
         agenda.Participants.map(async (participantId) => {
           const participant = await ParticipantModel.findById(participantId);
@@ -51,38 +62,65 @@ router.post('/create-mrm', async (req, res) => {
 
       // Check if there are participants before constructing the email
       if (participantEmails.length > 0) {
-        const mailOptions = {
-          from: process.env.email,
-          to: participantEmails.join(','),
-          subject: template.subject,
-          text: template.body
-            .replace('{{mrmDetails}}', mrmDetails)
-        };
+        // Path to the EJS email template
+        const templatePath = 'src/EmailTemplates/mrmEmailTemplate.ejs';
 
-        transporter.sendMail(mailOptions, function (error, info) {
-          if (error) {
-            console.error('Error sending email:', error);
-            res.status(500).json({ message: 'Error creating MRM document', error: error.message });
-          } else {
-            console.log('Email sent: ' + info.response);
+        console.log("mrmDetails", mrmDetails);
+
+        // Render the EJS template with dynamic data
+        ejs.renderFile(templatePath, {
+          agendaName: mrmDetails.agendaName,
+          targetDate: mrmDetails.targetDate,
+          discussion: mrmDetails.discussion,
+          responsibilities: mrmDetails.responsibilities
+        }, (err, emailBody) => {
+          if (err) {
+            console.error('Error rendering EJS template:', err);
+            return res.status(500).json({ message: 'Error rendering email template', error: err.message });
           }
+
+          // Set up the mail options
+          const mailOptions = {
+            from: process.env.email,
+            to: participantEmails.join(','),
+            subject: template.subject,
+            html: emailBody
+          };
+
+          // Send the email
+          transporter.sendMail(mailOptions, function (error, info) {
+            if (error) {
+              console.error('Error sending email:', error);
+              return res.status(500).json({ message: 'Error sending email', error: error.message });
+            } else {
+              console.log('Email sent: ' + info.response);
+            }
+          });
         });
       } else {
         console.log('No participants found. Skipping email sending.');
       }
     }
-    createdMRM.save();
-    res.status(200).json({ status: true, message: "MRM document created successfully", data: createdMRM });
+
+    // Save the MRM document
+    await createdMRM.save();
+
+    res.status(200).json({
+      status: true,
+      message: "MRM document created successfully",
+      data: createdMRM
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Error creating MRM document', error: error.message });
   }
 });
 
+
 // * Get all MRM documents
 router.get('/get-all-mrms', async (req, res) => {
   try {
-    const mrms = await MRM.find({UserDepartment : req.header('Authorization')}).populate('Notification').populate('UserDepartment').populate({
+    const mrms = await MRM.find({ UserDepartment: req.header('Authorization') }).populate('Notification').populate('UserDepartment').populate({
       path: 'AgendaDetails.Agenda',
       model: 'Agenda'
     }).populate({

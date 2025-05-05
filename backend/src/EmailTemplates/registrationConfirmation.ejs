@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Welcome to FSQ360</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f9;
+      }
+
+      a {
+        color: white !important;
+      }
+
+      .email-container {
+        width: 100%;
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+      }
+
+      .header {
+        background-color: #1e3a8a; /* Blue color */
+        color: #ffffff;
+        padding: 20px;
+        text-align: center;
+      }
+
+      .header h1 {
+        margin: 0;
+        font-size: 24px;
+      }
+
+      .content {
+        padding: 30px;
+        color: #333333;
+      }
+
+      .content h2 {
+        color: #1e3a8a;
+      }
+
+      .content p {
+        line-height: 1.6;
+        font-size: 16px;
+      }
+
+      .content a {
+        color: #1e3a8a;
+        text-decoration: none;
+        font-weight: bold;
+      }
+
+      .button {
+        display: inline-block;
+        background-color: #1e3a8a; /* Button Blue */
+        color: white;
+        padding: 12px 20px;
+        font-size: 16px;
+        text-decoration: none;
+        border-radius: 5px;
+        text-align: center;
+        margin-top: 20px;
+      }
+
+      .footer {
+        background-color: #f1f1f1;
+        text-align: center;
+        padding: 20px;
+        color: #777777;
+      }
+
+      .footer p {
+        font-size: 14px;
+      }
+
+      .footer a {
+        color: #1e3a8a;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="email-container">
+      <div class="header">
+        <h1>Welcome to FSQ360!</h1>
+      </div>
+
+      <div class="content">
+        <h2>Hi <%= name %>,</h2>
+        <p>Welcome to FSQ360 – we're excited to have you on board!</p>
+        <p>
+          Your account has been successfully created. You can now access the
+          platform and get started.
+        </p>
+
+        <p>Here are your login details:</p>
+        <ul>
+          <li><strong>Username:</strong> <%= username %></li>
+          <li><strong>Temporary Password:</strong> <%= password %></li>
+        </ul>
+
+        <p>To log in, please click the button below:</p>
+        <a href="https://fs-demo.vercel.app/login" class="button"
+          >Click Here to Login</a
+        >
+
+        <p>
+          Please log in using the link above and change your password at your
+          earliest convenience.
+        </p>
+
+        <p>
+          Thank you for choosing FSQ360 – we look forward to supporting your
+          success!
+        </p>
+        <p>
+          Warm regards,<br />Team FSQ-360<br /><em
+            >"Digitalizing Food Safety – Seamlessly."</em
+          >
+        </p>
+      </div>
+
+      <div class="footer">
+        <p>
+          <em
+            >*Please do not reply to this email. This is a computer-generated
+            email.</em
+          >
+        </p>
+      </div>
+    </div>
+  </body>
+</html>

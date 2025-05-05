@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
-const AgendaSchema = new mongoose.Schema({
+// * Agenda Schema Definition
+const AgendaSchema = new Schema({
     Name: {
         type: String,
         required: true
@@ -9,29 +10,29 @@ const AgendaSchema = new mongoose.Schema({
     Description: {
         type: String
     }
-})
+});
 
+// * Agenda Model Creation
 const Agenda = mongoose.model('Agenda', AgendaSchema);
 
-
-// * Creation of Notification Schema
-const NotificationSchema = new mongoose.Schema({
-
+// * Notification Schema Definition
+const NotificationSchema = new Schema({
     Venue: {
         type: String
     },
 
     UserDepartment: {
         type: Schema.Types.ObjectId,
-        ref: 'Department',
+        ref: 'Department', // Ensure this model exists as well
     },
+
     MRMNo: {
         type: String
     },
 
     Agendas: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Agenda'
+        ref: 'Agenda' // Reference to Agenda model
     }],
 
     Date: {
@@ -44,7 +45,7 @@ const NotificationSchema = new mongoose.Schema({
 
     Participants: [{
         type: Schema.Types.ObjectId,
-        ref: 'Participants',
+        ref: 'Participants', // Ensure this model exists as well
     }],
 
     CreatedBy: {
@@ -62,12 +63,12 @@ const NotificationSchema = new mongoose.Schema({
     UpdationDate: {
         type: Date
     }
-
 }, {
-    timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
-
+    timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }
 });
 
-// * Creation of model
+// * Notification Model Creation
 const Notification = mongoose.model('Notification', NotificationSchema);
-module.exports = {Notification,  Agenda };
+
+// Export models
+module.exports = { Notification, Agenda };

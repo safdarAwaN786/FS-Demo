@@ -126,7 +126,7 @@
   } */
   
   .table {
-    width: 600px;
+    width: 500px;
     position: relative;
     z-index: 0;
   }
@@ -140,7 +140,7 @@
   .headers > td {
     display: flex;
     height: 44px;
-    padding: 12px 24px;
+    padding: 12px 8px;
     align-items: center;
     gap: 12px;
     align-self: stretch;
@@ -234,7 +234,7 @@
     width: 200px;
   } */
   .tablebody>td {
-    padding: 30px 24px;
+    padding: 30px 2px;
     font-family: 'Inter';
     font-size: 13px;
     height: 100px;

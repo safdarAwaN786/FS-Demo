@@ -30,6 +30,11 @@ const ChecklistQuestionModel = mongoose.model('ChecklistQuestion', ChecklistQues
 // Form schema
 const ChecklistSchema = new mongoose.Schema({
 
+  title: {
+    type: String,
+    required: true,
+  },
+
   ChecklistId: {
     type: String,
     unique: true,
@@ -48,8 +53,8 @@ const ChecklistSchema = new mongoose.Schema({
   },
 
   ChecklistQuestions: [{
-    type : Schema.Types.ObjectId,
-    ref : 'ChecklistQuestion'
+    type: Schema.Types.ObjectId,
+    ref: 'ChecklistQuestion'
   }],
 
   RevisionNo: {
@@ -57,9 +62,9 @@ const ChecklistSchema = new mongoose.Schema({
     default: 0
   },
 
-  UserDepartment : {
-    type : Schema.Types.ObjectId,
-    ref : 'Department'
+  UserDepartment: {
+    type: Schema.Types.ObjectId,
+    ref: 'Department'
   },
 
   Status: {
@@ -137,7 +142,7 @@ ChecklistSchema.pre('save', async function (next) {
     this.ChecklistId = `${department.Company.ShortName}/${department.ShortName}/${documentTypeNumber}/${nextNumericPart.toString().padStart(3, '0')}`;
     console.log('Generated ChecklistId:', this.ChecklistId);
     next();
-    
+
   } catch (error) {
     next(error);
   }
@@ -145,4 +150,4 @@ ChecklistSchema.pre('save', async function (next) {
 
 // * Creation of model
 const Checklists = mongoose.model('Checklist', ChecklistSchema);
-module.exports = {Checklists, ChecklistQuestionModel};
+module.exports = { Checklists, ChecklistQuestionModel };

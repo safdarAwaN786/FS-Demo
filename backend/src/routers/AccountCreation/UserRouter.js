@@ -1,21 +1,19 @@
-const express = require('express')
-const router = express.Router()
-const User = require('../../models/AccountCreation/UserModel')
-const Company = require('../../models/AccountCreation/CompanyModel')
-const Department = require('../../models/AccountCreation/DepartmentModel')
-const ProcessOwner = require('../../models/InternalAudit/ProcessOwnerModel')
+const express = require('express');
+const router = express.Router();
+const User = require('../../models/AccountCreation/UserModel');
+const Company = require('../../models/AccountCreation/CompanyModel');
+const Department = require('../../models/AccountCreation/DepartmentModel');
+const ProcessOwner = require('../../models/InternalAudit/ProcessOwnerModel');
 const HaccpTeam = require('../../models/HACCP/HaccpTeamModel');
 const nodemailer = require('nodemailer');
 const smtpTransport = require('nodemailer-smtp-transport');
-const emailTemplates = require('../../EmailTemplates/userEmail.json');
-const template = emailTemplates.registrationConfirmation;
+const ejs = require('ejs'); // Include EJS
 require('dotenv').config();
-const CryptoJS = require('crypto-js')
+const CryptoJS = require('crypto-js');
 const jwt = require('jsonwebtoken');
-const authMiddleware = require('../../middleware/auth')
-// router.use(authMiddleware);
+const authMiddleware = require('../../middleware/auth');
 
-
+// Setup email transporter
 const transporter = nodemailer.createTransport(smtpTransport({
   host: process.env.host,
   port: process.env.port,
@@ -25,10 +23,10 @@ const transporter = nodemailer.createTransport(smtpTransport({
   }
 }));
 
-// * Create a new User document or update existing
+// Create a new User document or update existing
 router.post('/create-user', async (req, res) => {
   try {
-    console.log('User for creation came');
+    console.log('User for creation cameee');
     const { companyId, departmentId } = req.body;
 
     // Check if the company with the given ID exists
@@ -47,11 +45,8 @@ router.post('/create-user', async (req, res) => {
       return res.status(404).json({ message: 'Department not found or does not belong to the company' });
     }
 
-
-
     const addedUsers = await Promise.all(
       req.body.Users.map(async (user) => {
-
 
         // Check if the user with the given username already exists
         const existingUser = await User.findOne({ Company: companyId, UserName: user.UserName });
@@ -60,6 +55,7 @@ router.post('/create-user', async (req, res) => {
           return res.status(201).json({ status: true, message: 'User already exists!' });
         }
         const password = user.Password;
+
         // Create a new user
         const newUser = new User({
           Department: department?._id,
@@ -68,36 +64,47 @@ router.post('/create-user', async (req, res) => {
           Password: CryptoJS.AES.encrypt(password, process.env.PASS_CODE).toString()
         });
 
-        // Send email to the new user
-        const emailBody = template.body.replace('{{name}}', newUser.Name)
-          .replace('{{username}}', newUser.UserName)
-          .replace('{{password}}', password);
-
-        const mailOptions = {
-          from: process.env.email, // Sender email address
-          to: newUser.Email, // Recipient's email address
-          subject: template.subject,
-          text: emailBody
-        };
-
-        transporter.sendMail(mailOptions, function (error, info) {
-          if (error) {
-            console.error('Error sending email:', error);
-            return res.status(500).json({ message: 'Error sending email', error: error.message });
-          } else {
-            console.log('Email sent: ' + info.response);
-            // Save the new user after sending email
-            newUser.save().then(() => {
-              return newUser;
-            }).catch((error) => {
-              console.error(error);
-              res.status(500).json({ message: 'Error adding user', error: error.message });
-            });
+        // Path to the EJS email template
+        const templatePath = 'src/EmailTemplates/registrationConfirmation.ejs';  // Update this to your template path
+        console.log('templatePath', templatePath);
+        // Render the EJS template with dynamic data
+        ejs.renderFile(templatePath, {
+          name: newUser.Name,
+          username: newUser.UserName,
+          password: user.Password,
+        }, (err, emailBody) => {
+          if (err) {
+            console.error('Error rendering EJS template:', err);
+            return res.status(500).json({ message: 'Error rendering email template', error: err.message });
           }
+
+          // Set up the mail options
+          const mailOptions = {
+            from: process.env.email, // Sender email address
+            to: newUser.Email, // Recipient's email address
+            subject: 'Welcome to Our Platform', // Email subject
+            html: emailBody // Use the rendered HTML from EJS
+          };
+
+          // Send the email
+          transporter.sendMail(mailOptions, function (error, info) {
+            if (error) {
+              console.error('Error sending email:', error);
+              return res.status(500).json({ message: 'Error sending email', error: error.message });
+            } else {
+              console.log('Email sent: ' + info.response);
+              // Save the new user after sending email
+              newUser.save().then(() => {
+                return newUser;
+              }).catch((error) => {
+                console.error(error);
+                res.status(500).json({ message: 'Error adding user', error: error.message });
+              });
+            }
+          });
         });
-
-      }))
-
+      })
+    );
 
     res.status(201).json({ status: true, message: "user created successfully", data: addedUsers });
   } catch (error) {
@@ -105,6 +112,7 @@ router.post('/create-user', async (req, res) => {
     res.status(500).json({ message: 'Error adding user', error: error.message });
   }
 });
+
 
 // * Get a User document by User ID
 router.get('/get-user', authMiddleware, async (req, res) => {

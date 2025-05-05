@@ -1,6 +1,6 @@
 {
     "registrationConfirmation": {
-        "subject": "Feat Tech System Credentials!",
-        "body": "Welcome to our System!\n\nDear {{name}},\nUser Name:  {{username}}\nPassword:  {{password}}\n\n\n\n\nRegards,\nFeat Tech Team,\n\n\n\n\n\n*Please do not reply to this email. This is a computer-generated email."
+        "subject": "Welcome to FSQ360 - Your Account is Ready!",
+        "body": "Hi {{name}},\n\nWelcome to FSQ360 – we're excited to have you on board!\n\nYour account has been successfully created. You can now access the platform and get started.\n\nHere are your login details:\nUsername: {{username}}\nTemporary Password: {{password}}\nLogin URL: https://fs-demo.vercel.app/login\n\nPlease log in using the link above and change your password at your earliest convenience.\n\nThank you for choosing FSQ360 – we look forward to supporting your success!\n\nWarm regards,\nTeam FSQ-360\n\"Digitalizing Food Safety – Seamlessly.\"\n\n\n*Please do not reply to this email. This is a computer-generated email."
     }
 }

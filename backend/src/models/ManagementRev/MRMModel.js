@@ -1,9 +1,8 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
-// * Creation of MRM Schema
+// Creation of MRM Schema
 const MRMSchema = new mongoose.Schema({
-    // Reference to Notification model to store MRM numbers and agendas
     Notification: {
         type: Schema.Types.ObjectId,
         ref: 'Notification',
@@ -13,14 +12,12 @@ const MRMSchema = new mongoose.Schema({
         type: Schema.Types.ObjectId,
         ref: 'Department',
     },
-
-    // Agenda details for the MRM
     AgendaDetails: [{
-       Agenda : {
-        type: Schema.Types.ObjectId,
-        ref: 'Agenda',
-        required: true
-       },
+        Agenda: {
+            type: Schema.Types.ObjectId,
+            ref: 'Agenda',  // Reference to the Agenda model
+            required: true
+        },
         TargetDate: {
             type: Date
         },
@@ -35,19 +32,15 @@ const MRMSchema = new mongoose.Schema({
             ref: 'Participants'
         }],
     }],
-
     CreatedBy: {
         type: String
     },
-
     CreationDate: {
         type: Date
     },
-
     UpdatedBy: {
         type: String
     },
-
     UpdationDate: {
         type: Date
     }
@@ -56,6 +49,6 @@ const MRMSchema = new mongoose.Schema({
     timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }
 });
 
-// * Creation of model
+// Creation of MRM model
 const MRM = mongoose.model('MRM', MRMSchema);
 module.exports = MRM;
