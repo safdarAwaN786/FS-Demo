@@ -12,13 +12,13 @@ const UserSchema = new mongoose.Schema({
 
     PhoneNumber: {
         type: Number,
-        validate: {
-            validator: function (PhoneNumber) {
-                const phoneNumberString = PhoneNumber.toString();
-                return phoneNumberString.length <= 11;
-            },
-            message: 'Phone number must have a maximum of 11 digits.',
-        },
+        // validate: {
+        //     validator: function (PhoneNumber) {
+        //         const phoneNumberString = PhoneNumber.toString();
+        //         return phoneNumberString.length <= 11;
+        //     },
+        //     message: 'Phone number must have a maximum of 11 digits.',
+        // },
     },
 
     Qualification: {

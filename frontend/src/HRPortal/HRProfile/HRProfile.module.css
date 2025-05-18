@@ -46,7 +46,7 @@
   width: 17.5%;
 }
 .profile {
-  width: 82.5%;
+  width: 100%;
 }
 .hrInfo > div:nth-child(1) {
   display: flex;

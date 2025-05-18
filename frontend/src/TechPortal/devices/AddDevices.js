@@ -158,7 +158,7 @@ function AddDevices() {
                                 </div>
 
                                 <div className='mt-4'>
-                                    <input autoComplete='off' type="number" name='Range' onChange={updateFormValues} placeholder='Range' required />
+                                    <input autoComplete='off' type="text" name='Range' onChange={updateFormValues} placeholder='Range' required />
                                 </div>
                                 <div className={`${style.dropdown} bg-white p-3 `}>
                                     <p className='fs-4'>Add Callibration</p>

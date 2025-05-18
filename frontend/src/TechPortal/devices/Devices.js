@@ -159,8 +159,8 @@ function Devices() {
                                 </tr>
                                 <tr className={style.font}>
                                     {/* <th className={`${style.textLight}`} scope="col">Machinery Id</th> */}
-                                    <th className={`${style.textLight}`} scope="col">Machinery Name</th>
-                                    <th className={`${style.textLight}`} scope="col">Machinery Location</th>
+                                    <th className={`${style.textLight}`} scope="col">Equipment Name</th>
+                                    <th className={`${style.textLight}`} scope="col">Equipment Location</th>
                                     <th className='px-4' scope="col"> </th>
                                     <th className={`${style.textLight}`} scope="col">Status</th>
                                     <th className={`${style.textLight}`} scope="col">Callibration</th>

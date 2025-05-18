@@ -99,7 +99,7 @@ const addFirstPageWithApproval = async (page, logoImage, company, creatorName, c
             x: 80,
             y: yPosition - 50,
             color: rgb(0, 0, 0),
-            size: 20
+            size: 15
         });
 
 
@@ -107,7 +107,7 @@ const addFirstPageWithApproval = async (page, logoImage, company, creatorName, c
             x: 330,
             y: yPosition - 50,
             color: rgb(0, 0, 0),
-            size: 20
+            size: 15
         });
 
         const uploadDateText = `Creation Date : `;
@@ -115,7 +115,7 @@ const addFirstPageWithApproval = async (page, logoImage, company, creatorName, c
             x: 80,
             y: yPosition - 80,
             color: rgb(0, 0, 0),
-            size: 20
+            size: 15
         });
 
 
@@ -124,7 +124,7 @@ const addFirstPageWithApproval = async (page, logoImage, company, creatorName, c
             x: 330,
             y: yPosition - 80,
             color: rgb(0, 0, 0),
-            size: 20
+            size: 15
         });
 
         // Add document ID and revision number
@@ -133,14 +133,14 @@ const addFirstPageWithApproval = async (page, logoImage, company, creatorName, c
             x: 80,
             y: yPosition - 110,
             color: rgb(0, 0, 0),
-            size: 20
+            size: 15
         });
 
         page.drawText(documentId, {
             x: 330,
             y: yPosition - 110,
             color: rgb(0, 0, 0),
-            size: 20
+            size: 15
         });
 
         // Add review information
@@ -149,14 +149,14 @@ const addFirstPageWithApproval = async (page, logoImage, company, creatorName, c
             x: 80,
             y: yPosition - 140,
             color: rgb(0, 0, 0),
-            size: 20
+            size: 15
         });
 
         page.drawText(reviewedBy, {
             x: 330,
             y: yPosition - 140,
             color: rgb(0, 0, 0),
-            size: 20
+            size: 15
         });
 
         const reviewDateText = `Review Date : `;
@@ -164,14 +164,14 @@ const addFirstPageWithApproval = async (page, logoImage, company, creatorName, c
             x: 80,
             y: yPosition - 170,
             color: rgb(0, 0, 0),
-            size: 20
+            size: 15
         });
 
         page.drawText(reviewDate !== '---' ? formatDate(new Date(reviewDate)) : reviewDate, {
             x: 330,
             y: yPosition - 170,
             color: rgb(0, 0, 0),
-            size: 20
+            size: 15
         });
 
 
@@ -181,14 +181,14 @@ const addFirstPageWithApproval = async (page, logoImage, company, creatorName, c
             x: 80,
             y: yPosition - 200,
             color: rgb(0, 0, 0), // Green color for approval
-            size: 20
+            size: 15
         });
 
         page.drawText(approvedBy, {
             x: 330,
             y: yPosition - 200,
             color: rgb(0, 0, 0), // Green color for approval
-            size: 20
+            size: 15
         });
 
 
@@ -197,14 +197,14 @@ const addFirstPageWithApproval = async (page, logoImage, company, creatorName, c
             x: 80,
             y: yPosition - 230,
             color: rgb(0, 0, 0), // Green color for approval
-            size: 20
+            size: 15
         });
 
         page.drawText(approvalDate !== '---' ? formatDate(approvalDate) : approvalDate, {
             x: 330,
             y: yPosition - 230,
-            color: rgb(0, 0, 0), // Green color for approval
-            size: 20
+            color: rgb(195, 192, 192), // Green color for approval
+            size: 15
         });
 
         const revisionNoText = `Revision No : `;
@@ -212,14 +212,14 @@ const addFirstPageWithApproval = async (page, logoImage, company, creatorName, c
             x: 80,
             y: yPosition - 260,
             color: rgb(0, 0, 0),
-            size: 20
+            size: 15
         });
 
         page.drawText(`${revisionNo}`, {
             x: 330,
             y: yPosition - 260,
             color: rgb(0, 0, 0),
-            size: 20
+            size: 15
         });
 
 
@@ -292,7 +292,7 @@ const addFirstPage = async (page, logoImage, Company, user, documentId, revision
         yPosition -= 30; // Adjust line spacing
     }
     console.log(width);
-    
+
     // Add uploaded by and date
     const uploadByText = `Created By : `;
     page.drawText(uploadByText, {
@@ -300,15 +300,15 @@ const addFirstPage = async (page, logoImage, Company, user, documentId, revision
         x: 80,
         y: yPosition - 50,
         color: rgb(0, 0, 0),
-        size: 20
+        size: 15
     });
 
     page.drawText(user.Name, {
-       
+
         x: 330,
         y: yPosition - 50,
         color: rgb(0, 0, 0),
-        size: 20
+        size: 15
     });
 
     const uploadDateText = `Creation Date : `;
@@ -316,7 +316,7 @@ const addFirstPage = async (page, logoImage, Company, user, documentId, revision
         x: 80,
         y: yPosition - 80,
         color: rgb(0, 0, 0),
-        size: 20
+        size: 15
     });
 
 
@@ -324,7 +324,7 @@ const addFirstPage = async (page, logoImage, Company, user, documentId, revision
         x: 330,
         y: yPosition - 80,
         color: rgb(0, 0, 0),
-        size: 20
+        size: 15
     });
     if (documentId) {
         const docIdText = `Document ID : `;
@@ -332,7 +332,7 @@ const addFirstPage = async (page, logoImage, Company, user, documentId, revision
             x: 80,
             y: yPosition - 110,
             color: rgb(0, 0, 0),
-            size: 20
+            size: 15
         });
 
 
@@ -340,7 +340,7 @@ const addFirstPage = async (page, logoImage, Company, user, documentId, revision
             x: 330,
             y: yPosition - 110,
             color: rgb(0, 0, 0),
-            size: 20
+            size: 15
         });
         if (revisionNo) {
             const revisionNoText = `Revision No : `;
@@ -348,14 +348,14 @@ const addFirstPage = async (page, logoImage, Company, user, documentId, revision
                 x: 80,
                 y: yPosition - 140,
                 color: rgb(0, 0, 0),
-                size: 20
+                size: 15
             });
 
             page.drawText(revisionNo, {
                 x: 330,
                 y: yPosition - 140,
                 color: rgb(0, 0, 0),
-                size: 20
+                size: 15
             });
         }
     } else {
@@ -365,14 +365,14 @@ const addFirstPage = async (page, logoImage, Company, user, documentId, revision
                 x: 80,
                 y: yPosition - 110,
                 color: rgb(0, 0, 0),
-                size: 20
+                size: 15
             });
 
             page.drawText(revisionNo, {
                 x: 330,
                 y: yPosition - 110,
                 color: rgb(0, 0, 0),
-                size: 20
+                size: 15
             });
         }
     }
@@ -450,7 +450,7 @@ router.post('/uploadDocument', upload.single('file'), async (req, res) => {
 
             // Now add your custom text at the top
             const watermarkText = newDocument.DocumentName;
-            const watermarkFontSize = 15;
+            const watermarkFontSize = 10;
             const watermarkTextWidth = helveticaFont.widthOfTextAtSize(watermarkText, watermarkFontSize);
             const centerWatermarkX = width / 2 - watermarkTextWidth / 2;
             const centerWatermarkY = height + extraSpace - 10; // Place in new space

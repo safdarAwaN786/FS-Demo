@@ -1,11 +1,13 @@
 .card1 {
   width: 49%;
-  border: 1px solid #dadada;
+  /* border: 1px solid #dadada; */
   border-radius: 0.4375rem;
-  padding-bottom: 100px;
-  background: #fff;
-
+  padding: 15px;
+  /* padding-bottom: 100px; */
+  background: #ffffff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
+
 
 .card1headers {
   border-bottom: 1px solid #e1e1e1;
@@ -13,7 +15,9 @@
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  background: #fbfbfb;
+  background: #ee6a5f;
+   border-top-left-radius: 10px;
+   border-top-right-radius: 10px;
 
 }
 
@@ -59,6 +63,9 @@
 .card1body {
   display: flex;
   border-radius: 0.4375rem;
+  padding: 10px;
+  width: 100%;
+  justify-content: space-between;
 }
 @media (max-width: 475px) {
   .card1body {
@@ -69,18 +76,18 @@
   }
 }
 .card1body > div {
-  padding-left: 1.63rem;
+  /* padding-left: 1.63rem; */
   background: #fff;
   display: flex;
   gap: 3.5rem;
-  padding-top: 9px;
+  /* padding-top: 9px; */
   flex-direction: column;
 }
 .card1body > div:nth-child(1) {
-  width: 60%;
+  /* width: 40%; */
 }
 .card1body > div:nth-child(2) {
-  width: 40%;
+  /* width: 40%; */
 }
 
 .card1body > div > div {
@@ -524,3 +531,159 @@
     background-color: #707070;
   }
   
+
+
+  /* Emplopyee Result Table Start */
+  /* Table Container */
+.employee-table-container {
+  width: 100%;
+  margin: 20px 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.card2 {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  overflow: hidden;
+}
+
+/* Responsive Table */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  margin-bottom: 20px;
+}
+
+.employee-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 600px;
+}
+
+.employee-table th,
+.employee-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.employee-table th {
+  background-color: #DB5853;
+  color: white;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  letter-spacing: 0.5px;
+}
+
+.employee-table tr:hover {
+  background-color: #f9f9f9;
+}
+
+/* Status Badges */
+.status-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-align: center;
+  min-width: 70px;
+}
+
+.status-badge.completed {
+  background-color: #e6f7e6;
+  color: #2e7d32;
+}
+
+.status-badge.pending {
+  background-color: #fff8e1;
+  color: #ff8f00;
+}
+
+.status-badge.fail, 
+.status-badge.cancelled {
+  background-color: #ffebee;
+  color: #c62828;
+}
+
+.status-badge.pass {
+  background-color: #e6f7e6;
+  color: #2e7d32;
+}
+
+/* Details Link */
+.details-link {
+  color: #3f51b5;
+  text-decoration: none;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.details-link:hover {
+  color: #283593;
+  text-decoration: underline;
+}
+
+/* Action Buttons */
+.action-buttons {
+  display: flex;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.print-btn, .download-btn {
+  padding: 10px 20px;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+  font-size: 0.9rem;
+}
+
+.print-btn {
+  background-color: #3f51b5;
+}
+
+.print-btn a {
+  color: white;
+  text-decoration: none;
+}
+
+.print-btn:hover {
+  background-color: #283593;
+}
+
+.download-btn {
+  background-color: white;
+  border: 1px solid #e0e0e0;
+  color: #333;
+}
+
+.download-btn:hover {
+  background-color: #f5f5f5;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .employee-table th,
+  .employee-table td {
+    padding: 8px 10px;
+    font-size: 0.85rem;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .print-btn, .download-btn {
+    width: 100%;
+    text-align: center;
+  }
+}
+  /* Emplopyee Result Table End */

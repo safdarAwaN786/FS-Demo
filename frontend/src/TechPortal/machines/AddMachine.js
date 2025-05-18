@@ -72,7 +72,7 @@ function AddMachine() {
                             <span></span>
                         </div>
                         <div className={style.para}>
-                            Add Machinery
+                            Add Equipment
                         </div>
 
                     </div>
@@ -91,11 +91,11 @@ function AddMachine() {
                             <div className={style.sec1}>
 
                                 <div className='mb-5'>
-                                    <input autoComplete='off' onChange={updateData} name='machineName' value={formData?.machineName} type="text" placeholder='Machinery name' required />
+                                    <input autoComplete='off' onChange={updateData} name='machineName' value={formData?.machineName} type="text" placeholder='Equipment name' required />
                                     <img src={profile} alt="" />
                                 </div>
                                 <div>
-                                    <input autoComplete='off' value={formData?.machinaryLocation} onChange={updateData} name='machinaryLocation' type="text" placeholder='Machinery location' required />
+                                    <input autoComplete='off' value={formData?.machinaryLocation} onChange={updateData} name='machinaryLocation' type="text" placeholder='Equipment location' required />
                                     <img src={Phone} alt="" />
 
                                 </div>

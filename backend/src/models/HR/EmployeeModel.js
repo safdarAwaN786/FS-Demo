@@ -11,26 +11,26 @@ const EmployeeSchema = new mongoose.Schema({
     },
     PhoneNumber: {
         type: Number,
-        validate: {
-            validator: function (PhoneNumber) {
-                const phoneNumberString = PhoneNumber.toString();
-                return phoneNumberString.length <= 11;
-            },
-            message: 'Phone number must have a maximum of 11 digits.',
-        },
+        // validate: {
+        //     validator: function (PhoneNumber) {
+        //         const phoneNumberString = PhoneNumber.toString();
+        //         return phoneNumberString.length <= 11;
+        //     },
+        //     message: 'Phone number must have a maximum of 11 digits.',
+        // },
     },
     Qualification: {
         type: String,
     },
     CNIC: {
-        type: Number,
-        validate: {
-            validator: function (cnic) {
-                const cnicString = cnic.toString();
-                return cnicString.length === 13;
-            },
-            message: 'CNIC must have exactly 13 digits.',
-        },
+        type: String,
+        // validate: {
+        //     validator: function (cnic) {
+        //         const cnicString = cnic.toString();
+        //         return cnicString.length === 13;
+        //     },
+        //     message: 'CNIC must have exactly 13 digits.',
+        // },
     },
 
     Company: {

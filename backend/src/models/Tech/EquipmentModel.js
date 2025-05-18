@@ -21,7 +21,7 @@ const equipmentSchema = new mongoose.Schema({
         required:true
     },
     Range:{
-      type:Number,
+      type:String,
       Required:true
     },
     callibration:{
